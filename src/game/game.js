@@ -284,7 +284,7 @@ export function createGame(o) {
       const b = builder.nearest(x, z, 1.2);
       placeAt = { b };
       builder.showGhost(b?.type ?? null, b?.x, b?.z, b?.rot, false);
-      ui.hint(b ? `<span class="why">${BUILDINGS[b.type].name} 철거</span><kbd>E</kbd> 또는 클릭 · 재료를 돌려받아요 · <kbd>Esc</kbd> 그만하기` : '철거할 것을 바라보세요 · <kbd>Esc</kbd> 그만하기');
+      ui.hint(b ? `<span class="why">${BUILDINGS[b.type].name} 철거</span><kbd>E</kbd> 또는 클릭 · 재료를 돌려받아요 · <kbd>X</kbd> 그만하기` : '철거할 것을 바라보세요 · <kbd>X</kbd> 그만하기');
       return;
     }
     const def = BUILDINGS[placing.type];
@@ -293,7 +293,7 @@ export function createGame(o) {
     if (check.ok && !afford(def.cost)) check = { ok: false, why: '재료가 모자라요' };
     placeAt = { x, z, ok: check.ok };
     builder.showGhost(placing.type, x, z, placing.rot, check.ok);
-    ui.hint(`${check.ok ? '' : `<span class="why">${check.why}</span>`}<b>${def.name}</b> · <kbd>E</kbd> 또는 클릭으로 놓기 · <kbd>R</kbd> 돌리기 · <kbd>Esc</kbd> 취소`);
+    ui.hint(`${check.ok ? '' : `<span class="why">${check.why}</span>`}<b>${def.name}</b> · <kbd>E</kbd> 또는 클릭으로 놓기 · <kbd>R</kbd> 돌리기 · <kbd>X</kbd> 취소`);
   }
   function confirmPlacing() {
     if (!placing || !placeAt) return;
@@ -517,6 +517,7 @@ export function createGame(o) {
     } else if (e.code === 'KeyJ') ui.openJournal(view);
     else if (e.code === 'KeyH') ui.openHelp();
     else if (e.code === 'KeyR' && placing && !placing.demolish) placing.rot = (placing.rot + Math.PI / 8) % (Math.PI * 2);
+    else if (e.code === 'KeyX' && placing) placing = null;
   });
   document.addEventListener('keyup', (e) => held.delete(e.code));
   window.addEventListener('blur', () => held.clear());

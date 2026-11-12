@@ -9,6 +9,8 @@ shots/*
 !shots/readme.jpg
 !shots/village.jpg
 !shots/sunset.jpg
+!shots/camp.jpg
+!shots/camp.png
 *.mp4
 *.log
 .env
