@@ -1,0 +1,511 @@
+/* The game's page: paper cards over the painting. */
+:root {
+  --paper: rgba(252, 246, 228, 0.93);
+  --paper-solid: #fbf5e2;
+  --ink: #3b2f27;
+  --ink-soft: #7a6a5a;
+  --line: rgba(92, 70, 48, 0.22);
+  --leaf: #5f8f3e;
+  --leaf-dark: #436b2a;
+  --berry: #c5553d;
+  --sun: #e9a93a;
+}
+#game-ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  color: var(--ink);
+  font: 15px/1.45 'Noto Serif KR', 'Nanum Myeongjo', 'Apple SD Gothic Neo', 'Malgun Gothic', Georgia, serif;
+  letter-spacing: 0.01em;
+}
+#game-ui * {
+  box-sizing: border-box;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 6px 22px rgba(40, 50, 60, 0.18);
+}
+/* ---- top left: the day, and what to do next ---- */
+#hud-day {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 9px 15px 10px;
+  min-width: 190px;
+  max-width: 320px;
+}
+#hud-day .when {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+#hud-day .day {
+  font-size: 18px;
+  font-weight: 700;
+}
+#hud-day .hour {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+#hud-day .camp {
+  margin-left: auto;
+  color: var(--sun);
+  letter-spacing: 1px;
+  font-size: 14px;
+}
+#hud-day .bar {
+  height: 4px;
+  margin: 7px 0 0;
+  border-radius: 3px;
+  background: rgba(92, 70, 48, 0.14);
+  overflow: hidden;
+}
+#hud-day .bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #f3cf63, #ef9a4a 70%, #c96a5a);
+}
+#hud-goal {
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px dashed var(--line);
+  font-size: 13.5px;
+}
+#hud-goal b {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--ink-soft);
+  letter-spacing: 0.12em;
+}
+/* ---- top right: what you carry ---- */
+#hud-inv {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: 46vw;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px 4px 8px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: 0 3px 10px rgba(40, 50, 60, 0.14);
+  font-size: 14.5px;
+  white-space: nowrap;
+}
+.chip em {
+  font-style: normal;
+  font-size: 15px;
+}
+.chip b {
+  font-weight: 700;
+  min-width: 1ch;
+}
+.chip.bump {
+  animation: bump 0.45s;
+}
+.chip.lack {
+  color: var(--berry);
+  border-color: rgba(197, 85, 61, 0.45);
+}
+@keyframes bump {
+  30% {
+    transform: scale(1.22);
+    background: #fff8d2;
+  }
+}
+/* ---- bottom: what the key in your hand would do ---- */
+#prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 13vh;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 16px 8px 9px;
+  font-size: 16px;
+  white-space: nowrap;
+}
+#prompt.on {
+  display: flex;
+}
+#prompt.off {
+  opacity: 0.72;
+}
+kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 27px;
+  height: 27px;
+  padding: 0 7px;
+  border-radius: 7px;
+  background: var(--ink);
+  color: #fff7dd;
+  font: 700 13.5px/1 ui-sans-serif, system-ui, sans-serif;
+}
+#prompt .meter {
+  width: 74px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(92, 70, 48, 0.18);
+  overflow: hidden;
+}
+#prompt .meter i {
+  display: block;
+  height: 100%;
+  background: var(--leaf);
+}
+#hint {
+  position: absolute;
+  left: 50%;
+  bottom: 5vh;
+  transform: translateX(-50%);
+  display: none;
+  padding: 7px 16px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+#hint.on {
+  display: block;
+}
+#hint .why {
+  color: var(--berry);
+  font-weight: 700;
+  margin-right: 10px;
+}
+#keys {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  display: flex;
+  gap: 12px;
+  font-size: 12.5px;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(20, 40, 60, 0.7);
+  opacity: 0.92;
+}
+#keys kbd {
+  min-width: 20px;
+  height: 20px;
+  font-size: 11px;
+  margin-right: 4px;
+  background: rgba(40, 30, 24, 0.75);
+}
+/* ---- what has just happened ---- */
+#toasts {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  max-width: min(440px, 70vw);
+}
+.toast {
+  padding: 7px 14px;
+  font-size: 14.5px;
+  animation: rise 0.25s ease-out;
+  transition: opacity 0.5s, transform 0.5s;
+}
+.toast.big {
+  font-size: 16px;
+  font-weight: 700;
+  border-color: rgba(233, 169, 58, 0.7);
+  background: #fff9dc;
+}
+.toast.out {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+/* ---- things said in the world, over the heads of those who say them ---- */
+#bubbles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 3px 10px rgba(40, 50, 60, 0.16);
+  font-size: 13.5px;
+  white-space: nowrap;
+  will-change: transform;
+}
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  background: var(--paper-solid);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transform: rotate(45deg);
+}
+.bubble .hearts {
+  color: var(--berry);
+  letter-spacing: 1px;
+}
+.bubble small {
+  color: var(--ink-soft);
+  margin-left: 4px;
+}
+/* ---- panels ---- */
+#panel {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(40, 52, 60, 0.28);
+  pointer-events: auto;
+}
+#panel.on {
+  display: grid;
+}
+#panel .sheet {
+  width: min(860px, 94vw);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper-solid);
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 60px rgba(20, 30, 40, 0.35);
+  overflow: hidden;
+}
+#panel header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid var(--line);
+}
+#panel header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+#panel header span {
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+#panel header button {
+  margin-left: auto;
+}
+#panel .body {
+  padding: 16px 20px 20px;
+  overflow-y: auto;
+}
+#panel button {
+  font: inherit;
+  color: var(--ink);
+  background: #fffdf3;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+#panel button:hover:not(:disabled) {
+  border-color: var(--leaf);
+  background: #f3f8e4;
+}
+#panel button.on {
+  background: var(--leaf);
+  border-color: var(--leaf-dark);
+  color: #fff;
+}
+#panel button.warn {
+  color: var(--berry);
+}
+#panel button:disabled {
+  opacity: 0.62;
+  cursor: default;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
+  gap: 10px;
+}
+.grid .item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+  padding: 11px 13px !important;
+  border-radius: 12px !important;
+  min-height: 112px;
+}
+.grid .item h3 {
+  margin: 0;
+  font-size: 16.5px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.grid .item h3 small {
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.grid .item p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+  flex: 1;
+}
+.cost {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.cost .chip {
+  padding: 1px 8px 1px 6px;
+  font-size: 13px;
+  box-shadow: none;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.row:last-child {
+  border-bottom: 0;
+}
+.row .who {
+  width: 150px;
+  flex: none;
+}
+.row .who b {
+  display: block;
+  font-size: 16.5px;
+}
+.row .who small {
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+.row .dot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex: none;
+  border: 2px solid rgba(60, 40, 30, 0.55);
+  box-shadow: inset -5px -6px 0 rgba(40, 30, 60, 0.16);
+}
+.row .jobs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.row .jobs button {
+  padding: 3px 9px !important;
+  font-size: 13.5px !important;
+}
+.row .jobs button.best:not(.on) {
+  border-color: var(--sun) !important;
+}
+.note {
+  margin: 0 0 12px;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 26px;
+}
+.cols h4 {
+  grid-column: 1 / -1;
+  margin: 12px 0 0;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+}
+.cols h4:first-child {
+  margin-top: 0;
+}
+.entry {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.entry.unknown {
+  opacity: 0.45;
+}
+.entry b {
+  display: block;
+}
+.entry small {
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+.keys {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 7px 14px;
+  align-items: center;
+}
+.done {
+  color: var(--leaf-dark);
+}
+#fade {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #1c2433;
+  color: #fff5d6;
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  opacity: 0;
+  transition: opacity 0.9s;
+}
+#fade.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+body.panel-open #start {
+  display: none !important;
+}
+body:not(.playing) #prompt,
+body:not(.playing) #hint {
+  display: none;
+}
+@media (max-width: 700px) {
+  #keys {
+    display: none;
+  }
+  .cols {
+    grid-template-columns: 1fr;
+  }
+  .row {
+    flex-wrap: wrap;
+  }
+}

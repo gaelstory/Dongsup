@@ -17,7 +17,7 @@ for (let run = 1; run <= Number(runs); run++) {
   const browser = await chromium.launch({
     executablePath: process.env.CHROME, // a Chromium of your own; without it, Playwright's
     headless: true,
-    args: ['--mute-audio', '--ignore-gpu-blocklist', '--use-angle=d3d11'],
+    args: ['--mute-audio', '--ignore-gpu-blocklist', `--use-angle=${process.env.ANGLE ?? 'd3d11'}`, '--enable-unsafe-swiftshader'],
   });
   const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
   const page = await context.newPage();

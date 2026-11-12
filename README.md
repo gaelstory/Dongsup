@@ -1,96 +1,65 @@
----
-kind: effect
-engine: three.js
----
+# 정령의 골짜기 (Spirit Valley)
 
-# Painted valley
+손으로 그린 애니메이션 배경 같은 여름 골짜기에서 재료를 모으고, 정령과 동물을 만나 친구가 되고, 내 땅에 캠핑장과 집을 짓는 느긋한 생활 게임입니다. three.js(WebGL2)로 브라우저에서 돌아갑니다.
 
-A summer valley to walk through, drawn in the look of hand-painted animated film backgrounds: flat, clean colour, heaped white cloud, far mountains with every face painted, a village of tiled roofs, and a meadow whose brush marks stay round under your feet. A wanderer in a straw hat and a blue cloak walks it, drawn as a film draws its people: flat colour and an inked line. The land and sky are made in code, in three.js.
+오픈소스 데모 **[Painted valley](https://patch.gg/blendi/painted-valley)** (Patch, 코드 MIT · 아트 CC0 1.0)를 바탕으로 만들었습니다. 골짜기·하늘·풀밭·나그네는 그 데모의 것이고, 게임(채집·정령·동물·건축·하루의 흐름·화면)은 `src/game/`에 새로 썼습니다.
 
-![A wanderer in a straw hat and a blue cloak on a meadow hill above a village of red roofs, mountains under heaped white clouds behind](shots/readme.jpg)
+## 무엇을 하나요
 
-**In the demo:** click to look with the mouse, WASD to move, Shift to sprint, Alt to walk, Space to jump, the wheel to bring the eye in or out. A gamepad works too. V goes into his own eyes and back. T changes the time of day (noon, afternoon, golden hour, sunset) and 1 to 4 go straight to one; `,` and `.` nudge the hour, 0 lets the day pass by itself. P takes the paint finish off and on. There is nothing to do but walk: down the hill to the village, along the river, up to the tarn.
+- **돌아다니며 모으기** — 나무 아래 나뭇가지, 바위 곁 돌무더기, 열매 덤불, 그늘의 버섯, 풀밭의 들꽃과 억새, 물가의 갈대와 점토. 반짝이는 것에 다가가 `E`. 나무는 흔들고 바위는 캘 수 있습니다. 가져간 것은 시간이 지나거나 다음 날이면 다시 생깁니다.
+- **정령과 친구 되기** — 숲·바위 곁·꽃밭·언덕·물가에 사는 정령이 저마다 바라는 선물이 있습니다(머리 위 말풍선). 선물을 주면 내 땅까지 따라옵니다. 불씨정령은 내 모닥불에 찾아옵니다.
+- **정령에게 일 맡기기** — `Tab`에서 나무하기·돌 캐기·풀 베기·먹거리 찾기·점토 캐기·건설 돕기 중 하나를 맡기면 다녀와서 내 땅의 바구니에 재료를 담아 둡니다. 정령마다 두 배로 잘하는 일이 있습니다. 정령집을 지으면 더 많은 정령이 머뭅니다.
+- **내 땅에 짓기** — 언덕 위 말뚝으로 둘러싸인 곳이 내 땅입니다. `B`로 모닥불·텐트·통나무 의자·식탁·등불·울타리·디딤돌·정령집·꽃밭·열매밭·먹이터·우물·오두막·빛의 돌탑을 놓고, 가까이서 `E`를 누르고 있거나 정령에게 맡겨 완성합니다. 철거하면 재료를 모두 돌려받습니다.
+- **동물 만나기** — 다람쥐·토끼·사슴·여우·오리. 달려가면 달아나고, `Alt`로 살금살금 다가가면 좋아하는 것을 받아먹습니다. 하루에 한 번, 세 번 먹이면 단짝이 되어 먹이터에 놀러 옵니다.
+- **하루** — 낮 12시 반에 시작해 약 13분 뒤 해가 집니다. 텐트에서 쉬면 다음 날 아침. 저녁에는 등불과 창문에 불이 켜지고 모닥불이 풀밭을 밝힙니다.
+- **저장** — 브라우저(localStorage)에 자동 저장됩니다. 도움말(`H`)에서 처음부터 다시 시작할 수 있습니다.
 
-![The village from the meadow](shots/village.jpg)
-
-![The same hill at golden hour](shots/sunset.jpg)
-
-It is a starting point, not a filter. You can't lay it over a finished game: the look comes from how each part of the place is painted. Start from the valley, change it, put your own game in it.
-
-## The idea
-
-A painted background reads as paint because of what is left out: no photographed texture, no noise at every scale, few tones, and detail only where a brush would have put it.
-
-- **Few tones, chosen as paint.** Each thing has a lit colour and a shade colour and a short step between them. One shared palette (`meadowGreen`, `meadowLight` in `src/valley/world.js`) paints the grass, the ground under it, the far fields and the hills, so the valley is one picture.
-- **Marks, not noise.** The meadow is one slow green with thin strokes that follow the slope, and dabs laid out as they would look from the hill where the walk starts, so they are round from there and fade before they could turn to speckle (`heroPaint`). Far ground has no fine pattern at all: it would shimmer.
-- **Far things are painted once.** The mountains are a height map marched into a strip of paint (lit colour, shade colour, where the light falls, air, a bank of cloud), which the sky then lights for the hour. Rock is cut into facets, the lower slopes carry rounded tree crowns, and three ranks of foothills step back in the haze. Nothing far costs anything per frame.
-- **Clouds are heaps.** Each cumulus is a pile of spheres, ray-marched once into a cube map and given flat tones: white top, cool shade, a warm underside. They stand still on purpose; a redraw per hour changes their light.
-- **The plain is a painting too.** Fields, hedges, roads and the river are drawn into one texture, with trees, orchards, poplars and a mill standing on it as small painted cards.
-- **Buildings carry detail the way a background painter gives it:** rows of tiles, limewash with stains under the eaves, shutters, doors, attic windows, chimneys, all drawn in the shader from the wall's own coordinates.
-- **A finish over the frame** (a small Kuwahara pass) rounds everything into strokes, and leaves the sky and anything else that asks to be left alone.
-- **People are cel, not paint.** A film paints its backgrounds and inks its people, and the difference is most of the look. The wanderer is three flat tones (in the light, in the shade, the deep of a fold) with a clean turn between them; shade colours are mixed as they should look, not the light ones made darker. Each part of him writes a small number into the frame's alpha, and the last pass draws a line wherever two different numbers meet, except where the other thing is in front of him, so grass he stands in is not inked. His cloak is real cloth, with a few fold shadows drawn rising from the hem as a painter would put them. His shadow on the grass is a shape with a clean edge that grows as the sun comes down.
-
-## Use it in a game
-
-It is a place with its own renderer set-up, not a material: `src/valley/main.js` is the whole demo and the thing to start from. Built on three 0.186, WebGL2.
-
-```js
-import { createField, createFrame } from './src/lib/index.js';
-import { createSky } from './src/valley/sky.js';
-import { createTrees } from './src/valley/trees.js';
-import { heightAt, START } from './src/valley/world.js';
-
-const field = createField({ /* the meadow: grass, flowers, the ground; see main.js */ });
-const frame = createFrame(renderer, field, { samples: 4, bloom: 0.1 });
-const sky = createSky(renderer, field, { /* clouds and mountains are painted in here */ });
-scene.add(sky.mesh, createTrees(field).group);
-
-frame.paint = 3;                    // the paint finish: 0 is off
-sky.setHour(15.5);                  // 12.5 noon to 20.4 sunset
-camera.position.y = heightAt(x, z) + 1.7;
-frame.render(scene, camera);
-```
-
-- **Your own things in it.** Add meshes to the scene as usual. To be left out of the paint finish (a crisp character, a HUD in the world), write alpha below 0.6. To sit in the valley's light, read the sun and sky colours from `field.uniforms`.
-- **Your own people in it.** `src/valley/wanderer.js` is the cel look: give any mesh, rigged or not, its material with a light and a shade colour and a line number below 0.23 (parts with different numbers get a line between them). `field.uniforms.uWalker` (x, z, how dark, how long) lays one walker's shadow on the meadow. His movement, camera and cloth are in `src/figure/`, on Rapier, and come from Patch's oil paint block (`blendi/oil-paint`).
-- **Change the place.** `src/valley/world.js` holds the land: `heightAt`, the paths, the tarn, the river, where the village and the woods are. `village.js` builds houses from eight shapes. `backdrop.js` holds the mountains' outline, `clouds.js` where each cloud stands.
-- **Change the hour.** `sky.js` has one set of colours per hour key; add a night, a storm, a dawn.
-- **Performance mode.** `?quality=low` or `medium` draws less: fewer blades, no seed fluff, a lighter finish.
-
-## What is where
+## 조작
 
 | | |
 |---|---|
-| `src/valley/main.js` | The demo: start-up, the walker, the keys, the loop |
-| `src/valley/world.js` | The land and the shared palette |
-| `src/valley/sky.js`, `clouds.js`, `backdrop.js` | The sky and its hours, the clouds, the far mountains and foothills |
-| `src/valley/horizon.js`, `floor.js`, `farwoods.js` | The plain out to 6 km, its painted fields and roads, its trees and mill |
-| `src/valley/village.js` | The houses, church and barns |
-| `src/valley/trees.js`, `dressing.js`, `water.js` | Near trees and bushes with their shade, stones and drifting seeds, the tarn |
-| `src/valley/strokes.js` | The brush-dab texture the ground is painted with |
-| `src/valley/sounds.js` | The sound, from recordings (see below) |
-| `src/valley/wanderer.js` | The wanderer's look: cel colour, his hat and cloak, what the line is drawn from |
-| `src/figure/` | The starter man and how he moves: `man.js` (loading), `animator.js`, `player.js` (a Rapier character), `input.js`, `camera.js` (the eye behind him), `cloak.js` (cloth) |
-| `src/lib/` | The grass, flowers, ground and frame, from Patch's grass block (`blendi/touch-grass`), restyled for this look |
-| `tools/` | Headless stills (`shots.mjs`, and `walk.mjs` for the wanderer), frame time (`fps.mjs`), a first visit (`cold.mjs`), the sound cuts (`sounds.mjs`), `compact-glb.mjs` (a clip file with only what its clips use) |
+| `W A S D` | 걷기 · `Shift` 달리기 · `Alt` 살금살금 · `Space` 점프 |
+| 마우스 | 둘러보기 · 휠로 멀리/가까이 · `V` 1인칭 |
+| `E` | 줍기 · 흔들기 · 선물하기 · 먹이 주기 · 짓기(누르고 있기) · 놓기 |
+| `B` | 짓기 메뉴 — 고른 뒤 `R` 돌리기, 클릭/`E` 놓기, `Esc` 취소 |
+| `Tab` | 정령 친구들 (일 맡기기) |
+| `J` / `H` | 도감과 할 일 / 도움말 |
+| `P` | 붓질 마감 켜고 끄기 |
 
-## Sound
+키보드와 마우스가 있는 데스크톱 브라우저용입니다(터치 조작은 아직 없습니다).
 
-The released demo has wind in the grass, leaves, birds and insects, water at the tarn and crickets at dusk. Those five recordings come from the Sonniss GDC bundles, which may be used in a game but not passed on as files, so they are **not in this repo**: a build from it has footsteps only. [MISSING_ASSETS.md](MISSING_ASSETS.md) names each recording, where to get it and the one command that cuts it back in.
+## 실행
 
-## Limits
+```sh
+npm install
+npm run dev      # http://127.0.0.1:5384
+# 또는
+npm run build    # dist/ 에 빌드
+npm run serve    # http://127.0.0.1:5383
+```
 
-- three.js on WebGL2 only.
-- One valley, about 2 km across, with painted land out to the mountains. Walk past its edge and you are turned back.
-- Noon to sunset only: there is no night, and the clouds don't move.
-- You can't go into the houses, and nobody lives there yet.
-- The wanderer is one man with one face, made to be seen from a few metres. Through his own eyes you see no body or hands.
-- Measured only on an RTX 4090 at 1080p. A first visit is ready in about 8 seconds there; the demo downloads about 13 MB.
+주소 뒤에 붙일 수 있는 것: `?quality=low` 또는 `medium`(가벼운 그리기), `?new`(저장을 건드리지 않고 새 게임), `?debug`(`T`, `1`–`4`, `,` `.`로 시간 바꾸기).
 
-## Build
+## 어디에 무엇이 있나요
 
-`npm install`, then `npm run build`: the demo is in `dist/` with `index.html` at the top. `npm run serve` serves it on port 5383. The tools in `tools/` drive it headless with Playwright: set `CHROME` to a Chromium of your own if Playwright has none.
+| | |
+|---|---|
+| `src/game/data.js` | 재료, 건물(비용·공사 시간), 정령, 동물, 할 일 — 숫자와 글 |
+| `src/game/game.js` | 규칙과 하루: `E`가 하는 일, 놓기와 철거, 잠, 목표, 저장 |
+| `src/game/nodes.js` | 골짜기에 놓인 채집물과 반짝임 |
+| `src/game/spirits.js` | 정령: 야생 정령이 사는 곳, 친구가 된 정령의 일 |
+| `src/game/animals.js` | 동물의 움직임과 친밀도 |
+| `src/game/build.js` | 건물: 공사, 충돌, 풀 깎기, 미리보기 |
+| `src/game/models.js`, `paint.js` | 모든 모양(도형으로 조립)과 칠(배경은 물감, 생물은 셀 + 잉크 선) |
+| `src/game/ui.js`, `ui.css` | 화면: 가방, 말풍선, 짓기·정령·도감 패널 |
+| `src/valley/`, `src/lib/`, `src/figure/` | Painted valley: 땅·하늘·풀밭·나그네 ([원래 설명](docs/painted-valley.md)) |
 
-## Credits
+새 건물을 더하려면 `data.js`의 `BUILDINGS`에 한 줄, `models.js`의 `build`에 모양 하나를 더하면 됩니다. 정령과 동물도 같은 식입니다.
 
-Code MIT, art CC0 1.0. The wanderer is Patch's starter man (a MakeHuman figure, CC0) with clips from Quaternius' Universal Animation Library (CC0) and Patch's own (CC0). Physics by Rapier (Apache-2.0). The earth of the footpaths is two ambientCG grounds (CC0); the footsteps are Kenney's (CC0). Everything else you see is made in code. Every part and its source is in [LICENCE-NOTES.md](LICENCE-NOTES.md).
+## 소리
+
+발소리(CC0)와 코드로 만든 짧은 효과음만 들어 있습니다. 원본 데모의 바람·새·물소리 다섯 개는 재배포할 수 없는 녹음이라 저장소에 없습니다. 넣는 방법은 [MISSING_ASSETS.md](MISSING_ASSETS.md)에 있습니다.
+
+## 라이선스와 출처
+
+코드 MIT, 아트 CC0 1.0. 바탕이 된 Painted valley는 Patch의 작품이며(MIT/CC0), 물리는 Rapier(Apache-2.0), 나그네는 MakeHuman 인물(CC0)과 Quaternius의 애니메이션(CC0), 길의 흙은 ambientCG(CC0), 발소리는 Kenney(CC0)입니다. 부분별 출처는 [LICENCE-NOTES.md](LICENCE-NOTES.md)에 있습니다. 이 게임의 건물·정령·동물·글은 모두 이 저장소에서 새로 만든 것입니다.

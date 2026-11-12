@@ -7,7 +7,7 @@ guard(chromium);
 const [out, code = '', u = '396', v = '-70', turn = '6', pitch = '1', fov = '68'] = process.argv.slice(2);
 // a Chromium of your own in CHROME; without it, Playwright's
 const exe = process.env.CHROME;
-const browser = await chromium.launch({ executablePath: exe, headless: true, args: ['--mute-audio', '--ignore-gpu-blocklist', '--use-angle=d3d11', '--enable-gpu'] });
+const browser = await chromium.launch({ executablePath: exe, headless: true, args: ['--mute-audio', '--ignore-gpu-blocklist', `--use-angle=${process.env.ANGLE ?? 'd3d11'}`, '--enable-unsafe-swiftshader', '--enable-gpu'] });
 const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
 page.on('pageerror', (e) => console.log(`pageerror: ${e.message}`));
 await page.goto('http://127.0.0.1:5383/?step&dpr=1');

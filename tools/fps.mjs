@@ -24,7 +24,7 @@ await new Promise((r) => server.listen(0, '127.0.0.1', r));
 // a Chromium of your own in CHROME; without it, Playwright's
 const exe = process.env.CHROME;
 // vsync off, so the number is what the GPU can do and not the screen's refresh
-const browser = await chromium.launch({ executablePath: exe, headless: true, args: ['--mute-audio', '--ignore-gpu-blocklist', '--use-angle=d3d11', '--enable-gpu', '--disable-gpu-vsync', '--disable-frame-rate-limit'] });
+const browser = await chromium.launch({ executablePath: exe, headless: true, args: ['--mute-audio', '--ignore-gpu-blocklist', `--use-angle=${process.env.ANGLE ?? 'd3d11'}`, '--enable-unsafe-swiftshader', '--enable-gpu', '--disable-gpu-vsync', '--disable-frame-rate-limit'] });
 const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
 const t0 = Date.now();
 await page.goto(`http://127.0.0.1:${server.address().port}/?dpr=1&${query}`);

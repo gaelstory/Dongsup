@@ -1,5 +1,7 @@
 # Credits
 
+- 정령의 골짜기 (Spirit Valley) is built on Painted valley by Patch (https://patch.gg/blendi/painted-valley): code MIT, art CC0 1.0. The game's own buildings, spirits, animals and sounds are made in code.
+
 - The grass, flowers and frame finish come from Patch's grass block (`blendi/touch-grass`), restyled here.
 - Ground048 and Ground103 by ambientCG (https://ambientcg.com), CC0 1.0. The earth of the footpaths.
 - Footsteps on grass: Kenney's Impact Sounds (https://kenney.nl), CC0 1.0.

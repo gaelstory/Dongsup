@@ -10,6 +10,8 @@ import { Player as Walker } from '../figure/player.js';
 import RAPIER from '../figure/rapier/rapier.mjs';
 import * as THREE from 'three';
 import { bakeGround, createField, createFrame, loadGroundTextures } from '../lib/index.js';
+import { createGame } from '../game/game.js';
+import { DAY } from '../game/data.js';
 import { createFluff, createStones } from './dressing.js';
 import { createFarWoods } from './farwoods.js';
 import { createFloor, FLOOR, paintFloor } from './floor.js';
@@ -80,10 +82,20 @@ const quality = params.get('quality') ?? 'high';
 const EXTENT = 1280;
 const GROUND = { extent: EXTENT, extentRes: EXTENT, centre: [0, 0] };
 const FLOOR_SIZE = quality === 'low' ? 1024 : 1536;
-const hour0 = params.has('hour') ? Number(params.get('hour')) : 15.5;
+// the hour the day stands at: the game's (kept from last time), or the one asked for
+const hour0 = (() => {
+  if (params.has('hour')) return Number(params.get('hour'));
+  try {
+    const kept = params.has('new') ? null : JSON.parse(localStorage.getItem('spirit-valley-v1') ?? 'null');
+    if (kept?.hour) return Math.min(DAY.to, Math.max(DAY.from, kept.hour));
+  } catch {
+    // a new game, then
+  }
+  return DAY.from;
+})();
 const groundJob = offThread({ job: 'ground', ...GROUND }, () => bakeGround({ heightAt, paint, ...GROUND }));
 const floorJob = offThread({ job: 'floor', size: FLOOR_SIZE }, () => ({ pixels: paintFloor(FLOOR_SIZE) }));
-await stage(0.04, 'Painting the sky');
+await stage(0.04, '하늘을 칠하는 중');
 // Sound is made ready now, while the land is being made: opening the PC's audio can hold a page's thread for a
 // second or more, and here nothing is waiting on it. It only starts playing on the first click.
 const sounds = createSounds();
@@ -94,7 +106,7 @@ let renderer;
 try {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: stepped });
 } catch {
-  $('loading').textContent = 'Needs WebGL 2';
+  $('loading').textContent = 'WebGL 2가 필요해요';
   throw new Error('no WebGL 2');
 }
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, params.has('dpr') ? Number(params.get('dpr')) : 1.5));
@@ -137,7 +149,7 @@ const skyReady = (async () => {
   lapse('cloudsAt');
 })();
 mark('skyBegun');
-await stage(0.12, 'Laying out the valley');
+await stage(0.12, '골짜기를 펼치는 중');
 const baked = await groundJob;
 mark('groundWait');
 const field = createField({
@@ -186,7 +198,7 @@ mark('strokes');
   field.uniforms.uHeroEye.value.set(START[0], field.heightAt(START[0], START[1]) + 1.68, START[1]);
 }
 mark('floor');
-await stage(0.3, 'Building the village');
+await stage(0.3, '마을을 짓는 중');
 const frame = createFrame(renderer, field, { samples: quality === 'low' ? 0 : 4, bloom: 0.1 });
 mark('frame');
 const sky = createSky(renderer, field, { parts: skyParts });
@@ -200,20 +212,18 @@ scene.add(sky.mesh, createHorizon(field, EXTENT / 2), trees.group, farWoods.grou
 frame.paint = params.has('paint') ? Number(params.get('paint')) : quality === 'low' ? 0 : quality === 'medium' ? 2 : 3;
 const paintWas = frame.paint || 3;
 mark('build');
-await stage(0.45, 'Planting trees');
+await stage(0.45, '나무를 심는 중');
 const stones = createStones(field);
 scene.add(stones.group);
 if (quality !== 'low' && params.get('seeds') !== '0') scene.add(createFluff(field, quality === 'medium' ? 200 : 320));
-// time passes: the afternoon you start in is sunset twenty minutes later. ?drift=0 holds the hour; T and 1 to 4
-// pick a time of day and hold it there, 0 lets it pass again, and , and . nudge it.
-let drift = params.has('drift') ? Number(params.get('drift')) : 1;
+// time passes, and the game keeps it (src/game/game.js): a day runs from noon to sunset. With ?debug, T and 1 to 4
+// pick a time of day, and , and . nudge it.
 const TIMES = [
   { hour: 12.5, name: 'Noon' },
   { hour: 15.5, name: 'Afternoon' },
   { hour: 19, name: 'Golden hour' },
   { hour: 20.3, name: 'Sunset' },
 ];
-const DRIFT = (SUNSET - 15.5) / (20 * 60);
 let castAt = 0;
 let clock = 0;
 
@@ -239,7 +249,9 @@ const player = {
   dip: 0,
 };
 player.y = field.heightAt(player.x, player.z);
-const keys = new Set();
+const heldKeys = new Set();
+const keys = heldKeys;
+const NO_KEYS = new Set();
 
 function updatePlayer(dt) {
   const fx = -Math.sin(player.yaw);
@@ -248,6 +260,7 @@ function updatePlayer(dt) {
   const rz = fx;
   let mx = 0;
   let mz = 0;
+  const keys = game.frozen ? NO_KEYS : heldKeys;
   if (keys.has('KeyW') || keys.has('ArrowUp')) mz += 1;
   if (keys.has('KeyS') || keys.has('ArrowDown')) mz -= 1;
   if (keys.has('KeyD') || keys.has('ArrowRight')) mx += 1;
@@ -427,6 +440,11 @@ function air(x, y, z, out) {
 
 function updateWanderer(dt) {
   const inp = input.read(dt);
+  if (game.frozen) {
+    // a panel is open, or he is asleep: he stands where he is
+    inp.move.x = inp.move.y = inp.look.x = inp.look.y = inp.zoom = 0;
+    inp.jump = inp.sprint = false;
+  }
   held.copy(walker.feet);
   const bodyWas = walker.body.translation();
   walker.update(dt, inp, follow.yaw);
@@ -516,8 +534,39 @@ function placeCamera() {
 // ---- the page ------------------------------------------------------------------------------------------------
 const wind = { angle: Math.atan2(HERO[1], HERO[0]) + 0.9, speed: 4.5 };
 
-function setHour(hour) {
-  sky.setHour(Math.min(SUNSET, Math.max(12, hour)));
+// ---- the game: what there is to do in the valley (src/game) ----------------------------------------------------
+const game = createGame({
+  scene,
+  camera,
+  canvas,
+  field,
+  sky,
+  trees,
+  stones,
+  physics,
+  RAPIER,
+  player,
+  reach: REACH,
+  fresh: params.has('new'),
+  quiet: stepped,
+  speed: () => (third ? walker.speed : Math.hypot(player.vx, player.vz)),
+  setHour: (hour, soft) => setHour(hour, soft),
+  bend: (x, z) => field.bend(x, z, 0.7, 0, 0, 0.8),
+  /** Puts the walker somewhere, looking a way (his yaw: 0 looks along +z). */
+  standAt(x, z, yaw) {
+    Object.assign(player, { x, z, y: field.heightAt(x, z), vx: 0, vz: 0, yaw: yaw + Math.PI });
+    if (!third) return;
+    standAt(x, z, yaw);
+    follow.yaw = yaw;
+    follow.pivot.set(0, 0, 0);
+  },
+});
+if (params.has('hour')) game.hour = hour0;
+
+/** Sets the hour. `soft` for time passing: the clouds take the new light a little at a time. */
+function setHour(hour, soft = false) {
+  sky.setHour(Math.min(SUNSET, Math.max(12, hour)), soft);
+  if (soft && Math.abs(sky.hour - castAt) <= 0.04) return;
   trees.cast(sky.sunDir);
   castAt = sky.hour;
 }
@@ -533,7 +582,7 @@ function note(text) {
 /** Goes to one of the times of day and holds it there. */
 function pickTime(index) {
   const time = TIMES[(index + TIMES.length) % TIMES.length];
-  drift = 0;
+  game.hour = time.hour;
   setHour(time.hour);
   note(time.name);
 }
@@ -544,7 +593,7 @@ function setWind(speed) {
 
 canvas.addEventListener('click', () => {
   sounds.start();
-  if (document.pointerLockElement !== canvas) canvas.requestPointerLock()?.catch?.(() => {});
+  if (document.pointerLockElement !== canvas && !game.ui.open) canvas.requestPointerLock()?.catch?.(() => {});
 });
 document.addEventListener('pointerlockchange', () => {
   const locked = document.pointerLockElement === canvas;
@@ -559,19 +608,18 @@ document.addEventListener('mousemove', (e) => {
 });
 document.addEventListener('keydown', (e) => {
   keys.add(e.code);
-  // (after the last of them, round to the first again)
-  if (e.code === 'KeyT') pickTime(Math.max(0, TIMES.findIndex((time) => time.hour > sky.hour + 0.05)));
-  for (let i = 0; i < TIMES.length; i++) if (e.code === `Digit${i + 1}`) pickTime(i);
-  if (e.code === 'Digit0') {
-    drift = 1;
-    note('Time passing');
+  if (game.frozen) return;
+  if (params.has('debug')) {
+    // (after the last of them, round to the first again)
+    if (e.code === 'KeyT') pickTime(Math.max(0, TIMES.findIndex((time) => time.hour > sky.hour + 0.05)));
+    for (let i = 0; i < TIMES.length; i++) if (e.code === `Digit${i + 1}`) pickTime(i);
+    if (e.code === 'Comma') setHour((game.hour = Math.max(12, sky.hour - 0.25)));
+    if (e.code === 'Period') setHour((game.hour = Math.min(SUNSET, sky.hour + 0.25)));
   }
-  if (e.code === 'Comma') setHour(sky.hour - 0.25);
-  if (e.code === 'Period') setHour(sky.hour + 0.25);
   if (e.code === 'KeyP') frame.paint = frame.paint ? 0 : paintWas;
   if (e.code === 'KeyV') {
     setThird(!third);
-    note(third ? 'Third person' : 'First person');
+    note(third ? '3인칭' : '1인칭');
   }
   if (e.code === 'Space') e.preventDefault();
 });
@@ -602,17 +650,12 @@ function tick(dt) {
     updatePlayer(dt);
   }
   placeCamera();
+  input.lockable = !game.ui.open;
+  game.update(dt);
   field.update(dt, camera);
   farWoods.update(dt, wind.speed);
   frame.update(dt, camera);
   clock += dt;
-  if (drift > 0 && sky.hour < SUNSET && !window.__tg?.view) {
-    sky.setHour(Math.min(SUNSET, sky.hour + dt * drift * DRIFT), true);
-    if (Math.abs(sky.hour - castAt) > 0.04) {
-      trees.cast(sky.sunDir);
-      castAt = sky.hour;
-    }
-  }
   // what you hear depends on where you stand: leaves under a tree, water by the tarn, crickets as the light goes
   let tree = 0;
   for (const [tx, tz, kind, scale] of trees.trees) {
@@ -630,10 +673,10 @@ function tick(dt) {
 }
 
 mark('land');
-await stage(0.5, 'Painting the mountains');
+await stage(0.5, '산을 그리는 중');
 await skyReady;
 mark('skyWait');
-await stage(0.64, 'Painting the clouds');
+await stage(0.64, '구름을 그리는 중');
 setHour(hour0);
 setWind(params.has('wind') ? Number(params.get('wind')) : 4.5);
 setThird(third);
@@ -643,20 +686,21 @@ field.update(0, camera);
 sky.update(0, camera);
 await gpuDone();
 mark('clouds');
-await stage(0.78, 'Mixing paint');
+await stage(0.78, '물감을 섞는 중');
 await Promise.all([frame.compile(scene, camera), soundsReady]);
 mark('sceneShaders');
-await stage(0.9, 'Warming up');
+await stage(0.9, '정령들을 깨우는 중');
 // real frames, each waited for, so the first the walker sees isn't the one that compiles: a full turn of the
 // clouds' strips, a few steps taken and the grass trodden
 {
   const [x0, z0] = [player.x, player.z];
   keys.add('KeyW');
   input.keys.add('KeyW');
-  for (let i = 0; i < 44; i++) {
+  // (?fast for tests: a frame or two, not the whole warm-up)
+  for (let i = 0; i < (params.has('fast') ? 2 : 44); i++) {
     tick(1 / 30);
     await gpuDone();
-    if (i % 11 === 10) await stage(0.9 + 0.08 * (i / 44), 'Warming up');
+    if (i % 11 === 10) await stage(0.9 + 0.08 * (i / 44), '정령들을 깨우는 중');
   }
   keys.clear();
   input.keys.clear();
@@ -664,14 +708,15 @@ await stage(0.9, 'Warming up');
   if (third) setThird(true);
   field.reset();
   clock = 0;
-  setHour(params.has('hour') ? Number(params.get('hour')) : 15.5);
+  game.hour = hour0;
+  game.settle();
   tick(1 / 60);
   await gpuDone();
 }
 mark('warm');
 
 // for tests and filming: everything the page is made of, and a clock to drive by hand
-window.__tg = { sounds, walker, follow, input, wanderer, animator, setThird, standAt, pickTime, timings, view: null, wind, THREE, renderer, scene, camera, field, frame, sky, trees, farWoods, stones, player, keys, tick, setHour, setWind, fromValley, ready: true };
+window.__tg = { game, sounds, walker, follow, input, wanderer, animator, setThird, standAt, pickTime, timings, view: null, wind, THREE, renderer, scene, camera, field, frame, sky, trees, farWoods, stones, player, keys, tick, setHour, setWind, fromValley, ready: true };
 
 // ---- the loop's switch ----------------------------------------------------------------------------------------
 let last = 0;

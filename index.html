@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Painted valley</title>
+    <title>정령의 골짜기</title>
     <link rel="icon" href="data:," />
     <style>
       html,
@@ -13,7 +13,7 @@
         overflow: hidden;
         background: #dfeaf0;
         color: #24323a;
-        font: 15px/1.4 Georgia, 'Times New Roman', serif;
+        font: 15px/1.4 'Noto Serif KR', 'Nanum Myeongjo', 'Apple SD Gothic Neo', 'Malgun Gothic', Georgia, serif;
         user-select: none;
       }
       canvas {
@@ -79,12 +79,12 @@
     <canvas id="view"></canvas>
     <div id="start">
       <div>
-        <b>Click to walk</b>
-        <span>W A S D · Shift to sprint · Alt to walk · V first person · T for time of day</span>
+        <b>화면을 클릭하면 시작해요</b>
+        <span>W A S D 걷기 · E 줍기·말 걸기 · B 짓기 · Tab 정령 · J 도감 · H 도움말</span>
       </div>
     </div>
     <div id="note"></div>
-    <div id="loading">Painted valley</div>
+    <div id="loading">정령의 골짜기</div>
     <script type="module" src="./src/valley/main.js"></script>
   </body>
 </html>

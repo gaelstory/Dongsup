@@ -1,9 +1,15 @@
-# Licence notes: painted valley
+# Licence notes: 정령의 골짜기 (Spirit Valley)
 
-Code MIT. Art in this repo CC0 1.0. Checked 2026-11-11.
+This game is built on **Painted valley** 1.1.1 by Patch (https://patch.gg/blendi/painted-valley, commit `e523a37`),
+which is open source: code MIT, art CC0 1.0. The first commit of this repository after the empty one is that source
+unchanged; everything the game adds is in `src/game/` and in the changes to `src/valley/main.js`, `index.html` and
+`tools/`. The table below is Painted valley's own, with one row added for the game.
+
+Code MIT. Art in this repo CC0 1.0. Checked 2026-11-11 (Painted valley's parts), 2026-11-12 (the game's).
 
 | Part | Where it came from | Licence | In this repo? |
 |---|---|---|---|
+| `src/game/` (the game: gathering, spirits, animals, building, the day, the page) | Written for this game. Every building, spirit, animal and thing to gather is made in code from plain solids; no picture or model is loaded for them. The short interface sounds are made in code too | MIT; what it draws CC0 | Yes |
 | `src/valley/` (the land, sky, clouds, mountains, plain, village, trees, stones, water, brushwork, the walk) | Written by Patch for this block. Every cloud, mountain, tree, house and brush mark is made in code; no picture or model is loaded for them | MIT; what it draws CC0 | Yes |
 | `src/lib/` (the grass, flowers, the ground under them, the frame's finish) | Patch's grass block (`blendi/touch-grass`), copied and restyled for this look | MIT; what it draws CC0 | Yes |
 | `src/valley/wanderer.js` (the wanderer's look, his hat) | Written by Patch for this block | MIT; what it draws CC0 | Yes |
@@ -22,5 +28,7 @@ Code MIT. Art in this repo CC0 1.0. Checked 2026-11-11.
 **The sounds.** The repo's licences cover what is in the repo. The released demo plays five ambience recordings that are not in it, because their licence lets them be used in a game but not handed on. A build made from this repo alone has footsteps and nothing else; `MISSING_ASSETS.md` says how to put the five back for a game of your own.
 
 **The look.** The valley was painted toward the look of hand-painted backgrounds in animated films. While it was being made, published stills from such films and two pictures its author supplied were looked at side by side with it, for colour, light and how much is drawn where. None of them is in this repo or its history, none was traced or copied, and no place, building or character from any film is reproduced: the valley, the village, the mountains and the sky here are this demo's own, made in code. The wanderer is Patch's own figure from its oil paint block, in a hat and cloak of Patch's making; the flat colour and inked line he is drawn with are the common way of drawing people in hand-drawn film, not any one film's character.
+
+**The game.** It is a game of its own kind (gather, befriend, build) with its own spirits, animals, buildings and words. It takes no name, character, picture, sound or text from any other game.
 
 **Nothing here has no stated source.**

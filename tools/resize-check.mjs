@@ -15,7 +15,7 @@ const flag = (name, fallback) => {
   return i >= 0 ? args[i + 1] : fallback;
 };
 const url = args[0];
-const browser = await chromium.launch({ executablePath: process.env.CHROME, headless: true, args: ['--mute-audio', '--ignore-gpu-blocklist', '--use-angle=d3d11', '--enable-gpu'] });
+const browser = await chromium.launch({ executablePath: process.env.CHROME, headless: true, args: ['--mute-audio', '--ignore-gpu-blocklist', `--use-angle=${process.env.ANGLE ?? 'd3d11'}`, '--enable-unsafe-swiftshader', '--enable-gpu'] });
 const page = await browser.newPage({ viewport: { width: 960, height: 720 }, deviceScaleFactor: 1 });
 const t0 = Date.now();
 await page.goto(url, { waitUntil: 'commit' });
