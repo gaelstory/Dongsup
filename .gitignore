@@ -1,0 +1,15 @@
+node_modules/
+dist/
+# the five ambiences cut from the Sonniss bundles: licensed for use in a game, not to be passed on as files
+# (MISSING_ASSETS.md). The footsteps are CC0 and are kept.
+public/audio/*.ogg
+!public/audio/footstepOnGrass*.ogg
+shots/*
+!shots/cover.jpg
+!shots/readme.jpg
+!shots/village.jpg
+!shots/sunset.jpg
+*.mp4
+*.log
+.env
+.test/

@@ -1,0 +1,18 @@
+{
+  "name": "painted-valley",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite --config vite.config.mjs --host 127.0.0.1 --port 5384 --strictPort",
+    "build": "node build.mjs",
+    "serve": "node tools/serve.mjs dist 5383"
+  },
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.64.1",
+    "vite": "8.3.5"
+  }
+}
