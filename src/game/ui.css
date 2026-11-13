@@ -85,7 +85,7 @@
 #hud-inv {
   position: absolute;
   top: 16px;
-  right: 16px;
+  right: 164px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -662,7 +662,7 @@ body.touch #hud-goal b {
 }
 body.touch #hud-inv {
   top: calc(8px + env(safe-area-inset-top, 0px));
-  right: calc(10px + env(safe-area-inset-right, 0px));
+  right: calc(112px + env(safe-area-inset-right, 0px));
   gap: 4px;
   max-width: 50vw;
 }
@@ -803,4 +803,169 @@ body.touch .row .jobs button {
 #panel .body {
   touch-action: pan-y;
   overscroll-behavior: contain;
+}
+
+/* ---- the map ---- */
+#minimap {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 132px;
+  height: 132px;
+  padding: 0;
+  border-radius: 50%;
+  border: 3px solid #fbf5e2;
+  outline: 1px solid var(--line);
+  background: #e4e9ea;
+  box-shadow: 0 6px 20px rgba(40, 50, 60, 0.28);
+  pointer-events: auto;
+  cursor: pointer;
+  overflow: visible;
+}
+#minimap canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+}
+#minimap .tag {
+  position: absolute;
+  left: 50%;
+  bottom: -11px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 9px 1px 4px;
+  border-radius: 999px;
+  background: var(--paper-solid);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+}
+#minimap .tag kbd {
+  min-width: 18px;
+  height: 18px;
+  font-size: 10.5px;
+  padding: 0 4px;
+}
+#minimap:hover {
+  border-color: #fff;
+  filter: brightness(1.05);
+}
+body.touch #minimap {
+  top: calc(8px + env(safe-area-inset-top, 0px));
+  right: calc(10px + env(safe-area-inset-right, 0px));
+  width: 92px;
+  height: 92px;
+}
+body.touch #minimap .tag {
+  padding: 0 8px;
+  font-size: 11px;
+}
+#going {
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  transform: translateX(-50%);
+  display: none;
+  padding: 7px 16px;
+  font-size: 14.5px;
+  white-space: nowrap;
+  border-color: rgba(233, 169, 58, 0.7);
+  background: #fff9dc;
+}
+#going.on {
+  display: block;
+}
+body.touch #going {
+  top: calc(60px + env(safe-area-inset-top, 0px));
+  font-size: 13px;
+  padding: 5px 12px;
+}
+.bigmap {
+  position: relative;
+  width: min(100%, calc(92vh - 176px));
+  min-width: 240px;
+  margin: 0 auto;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: inset 0 0 0 4px #fbf5e2;
+}
+.bigmap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.bigmap .place {
+  position: absolute;
+  transform: translate(-50%, -165%);
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(252, 246, 228, 0.82);
+  color: var(--ink);
+  font-size: 12.5px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.bigmap .spirit {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 220, 0.9);
+  pointer-events: none;
+}
+.bigmap .you {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 20px solid #3b2f27;
+  filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 2px #fff);
+  pointer-events: none;
+}
+.bigmap .camp {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px !important;
+  background: transparent !important;
+  border: 0 !important;
+  cursor: pointer;
+}
+.bigmap .camp i {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 26px solid #e9573f;
+  filter: drop-shadow(0 0 2px #3b2f27) drop-shadow(0 2px 3px rgba(40, 30, 20, 0.5));
+  animation: beckon 1.6s ease-in-out infinite;
+}
+.bigmap .camp b {
+  padding: 1px 9px;
+  border-radius: 999px;
+  background: #e9573f;
+  color: #fff;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.bigmap .camp:hover b {
+  background: #c9442e;
+}
+@keyframes beckon {
+  50% {
+    transform: translateY(-4px);
+  }
 }

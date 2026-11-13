@@ -286,10 +286,10 @@ export function createBuilder({ field, paints, physics, RAPIER, trees, stones })
       for (const b of list) {
         if (!b.done) continue;
         if (b.type === 'campfire') glows.add(b.x, b.y + 0.55, b.z, 3.2 + 0.25 * Math.sin(clock * 9 + b.id), [1.0, 0.5, 0.16], 0.16 + 0.5 * dusk);
-        else if (b.type === 'lantern') glows.add(b.x + Math.cos(b.rot) * 0.42, b.y + 1.7, b.z - Math.sin(b.rot) * 0.42, 1.9, [1.0, 0.72, 0.36], 0.75 * dusk);
+        else if (b.type === 'lantern') glows.add(b.x + Math.cos(b.rot) * 0.3, b.y + 1.87, b.z - Math.sin(b.rot) * 0.3, 1.9, [1.0, 0.72, 0.36], 0.75 * dusk);
         else if (b.type === 'cairn') glows.add(b.x, b.y + 2.16, b.z, 2.6 + 0.2 * Math.sin(clock * 2 + b.id), [1.0, 0.92, 0.55], 0.25 + 0.6 * dusk);
-        else if (b.type === 'hut') glows.add(b.x + Math.cos(b.rot) * 0.68 + Math.sin(b.rot) * 0.7, b.y + 0.68, b.z - Math.sin(b.rot) * 0.68 + Math.cos(b.rot) * 0.7, 1.1, [1.0, 0.75, 0.4], 0.5 * dusk);
-        else if (b.type === 'cabin') glows.add(b.x + Math.cos(b.rot) * 0.95 + Math.sin(b.rot) * 1.95, b.y + 1.45, b.z - Math.sin(b.rot) * 0.95 + Math.cos(b.rot) * 1.95, 2.4, [1.0, 0.74, 0.4], 0.55 * dusk);
+        else if (b.type === 'hut') glows.add(b.x + Math.cos(b.rot) * 0.72 + Math.sin(b.rot) * 0.72, b.y + 0.74, b.z - Math.sin(b.rot) * 0.72 + Math.cos(b.rot) * 0.72, 1.1, [1.0, 0.75, 0.4], 0.5 * dusk);
+        else if (b.type === 'cabin') glows.add(b.x + Math.cos(b.rot) * 1.0 + Math.sin(b.rot) * 1.95, b.y + 1.62, b.z - Math.sin(b.rot) * 1.0 + Math.cos(b.rot) * 1.95, 2.4, [1.0, 0.74, 0.4], 0.55 * dusk);
       }
     },
     /** @param near { x, z }: the fire nearest there lights the grass round it */

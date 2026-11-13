@@ -13,6 +13,9 @@ shots/*
 !shots/dusk.jpg
 !shots/phone.jpg
 !shots/spirits.jpg
+!shots/cabin.jpg
+!shots/hut.jpg
+!shots/map.jpg
 *.mp4
 *.log
 .env
