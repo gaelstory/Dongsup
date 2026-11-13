@@ -35,8 +35,9 @@ export function createUI(canvas, on, touch = false) {
     <div id="toasts"></div>
     <div id="prompt" class="card"><kbd>E</kbd><span></span><div class="meter"><i></i></div></div>
     <div id="hint" class="card"></div>
+    <div id="going" class="card"></div>
     <div id="place-buttons"><button data-place="rotate">↻ 돌리기</button><button data-place="cancel">✕ 취소</button></div>
-    <div id="keys"><button data-menu="build"><kbd>B</kbd><em>🔨</em>짓기</button><button data-menu="spirits"><kbd>Tab</kbd><em>✨</em>정령</button><button data-menu="journal"><kbd>J</kbd><em>📖</em>도감</button><button data-menu="help"><kbd>H</kbd><em>❔</em>도움말</button></div>
+    <div id="keys"><button data-menu="build"><kbd>B</kbd><em>🔨</em>짓기</button><button data-menu="spirits"><kbd>Tab</kbd><em>✨</em>정령</button><button data-menu="journal"><kbd>J</kbd><em>📖</em>도감</button><button data-menu="map"><kbd>M</kbd><em>🗺️</em>지도</button><button data-menu="help"><kbd>H</kbd><em>❔</em>도움말</button></div>
     <div id="panel"><div class="sheet"><header><h2></h2><span></span><button data-close>${touch ? '닫기' : '닫기 (Esc)'}</button></header><div class="body"></div></div></div>
     <div id="turn" class="card">📱 가로로 돌리면 더 넓게 보여요</div>
     <div id="fade"></div>`;
@@ -123,6 +124,17 @@ export function createUI(canvas, on, touch = false) {
     root,
     get open() {
       return open;
+    },
+    /** A panel of anyone's making: `render(into)` fills it. */
+    openPanel: show,
+    /** A line at the top while he runs somewhere by himself. null puts it away. */
+    going(html) {
+      const g = $('#going');
+      g.classList.toggle('on', !!html);
+      if (html && g.html !== html) {
+        g.html = html;
+        g.innerHTML = html;
+      }
     },
     /** The buttons for turning and putting away what is being placed (for a thumb: a keyboard has R and X). */
     placing(onOrOff) {
@@ -298,6 +310,7 @@ export function createUI(canvas, on, touch = false) {
               ['🔨 짓기', '고른 뒤 화면 가운데가 놓일 자리 — ↻ 돌리기, ✋ 놓기, ✕ 취소'],
               ['✨ 정령', '정령 친구들에게 일 맡기기'],
               ['📖 도감', '만난 정령과 동물, 할 일'],
+              ['작은 지도', '오른쪽 위 지도를 누르면 큰 지도 — 베이스캠프를 누르면 달려갑니다'],
             ]
           : [
               ['W A S D', '걷기 · <b>Shift</b> 달리기 · <b>Alt</b> 살금살금 걷기 (동물이 도망가지 않아요)'],
@@ -306,6 +319,7 @@ export function createUI(canvas, on, touch = false) {
               ['B', '짓기 메뉴 — 고른 뒤 <b>R</b> 회전, <b>클릭/E</b> 설치, <b>X</b> 취소'],
               ['Tab', '정령 친구들에게 일 맡기기'],
               ['J', '도감과 할 일'],
+              ['M', '지도 — 베이스캠프를 누르면 달려갑니다 (오른쪽 위 작은 지도를 눌러도 돼요)'],
               ['Space', '점프'],
             ];
         for (const [k, text] of rows) keys.append(el('kbd', '', k), el('span', '', text));

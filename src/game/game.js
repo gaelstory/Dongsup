@@ -3,10 +3,12 @@
 // in data.js, how they look in models.js, and each kind of thing has its own file beside this one.
 import * as THREE from 'three';
 import { SUNSET } from '../valley/sky.js';
+import { tarnDistance } from '../valley/world.js';
 import { createAnimals } from './animals.js';
 import { createBuilder } from './build.js';
 import { createFlora } from './flora.js';
 import { createGlows } from './glow.js';
+import { createMap } from './map.js';
 import { ANIMALS, BUILDINGS, DAY, GOALS, HOME, ITEM_ORDER, ITEMS, JOBS, SPIRIT_ORDER, SPIRITS } from './data.js';
 import { createNodes, NODE_KINDS } from './nodes.js';
 import { createPaints } from './paint.js';
@@ -19,7 +21,7 @@ const RATE = (Math.min(DAY.to, SUNSET) - DAY.from) / DAY.seconds; // hours of th
 const CAMP = ['campfire', 'tent', 'bench', 'table', 'lantern'];
 const STARS = [3, 7, 12, 18, 26];
 
-const fresh = () => ({ v: 1, day: 1, hour: DAY.from, inv: {}, buildings: [], spirits: [], wild: [], animals: {}, basket: {}, goals: [], met: [], slept: 0, gave: 0, tips: {} });
+const fresh = () => ({ seen: {}, v: 1, day: 1, hour: DAY.from, inv: {}, buildings: [], spirits: [], wild: [], animals: {}, basket: {}, goals: [], met: [], slept: 0, gave: 0, tips: {} });
 
 /** Short sounds, made here: a pick-up, a knock of building, a few rising notes when something good happens. */
 function createChimes() {
@@ -189,6 +191,7 @@ export function createGame(o) {
       if (name === 'build') ui.openBuild(view);
       else if (name === 'spirits') ui.openSpirits(view);
       else if (name === 'journal') ui.openJournal(view);
+      else if (name === 'map') map.open();
       else ui.openHelp();
     },
     rotate() {
@@ -538,10 +541,12 @@ export function createGame(o) {
     if (e.code === 'Escape') {
       if (ui.open) ui.close();
       else if (placing) placing = null;
+      else if (going) stopGoing();
       return;
     }
+    if (e.code === 'KeyX' && going && !placing) stopGoing();
     if (ui.open) {
-      const same = { KeyB: 'build', Tab: 'spirits', KeyJ: 'journal', KeyH: 'help' }[e.code];
+      const same = { KeyB: 'build', Tab: 'spirits', KeyJ: 'journal', KeyH: 'help', KeyM: 'map' }[e.code];
       if (same === ui.open) {
         e.preventDefault();
         ui.close();
@@ -557,6 +562,10 @@ export function createGame(o) {
       ui.openSpirits(view);
     } else if (e.code === 'KeyJ') ui.openJournal(view);
     else if (e.code === 'KeyH') ui.openHelp();
+    else if (e.code === 'KeyM') {
+      placing = null;
+      map.open();
+    }
     else if (e.code === 'KeyR' && placing && !placing.demolish) placing.rot = (placing.rot + Math.PI / 8) % (Math.PI * 2);
     else if (e.code === 'KeyX' && placing) placing = null;
   });
@@ -608,6 +617,128 @@ export function createGame(o) {
       if (waiting && Math.hypot(builder.basket.x - player.x, builder.basket.z - player.z) < 30) bubble('basket', builder.basket.x, builder.basket.y + 1.1, builder.basket.z, `🧺 ${waiting}`);
     }
     ui.setBubbles(bubbleList);
+  }
+
+  // ---- the map, and running home by it ----------------------------------------------------------------------------
+  save.seen ??= {};
+  const map = createMap({
+    field,
+    trees,
+    stones,
+    reach,
+    seen: save.seen,
+    root: ui.root,
+    ui,
+    touch: handheld,
+    on: {
+      open() {
+        if (asleep) return;
+        if (ui.open === 'map') return void ui.close();
+        placing = null;
+        map.open();
+      },
+      home: () => goTo(builder.basket.x - 1.6, builder.basket.z + 1.2, '베이스캠프'),
+      found(region) {
+        if (region.id !== 'hill') ui.toast(`🗺️ 새로운 곳을 찾았어요: <b>${region.name}</b>`, true, 5);
+        touch();
+      },
+      changed: touch,
+    },
+  });
+  /** Where he is running to by himself, if anywhere: { x, z, name }. */
+  let going = null;
+  const solids = [
+    ...trees.trees.filter(([, , kind]) => kind <= 3).map(([x, z, kind, scale]) => ({ x, z, r: (kind === 0 ? 1.5 : 0.7) * scale })),
+    ...stones.solid.map(([x, z, gap]) => ({ x, z, r: gap })),
+  ];
+  function goTo(x, z, name) {
+    if (asleep) return;
+    placing = null;
+    going = { x, z, name, from: { x: player.x, z: player.z }, since: 0, held: 0, dodge: 0, side: 1 };
+    ui.going(`🏃 <b>${name}</b>${josa(name, '으로', '로').slice(name.length)} 달려가는 중 · ${key('움직이거나 <kbd>X</kbd>를 누르면 멈춰요', '스틱을 움직이면 멈춰요')}`);
+    chimes.pick();
+  }
+  function stopGoing(arrived = false) {
+    if (!going) return;
+    if (arrived) ui.toast(`⛺ ${going.name}에 도착했어요.`);
+    going = null;
+    ui.going(null);
+  }
+  /**
+   * Which way to run this moment to get where he is going: straight for it, bending round whatever stands in the
+   * way (trees, big stones, buildings) and round the shore of the tarn. Returns the heading (0 looks along +z)
+   * and whether to hop (he has stopped against something), or null when he is not going anywhere.
+   */
+  function pilot(dt, steering) {
+    if (!going) return null;
+    if (steering || asleep) {
+      stopGoing();
+      return null;
+    }
+    const px = player.x;
+    const pz = player.z;
+    const dx = going.x - px;
+    const dz = going.z - pz;
+    const d = Math.hypot(dx, dz);
+    if (d < 2.6) {
+      stopGoing(true);
+      return null;
+    }
+    const ux = dx / d;
+    const uz = dz / d;
+    let ax = ux;
+    let az = uz;
+    // whatever stands in his way a few strides ahead: he bears off to the side it is not on
+    const dodge = (ox, oz, r) => {
+      const along = (ox - px) * ux + (oz - pz) * uz;
+      if (along < -0.5 || along > 8.5 + r) return;
+      const across = -(ox - px) * uz + (oz - pz) * ux;
+      const clear = r + 0.75;
+      if (Math.abs(across) > clear) return;
+      const w = (1 - Math.max(0, along - r) / 8.5) * (1 - Math.abs(across) / clear) * 2.6;
+      const side = across > 0.02 ? -1 : across < -0.02 ? 1 : going.side;
+      ax += -uz * side * w;
+      az += ux * side * w;
+    };
+    for (const o of solids) if (Math.abs(o.x - px) < 14 && Math.abs(o.z - pz) < 14) dodge(o.x, o.z, o.r);
+    for (const b of builder.list) if (BUILDINGS[b.type].solid) dodge(b.x, b.z, b.r * 0.9);
+    // the tarn: where the water lies between him and where he is going, he goes round by the shore. Which way
+    // round is chosen once, when he comes to it, and kept until he is past (or he would stand there choosing)
+    const t = Math.min(tarnDistance(px, pz), tarnDistance(px + ux * 9, pz + uz * 9) + 0.25);
+    if (t < 1.5) {
+      const e = 1.5;
+      let gx = tarnDistance(px + e, pz) - tarnDistance(px - e, pz);
+      let gz = tarnDistance(px, pz + e) - tarnDistance(px, pz - e);
+      const g = Math.hypot(gx, gz) || 1;
+      gx /= g;
+      gz /= g;
+      // (g points away from the water: if that is the way he is going anyway, the water is behind him)
+      if (gx * ux + gz * uz < 0.25) {
+        going.round ||= -gz * ux + gx * uz >= 0 ? 1 : -1;
+        const w = Math.min(1, (1.5 - t) / 0.42);
+        const out = Math.max(0, 1.14 - t) * 3;
+        ax = ax * (1 - w) + (-gz * going.round + gx * out) * w;
+        az = az * (1 - w) + (gx * going.round + gz * out) * w;
+      } else going.round = 0;
+    } else if (t > 1.8) going.round = 0;
+    // if he has stopped against something all the same, he hops and bears the other way for a moment
+    going.since += dt;
+    let hop = false;
+    if (going.since > 1.2) {
+      if (Math.hypot(px - going.from.x, pz - going.from.z) < 0.9) {
+        going.side = -going.side;
+        going.dodge = 1.1;
+        hop = true;
+      }
+      going.since = 0;
+      going.from = { x: px, z: pz };
+    }
+    if (going.dodge > 0) {
+      going.dodge -= dt;
+      ax += -uz * going.side * 1.8;
+      az += ux * going.side * 1.8;
+    }
+    return { yaw: Math.atan2(ax, az), hop, near: d < 9 };
   }
 
   const ICON = { node: '✋', wild: '🎁', friend: '💬', animal: '🍽️', site: '🔨', basket: '🧺', tent: '⛺', crop: '🧺', feeder: '🫐' };
@@ -667,6 +798,12 @@ export function createGame(o) {
       hour = v;
     },
     confirmPlacing,
+    map,
+    goTo,
+    pilot,
+    get going() {
+      return going;
+    },
     /** After the meadow has been wiped (the warm-up treads it and then forgets): mow under the buildings again. */
     settle() {
       builder.mowAll();
@@ -725,6 +862,9 @@ export function createGame(o) {
       spirits.glow(glows, clock, dusk);
       builder.glow(glows, clock, dusk);
       glows.end();
+
+      map.update(dt, { x: player.x, z: player.z, yaw: o.heading(), spirits: spirits.list });
+      if (going && (placing || ui.open)) stopGoing();
 
       updatePlacing();
       target = findTarget();

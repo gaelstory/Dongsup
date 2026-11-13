@@ -279,6 +279,8 @@ player.y = field.heightAt(player.x, player.z);
 const heldKeys = new Set();
 const keys = heldKeys;
 const NO_KEYS = new Set();
+const AUTO_KEYS = new Set(['KeyW', 'ShiftLeft']);
+const AUTO_HOP = new Set(['KeyW', 'ShiftLeft', 'Space']);
 
 function updatePlayer(dt) {
   const fx = -Math.sin(player.yaw);
@@ -287,7 +289,14 @@ function updatePlayer(dt) {
   const rz = fx;
   let mx = 0;
   let mz = 0;
-  const keys = game.frozen ? NO_KEYS : heldKeys;
+  let keys = game.frozen ? NO_KEYS : heldKeys;
+  // running somewhere by himself (the map sent him): he turns that way and goes, until a key is touched
+  const auto = game.frozen ? null : game.pilot(dt, ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].some((k) => heldKeys.has(k)));
+  if (auto) {
+    const off = Math.atan2(Math.sin(auto.yaw + Math.PI - player.yaw), Math.cos(auto.yaw + Math.PI - player.yaw));
+    player.yaw += Math.max(-2.8 * dt, Math.min(2.8 * dt, off));
+    keys = auto.hop ? AUTO_HOP : AUTO_KEYS;
+  }
   if (keys.has('KeyW') || keys.has('ArrowUp')) mz += 1;
   if (keys.has('KeyS') || keys.has('ArrowDown')) mz -= 1;
   if (keys.has('KeyD') || keys.has('ArrowRight')) mx += 1;
@@ -472,6 +481,16 @@ function updateWanderer(dt) {
     inp.move.x = inp.move.y = inp.look.x = inp.look.y = inp.zoom = 0;
     inp.jump = inp.sprint = false;
   }
+  // running somewhere by himself (the map sent him): the eye swings round to where he is going and he runs that
+  // way, until the keys or the stick are touched
+  const auto = game.frozen ? null : game.pilot(dt, Math.hypot(inp.move.x, inp.move.y) > 0.25);
+  if (auto) {
+    const off = Math.atan2(Math.sin(auto.yaw - follow.yaw), Math.cos(auto.yaw - follow.yaw));
+    follow.yaw += Math.max(-2.6 * dt, Math.min(2.6 * dt, off));
+    // (a wide turn is taken at a walk, or he would run a ring round where he stood)
+    Object.assign(inp, { move: { x: 0, y: 1 }, walk: Math.abs(off) > 1.3, sprint: false, strafe: false, device: 'keyboard', jump: auto.hop });
+    inp.look.x = 0;
+  }
   held.copy(walker.feet);
   const bodyWas = walker.body.translation();
   walker.update(dt, inp, follow.yaw);
@@ -581,6 +600,8 @@ const game = createGame({
   quality,
   density: quality === 'low' ? 0.4 : quality === 'medium' ? 0.7 : 1,
   speed: () => (third ? walker.speed : Math.hypot(player.vx, player.vz)),
+  /** The way he faces: 0 looks along +z. */
+  heading: () => (third ? walker.yaw : player.yaw + Math.PI),
   setHour: (hour, soft) => setHour(hour, soft),
   bend: (x, z) => field.bend(x, z, 0.7, 0, 0, 0.8),
   /** Puts the walker somewhere, looking a way (his yaw: 0 looks along +z). */

@@ -1,7 +1,7 @@
 // What the game's things look like, each built from a few plain solids with a paint apiece. Everything stands on
 // y = 0 at its own middle and faces +z.
 import * as THREE from 'three';
-import { Shape } from './paint.js';
+import { MAT, Shape } from './paint.js';
 
 const TAU = Math.PI * 2;
 const WOOD = [0.56, 0.39, 0.23];
@@ -30,21 +30,60 @@ function rng(seed) {
 }
 
 /** A log lying along x. */
-const log = (s, len, r, at, rot = [0, 0, 0], color = WOOD) => s.cyl(r, r, len, 12, { at, rot: [rot[0], rot[1], rot[2] + Math.PI / 2], color });
+const log = (s, len, r, at, rot = [0, 0, 0], color = WOOD, mat = MAT.plain) => s.cyl(r, r, len, 12, { at, rot: [rot[0], rot[1], rot[2] + Math.PI / 2], color, mat });
+
+const _q = new THREE.Quaternion();
+const _e = new THREE.Euler();
+const _up = new THREE.Vector3(0, 1, 0);
+const _d = new THREE.Vector3();
+/** A round stick from a to b: r0 thick at a, r1 at b. */
+function stick(s, a, b, r0, r1, o = {}, sides = 8) {
+  _d.set(b[0] - a[0], b[1] - a[1], b[2] - a[2]);
+  const len = _d.length();
+  _e.setFromQuaternion(_q.setFromUnitVectors(_up, _d.normalize()), 'XYZ');
+  return s.cyl(r1, r0, len, sides, { at: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2], rot: [_e.x, _e.y, _e.z], ...o });
+}
+/** A flower on a stem with two leaves: h tall from (x, y, z), petals of a colour. k makes all of it bigger. */
+function bloom(s, x, y, z, h, color, k = 1, petals = 6) {
+  const tx = x + 0.02 * k;
+  const tz = z + 0.01 * k;
+  stick(s, [x, y, z], [tx, y + h, tz], 0.013 * k, 0.009 * k, { color: LEAF }, 5);
+  s.leaf([x, y + h * 0.3, z], [x + 0.13 * k, y + h * 0.52, z + 0.05 * k], 0.07 * k, { color: LEAF });
+  s.leaf([x, y + h * 0.45, z], [x - 0.12 * k, y + h * 0.64, z - 0.04 * k], 0.06 * k, { color: LEAF2 });
+  for (let p = 0; p < petals; p++) {
+    const b = (p / petals) * TAU + x * 7;
+    s.leaf([tx, y + h, tz], [tx + Math.cos(b) * 0.1 * k, y + h + 0.03 * k, tz + Math.sin(b) * 0.1 * k], 0.078 * k, { color });
+  }
+  s.ball(0.034 * k, { at: [tx, y + h + 0.016 * k, tz], scale: [1, 0.7, 1], color: [1.0, 0.82, 0.25] }, 1);
+}
+const PETALS = [[1.0, 0.56, 0.72], [1.0, 0.84, 0.3], [0.99, 0.97, 0.92], [0.72, 0.56, 0.98], [0.98, 0.48, 0.34], [0.5, 0.66, 1.0]];
 
 // ---- buildings ------------------------------------------------------------------------------------------------
 const build = {
   campfire() {
     const s = new Shape();
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * TAU;
-      s.ball(0.17 + 0.03 * (i % 3), { at: [Math.cos(a) * 0.52, 0.07, Math.sin(a) * 0.52], scale: [1, 0.7, 1], color: i % 2 ? STONE : STONE2 });
+    const random = rng(3);
+    for (let i = 0; i < 9; i++) {
+      const a = (i / 9) * TAU + random() * 0.2;
+      const r = 0.15 + random() * 0.06;
+      s.rock(r, 10 + i, { at: [Math.cos(a) * 0.56, r * 0.3, Math.sin(a) * 0.56], scale: [1, 0.82, 1], rot: [0, a * 3, 0], color: i % 3 ? STONE : [0.7, 0.68, 0.63] });
     }
-    s.cyl(0.42, 0.45, 0.05, 12, { at: [0, 0.03, 0], color: [0.22, 0.2, 0.2] });
-    for (let i = 0; i < 4; i++) {
-      const a = (i / 4) * TAU + 0.4;
-      s.cyl(0.06, 0.07, 0.75, 12, { at: [Math.cos(a) * 0.16, 0.3, Math.sin(a) * 0.16], rot: [Math.sin(a) * 0.55, 0, -Math.cos(a) * 0.55], color: i % 2 ? BARK : WOOD });
+    s.cyl(0.44, 0.47, 0.05, 16, { at: [0, 0.03, 0], color: [0.26, 0.24, 0.24], mat: MAT.soil });
+    // embers in the ash, and the logs leaning together over them
+    for (let i = 0; i < 6; i++) s.ball(0.045, { at: [Math.cos(i * 2.3) * 0.2, 0.07, Math.sin(i * 2.3) * 0.2], scale: [1, 0.5, 1], color: [1.0, 0.5, 0.18], shade: [1.0, 0.4, 0.12], ink: 1 }, 1);
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * TAU + 0.4;
+      stick(s, [Math.cos(a) * 0.34, 0.05, Math.sin(a) * 0.34], [Math.cos(a + 2.6) * 0.07, 0.62, Math.sin(a + 2.6) * 0.07], 0.06, 0.048, { color: i % 2 ? BARK : [0.47, 0.33, 0.21], mat: MAT.bark }, 10);
     }
+    // three poles tied over the fire, and a pot hung from them
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * TAU + 0.9;
+      stick(s, [Math.cos(a) * 0.78, 0, Math.sin(a) * 0.78], [Math.cos(a) * -0.06, 1.5, Math.sin(a) * -0.06], 0.026, 0.02, { color: [0.36, 0.26, 0.2], mat: MAT.bark }, 7);
+    }
+    s.torus(0.045, 0.014, { at: [0, 1.4, 0], rot: [Math.PI / 2, 0, 0], color: [0.78, 0.7, 0.5] }, 10);
+    stick(s, [0, 1.38, 0], [0, 1.08, 0], 0.008, 0.008, { color: DARK }, 5);
+    s.lathe([[0.0, 0.82], [0.1, 0.83], [0.155, 0.9], [0.16, 1.0], [0.14, 1.04], [0.15, 1.06]], 14, { color: [0.24, 0.23, 0.27] });
+    s.add(new THREE.TorusGeometry(0.13, 0.01, 5, 12, Math.PI), { at: [0, 1.05, 0], color: DARK });
     return s;
   },
   tent() {
@@ -52,214 +91,357 @@ const build = {
     const W = 1.2;
     const H = 1.75;
     const D = 1.5;
-    s.box(2.2, 0.05, 2.8, { at: [0, 0.03, 0], color: [0.58, 0.43, 0.3] });
-    s.quad([-W, 0, -D], [-W, 0, D], [0, H, D], [0, H, -D], { color: CANVAS });
-    s.quad([W, 0, D], [W, 0, -D], [0, H, -D], [0, H, D], { color: CANVAS });
-    s.tri([-W, 0, -D], [0, H, -D], [W, 0, -D], { color: CANVAS });
-    // the flaps, drawn back from a dark doorway
-    s.tri([-W, 0, D], [-0.38, 0, D], [0, H, D], { color: CANVAS });
-    s.tri([0.38, 0, D], [W, 0, D], [0, H, D], { color: CANVAS });
-    s.tri([-0.38, 0, D - 0.04], [0.38, 0, D - 0.04], [0, H, D - 0.04], { color: DARK, shade: DARK });
+    const cloth = { color: CANVAS, mat: MAT.cloth };
+    s.box(2.2, 0.05, 2.8, { at: [0, 0.03, 0], color: [0.6, 0.45, 0.32], mat: MAT.weave });
+    s.quad([-W, 0, -D], [-W, 0, D], [0, H, D], [0, H, -D], cloth);
+    s.quad([W, 0, D], [W, 0, -D], [0, H, -D], [0, H, D], cloth);
+    s.tri([-W, 0, -D], [0, H, -D], [W, 0, -D], cloth);
+    // the flaps, drawn back from a dark doorway and tied
+    s.tri([-W, 0, D], [-0.36, 0, D], [0, H, D], cloth);
+    s.tri([0.36, 0, D], [W, 0, D], [0, H, D], cloth);
+    s.tri([-0.36, 0, D - 0.04], [0.36, 0, D - 0.04], [0, H, D - 0.04], { color: [0.2, 0.15, 0.16], shade: DARK });
+    for (const side of [-1, 1]) s.ball(0.035, { at: [side * 0.3, 0.62, D + 0.02], color: RED }, 1);
     // a band of red along the foot of each side
     const t = 0.2;
     for (const side of [-1, 1]) {
       const o = 0.012;
-      const a = [side * (W + o * 0.82), o * 0.57, 0];
-      const b = [side * (W * (1 - t) + o * 0.82), H * t + o * 0.57, 0];
+      const a = [side * (W + o * 0.82), o * 0.57];
+      const b = [side * (W * (1 - t) + o * 0.82), H * t + o * 0.57];
       const corners = [[a[0], a[1], -D], [a[0], a[1], D], [b[0], b[1], D], [b[0], b[1], -D]];
       s.quad(...(side < 0 ? corners : corners.reverse()), { color: RED });
     }
+    // ridge, poles, a pennant, and the lines that hold it down
     log(s, 3.3, 0.04, [0, H + 0.02, 0], [0, Math.PI / 2, 0], BARK);
-    s.cyl(0.04, 0.04, H, 12, { at: [0, H / 2, D + 0.06], color: BARK });
-    s.cyl(0.04, 0.04, H, 12, { at: [0, H / 2, -D - 0.06], color: BARK });
+    stick(s, [0, 0, D + 0.06], [0, H + 0.42, D + 0.06], 0.042, 0.03, { color: BARK }, 8);
+    stick(s, [0, 0, -D - 0.06], [0, H + 0.1, -D - 0.06], 0.042, 0.034, { color: BARK }, 8);
+    s.leaf([0, H + 0.4, D + 0.06], [0.42, H + 0.3, D + 0.1], 0.2, { color: RED }, [0, 0.2, 1]);
+    for (const [sx, sz] of [[-1, 1], [1, 1], [-1, -1], [1, -1]]) {
+      const peg = [sx * 1.75, 0, sz * (D + 0.5)];
+      stick(s, [0, H, sz * (D + 0.06)], [peg[0], 0.1, peg[2]], 0.007, 0.007, { color: [0.86, 0.8, 0.64] }, 4);
+      stick(s, [peg[0] - sx * 0.05, 0, peg[2]], [peg[0] + sx * 0.04, 0.2, peg[2]], 0.022, 0.018, { color: CUT }, 6);
+    }
+    // inside: a bedroll, and a little lamp hung from the ridge
+    s.cyl(0.14, 0.14, 0.95, 12, { at: [0.25, 0.19, D - 0.55], rot: [0, 0.3, Math.PI / 2], color: [0.36, 0.52, 0.76] });
+    s.box(0.5, 0.1, 0.34, { at: [-0.4, 0.1, D - 0.5], rot: [0, 0.2, 0], color: [0.92, 0.88, 0.8] });
+    s.ball(0.06, { at: [0, H - 0.32, D - 0.12], color: LAMP, shade: [0.95, 0.66, 0.3], ink: 1 }, 1);
     return s;
   },
   bench() {
     const s = new Shape();
-    s.cyl(0.24, 0.24, 1.6, 12, { at: [0, 0.42, 0], rot: [0, 0, Math.PI / 2], scale: [0.55, 1, 1], color: WOOD });
-    s.box(1.58, 0.02, 0.4, { at: [0, 0.535, 0], color: CUT });
-    for (const x of [-0.55, 0.55]) s.cyl(0.16, 0.18, 0.36, 12, { at: [x, 0.18, 0], color: BARK });
+    s.cyl(0.21, 0.21, 1.66, 12, { at: [0, 0.4, 0], rot: [0, 0, Math.PI / 2], scale: [0.5, 1, 1], color: BARK, mat: MAT.bark });
+    s.box(1.7, 0.07, 0.42, { at: [0, 0.48, 0], round: 0.03, color: CUT, mat: MAT.boards });
+    for (const x of [-0.58, 0.58]) s.lathe([[0.2, 0], [0.16, 0.08], [0.15, 0.4]], 10, { at: [x, 0, 0], color: BARK, mat: MAT.ROUND + MAT.bark });
+    // a back to lean on
+    for (const x of [-0.7, 0.7]) stick(s, [x, 0.42, -0.18], [x * 1.04, 1.02, -0.32], 0.04, 0.034, { color: WOOD }, 8);
+    log(s, 1.7, 0.06, [0, 0.95, -0.305], [0, 0, 0], [0.6, 0.42, 0.26], MAT.bark);
+    log(s, 1.5, 0.04, [0, 0.72, -0.25], [0, 0, 0], WOOD);
     return s;
   },
   table() {
     const s = new Shape();
-    s.box(1.8, 0.08, 0.85, { at: [0, 0.78, 0], color: CUT });
-    for (const x of [-0.75, 0.75]) for (const z of [-0.32, 0.32]) s.box(0.09, 0.76, 0.09, { at: [x, 0.38, z], color: WOOD });
-    for (const z of [-0.78, 0.78]) {
-      s.box(1.8, 0.07, 0.3, { at: [0, 0.45, z], color: WOOD });
-      for (const x of [-0.7, 0.7]) s.box(0.08, 0.45, 0.22, { at: [x, 0.22, z], color: BARK });
+    s.box(1.9, 0.07, 0.9, { at: [0, 0.79, 0], round: 0.025, color: CUT, mat: MAT.boards });
+    for (const x of [-0.72, 0.72]) {
+      stick(s, [x, 0, -0.36], [x, 0.76, 0.34], 0.05, 0.045, { color: WOOD }, 8);
+      stick(s, [x, 0, 0.36], [x, 0.76, -0.34], 0.05, 0.045, { color: WOOD }, 8);
     }
+    log(s, 1.44, 0.04, [0, 0.38, 0], [0, 0, 0], BARK);
+    for (const z of [-0.8, 0.8]) {
+      s.box(1.9, 0.06, 0.3, { at: [0, 0.46, z], round: 0.025, color: [0.74, 0.58, 0.36], mat: MAT.boards });
+      for (const x of [-0.7, 0.7]) s.cyl(0.085, 0.1, 0.44, 10, { at: [x, 0.22, z], color: BARK, mat: MAT.ROUND + MAT.bark });
+    }
+    // laid for two: a plate of berries, cups, a kettle, a jar of flowers
+    s.cyl(0.15, 0.12, 0.02, 16, { at: [-0.45, 0.835, 0.08], color: [0.96, 0.93, 0.86] });
+    for (let i = 0; i < 6; i++) s.ball(0.035, { at: [-0.45 + Math.cos(i * 1.1) * 0.06, 0.865 + (i % 2) * 0.03, 0.08 + Math.sin(i * 1.1) * 0.06], color: i % 3 ? [0.5, 0.32, 0.9] : [0.9, 0.24, 0.32] }, 1);
+    for (const [x, z] of [[-0.1, -0.2], [0.42, 0.22]]) s.lathe([[0.0, 0.826], [0.045, 0.826], [0.055, 0.92], [0.045, 0.92], [0.04, 0.85]], 10, { at: [x, 0, z], color: [0.74, 0.5, 0.32] });
+    s.ball(0.11, { at: [0.22, 0.92, -0.14], scale: [1, 0.85, 1], color: [0.36, 0.5, 0.62] });
+    stick(s, [0.3, 0.92, -0.14], [0.42, 1.0, -0.14], 0.024, 0.014, { color: [0.36, 0.5, 0.62] }, 6);
+    s.add(new THREE.TorusGeometry(0.07, 0.012, 5, 10, Math.PI), { at: [0.22, 1.0, -0.14], color: DARK });
+    s.cyl(0.05, 0.04, 0.12, 10, { at: [0.72, 0.885, -0.18], color: [0.7, 0.86, 0.9] });
+    bloom(s, 0.72, 0.9, -0.18, 0.2, PETALS[0], 0.8);
+    bloom(s, 0.7, 0.9, -0.16, 0.26, PETALS[1], 0.7);
     return s;
   },
   lantern() {
     const s = new Shape();
-    for (let i = 0; i < 4; i++) s.ball(0.12, { at: [Math.cos(i * 1.6) * 0.14, 0.05, Math.sin(i * 1.6) * 0.14], scale: [1, 0.6, 1], color: STONE });
-    s.cyl(0.055, 0.07, 2.05, 12, { at: [0, 1.02, 0], color: BARK });
-    s.box(0.55, 0.06, 0.06, { at: [0.22, 1.98, 0], color: BARK });
-    s.box(0.03, 0.14, 0.03, { at: [0.42, 1.89, 0], color: DARK });
-    s.box(0.2, 0.26, 0.2, { at: [0.42, 1.7, 0], color: LAMP, shade: [0.9, 0.62, 0.3], ink: 1 });
-    s.cone(0.2, 0.14, 4, { at: [0.42, 1.89, 0], rot: [0, Math.PI / 4, 0], color: RED });
-    s.box(0.24, 0.04, 0.24, { at: [0.42, 1.56, 0], color: BARK });
+    for (let i = 0; i < 4; i++) s.rock(0.13, 30 + i, { at: [Math.cos(i * 1.6) * 0.15, 0.04, Math.sin(i * 1.6) * 0.15], scale: [1, 0.7, 1], color: i % 2 ? STONE : STONE2 });
+    stick(s, [0, 0, 0], [0, 2.02, 0], 0.07, 0.05, { color: BARK, mat: MAT.ROUND + MAT.bark }, 10);
+    // an iron hook, and the lamp hung from it: a light in a cage under a little hat
+    s.add(new THREE.TorusGeometry(0.28, 0.018, 6, 12, Math.PI / 2), { at: [0.28, 2.0, 0], rot: [0, 0, Math.PI / 2], color: DARK });
+    stick(s, [0.28, 2.28, 0], [0.3, 2.1, 0], 0.008, 0.008, { color: DARK }, 5);
+    s.cone(0.17, 0.13, 4, { at: [0.3, 2.06, 0], rot: [0, Math.PI / 4, 0], color: [0.3, 0.27, 0.3] });
+    s.box(0.15, 0.24, 0.15, { at: [0.3, 1.87, 0], round: 0.02, color: LAMP, shade: [0.95, 0.66, 0.3], ink: 1 });
+    for (const [x, z] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) s.box(0.02, 0.27, 0.02, { at: [0.3 + x * 0.085, 1.87, z * 0.085], round: 0, color: DARK });
+    s.box(0.21, 0.03, 0.21, { at: [0.3, 1.735, 0], color: [0.3, 0.27, 0.3] });
+    s.ball(0.022, { at: [0.3, 1.71, 0], color: DARK }, 1);
     return s;
   },
   fence() {
     const s = new Shape();
     for (const x of [-0.95, 0.95]) {
-      s.box(0.11, 1.0, 0.11, { at: [x, 0.5, 0], color: WOOD });
-      s.cone(0.09, 0.1, 4, { at: [x, 1.05, 0], rot: [0, Math.PI / 4, 0], color: WOOD });
+      stick(s, [x, 0, 0], [x, 1.02, 0], 0.062, 0.052, { color: WOOD, mat: MAT.ROUND + MAT.bark }, 10);
+      s.ball(0.06, { at: [x, 1.04, 0], scale: [1, 0.8, 1], color: [0.62, 0.44, 0.27] }, 1);
     }
-    s.box(2.0, 0.08, 0.05, { at: [0, 0.42, 0], color: CUT });
-    s.box(2.0, 0.08, 0.05, { at: [0, 0.78, 0], color: CUT });
+    stick(s, [-1.04, 0.44, 0.02], [1.04, 0.47, 0.02], 0.042, 0.038, { color: CUT }, 8);
+    stick(s, [-1.04, 0.82, 0.02], [1.04, 0.79, 0.02], 0.038, 0.042, { color: [0.78, 0.63, 0.4] }, 8);
+    // a vine has found one post
+    for (let i = 0; i < 4; i++) {
+      const a = i * 1.7;
+      s.leaf([-0.95 + Math.cos(a) * 0.06, 0.25 + i * 0.2, Math.sin(a) * 0.06], [-0.95 + Math.cos(a) * 0.22, 0.34 + i * 0.2, Math.sin(a) * 0.22], 0.11, { color: i % 2 ? LEAF : [0.36, 0.6, 0.26] });
+    }
+    s.ball(0.035, { at: [-0.86, 0.96, 0.08], color: PETALS[0] }, 1);
     return s;
   },
   path() {
     const s = new Shape();
-    const spots = [[-0.28, -0.18, 0.3], [0.26, 0.02, 0.34], [-0.1, 0.34, 0.24]];
-    spots.forEach(([x, z, r], i) => s.ball(r, { at: [x, 0.03, z], scale: [1, 0.2, 1], color: i % 2 ? STONE : [0.7, 0.68, 0.62] }));
+    const spots = [[-0.3, -0.2, 0.3], [0.27, 0.0, 0.35], [-0.1, 0.36, 0.25], [0.3, -0.42, 0.2]];
+    spots.forEach(([x, z, r], i) => s.rock(r, 50 + i, { at: [x, 0.02, z], scale: [1, 0.2, 1], rot: [0, i * 1.9, 0], color: i % 2 ? STONE : [0.72, 0.7, 0.64] }));
     return s;
   },
   hut() {
     const s = new Shape();
-    s.cyl(0.92, 1.0, 1.05, 12, { at: [0, 0.52, 0], color: [0.92, 0.86, 0.72] });
-    s.cyl(1.04, 1.06, 0.14, 12, { at: [0, 0.02, 0], color: STONE });
-    s.cone(1.5, 1.5, 12, { at: [0, 1.72, 0], color: THATCH });
-    s.cone(1.62, 0.3, 12, { at: [0, 1.08, 0], color: [0.74, 0.58, 0.3] });
-    s.ball(0.13, { at: [0, 2.5, 0], color: RED });
-    // a round door, and a small window with a light in it
-    s.box(0.46, 0.62, 0.1, { at: [0, 0.38, 0.95], color: BARK });
-    s.cyl(0.23, 0.23, 0.1, 12, { at: [0, 0.69, 0.95], rot: [Math.PI / 2, 0, 0], color: BARK });
-    s.ball(0.035, { at: [0.13, 0.4, 1.01], color: LAMP });
-    s.cyl(0.14, 0.14, 0.08, 12, { at: [0.68, 0.68, 0.66], rot: [Math.PI / 2, 0, 0.8], color: LAMP, shade: [0.9, 0.62, 0.3], ink: 1 });
-    // a leaf growing out of the top
-    s.quad([0, 2.6, 0], [0.16, 2.78, 0.02], [0.3, 2.98, 0], [0.1, 2.84, -0.03], { color: LEAF });
-    s.quad([0, 2.6, 0], [-0.12, 2.74, 0.02], [-0.22, 2.86, 0], [-0.06, 2.76, -0.03], { color: LEAF });
+    const plaster = [0.95, 0.89, 0.75];
+    s.cyl(1.04, 1.08, 0.24, 18, { at: [0, 0.12, 0], color: STONE, mat: MAT.ROUND + MAT.stonework });
+    s.lathe([[1.0, 0.22], [1.02, 0.7], [0.95, 1.14]], 20, { color: plaster });
+    for (let i = 0; i < 7; i++) {
+      // (timbers standing in the wall, none where the door is)
+      const a = (i / 7) * TAU + 0.45;
+      if (Math.abs(Math.atan2(Math.sin(a), Math.cos(a))) < 0.4) continue;
+      stick(s, [Math.sin(a) * 1.01, 0.22, Math.cos(a) * 1.01], [Math.sin(a) * 0.96, 1.12, Math.cos(a) * 0.96], 0.045, 0.04, { color: BARK }, 6);
+    }
+    // the roof: thatch in a tall soft cone, its underside in shade
+    s.lathe([[1.0, 1.12], [1.58, 1.0]], 20, { color: [0.62, 0.47, 0.26], shade: [0.34, 0.26, 0.2] });
+    s.lathe([[1.58, 1.0], [1.54, 1.1], [1.1, 1.72], [0.62, 2.28], [0.22, 2.62], [0.0, 2.7]], 22, { color: THATCH, mat: MAT.ROUND + MAT.thatch });
+    s.ball(0.13, { at: [0, 2.72, 0], color: RED });
+    s.leaf([0, 2.8, 0], [0.3, 3.04, 0.02], 0.17, { color: [0.42, 0.72, 0.28], steps: 4 }, [0, 0.4, 1]);
+    s.leaf([0, 2.8, 0], [-0.22, 2.98, 0.02], 0.13, { color: LEAF, steps: 4 }, [0, 0.4, 1]);
+    // a round-topped door with a stone before it, and a round window with a light in it
+    s.box(0.5, 0.62, 0.09, { at: [0, 0.55, 0.985], round: 0.02, color: [0.5, 0.33, 0.2], mat: MAT.boards });
+    s.cyl(0.25, 0.25, 0.09, 14, { at: [0, 0.86, 0.985], rot: [Math.PI / 2, 0, 0], color: [0.5, 0.33, 0.2], mat: MAT.boards });
+    s.add(new THREE.TorusGeometry(0.27, 0.035, 6, 12, Math.PI), { at: [0, 0.86, 1.0], color: BARK });
+    for (const x of [-0.275, 0.275]) s.box(0.06, 0.64, 0.1, { at: [x, 0.55, 1.0], color: BARK });
+    s.ball(0.03, { at: [0.15, 0.6, 1.04], color: LAMP, shade: LAMP });
+    s.rock(0.36, 61, { at: [0, 0.02, 1.36], scale: [1.2, 0.22, 0.8], color: STONE });
+    const w = [Math.sin(0.8) * 0.985, 0.74, Math.cos(0.8) * 0.985];
+    s.cyl(0.17, 0.17, 0.07, 14, { at: w, rot: [Math.PI / 2, 0.8, 0, 'YXZ'], color: LAMP, shade: [0.95, 0.66, 0.3], ink: 1 });
+    s.torus(0.18, 0.03, { at: [w[0] * 1.02, w[1], w[2] * 1.02], rot: [0, 0.8, 0], color: BARK }, 14);
+    s.box(0.36, 0.025, 0.03, { at: [w[0] * 1.04, w[1], w[2] * 1.04], rot: [0, 0.8, 0], round: 0, color: BARK });
+    s.box(0.025, 0.36, 0.03, { at: [w[0] * 1.04, w[1], w[2] * 1.04], rot: [0, 0.8, 0], round: 0, color: BARK });
+    // a pot of flowers by the door
+    s.lathe([[0.09, 0.2], [0.13, 0.42], [0.14, 0.44], [0.11, 0.44]], 10, { at: [-0.62, 0.02, 1.02], color: [0.8, 0.46, 0.32] });
+    bloom(s, -0.62, 0.44, 1.02, 0.24, PETALS[3], 0.9);
+    bloom(s, -0.56, 0.44, 1.06, 0.18, PETALS[1], 0.8);
     return s;
   },
   flowerbed() {
     const s = new Shape();
     const random = rng(7);
-    s.box(2.0, 0.12, 2.0, { at: [0, 0.05, 0], color: SOIL });
-    for (const [x, z, w, d] of [[0, 1.02, 2.2, 0.14], [0, -1.02, 2.2, 0.14], [1.02, 0, 0.14, 2.2], [-1.02, 0, 0.14, 2.2]]) s.box(w, 0.2, d, { at: [x, 0.1, z], color: WOOD });
-    const heads = [[1.0, 0.8, 0.25], [1.0, 0.55, 0.7], [0.98, 0.96, 0.9], [0.7, 0.5, 0.95], [0.98, 0.45, 0.3]];
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-        const x = -0.72 + i * 0.48 + (random() - 0.5) * 0.2;
-        const z = -0.72 + j * 0.48 + (random() - 0.5) * 0.2;
-        const h = 0.42 + random() * 0.3;
-        s.box(0.035, h, 0.035, { at: [x, 0.1 + h / 2, z], color: LEAF });
-        s.ball(0.1, { at: [x, 0.14 + h, z], scale: [1, 0.7, 1], color: heads[(i * 3 + j) % heads.length] }, 1);
+    s.ball(1.0, { at: [0, 0.04, 0], scale: [1, 0.16, 1], color: SOIL, mat: MAT.soil });
+    for (const [x, z, w, d] of [[0, 1.04, 2.24, 0.12], [0, -1.04, 2.24, 0.12], [1.04, 0, 0.12, 2.2], [-1.04, 0, 0.12, 2.2]]) s.box(w, 0.24, d, { at: [x, 0.12, z], round: 0.03, color: [0.66, 0.48, 0.3], mat: MAT.boards });
+    for (const [x, z] of [[-1.04, -1.04], [1.04, -1.04], [-1.04, 1.04], [1.04, 1.04]]) {
+      s.box(0.14, 0.4, 0.14, { at: [x, 0.2, z], round: 0.03, color: WOOD });
+      s.ball(0.075, { at: [x, 0.43, z], color: [0.62, 0.44, 0.27] }, 1);
+    }
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        const x = -0.62 + i * 0.62 + (random() - 0.5) * 0.2;
+        const z = -0.62 + j * 0.62 + (random() - 0.5) * 0.2;
+        bloom(s, x, 0.14, z, 0.4 + random() * 0.3, PETALS[(i * 2 + j * 3) % PETALS.length], 1.5, 6);
+        s.leaf([x, 0.14, z], [x + 0.2, 0.3, z - 0.14], 0.1, { color: LEAF2 });
       }
     }
+    // a little label on a stake
+    s.box(0.03, 0.4, 0.03, { at: [0.86, 0.3, 0.86], round: 0, color: WOOD });
+    s.box(0.22, 0.14, 0.025, { at: [0.86, 0.5, 0.86], rot: [0, -0.6, 0], color: CUT });
     return s;
   },
   garden() {
     const s = new Shape();
     const random = rng(11);
-    s.box(2.6, 0.12, 2.6, { at: [0, 0.05, 0], color: SOIL });
+    s.box(2.6, 0.14, 2.6, { at: [0, 0.05, 0], round: 0.05, color: SOIL, mat: MAT.soil });
+    for (const x of [-0.65, 0.65]) s.cyl(0.3, 0.3, 2.4, 10, { at: [x, 0.1, 0], rot: [Math.PI / 2, 0, 0], scale: [1, 1, 0.45], color: [0.44, 0.31, 0.22], mat: MAT.soil });
     for (const x of [-0.65, 0.65]) {
       for (const z of [-0.65, 0.65]) {
-        s.ball(0.46, { at: [x, 0.48, z], scale: [1, 0.85, 1], color: LEAF2 });
-        s.ball(0.3, { at: [x + 0.2, 0.74, z - 0.1], color: LEAF });
-        for (let i = 0; i < 6; i++) {
+        s.ball(0.4, { at: [x, 0.5, z], scale: [1, 0.85, 1], color: [0.16, 0.36, 0.14] });
+        s.ball(0.26, { at: [x + 0.18, 0.74, z - 0.1], color: [0.22, 0.44, 0.16] });
+        for (let i = 0; i < 9; i++) {
+          const a = i * 2.4 + x;
+          const up = 0.4 + (i % 4) * 0.14;
+          const r = 0.38 - Math.abs(up - 0.55) * 0.2;
+          s.leaf([x + Math.cos(a) * r, up, z + Math.sin(a) * r], [x + Math.cos(a) * (r + 0.2), up + 0.12, z + Math.sin(a) * (r + 0.2)], 0.13, { color: i % 2 ? [0.3, 0.54, 0.18] : [0.22, 0.44, 0.16] }, [Math.cos(a) * 0.3, 1, Math.sin(a) * 0.3]);
+        }
+        for (let i = 0; i < 7; i++) {
           const a = random() * TAU;
-          const up = 0.3 + random() * 0.5;
-          s.ball(0.065, { at: [x + Math.cos(a) * 0.42, up + 0.1, z + Math.sin(a) * 0.42], color: [0.45, 0.3, 0.86] }, 1);
+          const up = 0.32 + random() * 0.5;
+          s.ball(0.06, { at: [x + Math.cos(a) * 0.4, up + 0.1, z + Math.sin(a) * 0.4], color: [0.5, 0.32, 0.92], shade: [0.26, 0.14, 0.6] }, 1);
         }
       }
     }
-    for (const [x, z] of [[-1.3, -1.3], [1.3, -1.3], [-1.3, 1.3], [1.3, 1.3]]) s.box(0.08, 0.7, 0.08, { at: [x, 0.35, z], color: WOOD });
+    // stakes at the corners with a line between them
+    const corners = [[-1.3, -1.3], [1.3, -1.3], [1.3, 1.3], [-1.3, 1.3]];
+    corners.forEach(([x, z], i) => {
+      stick(s, [x, 0, z], [x, 0.78, z], 0.045, 0.035, { color: WOOD }, 7);
+      const [nx, nz] = corners[(i + 1) % 4];
+      stick(s, [x, 0.66, z], [nx, 0.66, nz], 0.007, 0.007, { color: [0.86, 0.8, 0.64] }, 4);
+    });
     return s;
   },
   feeder() {
     const s = new Shape();
-    s.cyl(0.06, 0.08, 1.1, 12, { at: [0, 0.55, 0], color: BARK });
-    s.box(0.8, 0.06, 0.8, { at: [0, 1.12, 0], color: CUT });
-    for (const [x, z, w, d] of [[0, 0.4, 0.8, 0.05], [0, -0.4, 0.8, 0.05], [0.4, 0, 0.05, 0.8], [-0.4, 0, 0.05, 0.8]]) s.box(w, 0.1, d, { at: [x, 1.18, z], color: WOOD });
-    for (const [x, z] of [[-0.36, -0.36], [0.36, -0.36], [-0.36, 0.36], [0.36, 0.36]]) s.box(0.04, 0.5, 0.04, { at: [x, 1.4, z], color: WOOD });
-    s.quad([-0.55, 1.62, -0.5], [-0.55, 1.62, 0.5], [0, 1.95, 0.5], [0, 1.95, -0.5], { color: RED });
-    s.quad([0.55, 1.62, 0.5], [0.55, 1.62, -0.5], [0, 1.95, -0.5], [0, 1.95, 0.5], { color: RED });
+    stick(s, [0, 0, 0], [0, 1.1, 0], 0.075, 0.06, { color: BARK, mat: MAT.ROUND + MAT.bark }, 10);
+    for (const [x, z] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) stick(s, [0, 0.72, 0], [x * 0.3, 1.08, z * 0.3], 0.025, 0.025, { color: WOOD }, 6);
+    s.box(0.84, 0.05, 0.84, { at: [0, 1.12, 0], round: 0.02, color: CUT, mat: MAT.boards });
+    for (const [x, z, w, d] of [[0, 0.41, 0.86, 0.05], [0, -0.41, 0.86, 0.05], [0.41, 0, 0.05, 0.86], [-0.41, 0, 0.05, 0.86]]) s.box(w, 0.1, d, { at: [x, 1.18, z], round: 0.02, color: WOOD });
+    for (const [x, z] of [[-0.37, -0.37], [0.37, -0.37], [-0.37, 0.37], [0.37, 0.37]]) stick(s, [x, 1.14, z], [x, 1.66, z], 0.022, 0.022, { color: WOOD }, 6);
+    // a little shingled roof over it
+    for (const side of [-1, 1]) s.box(0.66, 0.04, 1.08, { at: [side * 0.27, 1.8, 0], rot: [0, 0, -side * 0.55], round: 0.012, color: [0.74, 0.34, 0.25], mat: MAT.shingles });
+    log(s, 1.12, 0.03, [0, 1.98, 0], [0, Math.PI / 2, 0], [0.56, 0.26, 0.2]);
+    // what is put out: a heap of berries
+    for (let i = 0; i < 9; i++) s.ball(0.05, { at: [Math.cos(i * 2.1) * 0.13 * (i % 3), 1.19 + (i % 3 === 0 ? 0.07 : 0), Math.sin(i * 2.1) * 0.13 * (i % 3)], color: i % 2 ? [0.5, 0.32, 0.92] : [0.88, 0.24, 0.34] }, 1);
+    stick(s, [0.4, 1.14, 0.2], [0.72, 1.16, 0.2], 0.014, 0.012, { color: WOOD }, 5);
     return s;
   },
   well() {
     const s = new Shape();
-    s.add(new THREE.CylinderGeometry(0.85, 0.92, 0.8, 12, 1, true), { at: [0, 0.4, 0], color: STONE });
-    s.add(new THREE.CylinderGeometry(0.68, 0.68, 0.8, 12, 1, true), { at: [0, 0.4, 0], color: STONE2, shade: [0.2, 0.22, 0.26] });
-    s.add(new THREE.RingGeometry(0.66, 0.9, 12), { at: [0, 0.8, 0], rot: [-Math.PI / 2, 0, 0], color: [0.7, 0.69, 0.64] });
-    s.cyl(0.68, 0.68, 0.02, 12, { at: [0, 0.5, 0], color: [0.3, 0.55, 0.75], shade: [0.12, 0.25, 0.45] });
-    for (const x of [-0.82, 0.82]) s.box(0.1, 1.5, 0.1, { at: [x, 1.5, 0], color: WOOD });
-    log(s, 1.7, 0.045, [0, 1.75, 0], [0, 0, 0], BARK);
-    s.quad([-1.05, 2.15, -0.6], [-1.05, 2.15, 0.6], [1.05, 2.15, 0.6], [1.05, 2.15, -0.6], { at: [0, 0, 0], color: RED });
-    s.quad([-1.05, 2.15, 0.6], [-1.05, 2.5, 0], [1.05, 2.5, 0], [1.05, 2.15, 0.6], { color: RED });
-    s.quad([-1.05, 2.5, 0], [-1.05, 2.15, -0.6], [1.05, 2.15, -0.6], [1.05, 2.5, 0], { color: RED });
-    s.box(0.02, 0.6, 0.02, { at: [0.15, 1.45, 0], color: DARK });
-    s.cyl(0.13, 0.1, 0.2, 12, { at: [0.15, 1.08, 0], color: WOOD });
+    s.lathe([[0.94, 0], [0.9, 0.74], [0.86, 0.82], [0.7, 0.82], [0.68, 0.36]], 18, { color: STONE, mat: MAT.ROUND + MAT.stonework });
+    s.cyl(0.68, 0.68, 0.02, 16, { at: [0, 0.52, 0], color: [0.32, 0.58, 0.78], shade: [0.12, 0.26, 0.46] });
+    for (const x of [-0.82, 0.82]) s.box(0.12, 1.42, 0.12, { at: [x, 1.46, 0], round: 0.02, color: WOOD, mat: MAT.boards });
+    // the roller with its rope and handle, and the bucket
+    log(s, 1.74, 0.055, [0, 1.74, 0], [0, 0, 0], BARK);
+    for (let i = 0; i < 5; i++) s.torus(0.062, 0.012, { at: [-0.12 + i * 0.035, 1.74, 0], rot: [0, Math.PI / 2, 0], color: [0.86, 0.8, 0.62] }, 8);
+    stick(s, [0.9, 1.74, 0], [1.02, 1.74, 0], 0.02, 0.02, { color: DARK }, 5);
+    stick(s, [1.02, 1.74, 0], [1.02, 1.5, 0], 0.02, 0.02, { color: DARK }, 5);
+    stick(s, [1.02, 1.5, 0], [1.16, 1.5, 0], 0.024, 0.024, { color: WOOD }, 6);
+    stick(s, [0.02, 1.7, 0], [0.02, 1.22, 0], 0.008, 0.008, { color: [0.86, 0.8, 0.62] }, 4);
+    s.lathe([[0.0, 0.98], [0.1, 0.98], [0.135, 1.2], [0.115, 1.2], [0.09, 1.02]], 12, { at: [0.02, 0, 0], color: WOOD, mat: MAT.ROUND + MAT.boards });
+    s.torus(0.125, 0.012, { at: [0.02, 1.14, 0], rot: [Math.PI / 2, 0, 0], color: DARK }, 12);
+    // a shingled roof over all
+    for (const side of [-1, 1]) s.box(2.3, 0.05, 0.92, { at: [0, 2.3, side * 0.36], rot: [side * 0.55, 0, 0], round: 0.015, color: [0.74, 0.34, 0.25], mat: MAT.shingles });
+    for (const x of [-0.98, 0.98]) s.tri([x, 2.1, -0.66], [x, 2.1, 0.66], [x, 2.5, 0], { color: [0.7, 0.52, 0.32], mat: MAT.boards });
+    log(s, 2.36, 0.04, [0, 2.54, 0], [0, 0, 0], [0.56, 0.26, 0.2]);
     return s;
   },
   cabin() {
     const s = new Shape();
     const X = 2.2;
     const Z = 1.8;
-    const H = 2.4;
-    s.box(2 * X + 0.25, 0.9, 2 * Z + 0.25, { at: [0, -0.3, 0], color: STONE2 });
-    s.box(2 * X, H, 2 * Z, { at: [0, H / 2 + 0.1, 0], color: [0.62, 0.44, 0.27] });
-    // the logs, as lines of darker wood standing a little proud
-    for (let i = 0; i < 6; i++) s.box(2 * X + 0.08, 0.05, 2 * Z + 0.08, { at: [0, 0.32 + i * 0.4, 0], color: BARK });
-    for (const x of [-X, X]) for (const z of [-Z, Z]) s.box(0.22, H, 0.22, { at: [x, H / 2 + 0.1, z], color: BARK });
-    const E = H + 0.1;
-    const R = E + 1.35;
-    for (const x of [-X, X]) s.tri([x, E, -Z], [x, E, Z], [x, R, 0], { color: [0.66, 0.48, 0.3] });
-    const O = X + 0.35;
-    const eave = [Z + 0.4, E - 0.28];
-    const roof = [0.74, 0.34, 0.25];
-    s.quad([-O, eave[1], eave[0]], [O, eave[1], eave[0]], [O, R + 0.02, 0], [-O, R + 0.02, 0], { color: roof });
-    s.quad([O, eave[1], -eave[0]], [-O, eave[1], -eave[0]], [-O, R + 0.02, 0], [O, R + 0.02, 0], { color: roof });
-    log(s, 2 * O + 0.1, 0.07, [0, R + 0.04, 0], [0, 0, 0], BARK);
-    // door, step, window with a light in it, chimney
-    s.box(0.85, 1.65, 0.08, { at: [-0.7, 0.95, Z + 0.03], color: [0.42, 0.27, 0.17] });
-    s.ball(0.045, { at: [-0.42, 0.95, Z + 0.09], color: LAMP });
-    s.box(1.3, 0.16, 0.6, { at: [-0.7, 0.06, Z + 0.32], color: STONE });
-    s.box(0.95, 0.8, 0.06, { at: [0.95, 1.45, Z + 0.02], color: LAMP, shade: [0.9, 0.62, 0.3], ink: 1 });
-    s.box(1.05, 0.07, 0.1, { at: [0.95, 1.03, Z + 0.04], color: CUT });
-    s.box(0.05, 0.8, 0.09, { at: [0.95, 1.45, Z + 0.04], color: CUT });
-    s.box(0.95, 0.05, 0.09, { at: [0.95, 1.45, Z + 0.04], color: CUT });
-    s.box(0.55, 1.7, 0.55, { at: [1.35, R - 0.35, -0.75], color: STONE });
-    s.box(0.65, 0.12, 0.65, { at: [1.35, R + 0.52, -0.75], color: STONE2 });
+    const F = 0.22; // the floor: the top of the footing
+    const logs = [0.63, 0.45, 0.28];
+    const roof = [0.76, 0.35, 0.26];
+    s.box(2 * X + 0.3, 0.5, 2 * Z + 0.3, { at: [0, F - 0.25, 0], round: 0.04, color: STONE2, mat: MAT.stonework });
+    s.box(2 * X, 2.3, 2 * Z, { at: [0, F + 1.15, 0], round: 0.02, color: logs, mat: MAT.logs });
+    // the ends of the logs, crossing at each corner
+    for (const sx of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        for (let i = 0; i < 7; i++) {
+          const y = F + 0.2 + i * 0.31;
+          if (i % 2) {
+            s.cyl(0.14, 0.14, 0.36, 10, { at: [sx * (X + 0.08), y, sz * (Z - 0.02)], rot: [0, 0, Math.PI / 2], color: logs });
+            s.cyl(0.11, 0.11, 0.012, 10, { at: [sx * (X + 0.262), y, sz * (Z - 0.02)], rot: [0, 0, Math.PI / 2], color: CUT });
+          } else {
+            s.cyl(0.14, 0.14, 0.36, 10, { at: [sx * (X - 0.02), y, sz * (Z + 0.08)], rot: [Math.PI / 2, 0, 0], color: logs });
+            s.cyl(0.11, 0.11, 0.012, 10, { at: [sx * (X - 0.02), y, sz * (Z + 0.262)], rot: [Math.PI / 2, 0, 0], color: CUT });
+          }
+        }
+      }
+    }
+    // gables boarded upright, and the roof: two thick slopes of shingle with a ridge log along the top
+    const E = F + 2.3;
+    const R = E + 1.5;
+    for (const x of [-X, X]) s.tri([x, E, -Z], [x, E, Z], [x, R, 0], { color: [0.72, 0.54, 0.33], mat: MAT.boards });
+    const run = Z + 0.48;
+    const rise = R + 0.1 - (E - 0.2);
+    const slope = Math.atan2(rise, run);
+    const long = Math.hypot(rise, run);
+    for (const side of [-1, 1]) {
+      s.box(2 * X + 0.9, 0.1, long, { at: [0, (E - 0.2 + R + 0.1) / 2, (side * run) / 2], rot: [side * slope, 0, 0], round: 0.03, color: roof, mat: MAT.shingles });
+      for (const x of [-X - 0.42, X + 0.42]) stick(s, [x, E - 0.24, side * (run + 0.03)], [x, R + 0.08, 0], 0.05, 0.05, { color: CUT }, 6);
+    }
+    log(s, 2 * X + 1.0, 0.09, [0, R + 0.14, 0], [0, 0, 0], [0.56, 0.26, 0.2]);
+    // a stone chimney
+    s.box(0.62, 2.0, 0.62, { at: [1.35, R - 0.3, -0.8], round: 0.03, color: STONE, mat: MAT.stonework });
+    s.box(0.76, 0.12, 0.76, { at: [1.35, R + 0.74, -0.8], round: 0.03, color: STONE2 });
+    s.cyl(0.13, 0.15, 0.24, 10, { at: [1.35, R + 0.9, -0.8], color: [0.8, 0.46, 0.32] });
+    // the door, under a porch of its own, with a lamp beside it and a stone step
+    const dx = -0.78;
+    s.box(1.02, 1.86, 0.06, { at: [dx, F + 0.93, Z + 0.01], round: 0.02, color: BARK });
+    s.box(0.86, 1.72, 0.07, { at: [dx, F + 0.88, Z + 0.035], round: 0.02, color: [0.47, 0.31, 0.2], mat: MAT.boards });
+    for (const y of [0.4, 1.4]) s.box(0.5, 0.05, 0.02, { at: [dx - 0.17, F + y, Z + 0.075], round: 0, color: DARK });
+    s.ball(0.045, { at: [dx + 0.3, F + 0.9, Z + 0.09], color: [0.9, 0.74, 0.36] }, 1);
+    s.box(1.5, 0.2, 0.7, { at: [dx, F - 0.1, Z + 0.48], round: 0.04, color: STONE, mat: MAT.stonework });
+    s.box(1.7, 0.07, 0.95, { at: [dx, F + 2.16, Z + 0.4], rot: [0.36, 0, 0], round: 0.02, color: roof, mat: MAT.shingles });
+    for (const x of [dx - 0.74, dx + 0.74]) stick(s, [x, F, Z + 0.76], [x, F + 2.0, Z + 0.76], 0.055, 0.05, { color: WOOD, mat: MAT.ROUND + MAT.bark }, 8);
+    s.box(0.1, 0.16, 0.1, { at: [dx + 0.62, F + 1.62, Z + 0.1], round: 0.02, color: LAMP, shade: [0.95, 0.66, 0.3], ink: 1 });
+    s.cone(0.1, 0.08, 4, { at: [dx + 0.62, F + 1.74, Z + 0.1], rot: [0, Math.PI / 4, 0], color: DARK });
+    // the window: four lit panes, shutters, and a box of flowers under it
+    const wx = 1.0;
+    const wy = F + 1.4;
+    s.box(0.92, 0.8, 0.05, { at: [wx, wy, Z + 0.015], round: 0, color: LAMP, shade: [0.95, 0.66, 0.3], ink: 1 });
+    for (const [x, y, w, h] of [[0, 0.43, 1.06, 0.08], [0, -0.43, 1.12, 0.09], [-0.49, 0, 0.08, 0.86], [0.49, 0, 0.08, 0.86], [0, 0, 0.045, 0.8], [0, 0, 0.92, 0.045]]) s.box(w, h, 0.09, { at: [wx + x, wy + y, Z + 0.04], round: 0.015, color: CUT });
+    for (const side of [-1, 1]) s.box(0.32, 0.86, 0.045, { at: [wx + side * 0.7, wy, Z + 0.03], round: 0.015, color: [0.36, 0.56, 0.5], mat: MAT.boards });
+    s.box(1.0, 0.16, 0.2, { at: [wx, wy - 0.56, Z + 0.13], round: 0.03, color: WOOD, mat: MAT.boards });
+    for (let i = 0; i < 5; i++) bloom(s, wx - 0.38 + i * 0.19, wy - 0.48, Z + 0.14, 0.14 + (i % 2) * 0.06, PETALS[(i * 2) % PETALS.length], 0.75, 5);
+    // a window in the side wall, firewood stacked against the other, a barrel at the corner
+    s.box(0.05, 0.62, 0.72, { at: [X + 0.015, wy + 0.05, 0.35], round: 0, color: LAMP, shade: [0.95, 0.66, 0.3], ink: 1 });
+    for (const [y, z, h, d] of [[0.34, 0, 0.07, 0.84], [-0.34, 0, 0.08, 0.88], [0, -0.39, 0.7, 0.07], [0, 0.39, 0.7, 0.07], [0, 0, 0.62, 0.04]]) s.box(0.09, h, d, { at: [X + 0.04, wy + 0.05 + y, 0.35 + z], round: 0.015, color: CUT });
+    for (let row = 0; row < 3; row++) {
+      for (let i = 0; i < 4 - (row % 2); i++) {
+        const y = F + 0.12 + row * 0.21;
+        const z = -1.2 + i * 0.24 + (row % 2) * 0.12;
+        s.cyl(0.11, 0.11, 0.6, 9, { at: [-X - 0.36, y, z], rot: [0, 0, Math.PI / 2], color: (i + row) % 2 ? BARK : [0.5, 0.35, 0.22], mat: MAT.bark });
+        s.cyl(0.095, 0.095, 0.012, 9, { at: [-X - 0.665, y, z], rot: [0, 0, Math.PI / 2], color: CUT });
+      }
+    }
+    s.lathe([[0.25, 0], [0.32, 0.36], [0.25, 0.72]], 14, { at: [X + 0.46, F - 0.2, 1.3], color: WOOD, mat: MAT.ROUND + MAT.boards });
+    for (const y of [0.16, 0.56]) s.torus(0.3, 0.016, { at: [X + 0.46, F - 0.2 + y, 1.3], rot: [Math.PI / 2, 0, 0], color: DARK }, 14);
     return s;
   },
   cairn() {
     const s = new Shape();
-    const stack = [[0.72, 0.3], [0.58, 0.78], [0.45, 1.18], [0.34, 1.5], [0.24, 1.76]];
-    stack.forEach(([r, y], i) => s.ball(r, { at: [(i % 2 ? 0.04 : -0.03) * i, y, (i % 3 ? -0.03 : 0.04) * i], scale: [1, 0.62, 1], rot: [0, i * 1.3, 0], color: i % 2 ? STONE : [0.7, 0.69, 0.65] }));
-    s.ball(0.22, { at: [0, 2.16, 0], color: [1.0, 0.95, 0.62], shade: [1.0, 0.8, 0.45], ink: 1 });
+    const stack = [[0.72, 0.28], [0.58, 0.78], [0.45, 1.2], [0.34, 1.53], [0.24, 1.79]];
+    stack.forEach(([r, y], i) => s.rock(r, 70 + i, { at: [(i % 2 ? 0.04 : -0.03) * i, y, (i % 3 ? -0.03 : 0.04) * i], scale: [1, 0.62, 1], rot: [0, i * 1.3, 0], color: i % 2 ? STONE : [0.72, 0.71, 0.67] }));
+    // the light it was raised for: crystals standing out of the top stone
+    const crystal = { color: [1.0, 0.95, 0.62], shade: [1.0, 0.8, 0.45], ink: 1 };
+    s.add(new THREE.OctahedronGeometry(1, 0), { at: [0, 2.2, 0], scale: [0.13, 0.34, 0.13], rot: [0, 0.5, 0], ...crystal });
+    s.add(new THREE.OctahedronGeometry(1, 0), { at: [0.13, 2.02, 0.03], scale: [0.07, 0.18, 0.07], rot: [0, 0.2, -0.5], ...crystal });
+    s.add(new THREE.OctahedronGeometry(1, 0), { at: [-0.11, 2.0, -0.04], scale: [0.06, 0.15, 0.06], rot: [0.2, 0, 0.55], ...crystal });
+    s.ball(0.3, { at: [-0.3, 0.52, 0.42], scale: [1, 0.3, 1], color: [0.38, 0.58, 0.24] }, 1);
     for (let i = 0; i < 7; i++) {
       const a = (i / 7) * TAU;
-      s.ball(0.15, { at: [Math.cos(a) * 1.05, 0.06, Math.sin(a) * 1.05], scale: [1, 0.6, 1], color: STONE2 });
+      s.rock(0.15, 80 + i, { at: [Math.cos(a) * 1.06, 0.05, Math.sin(a) * 1.06], scale: [1, 0.66, 1], color: STONE2 });
+      if (i % 2) bloom(s, Math.cos(a + 0.45) * 1.02, 0, Math.sin(a + 0.45) * 1.02, 0.3, PETALS[i % PETALS.length], 1.1);
     }
     return s;
   },
   /** What stands in the middle of your land from the first day: a signpost, and the basket the spirits fill. */
   basket() {
     const s = new Shape();
-    s.cyl(0.42, 0.34, 0.5, 12, { at: [0, 0.25, 0], color: [0.8, 0.62, 0.36] });
-    s.add(new THREE.TorusGeometry(0.42, 0.045, 5, 12), { at: [0, 0.5, 0], rot: [Math.PI / 2, 0, 0], color: [0.66, 0.48, 0.28] });
-    s.add(new THREE.TorusGeometry(0.37, 0.03, 5, 12), { at: [0, 0.25, 0], rot: [Math.PI / 2, 0, 0], color: [0.66, 0.48, 0.28] });
-    s.cyl(0.38, 0.38, 0.02, 12, { at: [0, 0.44, 0], color: DARK, shade: DARK });
+    const cane = [0.84, 0.66, 0.4];
+    s.lathe([[0.0, 0.01], [0.3, 0.01], [0.36, 0.06], [0.45, 0.5], [0.47, 0.55], [0.43, 0.56], [0.39, 0.5]], 16, { color: cane, mat: MAT.ROUND + MAT.weave });
+    s.torus(0.45, 0.035, { at: [0, 0.55, 0], rot: [Math.PI / 2, 0, 0], color: [0.68, 0.5, 0.3] }, 16);
+    s.add(new THREE.TorusGeometry(0.42, 0.028, 6, 16, Math.PI), { at: [0, 0.55, 0], color: [0.68, 0.5, 0.3] });
+    s.cyl(0.4, 0.4, 0.02, 14, { at: [0, 0.44, 0], color: DARK, shade: DARK });
     return s;
   },
   sign() {
     const s = new Shape();
-    s.box(0.1, 1.5, 0.1, { at: [0, 0.75, 0], color: BARK });
-    s.box(0.95, 0.42, 0.07, { at: [0, 1.32, 0.04], color: CUT });
-    s.cone(0.1, 0.12, 4, { at: [0, 1.56, 0], rot: [0, Math.PI / 4, 0], color: BARK });
-    s.quad([-0.3, 1.32, 0.08], [-0.1, 1.24, 0.08], [0.02, 1.36, 0.08], [-0.16, 1.44, 0.08], { color: LEAF });
-    s.ball(0.07, { at: [0.2, 1.33, 0.08], scale: [1, 1, 0.3], color: RED }, 1);
+    stick(s, [0, 0, 0], [0, 1.62, 0], 0.07, 0.055, { color: BARK, mat: MAT.ROUND + MAT.bark }, 10);
+    s.box(1.05, 0.46, 0.07, { at: [0.06, 1.34, 0.06], rot: [0, 0, 0.04], round: 0.03, color: CUT, mat: MAT.boards });
+    s.box(0.7, 0.24, 0.06, { at: [-0.1, 0.94, 0.06], rot: [0, 0, -0.06], round: 0.03, color: [0.76, 0.6, 0.38], mat: MAT.boards });
+    s.cone(0.11, 0.14, 4, { at: [0, 1.68, 0], rot: [0, Math.PI / 4, 0], color: BARK });
+    // carved on it: a tent and a leaf
+    s.tri([-0.26, 1.2, 0.1], [0.02, 1.2, 0.1], [-0.12, 1.46, 0.1], { color: RED });
+    s.leaf([0.16, 1.24, 0.1], [0.42, 1.44, 0.1], 0.16, { color: LEAF, steps: 4 }, [0, 0, 1]);
+    s.leaf([0.1, 0.3, 0.05], [0.3, 0.52, 0.12], 0.12, { color: LEAF });
+    s.leaf([-0.05, 0.5, 0.05], [-0.26, 0.7, 0.1], 0.11, { color: [0.36, 0.6, 0.26] });
     return s;
   },
   /** A stake with a ribbon: the edge of your land. */
   marker() {
     const s = new Shape();
-    s.box(0.07, 1.25, 0.07, { at: [0, 0.62, 0], color: CUT });
-    s.quad([0.04, 1.22, 0], [0.34, 1.16, 0.02], [0.3, 1.0, 0], [0.04, 1.04, 0], { color: RED });
+    stick(s, [0, 0, 0], [0, 1.25, 0], 0.045, 0.035, { color: CUT }, 7);
+    s.ball(0.045, { at: [0, 1.27, 0], color: [0.78, 0.62, 0.4] }, 1);
+    s.leaf([0.02, 1.16, 0], [0.42, 1.08, 0.03], 0.2, { color: RED, steps: 4 }, [0, 0.2, 1]);
+    s.leaf([0.02, 1.08, 0], [0.3, 0.9, -0.02], 0.12, { color: [0.95, 0.8, 0.4], steps: 3 }, [0, 0.2, 1]);
     return s;
   },
 };
@@ -288,12 +470,12 @@ const node = {
   },
   pebble() {
     const s = new Shape();
-    const c = [0.78, 0.76, 0.72];
-    s.ball(0.3, { at: [0, 0.2, 0], scale: [1.1, 0.7, 1], rot: [0.2, 0.4, 0], color: c });
-    s.ball(0.24, { at: [0.3, 0.16, 0.14], scale: [1, 0.7, 1.1], rot: [0, 1, 0.2], color: [0.7, 0.69, 0.68] });
-    s.ball(0.2, { at: [-0.22, 0.14, 0.22], scale: [1, 0.7, 1], color: [0.72, 0.72, 0.72] });
-    s.ball(0.2, { at: [0.06, 0.52, 0.04], scale: [1, 0.72, 1], rot: [0.1, 2, 0], color: c });
-    s.ball(0.13, { at: [0.05, 0.74, 0.02], scale: [1, 0.75, 1], color: [0.84, 0.82, 0.78] });
+    const pale = [0.8, 0.78, 0.73];
+    s.rock(0.3, 101, { at: [0, 0.16, 0], scale: [1.1, 0.72, 1], color: pale });
+    s.rock(0.24, 102, { at: [0.3, 0.13, 0.14], scale: [1, 0.72, 1.1], rot: [0, 1, 0], color: [0.7, 0.69, 0.68] });
+    s.rock(0.2, 103, { at: [-0.22, 0.11, 0.22], scale: [1, 0.72, 1], rot: [0, 2, 0], color: [0.74, 0.73, 0.72] });
+    s.rock(0.2, 104, { at: [0.06, 0.47, 0.04], scale: [1, 0.72, 1], rot: [0, 3, 0], color: pale });
+    s.rock(0.13, 105, { at: [0.05, 0.69, 0.02], scale: [1, 0.76, 1], color: [0.86, 0.84, 0.8] });
     return s;
   },
   bush() {
@@ -397,11 +579,11 @@ const node = {
   },
   clay() {
     const s = new Shape();
-    const c = [0.8, 0.52, 0.36];
-    s.ball(0.45, { at: [0, 0.14, 0], scale: [1.1, 0.5, 1], color: c });
-    s.ball(0.28, { at: [0.3, 0.2, 0.2], scale: [1, 0.6, 1], color: [0.72, 0.45, 0.31] });
-    s.ball(0.2, { at: [-0.05, 0.36, -0.05], scale: [1, 0.6, 1], color: [0.86, 0.58, 0.42] });
-    s.ball(0.12, { at: [-0.34, 0.12, 0.2], scale: [1, 0.6, 1], color: [0.76, 0.48, 0.34] });
+    const c = [0.82, 0.53, 0.37];
+    s.rock(0.45, 111, { at: [0, 0.1, 0], scale: [1.1, 0.5, 1], color: c, mat: MAT.soil });
+    s.rock(0.28, 112, { at: [0.3, 0.16, 0.2], scale: [1, 0.6, 1], color: [0.74, 0.46, 0.32], mat: MAT.soil });
+    s.rock(0.2, 113, { at: [-0.05, 0.32, -0.05], scale: [1, 0.6, 1], color: [0.88, 0.6, 0.43], mat: MAT.soil });
+    s.rock(0.12, 114, { at: [-0.34, 0.08, 0.2], scale: [1, 0.6, 1], color: [0.78, 0.5, 0.35], mat: MAT.soil });
     return s;
   },
 };
@@ -714,100 +896,144 @@ export function spiritShape(kind, sort = 0) {
 }
 
 // ---- animals -----------------------------------------------------------------------------------------------------
+// Inks for the line: body 0.05, head 0.07, face 0.1, ears 0.14, legs 0.17, tail and trimmings 0.2.
 const EYE = { color: [0.1, 0.08, 0.08], shade: [0.07, 0.06, 0.08], ink: 0.1 };
+/** Two eyes with a light in each, x apart either side of the middle. */
 const eyes = (s, x, y, z, r = 0.028) => {
-  for (const side of [-1, 1]) s.ball(r, { at: [side * x, y, z], ...EYE }, 1);
+  for (const side of [-1, 1]) {
+    s.ball(r, { at: [side * x, y, z], scale: [0.8, 1.15, 0.7], ...EYE });
+    s.ball(r * 0.34, { at: [side * x + r * 0.25, y + r * 0.4, z + r * 0.55], color: [1, 1, 1], shade: [1, 1, 1], ink: 0.1 }, 1);
+  }
+};
+/** A leg: thicker at the top than at the foot, with a foot of its own colour. */
+const leg = (s, top, foot, r, color, sock = color, hoof = null) => {
+  const knee = [(top[0] + foot[0]) / 2, (top[1] + foot[1]) / 2, (top[2] + foot[2]) / 2 + 0.02];
+  stick(s, top, knee, r, r * 0.72, { color, ink: 0.17 }, 9);
+  stick(s, knee, [foot[0], foot[1] + r * 0.5, foot[2]], r * 0.72, r * 0.6, { color: sock, ink: 0.17 }, 9);
+  s.ball(r * 0.82, { at: [foot[0], foot[1] + r * 0.45, foot[2] + r * 0.3], scale: [1, 0.7, 1.35], color: hoof ?? sock, ink: 0.2 }, 1);
 };
 
 const animal = {
   rabbit() {
     const s = new Shape();
-    const fur = [0.86, 0.76, 0.62];
-    const white = [0.98, 0.96, 0.92];
-    s.ball(0.24, { at: [0, 0.26, -0.04], scale: [0.85, 0.85, 1.2], color: fur, ink: 0.05 }, 3);
-    s.ball(0.16, { at: [0, 0.46, 0.2], color: fur, ink: 0.07 }, 3);
+    const fur = [0.88, 0.78, 0.63];
+    const white = [0.99, 0.97, 0.93];
+    const pink = [0.98, 0.72, 0.72];
+    s.ball(0.25, { at: [0, 0.27, -0.06], scale: [0.86, 0.88, 1.2], color: fur, ink: 0.05 }, 3);
+    s.ball(0.17, { at: [0, 0.2, 0.08], scale: [0.8, 0.8, 0.9], color: white, ink: 0.05 });
+    s.ball(0.165, { at: [0, 0.5, 0.2], scale: [1, 0.95, 1], color: fur, ink: 0.07 }, 3);
     for (const side of [-1, 1]) {
-      s.ball(0.15, { at: [side * 0.07, 0.74, 0.14], scale: [0.32, 1.25, 0.22], rot: [-0.2, 0, -side * 0.12], color: fur, ink: 0.14 }, 1);
-      s.ball(0.07, { at: [side * 0.11, 0.06, 0.16], scale: [0.7, 0.6, 1.3], color: white, ink: 0.17 }, 1);
+      // cheeks, long ears with pink inside them, big hind feet and small front paws
+      s.ball(0.075, { at: [side * 0.085, 0.45, 0.3], color: white, ink: 0.07 });
+      s.capsule(0.05, 0.26, { at: [side * 0.075, 0.82, 0.13], rot: [-0.22, 0, -side * 0.14], scale: [1, 1, 0.5], color: fur, ink: 0.14 });
+      s.capsule(0.028, 0.2, { at: [side * 0.078, 0.82, 0.148], rot: [-0.22, 0, -side * 0.14], scale: [1, 1, 0.3], color: pink, ink: 0.14 });
+      s.ball(0.085, { at: [side * 0.15, 0.06, 0.04], scale: [0.7, 0.55, 1.6], color: fur, ink: 0.17 });
+      s.ball(0.05, { at: [side * 0.09, 0.05, 0.26], scale: [0.8, 0.7, 1.2], color: white, ink: 0.17 }, 1);
     }
-    s.ball(0.085, { at: [0, 0.3, -0.33], color: white, ink: 0.2 }, 1);
-    s.ball(0.03, { at: [0, 0.44, 0.355], color: [0.95, 0.6, 0.6], ink: 0.1 }, 1);
-    eyes(s, 0.1, 0.5, 0.31);
+    s.ball(0.09, { at: [0, 0.3, -0.36], color: white, ink: 0.2 });
+    s.ball(0.026, { at: [0, 0.48, 0.365], scale: [1.2, 0.8, 0.8], color: [0.95, 0.55, 0.58], ink: 0.1 }, 1);
+    eyes(s, 0.105, 0.54, 0.31, 0.03);
     return s;
   },
   squirrel() {
     const s = new Shape();
-    const fur = [0.78, 0.46, 0.22];
-    const belly = [0.97, 0.9, 0.76];
-    s.ball(0.17, { at: [0, 0.24, 0], scale: [0.85, 1.2, 0.85], color: fur, ink: 0.05 }, 3);
-    s.ball(0.11, { at: [0, 0.22, 0.09], scale: [0.8, 1.2, 0.6], color: belly, ink: 0.05 }, 1);
-    s.ball(0.125, { at: [0, 0.5, 0.06], color: fur, ink: 0.07 }, 3);
-    for (const side of [-1, 1]) s.cone(0.04, 0.1, 4, { at: [side * 0.07, 0.63, 0.03], color: fur, ink: 0.14 });
-    // the tail: most of a squirrel
-    s.ball(0.15, { at: [0, 0.3, -0.24], scale: [0.8, 1.3, 0.8], color: fur, ink: 0.17 }, 2);
-    s.ball(0.17, { at: [0, 0.58, -0.3], scale: [0.85, 1.1, 0.85], color: [0.86, 0.56, 0.28], ink: 0.2 }, 2);
-    s.ball(0.022, { at: [0, 0.49, 0.185], color: [0.2, 0.12, 0.1], ink: 0.1 }, 1);
-    eyes(s, 0.075, 0.54, 0.15, 0.024);
+    const fur = [0.8, 0.47, 0.22];
+    const belly = [0.98, 0.91, 0.78];
+    s.ball(0.17, { at: [0, 0.25, 0], scale: [0.86, 1.2, 0.86], color: fur, ink: 0.05 }, 3);
+    s.ball(0.115, { at: [0, 0.23, 0.085], scale: [0.8, 1.2, 0.6], color: belly, ink: 0.05 });
+    s.ball(0.13, { at: [0, 0.52, 0.06], scale: [1, 0.92, 1], color: fur, ink: 0.07 }, 3);
+    s.ball(0.07, { at: [0, 0.48, 0.15], scale: [1.1, 0.8, 0.8], color: belly, ink: 0.07 }, 1);
+    for (const side of [-1, 1]) {
+      s.cone(0.04, 0.11, 8, { at: [side * 0.075, 0.66, 0.03], rot: [0, 0, -side * 0.15], color: fur, ink: 0.14 });
+      s.ball(0.045, { at: [side * 0.09, 0.3, 0.14], color: fur, ink: 0.17 }, 1);
+      s.ball(0.06, { at: [side * 0.09, 0.04, 0.05], scale: [0.8, 0.6, 1.5], color: fur, ink: 0.17 }, 1);
+    }
+    // an acorn held in both paws
+    s.ball(0.045, { at: [0, 0.3, 0.2], scale: [1, 1.15, 1], color: [0.72, 0.52, 0.26], ink: 0.2 }, 1);
+    s.ball(0.047, { at: [0, 0.33, 0.2], scale: [1, 0.5, 1], color: [0.44, 0.3, 0.18], ink: 0.14 }, 1);
+    // the tail: most of a squirrel, curling up behind and over
+    const curl = [[0, 0.16, -0.2, 0.11], [0, 0.34, -0.3, 0.14], [0, 0.56, -0.32, 0.16], [0, 0.76, -0.24, 0.15], [0, 0.86, -0.1, 0.11]];
+    curl.forEach(([x, y, z, r], i) => s.ball(r, { at: [x, y, z], scale: [0.85, 1, 0.9], color: i > 2 ? [0.9, 0.6, 0.3] : fur, ink: i % 2 ? 0.2 : 0.17 }));
+    s.ball(0.02, { at: [0, 0.5, 0.2], color: [0.2, 0.12, 0.1], ink: 0.1 }, 1);
+    eyes(s, 0.08, 0.56, 0.155, 0.026);
     return s;
   },
   deer() {
     const s = new Shape();
-    const fur = [0.76, 0.52, 0.3];
-    const white = [0.98, 0.94, 0.86];
-    s.ball(0.42, { at: [0, 0.98, -0.05], scale: [0.62, 0.68, 1.3], color: fur, ink: 0.05 }, 3);
-    s.ball(0.3, { at: [0, 0.86, -0.05], scale: [0.55, 0.5, 1.15], color: white, ink: 0.05 }, 1);
-    s.cyl(0.11, 0.15, 0.6, 12, { at: [0, 1.36, 0.46], rot: [0.5, 0, 0], color: fur, ink: 0.07 });
-    s.ball(0.15, { at: [0, 1.66, 0.64], scale: [0.85, 0.9, 1.25], color: fur, ink: 0.14 }, 2);
-    s.ball(0.08, { at: [0, 1.61, 0.82], color: white, ink: 0.14 }, 1);
-    s.ball(0.035, { at: [0, 1.63, 0.895], color: [0.15, 0.1, 0.1], ink: 0.1 }, 1);
+    const fur = [0.78, 0.54, 0.31];
+    const white = [0.99, 0.95, 0.87];
+    const dark = [0.3, 0.2, 0.15];
+    // a long body carried level, deep in the chest
+    s.capsule(0.27, 0.62, { at: [0, 0.98, -0.06], rot: [Math.PI / 2, 0, 0], scale: [0.86, 1, 1], color: fur, ink: 0.05 });
+    s.ball(0.26, { at: [0, 0.99, 0.26], scale: [0.9, 1.06, 1], color: fur, ink: 0.05 }, 3);
+    s.ball(0.22, { at: [0, 0.82, -0.02], scale: [0.7, 0.5, 2.0], color: white, ink: 0.05 });
+    // the neck rising to a fine head
+    stick(s, [0, 1.1, 0.36], [0, 1.62, 0.6], 0.16, 0.1, { color: fur, ink: 0.07 }, 12);
+    s.ball(0.11, { at: [0, 1.22, 0.47], scale: [0.7, 1.4, 0.5], color: white, ink: 0.07 }, 1);
+    s.ball(0.135, { at: [0, 1.7, 0.64], scale: [0.9, 0.95, 1.1], color: fur, ink: 0.14 }, 3);
+    stick(s, [0, 1.67, 0.7], [0, 1.6, 0.9], 0.085, 0.055, { color: fur, ink: 0.14 }, 10);
+    s.ball(0.058, { at: [0, 1.58, 0.9], color: white, ink: 0.14 }, 1);
+    s.ball(0.03, { at: [0, 1.61, 0.945], scale: [1.2, 0.8, 0.8], color: [0.16, 0.11, 0.1], ink: 0.1 }, 1);
     for (const side of [-1, 1]) {
-      s.ball(0.1, { at: [side * 0.16, 1.78, 0.56], scale: [0.5, 1.1, 0.3], rot: [0, 0, -side * 0.7], color: fur, ink: 0.17 }, 1);
-      s.cyl(0.018, 0.026, 0.3, 12, { at: [side * 0.07, 1.92, 0.58], rot: [0, 0, -side * 0.3], color: [0.9, 0.84, 0.7], ink: 0.2 });
-      s.cyl(0.014, 0.018, 0.16, 12, { at: [side * 0.15, 2.02, 0.58], rot: [0, 0, -side * 1.0], color: [0.9, 0.84, 0.7], ink: 0.2 });
-      for (const z of [-0.42, 0.34]) {
-        s.cyl(0.045, 0.035, 0.8, 12, { at: [side * 0.15, 0.4, z], color: fur, ink: 0.17 });
-        s.ball(0.045, { at: [side * 0.15, 0.03, z + 0.01], scale: [1, 0.7, 1.2], color: [0.25, 0.18, 0.14], ink: 0.2 }, 1);
-      }
-      for (let i = 0; i < 3; i++) s.ball(0.035, { at: [side * (0.2 + 0.03 * (i % 2)), 1.14 + 0.05 * (i % 2), -0.3 + i * 0.22], scale: [0.4, 1, 1], color: white, ink: 0.05 }, 1);
+      s.leaf([side * 0.09, 1.78, 0.58], [side * 0.3, 1.9, 0.5], 0.13, { color: fur, ink: 0.17, steps: 4 }, [0, 0.3, 1]);
+      // antlers: a beam with three tines
+      const base = [side * 0.06, 1.82, 0.6];
+      const mid = [side * 0.16, 2.06, 0.52];
+      const tip = [side * 0.26, 2.3, 0.56];
+      const horn = { color: [0.93, 0.87, 0.72], ink: 0.2 };
+      stick(s, base, mid, 0.024, 0.02, horn, 6);
+      stick(s, mid, tip, 0.02, 0.012, horn, 6);
+      stick(s, mid, [side * 0.1, 2.2, 0.66], 0.016, 0.01, horn, 5);
+      stick(s, [side * 0.21, 2.18, 0.54], [side * 0.36, 2.26, 0.46], 0.014, 0.009, horn, 5);
+      leg(s, [side * 0.14, 0.92, 0.3], [side * 0.14, 0, 0.32], 0.07, fur, fur, dark);
+      leg(s, [side * 0.15, 0.94, -0.42], [side * 0.15, 0, -0.46], 0.078, fur, fur, dark);
+      for (let i = 0; i < 4; i++) s.ball(0.032, { at: [side * (0.215 + 0.01 * (i % 2)), 1.12 + 0.06 * (i % 2), -0.34 + i * 0.17], scale: [0.4, 1, 1], color: white, ink: 0.05 }, 1);
     }
-    s.ball(0.07, { at: [0, 1.08, -0.6], color: white, ink: 0.2 }, 1);
-    eyes(s, 0.115, 1.7, 0.72, 0.03);
+    s.ball(0.075, { at: [0, 1.1, -0.62], scale: [0.8, 1, 0.7], color: white, ink: 0.2 }, 1);
+    eyes(s, 0.105, 1.73, 0.72, 0.032);
     return s;
   },
   fox() {
     const s = new Shape();
-    const fur = [0.95, 0.52, 0.2];
-    const white = [0.99, 0.95, 0.88];
-    const sock = [0.25, 0.17, 0.15];
-    s.ball(0.27, { at: [0, 0.5, -0.05], scale: [0.72, 0.75, 1.35], color: fur, ink: 0.05 }, 3);
-    s.ball(0.17, { at: [0, 0.44, 0.2], scale: [0.7, 0.8, 0.9], color: white, ink: 0.05 }, 1);
-    s.ball(0.19, { at: [0, 0.78, 0.36], scale: [1.05, 0.9, 0.95], color: fur, ink: 0.07 }, 3);
-    s.cone(0.1, 0.24, 12, { at: [0, 0.72, 0.58], rot: [Math.PI / 2, 0, 0], color: white, ink: 0.07 });
-    s.ball(0.03, { at: [0, 0.73, 0.7], color: [0.12, 0.09, 0.09], ink: 0.1 }, 1);
+    const fur = [0.96, 0.53, 0.2];
+    const white = [0.99, 0.96, 0.9];
+    const sock = [0.27, 0.19, 0.17];
+    s.capsule(0.2, 0.42, { at: [0, 0.5, -0.06], rot: [Math.PI / 2, 0, 0], scale: [0.9, 1, 1], color: fur, ink: 0.05 });
+    s.ball(0.17, { at: [0, 0.46, 0.2], scale: [0.8, 0.9, 0.9], color: white, ink: 0.05 });
+    s.ball(0.19, { at: [0, 0.8, 0.36], scale: [1.08, 0.9, 0.95], color: fur, ink: 0.07 }, 3);
+    // white cheeks, a pointed muzzle, tall ears tipped with dark
     for (const side of [-1, 1]) {
-      s.cone(0.075, 0.2, 4, { at: [side * 0.12, 1.0, 0.32], rot: [0, 0, -side * 0.2], color: fur, ink: 0.14 });
-      for (const z of [-0.26, 0.2]) s.cyl(0.045, 0.04, 0.38, 12, { at: [side * 0.12, 0.19, z], color: sock, ink: 0.17 });
+      s.ball(0.1, { at: [side * 0.12, 0.75, 0.44], scale: [1, 0.8, 0.8], color: white, ink: 0.07 }, 1);
+      s.cone(0.085, 0.22, 6, { at: [side * 0.125, 1.02, 0.31], rot: [0, 0, -side * 0.22], scale: [1, 1, 0.6], color: fur, ink: 0.14 });
+      s.cone(0.045, 0.1, 6, { at: [side * 0.138, 1.1, 0.31], rot: [0, 0, -side * 0.22], scale: [1, 1, 0.6], color: sock, ink: 0.2 });
+      leg(s, [side * 0.11, 0.42, 0.18], [side * 0.11, 0, 0.2], 0.055, fur, sock);
+      leg(s, [side * 0.12, 0.44, -0.28], [side * 0.12, 0, -0.3], 0.06, fur, sock);
     }
-    s.ball(0.17, { at: [0, 0.56, -0.52], scale: [0.75, 0.75, 1.7], rot: [-0.5, 0, 0], color: fur, ink: 0.2 }, 2);
-    s.ball(0.11, { at: [0, 0.74, -0.76], color: white, ink: 0.14 }, 1);
-    eyes(s, 0.1, 0.83, 0.5, 0.027);
+    stick(s, [0, 0.76, 0.48], [0, 0.72, 0.68], 0.09, 0.035, { color: white, ink: 0.07 }, 10);
+    s.ball(0.032, { at: [0, 0.735, 0.7], color: [0.12, 0.09, 0.09], ink: 0.1 }, 1);
+    // the brush: full in the middle, white at the tip
+    s.drop(0.17, 0.62, 14, { at: [0, 0.5, -0.3], rot: [-1.9, 0, 0], color: fur, ink: 0.2 });
+    s.ball(0.085, { at: [0, 0.72, -0.86], scale: [1, 1, 1.3], color: white, ink: 0.14 });
+    eyes(s, 0.1, 0.85, 0.51, 0.028);
     return s;
   },
   duck() {
     const s = new Shape();
-    const white = [0.98, 0.97, 0.92];
-    const bill = [1.0, 0.66, 0.2];
-    s.ball(0.24, { at: [0, 0.32, -0.02], scale: [0.85, 0.78, 1.25], color: white, ink: 0.05 }, 3);
-    s.cone(0.12, 0.22, 12, { at: [0, 0.42, -0.34], rot: [-1.0, 0, 0], color: white, ink: 0.05 });
-    s.cyl(0.07, 0.09, 0.26, 12, { at: [0, 0.56, 0.16], rot: [0.25, 0, 0], color: white, ink: 0.07 });
-    s.ball(0.12, { at: [0, 0.74, 0.2], color: [0.2, 0.5, 0.36], shade: [0.1, 0.28, 0.3], ink: 0.14 }, 2);
-    s.ball(0.07, { at: [0, 0.71, 0.33], scale: [1, 0.45, 1.5], color: bill, ink: 0.17 }, 1);
+    const white = [0.99, 0.98, 0.93];
+    const bill = [1.0, 0.68, 0.2];
+    const green = [0.2, 0.52, 0.38];
+    s.ball(0.24, { at: [0, 0.32, -0.02], scale: [0.86, 0.8, 1.25], color: white, ink: 0.05 }, 3);
+    s.drop(0.13, 0.3, 12, { at: [0, 0.34, -0.26], rot: [-1.05, 0, 0], color: white, ink: 0.05 });
+    stick(s, [0, 0.44, 0.14], [0, 0.72, 0.2], 0.09, 0.07, { color: white, ink: 0.07 }, 10);
+    s.torus(0.073, 0.014, { at: [0, 0.62, 0.18], rot: [Math.PI / 2 - 0.2, 0, 0], color: [0.98, 0.95, 0.8], ink: 0.2 }, 12);
+    s.ball(0.12, { at: [0, 0.78, 0.21], color: green, shade: [0.1, 0.28, 0.3], ink: 0.14 }, 3);
+    s.ball(0.075, { at: [0, 0.745, 0.35], scale: [1, 0.42, 1.5], color: bill, ink: 0.17 });
     for (const side of [-1, 1]) {
-      s.cyl(0.02, 0.02, 0.14, 12, { at: [side * 0.08, 0.07, 0.02], color: bill, ink: 0.17 });
-      s.ball(0.05, { at: [side * 0.08, 0.015, 0.06], scale: [1, 0.3, 1.4], color: bill, ink: 0.2 }, 1);
-      s.ball(0.15, { at: [side * 0.19, 0.35, -0.04], scale: [0.3, 0.6, 1.1], color: [0.9, 0.9, 0.86], ink: 0.2 }, 1);
+      s.leaf([side * 0.16, 0.42, 0.12], [side * 0.2, 0.36, -0.32], 0.26, { color: [0.9, 0.9, 0.86], ink: 0.2, steps: 4 }, [side, 0.3, 0]);
+      stick(s, [side * 0.08, 0.14, 0.02], [side * 0.08, 0.02, 0.03], 0.02, 0.018, { color: bill, ink: 0.17 }, 6);
+      s.leaf([side * 0.08, 0.015, -0.02], [side * 0.09, 0.015, 0.16], 0.12, { color: bill, ink: 0.2 });
     }
-    eyes(s, 0.075, 0.78, 0.28, 0.022);
+    eyes(s, 0.078, 0.82, 0.29, 0.022);
     return s;
   },
 };
