@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { fromValley, paint, pathDistance, TARN, tarnDistance, TREE } from '../valley/world.js';
 import { HOME, ITEMS, JOBS, SPIRIT_NAMES, SPIRITS } from './data.js';
-import { spiritGeometry } from './models.js';
+import { SPIRIT_LOOKS, spiritGeometry } from './models.js';
 import { Shape } from './paint.js';
 
 const TAU = Math.PI * 2;
@@ -22,7 +22,7 @@ const SPEED = 3.4;
 export function createSpirits({ field, paints, nodes, sites, work, deposit, basket, campfires }) {
   const group = new THREE.Group();
   const list = [];
-  const material = paints.celOwn(1.18);
+  const material = paints.celOwn(1.16, 0.7);
   const carried = {};
   const carryGeometry = (item) => {
     if (!carried[item]) carried[item] = new Shape().ball(0.11, { color: ITEMS[item].color }, 1).build();
@@ -40,6 +40,17 @@ export function createSpirits({ field, paints, nodes, sites, work, deposit, bask
       // (not one much farther off than the nearest: a trip should be a short one)
       .filter((p, i, all) => p.d < all[0].d * 1.6 + 12);
   const spots = { wood: byHome('tree', 4), stone: byHome('rock', 4), forage: byHome('bush', 5), clay: byHome('clay', 3) };
+  /** Somewhere a good way off, for one sent to see what it can find. */
+  const farSpot = () => {
+    for (let i = 0; i < 30; i++) {
+      const a = Math.random() * TAU;
+      const d = 50 + Math.random() * 70;
+      const x = HOME.x + Math.cos(a) * d;
+      const z = HOME.z + Math.sin(a) * d;
+      if (tarnDistance(x, z) > 1.1 && Math.hypot(x, z) < 500) return { x, z, r: 0.4 };
+    }
+    return meadowSpot();
+  };
   const meadowSpot = () => {
     for (let i = 0; i < 20; i++) {
       const a = Math.random() * TAU;
@@ -51,17 +62,18 @@ export function createSpirits({ field, paints, nodes, sites, work, deposit, bask
     return { x: HOME.x + 16, z: HOME.z, r: 0.4 };
   };
 
-  function make(kind, name, x, z, friend, job = 'rest', id = nextId) {
+  function make(kind, name, x, z, friend, job = 'rest', id = nextId, sort = Math.floor(Math.random() * 3)) {
     nextId = Math.max(nextId, id + 1);
-    const k = SPIRITS[kind];
-    const mesh = new THREE.Mesh(spiritGeometry(kind, k.body, k.accent), material);
+    // (each is one of its kind's three sorts, and a little bigger or smaller than the next)
+    const size = 0.9 + ((id * 0.618) % 1) * 0.28;
+    const mesh = new THREE.Mesh(spiritGeometry(kind, sort), material);
     mesh.frustumCulled = false;
     const load = new THREE.Mesh(carryGeometry('wood'), paints.prop);
     load.position.set(0, 0.98, 0);
     load.visible = false;
     mesh.add(load);
     group.add(mesh);
-    const s = { id, kind, name, friend, job, x, z, y: field.heightAt(x, z), yaw: Math.random() * TAU, mesh, load, state: 'idle', timer: Math.random() * 2, goal: null, site: null, carry: null, phase: Math.random() * TAU, home: { x, z }, joy: 0, busy: 0 };
+    const s = { id, kind, sort, size, name, friend, job, x, z, y: field.heightAt(x, z), yaw: Math.random() * TAU, mesh, load, state: 'idle', timer: Math.random() * 2, goal: null, site: null, carry: null, phase: Math.random() * TAU, home: { x, z }, joy: 0, busy: 0 };
     list.push(s);
     return s;
   }
@@ -87,6 +99,19 @@ export function createSpirits({ field, paints, nodes, sites, work, deposit, bask
     switch (SPIRITS[kind].where) {
       case 'grove':
         return pick(nodes.of('tree').filter((p) => !p.great && away(p)), 3.5);
+      case 'shade':
+        return pick(nodes.of('mushroom').filter(away), 1.6);
+      case 'dusk': {
+        // it comes down on the open hill, not far from your land
+        for (let i = 0; i < 60; i++) {
+          const a = Math.random() * TAU;
+          const d = HOME.r + 12 + Math.random() * 50;
+          const x = HOME.x + Math.cos(a) * d;
+          const z = HOME.z + Math.sin(a) * d;
+          if (pathDistance(x, z) > 3 && paint(x, z).growth > 0.9 && free(x, z)) return { x, z };
+        }
+        return null;
+      }
       case 'stones':
         return pick(nodes.of('rock').filter(away), 2.6);
       case 'flowers':
@@ -185,7 +210,7 @@ export function createSpirits({ field, paints, nodes, sites, work, deposit, bask
     // a gathering job: out to the place, work there, back to the basket with what was found
     if (s.state === 'idle') {
       const choice = spots[s.job];
-      s.goal = choice?.length ? choice[Math.floor(Math.random() * choice.length)] : meadowSpot();
+      s.goal = s.job === 'explore' ? farSpot() : choice?.length ? choice[Math.floor(Math.random() * choice.length)] : meadowSpot();
       s.state = 'out';
     }
     if (s.state === 'out') {
@@ -198,8 +223,10 @@ export function createSpirits({ field, paints, nodes, sites, work, deposit, bask
       s.busy = 1;
       s.timer -= dt;
       if (s.timer <= 0) {
-        const item = job.gives[Math.floor(Math.random() * job.gives.length)];
-        s.carry = { item, count: SPIRITS[s.kind].best === s.job ? 2 : 1 };
+        const best = SPIRITS[s.kind].best === s.job;
+        // (one who goes exploring sometimes comes back with something that shines)
+        const item = s.job === 'explore' && Math.random() < (best ? 0.16 : 0.05) ? 'glow' : job.gives[Math.floor(Math.random() * job.gives.length)];
+        s.carry = { item, count: item === 'glow' ? 1 : best ? 2 : 1 };
         s.load.geometry = carryGeometry(item);
         s.load.visible = true;
         s.state = 'back';
@@ -225,17 +252,17 @@ export function createSpirits({ field, paints, nodes, sites, work, deposit, bask
     group,
     list,
     /** Puts a wild spirit in the valley. With no place given it finds one of its own kind of place; null if it can't. */
-    spawnWild(kind, at = null, name = null, id = undefined) {
+    spawnWild(kind, at = null, name = null, id = undefined, sort = undefined) {
       const where = at ?? habitat(kind, list.filter((s) => !s.friend));
       if (!where) return null;
       const used = new Set(list.map((s) => s.name));
       const free = SPIRIT_NAMES.filter((n) => !used.has(n));
-      return make(kind, name ?? free[Math.floor(Math.random() * free.length)] ?? '정령', where.x, where.z, false, 'rest', id);
+      return make(kind, name ?? free[Math.floor(Math.random() * free.length)] ?? '정령', where.x, where.z, false, 'rest', id, sort);
     },
     /** A friend from a saved game, put down at home. */
-    addFriend({ id, kind, name, job }) {
+    addFriend({ id, kind, name, job, sort }) {
       const a = Math.random() * TAU;
-      return make(kind, name, basket.x + Math.cos(a) * 3, basket.z + Math.sin(a) * 3, true, job, id);
+      return make(kind, name, basket.x + Math.cos(a) * 3, basket.z + Math.sin(a) * 3, true, job, id, sort);
     },
     /** The first spirit anyone meets waits under the great tree. */
     firstPlace: () => ({ x: TREE[0] - 5.5, z: TREE[1] + 4.5 }),
@@ -271,6 +298,19 @@ export function createSpirits({ field, paints, nodes, sites, work, deposit, bask
       }
       return best;
     },
+    /** The shine round each of them, and a mote or two in its company. */
+    glow(glows, clock, dusk) {
+      for (const s of list) {
+        const colour = SPIRIT_LOOKS[s.kind][s.sort % 3][0];
+        const p = s.mesh.position;
+        const hot = s.kind === 'ember' || s.kind === 'star' ? 1.4 : 1;
+        glows.add(p.x, p.y + 0.34 * s.size, p.z, 1.7 * s.size, colour, (0.1 + 0.26 * dusk + 0.12 * s.joy) * hot);
+        for (let i = 0; i < 2; i++) {
+          const a = clock * (1.1 + 0.3 * i) + s.id * 2.4 + i * 3.1;
+          glows.add(p.x + Math.cos(a) * 0.46, p.y + 0.36 + Math.sin(a * 1.7) * 0.22, p.z + Math.sin(a) * 0.46, 0.2, [1, 0.96, 0.8], (0.5 + 0.5 * Math.sin(a * 3)) * (0.5 + 0.8 * dusk), 1);
+        }
+      }
+    },
     update(dt, player, clock) {
       for (const s of list) {
         s.moving = false;
@@ -284,8 +324,10 @@ export function createSpirits({ field, paints, nodes, sites, work, deposit, bask
         s.mesh.position.set(s.x, s.y + HOVER + bob, s.z);
         // it leans into its going, and sways a little when it stays
         s.mesh.rotation.set(s.moving ? 0.22 : 0, s.yaw, Math.sin(s.phase * 0.5) * 0.06 + (s.busy ? Math.sin(clock * 9 + s.id) * 0.18 : 0));
-        const squash = 1 + Math.sin(s.phase * 2) * 0.03;
-        s.mesh.scale.set(1 / squash, squash, 1 / squash);
+        const squash = 1 + Math.sin(s.phase * 2) * 0.035;
+        s.mesh.scale.set(s.size / squash, s.size * squash, s.size / squash);
+        // (a star turns as it hangs there)
+        if (s.kind === 'star') s.mesh.rotation.z += Math.sin(clock * 0.9 + s.id) * 0.35;
       }
     },
   };

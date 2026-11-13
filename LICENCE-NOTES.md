@@ -3,13 +3,16 @@
 This game is built on **Painted valley** 1.1.1 by Patch (https://patch.gg/blendi/painted-valley, commit `e523a37`),
 which is open source: code MIT, art CC0 1.0. The first commit of this repository after the empty one is that source
 unchanged; everything the game adds is in `src/game/` and in the changes to `src/valley/main.js`, `index.html` and
-`tools/`. The table below is Painted valley's own, with one row added for the game.
+`tools/`, with a few small changes to the meadow itself (`src/lib/glsl.js`, `flowers.js`, `blades.js`, `ground.js`,
+`clippings.js`: more kinds and colours of flower and grass, and the shade of buildings on the ground) and to
+`src/figure/input.js` (touch). The table below is Painted valley's own, with one row added for the game.
 
 Code MIT. Art in this repo CC0 1.0. Checked 2026-11-11 (Painted valley's parts), 2026-11-12 (the game's).
 
 | Part | Where it came from | Licence | In this repo? |
 |---|---|---|---|
 | `src/game/` (the game: gathering, spirits, animals, building, the day, the page) | Written for this game. Every building, spirit, animal and thing to gather is made in code from plain solids; no picture or model is loaded for them. The short interface sounds are made in code too | MIT; what it draws CC0 | Yes |
+| `public/icons/`, `public/manifest.webmanifest`, `public/sw.js` | Made for this game (the icon is drawn by a script) | MIT; the icon CC0 | Yes |
 | `src/valley/` (the land, sky, clouds, mountains, plain, village, trees, stones, water, brushwork, the walk) | Written by Patch for this block. Every cloud, mountain, tree, house and brush mark is made in code; no picture or model is loaded for them | MIT; what it draws CC0 | Yes |
 | `src/lib/` (the grass, flowers, the ground under them, the frame's finish) | Patch's grass block (`blendi/touch-grass`), copied and restyled for this look | MIT; what it draws CC0 | Yes |
 | `src/valley/wanderer.js` (the wanderer's look, his hat) | Written by Patch for this block | MIT; what it draws CC0 | Yes |

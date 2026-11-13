@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --config vite.config.mjs --host 127.0.0.1 --port 5384 --strictPort",
+    "dev:lan": "vite --config vite.config.mjs --host 0.0.0.0 --port 5384 --strictPort",
     "build": "node build.mjs",
     "serve": "node tools/serve.mjs dist 5383"
   },

@@ -48,13 +48,17 @@ void main() {
   // one kind to a drift, with a few strays
   float kindN = texture(tWhite, xz / (7.0 * 256.0)).r;
   if (q.z > 0.8) kindN = q.w;
-  int kind = int(kindN * 3.999);
+  int kind = int(kindN * 6.999);
   vec3 petal = vec3(0.80, 0.80, 0.74);
   vec3 middle = vec3(0.75, 0.50, 0.03);
   float count = 8.0, pl = 0.024, pw = 0.0075, cup = 0.12, mid = 0.0095, tall = 1.0;
   if (kind == 1) { petal = vec3(0.85, 0.62, 0.02); middle = vec3(0.6, 0.45, 0.02); count = 5.0; pl = 0.012; pw = 0.011; cup = 0.6; mid = 0.004; tall = 0.85; }
   if (kind == 2) { petal = vec3(0.86, 0.34, 0.55); middle = vec3(0.7, 0.5, 0.08); count = 8.0; pl = 0.019; pw = 0.005; cup = 0.55; mid = 0.007; tall = 1.1; }
   if (kind == 3) { petal = vec3(0.93, 0.88, 0.8); middle = vec3(0.8, 0.55, 0.06); count = 4.0; pl = 0.03; pw = 0.03; cup = 0.75; mid = 0.006; tall = 1.05; }
+  // (more kinds, for a meadow of more colours: cornflower, a red poppy, harebell)
+  if (kind == 4) { petal = vec3(0.26, 0.42, 0.9); middle = vec3(0.2, 0.2, 0.5); count = 8.0; pl = 0.02; pw = 0.006; cup = 0.5; mid = 0.006; tall = 1.1; }
+  if (kind == 5) { petal = vec3(0.9, 0.16, 0.1); middle = vec3(0.1, 0.08, 0.06); count = 4.0; pl = 0.03; pw = 0.03; cup = 0.8; mid = 0.007; tall = 1.0; }
+  if (kind == 6) { petal = vec3(0.62, 0.48, 0.92); middle = vec3(0.8, 0.7, 0.3); count = 5.0; pl = 0.016; pw = 0.012; cup = 0.7; mid = 0.004; tall = 0.9; }
   float size = mix(2.0, 2.7, r.z);
 
   float gy = groundAt(xz);
@@ -127,7 +131,7 @@ void main() {
   vWorld = world;
   vNormal = N;
   vAlbedo = col;
-  vLight = vec3(cloudAt(xz), texture(tGlow, suv).g + lampAt(world), clamp(rise / (uHeight * 0.85), 0.0, 1.0));
+  vLight = vec3(groundSun(xz), texture(tGlow, suv).g + lampAt(world), clamp(rise / (uHeight * 0.85), 0.0, 1.0));
   gl_Position = projectionMatrix * viewMatrix * vec4(world, 1.0);
 }
 `;

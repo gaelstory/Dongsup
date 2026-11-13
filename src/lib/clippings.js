@@ -31,7 +31,7 @@ void main() {
   vAlbedo = mix(aColor.rgb, vec3(0.62, 0.56, 0.30) * (0.35 + 1.6 * lum), lain * 0.75);
   // deep in the heap or down in the stubble it is in shade; on top it is in the light
   float up = clamp(0.3 + (world.y - groundAt(world.xz)) / 0.22, 0.0, 0.8);
-  vLight = vec3(cloudAt(world.xz), texture(tGlow, stateUv(world.xz)).g + lampAt(world), up);
+  vLight = vec3(groundSun(world.xz), texture(tGlow, stateUv(world.xz)).g + lampAt(world), up);
   gl_Position = projectionMatrix * viewMatrix * vec4(world, 1.0);
 }
 `;

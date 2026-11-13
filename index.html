@@ -2,9 +2,17 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#7fb069" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="정령의 골짜기" />
+    <meta name="description" content="그림 같은 골짜기에서 재료를 모으고, 정령과 동물을 만나고, 내 땅에 캠핑장을 짓는 느긋한 생활 게임" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
     <title>정령의 골짜기</title>
-    <link rel="icon" href="data:," />
+    <link rel="icon" type="image/png" href="./icons/icon-192.png" />
     <style>
       html,
       body {
@@ -15,6 +23,13 @@
         color: #24323a;
         font: 15px/1.4 'Noto Serif KR', 'Nanum Myeongjo', 'Apple SD Gothic Neo', 'Malgun Gothic', Georgia, serif;
         user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: none;
+        overscroll-behavior: none;
+        position: fixed;
+        inset: 0;
       }
       canvas {
         display: block;
@@ -73,14 +88,26 @@
       .ready:not(.playing) #start {
         display: grid;
       }
+      #start .thumb,
+      .touch #start .mouse {
+        display: none;
+      }
+      .touch #start .thumb {
+        display: block;
+      }
+      #loading {
+        font-size: 18px;
+      }
     </style>
   </head>
   <body>
     <canvas id="view"></canvas>
     <div id="start">
       <div>
-        <b>화면을 클릭하면 시작해요</b>
-        <span>W A S D 걷기 · E 줍기·말 걸기 · B 짓기 · Tab 정령 · J 도감 · H 도움말</span>
+        <b class="mouse">화면을 클릭하면 시작해요</b>
+        <span class="mouse">W A S D 걷기 · E 줍기·말 걸기 · B 짓기 · Tab 정령 · J 도감 · H 도움말</span>
+        <b class="thumb">화면을 터치하면 시작해요</b>
+        <span class="thumb">왼쪽 엄지로 걷기 · 오른쪽을 끌어 둘러보기 · ✋ 줍기·말 걸기</span>
       </div>
     </div>
     <div id="note"></div>

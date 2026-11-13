@@ -182,7 +182,7 @@ void main() {
   vMisc = vec4(side, up, gloss * (1.0 - charred), heat * (1.0 - 0.5 * charred) * (0.35 + 0.65 * s));
   // a low sun lights the tall clumps and leaves the short ones behind them in shade
   float among = mix(mix(0.45, 1.0, smoothstep(0.15, 0.75, cl.r)), 1.0, clamp(uSunDir.y * 2.5, 0.0, 1.0));
-  vLight = vec2(cloudAt(xz) * mix(among, 1.0, open) * slopeSun(rel), texture(tGlow, suv).g + lampAt(world));
+  vLight = vec2(groundSun(xz) * mix(among, 1.0, open) * slopeSun(rel), texture(tGlow, suv).g + lampAt(world));
   gl_Position = projectionMatrix * viewMatrix * vec4(world, 1.0);
 }
 `;

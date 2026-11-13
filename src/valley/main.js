@@ -12,6 +12,7 @@ import * as THREE from 'three';
 import { bakeGround, createField, createFrame, loadGroundTextures } from '../lib/index.js';
 import { createGame } from '../game/game.js';
 import { DAY } from '../game/data.js';
+import { isTouchDevice } from '../game/touch.js';
 import { createFluff, createStones } from './dressing.js';
 import { createFarWoods } from './farwoods.js';
 import { createFloor, FLOOR, paintFloor } from './floor.js';
@@ -78,7 +79,20 @@ const offThread = (message, here) =>
       fallback();
     }
   });
-const quality = params.get('quality') ?? 'high';
+// On a phone or tablet the game is played with thumbs, and drawn lighter unless asked otherwise. How finely it is
+// drawn can be chosen in the help panel, which keeps the choice; ?quality= in the address wins over both.
+const touch = isTouchDevice(params);
+const quality = (() => {
+  const asked = params.get('quality');
+  if (asked) return asked;
+  try {
+    const kept = localStorage.getItem('spirit-valley-quality');
+    if (kept === 'low' || kept === 'medium' || kept === 'high') return kept;
+  } catch {
+    // no choice kept
+  }
+  return touch ? 'low' : 'high';
+})();
 const EXTENT = 1280;
 const GROUND = { extent: EXTENT, extentRes: EXTENT, centre: [0, 0] };
 const FLOOR_SIZE = quality === 'low' ? 1024 : 1536;
@@ -109,7 +123,8 @@ try {
   $('loading').textContent = 'WebGL 2가 필요해요';
   throw new Error('no WebGL 2');
 }
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, params.has('dpr') ? Number(params.get('dpr')) : 1.5));
+// (a phone's screen is small and dense: a little less than its own pixels is plenty, and keeps it cool)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, params.has('dpr') ? Number(params.get('dpr')) : touch && quality === 'low' ? 1.25 : 1.5));
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 const scene = new THREE.Scene();
@@ -199,7 +214,19 @@ mark('strokes');
 }
 mark('floor');
 await stage(0.3, '마을을 짓는 중');
-const frame = createFrame(renderer, field, { samples: quality === 'low' ? 0 : 4, bloom: 0.1 });
+// Smooth edges wherever the graphics card can give them to the frame's own kind of picture (half-float), which
+// it is asked rather than assumed: a phone that can't would draw nothing at all.
+const msaa = (() => {
+  if (params.has('samples')) return Number(params.get('samples'));
+  try {
+    const gl = renderer.getContext();
+    const counts = Array.from(gl.getInternalformatParameter(gl.RENDERBUFFER, gl.RGBA16F, gl.SAMPLES) ?? []);
+    return counts.includes(4) ? 4 : counts.includes(2) ? 2 : 0;
+  } catch {
+    return 0;
+  }
+})();
+const frame = createFrame(renderer, field, { samples: msaa, bloom: 0.14 });
 mark('frame');
 const sky = createSky(renderer, field, { parts: skyParts });
 mark('sky');
@@ -209,7 +236,7 @@ const farWoods = createFarWoods(field);
 mark('farWoods');
 scene.add(sky.mesh, createHorizon(field, EXTENT / 2), trees.group, farWoods.group, createTarn(field, sky));
 // the finish: the frame laid in as brush marks. ?paint=0 for none; P turns it on and off.
-frame.paint = params.has('paint') ? Number(params.get('paint')) : quality === 'low' ? 0 : quality === 'medium' ? 2 : 3;
+frame.paint = params.has('paint') ? Number(params.get('paint')) : quality === 'low' ? 1 : quality === 'medium' ? 2 : 3;
 const paintWas = frame.paint || 3;
 mark('build');
 await stage(0.45, '나무를 심는 중');
@@ -549,6 +576,10 @@ const game = createGame({
   reach: REACH,
   fresh: params.has('new'),
   quiet: stepped,
+  touch,
+  input,
+  quality,
+  density: quality === 'low' ? 0.4 : quality === 'medium' ? 0.7 : 1,
   speed: () => (third ? walker.speed : Math.hypot(player.vx, player.vz)),
   setHour: (hour, soft) => setHour(hour, soft),
   bend: (x, z) => field.bend(x, z, 0.7, 0, 0, 0.8),
@@ -593,9 +624,28 @@ function setWind(speed) {
 
 canvas.addEventListener('click', () => {
   sounds.start();
+  if (touch) return;
   if (document.pointerLockElement !== canvas && !game.ui.open) canvas.requestPointerLock()?.catch?.(() => {});
 });
+if (touch) {
+  // under a thumb there is no mouse to hold: the first touch begins the game, and it stays begun. Where the
+  // browser allows, the page takes the whole screen and lies on its side.
+  input.lockable = false;
+  const begin = async () => {
+    window.removeEventListener('pointerup', begin);
+    document.body.classList.add('playing');
+    sounds.start();
+    try {
+      if (!document.fullscreenElement && !params.has('step')) await document.documentElement.requestFullscreen?.({ navigationUI: 'hide' });
+      await screen.orientation?.lock?.('landscape');
+    } catch {
+      // not every browser lets a page do either: the game is the same without
+    }
+  };
+  window.addEventListener('pointerup', begin);
+}
 document.addEventListener('pointerlockchange', () => {
+  if (touch) return;
   const locked = document.pointerLockElement === canvas;
   document.body.classList.toggle('playing', locked);
   if (locked) sounds.start();
@@ -617,7 +667,7 @@ document.addEventListener('keydown', (e) => {
     if (e.code === 'Period') setHour((game.hour = Math.min(SUNSET, sky.hour + 0.25)));
   }
   if (e.code === 'KeyP') frame.paint = frame.paint ? 0 : paintWas;
-  if (e.code === 'KeyV') {
+  if (e.code === 'KeyV' && !touch) {
     setThird(!third);
     note(third ? '3인칭' : '1인칭');
   }
@@ -650,7 +700,7 @@ function tick(dt) {
     updatePlayer(dt);
   }
   placeCamera();
-  input.lockable = !game.ui.open;
+  input.lockable = !touch && !game.ui.open;
   game.update(dt);
   field.update(dt, camera);
   farWoods.update(dt, wind.speed);
@@ -746,3 +796,4 @@ document.body.classList.add('ready');
 block.ready();
 // for the measuring tools
 window.__block = { ready: true, block, timings };
+if (import.meta.env.PROD && 'serviceWorker' in navigator && !stepped) navigator.serviceWorker.register('./sw.js').catch(() => {});

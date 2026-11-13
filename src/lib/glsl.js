@@ -141,6 +141,14 @@ float cloudAt(vec2 xz) {
   return openAt(xz) * walkerShade(xz);
 }
 
+// The same for what grows on the ground, which also lies in the shade of what has been built there (the game keeps
+// that shade in the spare channel of the state map: 255 for none).
+float groundSun(vec2 xz) {
+  vec2 suv = stateUv(xz);
+  float built = suv == clamp(suv, 0.0, 1.0) ? 1.0 - texture(tState, suv).a : 0.0;
+  return cloudAt(xz) * (1.0 - 0.78 * built);
+}
+
 // Distance haze, warmer towards the sun.
 vec3 applyFog(vec3 c, vec3 world) {
   vec3 d = world - uCamPos;
@@ -165,6 +173,11 @@ vec3 meadowTint(vec2 xz) {
   float b = texture(tNoiseHi, xz / 37.0 + 0.23).r;
   float w = smoothstep(0.3, 0.7, a * 0.6 + b * 0.4);
   vec3 t = mix(vec3(0.8, 0.96, 1.1), vec3(1.2, 1.06, 0.76), w);
+  // wide reaches of the meadow lean their own way: one gold with seed, one deep and blue, one fresh and pale
+  float reachN = texture(tNoiseHi, xz / 190.0 + 0.71).g;
+  t *= mix(vec3(1.0), vec3(1.16, 1.04, 0.7), smoothstep(0.58, 0.72, reachN));
+  t *= mix(vec3(1.0), vec3(0.78, 0.98, 1.06), smoothstep(0.42, 0.28, reachN));
+  t *= mix(vec3(1.0), vec3(1.08, 1.12, 0.92), smoothstep(0.6, 0.75, texture(tNoiseHi, xz / 83.0 + 0.13).b));
   // here and there a patch of something darker and bluer: clover, sedge
   float c = texture(tNoiseHi, xz / 13.0 + 0.61).g;
   return t * mix(vec3(1.0), vec3(0.72, 0.87, 0.96), smoothstep(0.6, 0.72, c));

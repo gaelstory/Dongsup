@@ -12,6 +12,8 @@ export class Input {
     this.pad = { a: false, l3: false, sprint: false };
     this.sensitivity = 0.0022;
     this.override = null; // scripted input for captures
+    // a thumb on glass (src/game/touch.js): a stick for moving, and what its buttons hold down
+    this.touch = { x: 0, y: 0, active: false, jump: false, sprint: false };
     this.lockable = true;
     const typing = () => document.activeElement?.tagName === 'INPUT';
     const down = (e) => {
@@ -57,6 +59,19 @@ export class Input {
     };
     this.mouse.x = this.mouse.y = this.mouse.wheel = 0;
     this.pressed.clear();
+
+    // touch: the stick moves him as a gamepad's would (a little tilt is a slow walk), its buttons jump and sprint
+    const t = this.touch;
+    if (t.active && Math.hypot(t.x, t.y) > 0.01) {
+      s.move = { x: t.x, y: t.y };
+      s.device = 'pad';
+      s.walk = false;
+    }
+    if (t.jump) {
+      s.jump = true;
+      t.jump = false;
+    }
+    if (t.sprint && t.active) s.sprint = true;
 
     // gamepad: left stick moves (its tilt sets the speed), right stick looks, L3 sprints,
     // A jumps, LT strafes, d-pad up/down zooms

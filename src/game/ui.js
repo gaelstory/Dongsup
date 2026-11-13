@@ -1,6 +1,7 @@
 // The game's page: what you carry, the day, what the key would do, and the panels (building, spirits, the
 // journal, the keys). Plain DOM over the canvas. It knows nothing of the game but what it is handed.
 import './ui.css';
+import { SPIRIT_LOOKS } from './models.js';
 import { ANIMAL_ORDER, ANIMALS, BUILD_ORDER, BUILDINGS, ITEM_ORDER, ITEMS, JOB_ORDER, JOBS, SPIRIT_ORDER, SPIRITS } from './data.js';
 
 const el = (tag, cls, html) => {
@@ -17,9 +18,10 @@ const costChips = (cost, inv) =>
 
 /**
  * @param canvas the game's canvas (to give the mouse back to when a panel shuts)
- * @param on { build(type), demolish(), job(spirit, job), reset(), closed() }
+ * @param on { build(type), demolish(), job(spirit, job), reset(), closed(), menu(name), rotate(), cancel(), quality(name) }
+ * @param touch true on a phone or tablet: no keys are named, and there are buttons for what keys do
  */
-export function createUI(canvas, on) {
+export function createUI(canvas, on, touch = false) {
   const root = el('div');
   root.id = 'game-ui';
   root.innerHTML = `
@@ -33,8 +35,10 @@ export function createUI(canvas, on) {
     <div id="toasts"></div>
     <div id="prompt" class="card"><kbd>E</kbd><span></span><div class="meter"><i></i></div></div>
     <div id="hint" class="card"></div>
-    <div id="keys"><span><kbd>E</kbd>줍기·말 걸기</span><span><kbd>B</kbd>짓기</span><span><kbd>Tab</kbd>정령</span><span><kbd>J</kbd>도감</span><span><kbd>H</kbd>도움말</span></div>
-    <div id="panel"><div class="sheet"><header><h2></h2><span></span><button data-close>닫기 (Esc)</button></header><div class="body"></div></div></div>
+    <div id="place-buttons"><button data-place="rotate">↻ 돌리기</button><button data-place="cancel">✕ 취소</button></div>
+    <div id="keys"><button data-menu="build"><kbd>B</kbd><em>🔨</em>짓기</button><button data-menu="spirits"><kbd>Tab</kbd><em>✨</em>정령</button><button data-menu="journal"><kbd>J</kbd><em>📖</em>도감</button><button data-menu="help"><kbd>H</kbd><em>❔</em>도움말</button></div>
+    <div id="panel"><div class="sheet"><header><h2></h2><span></span><button data-close>${touch ? '닫기' : '닫기 (Esc)'}</button></header><div class="body"></div></div></div>
+    <div id="turn" class="card">📱 가로로 돌리면 더 넓게 보여요</div>
     <div id="fade"></div>`;
   document.body.appendChild(root);
   const $ = (sel) => root.querySelector(sel);
@@ -64,12 +68,14 @@ export function createUI(canvas, on) {
     refresh = null;
     panel.classList.remove('on');
     document.body.classList.remove('panel-open');
-    if (relock) canvas.requestPointerLock?.()?.catch?.(() => {});
+    if (relock && !touch) canvas.requestPointerLock?.()?.catch?.(() => {});
     on.closed?.();
   }
-  panel.addEventListener('mousedown', (e) => {
+  panel.addEventListener('pointerdown', (e) => {
     if (e.target === panel || e.target.closest('[data-close]')) close();
   });
+  for (const b of root.querySelectorAll('[data-menu]')) b.addEventListener('click', () => on.menu(b.dataset.menu));
+  for (const b of root.querySelectorAll('[data-place]')) b.addEventListener('click', () => on[b.dataset.place]());
 
   // ---- what you carry ----
   const chips = {};
@@ -114,8 +120,13 @@ export function createUI(canvas, on) {
   const bubbles = new Map();
 
   return {
+    root,
     get open() {
       return open;
+    },
+    /** The buttons for turning and putting away what is being placed (for a thumb: a keyboard has R and X). */
+    placing(onOrOff) {
+      $('#place-buttons').classList.toggle('on', onOrOff && touch);
     },
     close,
     toast,
@@ -226,7 +237,7 @@ export function createUI(canvas, on) {
         for (const s of friends) {
           const kind = SPIRITS[s.kind];
           const row = el('div', 'row');
-          row.appendChild(el('div', 'dot')).style.background = rgb(kind.body);
+          row.appendChild(el('div', 'dot')).style.background = rgb(SPIRIT_LOOKS[s.kind][(s.sort ?? 0) % 3][0]);
           row.appendChild(el('div', 'who', `<b>${s.name}</b><small>${kind.name} · ${state.doing(s)}</small>`));
           const jobs = el('div', 'jobs');
           for (const job of JOB_ORDER) {
@@ -252,7 +263,7 @@ export function createUI(canvas, on) {
           const kind = SPIRITS[k];
           const e = el('div', `entry${met ? '' : ' unknown'}`);
           e.appendChild(el('div', 'dot')).style.cssText = `width:30px;height:30px;border-radius:50%;flex:none;border:2px solid rgba(60,40,30,.5);background:${met ? rgb(kind.body) : '#cfc8b8'}`;
-          e.appendChild(el('div', '', met ? `<b>${kind.name}</b><small>${ITEMS[kind.gift[0]].icon} ${ITEMS[kind.gift[0]].name} ${kind.gift[1]}개를 좋아해요 · ${JOBS[kind.best].name}을(를) 잘해요</small>` : `<b>???</b><small>${{ grove: '숲 그늘 어딘가에', stones: '바위 곁 어딘가에', tarn: '물가 어딘가에', flowers: '꽃이 핀 풀밭 어딘가에', hill: '바람 부는 언덕 어딘가에', campfire: '따뜻한 불가에' }[kind.where]}</small>`));
+          e.appendChild(el('div', '', met ? `<b>${kind.name}</b><small>${ITEMS[kind.gift[0]].icon} ${ITEMS[kind.gift[0]].name} ${kind.gift[1]}개를 좋아해요 · ${JOBS[kind.best].name}을(를) 잘해요</small>` : `<b>???</b><small>${{ grove: '숲 그늘 어딘가에', stones: '바위 곁 어딘가에', tarn: '물가 어딘가에', flowers: '꽃이 핀 풀밭 어딘가에', hill: '바람 부는 언덕 어딘가에', campfire: '따뜻한 불가에', shade: '버섯이 돋는 그늘에', dusk: '해 질 녘 언덕에' }[kind.where]}</small>`));
           cols.appendChild(e);
         }
         cols.appendChild(el('h4', '', '동물'));
@@ -274,23 +285,45 @@ export function createUI(canvas, on) {
           el(
             'p',
             'note',
-            '언덕 위 말뚝으로 둘러싸인 곳이 <b>내 땅</b>이에요. 골짜기를 돌아다니며 반짝이는 재료를 모으고, 정령을 만나 친구가 되고, 내 땅에 캠핑장과 집을 지어 보세요. 정령에게 일을 맡기면 재료를 대신 모아 줍니다. 해가 지면 텐트에서 쉬고 새 아침을 맞아요.',
+            '언덕 위 깃발 말뚝으로 둘러싸인 곳이 <b>내 땅</b>이에요. 골짜기를 돌아다니며 반짝이는 재료를 모으고, 정령을 만나 친구가 되고, 내 땅에 캠핑장과 집을 지어 보세요. 정령에게 일을 맡기면 재료를 대신 모아 줍니다. 해가 지면 텐트에서 쉬고 새 아침을 맞아요.',
           ),
         );
         const keys = el('div', 'keys');
-        const rows = [
-          ['W A S D', '걷기 · <b>Shift</b> 달리기 · <b>Alt</b> 살금살금 걷기 (동물이 도망가지 않아요)'],
-          ['마우스', '둘러보기 · 휠로 멀리/가까이 · <b>V</b> 1인칭'],
-          ['E', '줍기 · 흔들기 · 말 걸기 · 먹이 주기 · 짓기(누르고 있기)'],
-          ['B', '짓기 메뉴 — 고른 뒤 <b>R</b> 회전, <b>클릭/E</b> 설치, <b>X</b> 취소'],
-          ['Tab', '정령 친구들에게 일 맡기기'],
-          ['J', '도감과 할 일'],
-          ['Space', '점프'],
-        ];
+        const rows = touch
+          ? [
+              ['왼쪽 화면', '엄지를 대면 스틱이 나타나요. 살짝 밀면 살금살금(동물이 도망가지 않아요), 끝까지 밀면 달리기'],
+              ['오른쪽 화면', '끌어서 둘러보기 · 두 손가락으로 벌리고 오므려 멀리/가까이'],
+              ['✋ 버튼', '줍기 · 흔들기 · 선물하기 · 먹이 주기 · 짓기(누르고 있기) · 놓기'],
+              ['⤒ / 🏃', '점프 / 전력 질주 켜고 끄기'],
+              ['🔨 짓기', '고른 뒤 화면 가운데가 놓일 자리 — ↻ 돌리기, ✋ 놓기, ✕ 취소'],
+              ['✨ 정령', '정령 친구들에게 일 맡기기'],
+              ['📖 도감', '만난 정령과 동물, 할 일'],
+            ]
+          : [
+              ['W A S D', '걷기 · <b>Shift</b> 달리기 · <b>Alt</b> 살금살금 걷기 (동물이 도망가지 않아요)'],
+              ['마우스', '둘러보기 · 휠로 멀리/가까이 · <b>V</b> 1인칭'],
+              ['E', '줍기 · 흔들기 · 말 걸기 · 먹이 주기 · 짓기(누르고 있기)'],
+              ['B', '짓기 메뉴 — 고른 뒤 <b>R</b> 회전, <b>클릭/E</b> 설치, <b>X</b> 취소'],
+              ['Tab', '정령 친구들에게 일 맡기기'],
+              ['J', '도감과 할 일'],
+              ['Space', '점프'],
+            ];
         for (const [k, text] of rows) keys.append(el('kbd', '', k), el('span', '', text));
         into.appendChild(keys);
+        // how finely it is drawn: lighter for a slow machine or a hot phone
+        const fine = el('p', 'note');
+        fine.style.margin = '16px 0 0';
+        fine.append('그래픽 품질 ');
+        for (const [name, label] of [['low', '가볍게'], ['medium', '보통'], ['high', '곱게']]) {
+          const b = el('button', on.qualityNow?.() === name ? 'on' : '', label);
+          b.style.marginRight = '6px';
+          b.addEventListener('click', () => on.quality(name));
+          fine.appendChild(b);
+        }
+        fine.append(' (바꾸면 다시 불러옵니다)');
+        into.appendChild(fine);
         const foot = el('p', 'note');
-        foot.style.margin = '16px 0 0';
+        foot.style.margin = '12px 0 0';
         const again = el('button', 'warn', '처음부터 다시 시작');
         again.addEventListener('click', () => {
           if (again.dataset.sure) on.reset();

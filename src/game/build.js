@@ -52,6 +52,57 @@ export function createBuilder({ field, paints, physics, RAPIER, trees, stones })
     for (const fixed of fixtures) mow(fixed);
   };
 
+  // ---- the shade of what is built, on the meadow ----------------------------------------------------------------
+  // Kept in the spare channel of the meadow's state map (255 is no shade), which the grass and the ground read. A
+  // building's shade is a soft shape lying away from the sun, as long as the hour makes it.
+  let shaded = [];
+  let shadeStale = true;
+  function castShade(sunDir) {
+    const { N, cell, data } = state;
+    for (const [i0, j0, i1, j1] of shaded) {
+      for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) data[(i + j * N) * 4 + 3] = 255;
+      state.dirty.add(i0, j0, i1, j1);
+    }
+    shaded = [];
+    shadeStale = false;
+    const flat = Math.hypot(sunDir.x, sunDir.z) || 1e-3;
+    const ax = -sunDir.x / flat;
+    const az = -sunDir.z / flat;
+    const slope = flat / Math.max(sunDir.y, 0.1);
+    for (const b of [...fixtures, ...list]) {
+      const def = BUILDINGS[b.type];
+      const top = buildingGeometry(b.type).userData.top * (b.fixed || b.done ? 1 : Math.max(0.15, b.work / def.work));
+      if (top < 0.25) continue;
+      const solid = def?.solid;
+      const wide = b.fixed ? 0.45 : Array.isArray(solid) ? Math.hypot(solid[0], solid[2]) * 0.72 : Math.max(def.r * 0.62, 0.3);
+      const long = Math.min(15, top * slope * 0.8);
+      const reach = wide + 0.6;
+      const i0 = Math.max(2, Math.floor((Math.min(b.x, b.x + ax * long) - reach - state.minX) / cell));
+      const i1 = Math.min(N - 3, Math.ceil((Math.max(b.x, b.x + ax * long) + reach - state.minX) / cell));
+      const j0 = Math.max(2, Math.floor((Math.min(b.z, b.z + az * long) - reach - state.minZ) / cell));
+      const j1 = Math.min(N - 3, Math.ceil((Math.max(b.z, b.z + az * long) + reach - state.minZ) / cell));
+      if (i0 > i1 || j0 > j1) continue;
+      for (let j = j0; j <= j1; j++) {
+        for (let i = i0; i <= i1; i++) {
+          const dx = state.minX + (i + 0.5) * cell - b.x;
+          const dz = state.minZ + (j + 0.5) * cell - b.z;
+          const t = Math.min(long, Math.max(0, dx * ax + dz * az));
+          const d = Math.hypot(dx - ax * t, dz - az * t);
+          // narrower and fainter towards its far end, soft all round
+          const k = long > 0 ? t / long : 0;
+          const r = wide * (1 - 0.25 * k);
+          const s = (1 - Math.min(1, Math.max(0, (d - r * 0.55) / (r * 0.6 + 0.35)))) * (1 - 0.55 * k * k);
+          if (s <= 0) continue;
+          const v = Math.round(255 * (1 - s * s * (3 - 2 * s)));
+          const at = (i + j * N) * 4 + 3;
+          if (v < data[at]) data[at] = v;
+        }
+      }
+      state.dirty.add(i0, j0, i1, j1);
+      shaded.push([i0, j0, i1, j1]);
+    }
+  }
+
   // ---- what stands there from the first day: the basket, a signpost, the stakes round the edge -----------------
   const basket = { type: 'basket', x: HOME.x + 2.2, z: HOME.z + 1.2, rot: 0.5, fixed: true };
   const sign = { type: 'sign', x: HOME.x + 3.6, z: HOME.z + 0.2, rot: 0.9, fixed: true };
@@ -142,6 +193,7 @@ export function createBuilder({ field, paints, physics, RAPIER, trees, stones })
       b.collider = collide(b);
       mow(b);
       list.push(b);
+      shadeStale = true;
       material.uniforms.uBuilt.value = work / BUILDINGS[type].work;
       if (done) finish(b);
       return b;
@@ -156,6 +208,7 @@ export function createBuilder({ field, paints, physics, RAPIER, trees, stones })
       if (b.material !== paints.prop) paints.forget(b.material);
       if (b.collider) physics.removeCollider(b.collider, false);
       regrow(b);
+      shadeStale = true;
     },
     /** Some building done on a site, in seconds of one pair of hands. True if that finished it. */
     workOn(b, seconds) {
@@ -164,6 +217,7 @@ export function createBuilder({ field, paints, physics, RAPIER, trees, stones })
       b.material.uniforms.uBuilt.value = b.work / BUILDINGS[b.type].work;
       if (b.work < BUILDINGS[b.type].work) return false;
       finish(b);
+      shadeStale = true;
       return true;
     },
     sites: () => list.filter((b) => !b.done),
@@ -191,13 +245,15 @@ export function createBuilder({ field, paints, physics, RAPIER, trees, stones })
       return { ok: true };
     },
     /** Shows what would be built at (x, z), green if it may be and red if not. `type` null puts the ghost away. */
-    showGhost(type, x = 0, z = 0, rot = 0, ok = true) {
+    showGhost(type, x = 0, z = 0, rot = 0, ok = true, over = false) {
       ghost.visible = !!type;
       if (!type) return;
       ghost.geometry = buildingGeometry(type);
       ghost.position.set(x, field.heightAt(x, z), z);
       ghost.rotation.y = rot;
-      ghostPaint.uniforms.uTint.value.setRGB(...(ok ? [0.45, 1.0, 0.55] : [1.0, 0.35, 0.3]));
+      // (laid over a thing that stands there, it is a shade bigger, so it is the one seen)
+      ghost.scale.setScalar(over ? 1.035 : 1);
+      ghostPaint.uniforms.uTint.value.setRGB(...(ok ? [0.62, 0.95, 0.66] : [1.0, 0.52, 0.46]));
     },
     /** The building nearest (x, z) within reach of its edge, or null. */
     nearest(x, z, reach = 1.5) {
@@ -216,6 +272,25 @@ export function createBuilder({ field, paints, physics, RAPIER, trees, stones })
     mowAll() {
       for (const f of fixtures) mow(f);
       for (const b of list) mow(b);
+      shaded = [];
+      shadeStale = true;
+    },
+    /** Where things stand, for whoever must keep clear of them: [{ x, z, r }]. */
+    footprints: () => [...fixtures.map((f) => ({ x: f.x, z: f.z, r: 0.7 })), ...list.map((b) => ({ x: b.x, z: b.z, r: Array.isArray(BUILDINGS[b.type].solid) ? Math.hypot(BUILDINGS[b.type].solid[0], BUILDINGS[b.type].solid[2]) : b.r * 0.9 }))],
+    /** Lays the shade of everything built for this sun, if the sun has moved or something has changed. */
+    shade(sunDir, moved) {
+      if (shadeStale || moved) castShade(sunDir);
+    },
+    /** Light in the air round what burns and shines: more as the day goes. */
+    glow(glows, clock, dusk) {
+      for (const b of list) {
+        if (!b.done) continue;
+        if (b.type === 'campfire') glows.add(b.x, b.y + 0.55, b.z, 3.2 + 0.25 * Math.sin(clock * 9 + b.id), [1.0, 0.5, 0.16], 0.16 + 0.5 * dusk);
+        else if (b.type === 'lantern') glows.add(b.x + Math.cos(b.rot) * 0.42, b.y + 1.7, b.z - Math.sin(b.rot) * 0.42, 1.9, [1.0, 0.72, 0.36], 0.75 * dusk);
+        else if (b.type === 'cairn') glows.add(b.x, b.y + 2.16, b.z, 2.6 + 0.2 * Math.sin(clock * 2 + b.id), [1.0, 0.92, 0.55], 0.25 + 0.6 * dusk);
+        else if (b.type === 'hut') glows.add(b.x + Math.cos(b.rot) * 0.68 + Math.sin(b.rot) * 0.7, b.y + 0.68, b.z - Math.sin(b.rot) * 0.68 + Math.cos(b.rot) * 0.7, 1.1, [1.0, 0.75, 0.4], 0.5 * dusk);
+        else if (b.type === 'cabin') glows.add(b.x + Math.cos(b.rot) * 0.95 + Math.sin(b.rot) * 1.95, b.y + 1.45, b.z - Math.sin(b.rot) * 0.95 + Math.cos(b.rot) * 1.95, 2.4, [1.0, 0.74, 0.4], 0.55 * dusk);
+      }
     },
     /** @param near { x, z }: the fire nearest there lights the grass round it */
     update(dt, clock, dusk, near) {

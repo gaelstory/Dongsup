@@ -10,7 +10,9 @@ shots/*
 !shots/village.jpg
 !shots/sunset.jpg
 !shots/camp.jpg
-!shots/camp.png
+!shots/dusk.jpg
+!shots/phone.jpg
+!shots/spirits.jpg
 *.mp4
 *.log
 .env

@@ -68,7 +68,7 @@ void main() {
   vec3 ash = mix(vec3(0.010, 0.009, 0.009), vec3(0.12, 0.115, 0.11), smoothstep(0.42, 0.72, ashN) * 0.5 + step(0.975, fleck) * 0.5);
   albedo = mix(albedo, ash, charred);
 
-  float cloud = cloudAt(vWorld.xz);
+  float cloud = groundSun(vWorld.xz);
   float glow = texture(tGlow, suv).g + lampAt(vWorld) * mix(1.0, 0.35, standing);
   float shade = mix(1.0, 0.3, standing);
   vec3 c = albedo * (uSunColor * cloud * max(dot(N, uSunDir), 0.0) * shade + mix(uBounceColor, uSkyColor, N.y * 0.5 + 0.5) * mix(1.0, 0.4, standing));

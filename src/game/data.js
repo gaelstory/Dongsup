@@ -47,9 +47,10 @@ export const JOBS = {
   fiber: { name: '풀 베기', icon: '🌾', gives: ['fiber'], time: 6 },
   forage: { name: '먹거리 찾기', icon: '🫐', gives: ['berry', 'berry', 'mushroom', 'flower'], time: 7 },
   clay: { name: '점토 캐기', icon: '🧱', gives: ['clay'], time: 11 },
+  explore: { name: '탐험하기', icon: '🧭', gives: ['wood', 'stone', 'fiber', 'berry', 'flower', 'mushroom', 'clay'], time: 6 },
   build: { name: '건설 돕기', icon: '🔨' },
 };
-export const JOB_ORDER = ['rest', 'wood', 'stone', 'fiber', 'forage', 'clay', 'build'];
+export const JOB_ORDER = ['rest', 'wood', 'stone', 'fiber', 'forage', 'clay', 'explore', 'build'];
 
 /**
  * The kinds of spirit. gift: what one asks for before it will come with you; best: the job it does twice as well;
@@ -57,13 +58,15 @@ export const JOB_ORDER = ['rest', 'wood', 'stone', 'fiber', 'forage', 'clay', 'b
  */
 export const SPIRITS = {
   wood: { name: '숲정령', body: [0.42, 0.72, 0.3], accent: [0.2, 0.45, 0.16], gift: ['berry', 2], best: 'wood', where: 'grove', says: '숲 그늘이 제일 좋아. 나무하는 건 나한테 맡겨!' },
-  stone: { name: '돌정령', body: [0.66, 0.67, 0.7], accent: [0.42, 0.44, 0.5], gift: ['mushroom', 2], best: 'stone', where: 'stones', says: '단단한 게 좋아. 돌은 내가 잘 캐.' },
+  stone: { name: '돌정령', body: [0.66, 0.67, 0.7], accent: [0.42, 0.44, 0.5], gift: ['wood', 3], best: 'stone', where: 'stones', says: '단단한 게 좋아. 돌은 내가 잘 캐.' },
   water: { name: '물정령', body: [0.45, 0.78, 0.95], accent: [0.2, 0.5, 0.85], gift: ['flower', 3], best: 'clay', where: 'tarn', says: '물가의 흙은 말랑말랑해. 점토라면 내가 찾아 줄게.' },
   flower: { name: '꽃정령', body: [1.0, 0.62, 0.72], accent: [0.98, 0.85, 0.3], gift: ['fiber', 3], best: 'forage', where: 'flowers', says: '달콤한 열매랑 꽃이 어디 있는지 다 알아!' },
   wind: { name: '바람정령', body: [0.86, 0.95, 0.98], accent: [0.55, 0.8, 0.9], gift: ['flower', 2], best: 'fiber', where: 'hill', says: '풀밭을 스치는 건 내 특기야. 풀은 내가 벨게.' },
   ember: { name: '불씨정령', body: [1.0, 0.55, 0.2], accent: [1.0, 0.85, 0.3], gift: ['wood', 5], best: 'build', where: 'campfire', says: '따뜻한 모닥불이네! 뭐든 뚝딱뚝딱 지어 줄게.' },
+  mushroom: { name: '버섯정령', body: [0.9, 0.3, 0.24], accent: [0.98, 0.93, 0.82], gift: ['clay', 2], best: 'forage', where: 'shade', says: '축축한 그늘이 좋아… 먹을 만한 건 내가 다 찾아 줄게.' },
+  star: { name: '별정령', body: [1.0, 0.92, 0.5], accent: [1.0, 0.98, 0.8], gift: ['glow', 1], best: 'explore', where: 'dusk', says: '해 질 녘에만 내려와. 멀리멀리 다녀와서 신기한 걸 가져다줄게.' },
 };
-export const SPIRIT_ORDER = ['wood', 'stone', 'flower', 'wind', 'water', 'ember'];
+export const SPIRIT_ORDER = ['wood', 'stone', 'flower', 'wind', 'mushroom', 'water', 'ember', 'star'];
 export const SPIRIT_NAMES = ['도토', '몽돌', '이슬', '꽃비', '산들', '모닥', '새싹', '여울', '보늬', '다래', '솔이', '초롱', '반디', '구름', '마루', '나래', '달이', '별이', '누리', '가람'];
 
 /** The animals. likes: what it takes from your hand; where: [u, v] down the valley; roam: metres it wanders. */
@@ -79,9 +82,9 @@ export const ANIMAL_ORDER = ['squirrel', 'rabbit', 'deer', 'fox', 'duck'];
 /** Things to do, in the order they are suggested. Each is checked against the game by goals in game.js. */
 export const GOALS = [
   { id: 'gather', text: '나뭇가지와 돌을 주워 보세요 (나무 3, 돌 3)' },
-  { id: 'campfire', text: 'B를 눌러 내 땅에 모닥불 짓기' },
+  { id: 'campfire', text: '짓기 메뉴에서 내 땅에 모닥불 짓기' },
   { id: 'spirit', text: '정령을 만나 선물을 주고 친구 되기' },
-  { id: 'job', text: 'Tab을 눌러 정령에게 일 맡기기' },
+  { id: 'job', text: '정령 메뉴에서 정령에게 일 맡기기' },
   { id: 'tent', text: '텐트를 짓고 하룻밤 쉬기' },
   { id: 'animal', text: '동물에게 살금살금 다가가 먹이 주기' },
   { id: 'camp', text: '캠핑장 완성하기 (모닥불·텐트·의자·식탁·등불)' },

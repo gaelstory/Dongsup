@@ -5,10 +5,13 @@ import * as THREE from 'three';
 import { SUNSET } from '../valley/sky.js';
 import { createAnimals } from './animals.js';
 import { createBuilder } from './build.js';
+import { createFlora } from './flora.js';
+import { createGlows } from './glow.js';
 import { ANIMALS, BUILDINGS, DAY, GOALS, HOME, ITEM_ORDER, ITEMS, JOBS, SPIRIT_ORDER, SPIRITS } from './data.js';
 import { createNodes, NODE_KINDS } from './nodes.js';
 import { createPaints } from './paint.js';
 import { createSpirits } from './spirits.js';
+import { createTouch } from './touch.js';
 import { createUI } from './ui.js';
 
 const SAVE_KEY = 'spirit-valley-v1';
@@ -60,6 +63,9 @@ function createChimes() {
  */
 export function createGame(o) {
   const { scene, camera, canvas, field, sky, trees, stones, physics, RAPIER, player, reach } = o;
+  const handheld = !!o.touch;
+  /** A word for a key, or for what a thumb presses instead. */
+  const key = (keyboard, thumb) => (handheld ? thumb : keyboard);
   let save = fresh();
   if (!o.fresh) {
     try {
@@ -77,8 +83,8 @@ export function createGame(o) {
     if (!storing) return;
     save.hour = hour;
     save.buildings = builder.serialize();
-    save.spirits = spirits.list.filter((s) => s.friend).map((s) => ({ id: s.id, kind: s.kind, name: s.name, job: s.job }));
-    save.wild = spirits.list.filter((s) => !s.friend).map((s) => ({ id: s.id, kind: s.kind, name: s.name, x: +s.home.x.toFixed(1), z: +s.home.z.toFixed(1) }));
+    save.spirits = spirits.list.filter((s) => s.friend).map((s) => ({ id: s.id, kind: s.kind, sort: s.sort, name: s.name, job: s.job }));
+    save.wild = spirits.list.filter((s) => !s.friend).map((s) => ({ id: s.id, kind: s.kind, sort: s.sort, name: s.name, x: +s.home.x.toFixed(1), z: +s.home.z.toFixed(1) }));
     save.animals = Object.fromEntries(animals.list.map((a) => [a.kind, { hearts: a.hearts, fedDay: a.fedDay, met: a.met }]));
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify(save));
@@ -124,7 +130,11 @@ export function createGame(o) {
     },
   });
   const animals = createAnimals({ field, paints, reach });
-  scene.add(nodes.group, builder.group, spirits.group, animals.group);
+  const flora = createFlora({ field, trees, paints, reach, density: o.density ?? 1 });
+  const glows = createGlows(field);
+  scene.add(nodes.group, flora.group, builder.group, spirits.group, animals.group, glows.mesh);
+  /** Something has been built or taken down: the plants keep clear of it. */
+  const tidy = () => flora.clearFor(builder.footprints());
 
   const friends = () => spirits.list.filter((s) => s.friend);
   const capacity = () => 3 + 2 * builder.done('hut').length + (builder.done('cabin').length ? 2 : 0);
@@ -172,6 +182,33 @@ export function createGame(o) {
       touch();
       checkGoals();
     },
+    menu(name) {
+      if (asleep) return;
+      if (ui.open === name) return void ui.close();
+      placing = null;
+      if (name === 'build') ui.openBuild(view);
+      else if (name === 'spirits') ui.openSpirits(view);
+      else if (name === 'journal') ui.openJournal(view);
+      else ui.openHelp();
+    },
+    rotate() {
+      if (placing && !placing.demolish) placing.rot = (placing.rot + Math.PI / 8) % (Math.PI * 2);
+    },
+    cancel() {
+      placing = null;
+    },
+    qualityNow: () => o.quality,
+    quality(name) {
+      store();
+      try {
+        localStorage.setItem('spirit-valley-quality', name);
+      } catch {
+        // it will be asked for in the address instead
+      }
+      const url = new URL(location.href);
+      url.searchParams.delete('quality');
+      location.replace(url);
+    },
     reset() {
       storing = false;
       try {
@@ -181,12 +218,13 @@ export function createGame(o) {
       }
       location.reload();
     },
-  });
+  }, handheld);
 
   // ---- a saved game, put back -----------------------------------------------------------------------------------
   for (const b of save.buildings) if (BUILDINGS[b.type]) builder.add(b);
   for (const s of save.spirits) if (SPIRITS[s.kind]) spirits.addFriend(s);
-  for (const w of save.wild) if (SPIRITS[w.kind]) spirits.spawnWild(w.kind, { x: w.x, z: w.z }, w.name, w.id);
+  for (const w of save.wild) if (SPIRITS[w.kind]) spirits.spawnWild(w.kind, { x: w.x, z: w.z }, w.name, w.id, w.sort);
+  tidy();
   for (const a of animals.list) Object.assign(a, save.animals[a.kind] ?? {});
   let hour = Math.min(Math.max(save.hour, DAY.from), DAY.to);
   let dusk = 0;
@@ -200,7 +238,8 @@ export function createGame(o) {
       // the first one waits where you can't miss it
       spirits.spawnWild('wood', spirits.firstPlace());
     }
-    const kinds = SPIRIT_ORDER.filter((k) => k !== 'ember' || builder.done('campfire').length);
+    // (the fire's spirit comes only to a fire, and the star's only at dusk: see update)
+    const kinds = SPIRIT_ORDER.filter((k) => k !== 'star' && (k !== 'ember' || builder.done('campfire').length));
     const unmet = kinds.filter((k) => !save.met.includes(k));
     for (let tries = 0; tries < 12 && spirits.list.filter((s) => !s.friend).length < 3; tries++) {
       const here = new Set(spirits.list.filter((s) => !s.friend).map((s) => s.kind));
@@ -283,8 +322,8 @@ export function createGame(o) {
       const [x, z] = aimPoint(1, 9);
       const b = builder.nearest(x, z, 1.2);
       placeAt = { b };
-      builder.showGhost(b?.type ?? null, b?.x, b?.z, b?.rot, false);
-      ui.hint(b ? `<span class="why">${BUILDINGS[b.type].name} 철거</span><kbd>E</kbd> 또는 클릭 · 재료를 돌려받아요 · <kbd>X</kbd> 그만하기` : '철거할 것을 바라보세요 · <kbd>X</kbd> 그만하기');
+      builder.showGhost(b?.type ?? null, b?.x, b?.z, b?.rot, false, true);
+      ui.hint(b ? `<span class="why">${BUILDINGS[b.type].name} 철거</span>${key('<kbd>E</kbd> 또는 클릭', '✋ 버튼')} · 재료를 돌려받아요${key(' · <kbd>X</kbd> 그만하기', '')}` : `철거할 것을 화면 가운데에 두세요${key(' · <kbd>X</kbd> 그만하기', '')}`);
       return;
     }
     const def = BUILDINGS[placing.type];
@@ -293,7 +332,7 @@ export function createGame(o) {
     if (check.ok && !afford(def.cost)) check = { ok: false, why: '재료가 모자라요' };
     placeAt = { x, z, ok: check.ok };
     builder.showGhost(placing.type, x, z, placing.rot, check.ok);
-    ui.hint(`${check.ok ? '' : `<span class="why">${check.why}</span>`}<b>${def.name}</b> · <kbd>E</kbd> 또는 클릭으로 놓기 · <kbd>R</kbd> 돌리기 · <kbd>X</kbd> 취소`);
+    ui.hint(`${check.ok ? '' : `<span class="why">${check.why}</span>`}<b>${def.name}</b> · ${key('<kbd>E</kbd> 또는 클릭으로 놓기 · <kbd>R</kbd> 돌리기 · <kbd>X</kbd> 취소', '화면 가운데에 놓여요 · ✋ 버튼으로 놓기')}`);
   }
   function confirmPlacing() {
     if (!placing || !placeAt) return;
@@ -301,6 +340,7 @@ export function createGame(o) {
       const b = placeAt.b;
       if (!b) return;
       builder.remove(b);
+      tidy();
       give(BUILDINGS[b.type].cost, `${BUILDINGS[b.type].name} 철거 ·`);
       chimes.knock();
       store();
@@ -313,8 +353,9 @@ export function createGame(o) {
     const def = BUILDINGS[placing.type];
     spend(def.cost);
     builder.add({ type: placing.type, x: placeAt.x, z: placeAt.z, rot: placing.rot });
+    tidy();
     chimes.knock();
-    tip('site', '🔨 가까이 가서 <b>E</b>를 누르고 있으면 지어집니다. 정령에게 <b>건설 돕기</b>를 맡겨도 돼요.');
+    tip('site', `🔨 가까이 가서 ${key('<b>E</b>를', '✋ 버튼을')} 누르고 있으면 지어집니다. 정령에게 <b>건설 돕기</b>를 맡겨도 돼요.`);
     // (fences and stepping stones go down one after another; anything else is one at a time)
     if (!(placing.type === 'fence' || placing.type === 'path') || !afford(def.cost)) placing = null;
     store();
@@ -386,7 +427,7 @@ export function createGame(o) {
       ui.toast(`✨ ${kind.name} <b>${s.name}</b>${josa(s.name, '과', '와').slice(s.name.length)} 친구가 되었어요!`, true, 6);
       ui.toast(`💬 ${s.name}: “${kind.says}”`, false, 7);
       if (first) give({ glow: 1 }, '처음 만난 정령의 선물 ·');
-      tip('follow', '정령이 내 땅까지 따라옵니다. <b>Tab</b>을 눌러 일을 맡겨 보세요.');
+      tip('follow', `정령이 내 땅까지 따라옵니다. ${key('<b>Tab</b>을', '✨ 정령 버튼을')} 눌러 일을 맡겨 보세요.`);
       checkGoals();
       store();
     } else if (t.kind === 'friend') {
@@ -569,15 +610,32 @@ export function createGame(o) {
     ui.setBubbles(bubbleList);
   }
 
+  const ICON = { node: '✋', wild: '🎁', friend: '💬', animal: '🍽️', site: '🔨', basket: '🧺', tent: '⛺', crop: '🧺', feeder: '🫐' };
+  const thumbs = handheld
+    ? createTouch({
+        input: o.input,
+        root: ui.root,
+        on: {
+          frozen: () => asleep || !!ui.open,
+          act(down) {
+            if (down) {
+              held.add('KeyE');
+              if (!asleep && !ui.open) act();
+            } else held.delete('KeyE');
+          },
+        },
+      })
+    : null;
   ui.setInventory(inv);
   checkGoals();
   if (isNew && !o.quiet) {
-    setTimeout(() => ui.toast('🌿 골짜기에 오신 걸 환영해요. <b>H</b>를 누르면 도움말을 볼 수 있어요.', true, 8), 600);
-    setTimeout(() => ui.toast('큰 나무 아래에서 누군가 기다리고 있어요. 반짝이는 것들을 <b>E</b>로 모아 보세요.', false, 9), 1800);
+    setTimeout(() => ui.toast(`🌿 골짜기에 오신 걸 환영해요. ${key('<b>H</b>를', '❔ 도움말을')} 누르면 조작법을 볼 수 있어요.`, true, 8), 600);
+    setTimeout(() => ui.toast(`큰 나무 아래에서 누군가 기다리고 있어요. 반짝이는 것들을 ${key('<b>E</b>로', '✋ 버튼으로')} 모아 보세요.`, false, 9), 1800);
   }
 
   let slow = 0;
   let duskHeld = 0;
+  let shadeHour = -1;
   const game = {
     ui,
     save,
@@ -585,6 +643,8 @@ export function createGame(o) {
     builder,
     spirits,
     animals,
+    flora,
+    tidy,
     paints,
     give,
     act,
@@ -610,6 +670,7 @@ export function createGame(o) {
     /** After the meadow has been wiped (the warm-up treads it and then forgets): mow under the buildings again. */
     settle() {
       builder.mowAll();
+      shadeHour = -1;
       o.setHour(hour, false);
     },
     update(dt) {
@@ -628,6 +689,16 @@ export function createGame(o) {
       }
       dusk = Math.min(1, Math.max(0, (hour - 17.2) / 2.6));
       paints.setDusk(dusk);
+      flora.update(dusk);
+      // when the light begins to go, a star's spirit comes down near your land (if there is room for another)
+      if (hour > 18.1 && save.starDay !== save.day && !asleep) {
+        save.starDay = save.day;
+        if (!spirits.list.some((s) => s.kind === 'star' && !s.friend) && spirits.spawnWild('star')) ui.toast('🌠 해 질 녘, 내 땅 근처 언덕에 별정령이 내려왔어요.', true, 7);
+      }
+      // the shade of what is built follows the sun
+      const moved = Math.abs(hour - shadeHour) > 0.07;
+      if (moved) shadeHour = hour;
+      builder.shade(sky.sunDir, moved);
 
       nodes.update(dt);
       const speed = o.speed();
@@ -638,7 +709,7 @@ export function createGame(o) {
           bolted.met = true;
           touch();
         }
-        tip('bolt', `🐾 ${josa(ANIMALS[bolted.kind].name, '이', '가')} 놀라 달아났어요. <b>Alt</b>를 누른 채 살금살금 다가가 보세요.`);
+        tip('bolt', `🐾 ${josa(ANIMALS[bolted.kind].name, '이', '가')} 놀라 달아났어요. ${key('<b>Alt</b>를 누른 채', '스틱을 살짝만 밀어')} 살금살금 다가가 보세요.`);
       }
       builder.update(dt, clock, dusk, player);
       // the grass parts round the animals nearest the eye
@@ -650,6 +721,11 @@ export function createGame(o) {
       }
       for (; slot <= 5; slot++) field.setPusher(slot, 0, 0, 0, 0);
 
+      glows.begin();
+      spirits.glow(glows, clock, dusk);
+      builder.glow(glows, clock, dusk);
+      glows.end();
+
       updatePlacing();
       target = findTarget();
       // building is done by keeping at it
@@ -658,6 +734,12 @@ export function createGame(o) {
         if (Math.floor(clock * 2.5) !== Math.floor((clock - dt) * 2.5)) chimes.knock();
       }
       ui.prompt(target?.text ?? null, { enabled: target?.enabled !== false, meter: target?.meter ?? null });
+      ui.placing(!!placing);
+      if (thumbs) {
+        thumbs.update();
+        if (placing) thumbs.setAction(placing.demolish ? '🧹' : '✔', placing.demolish ? !!placeAt?.b : !!placeAt?.ok);
+        else thumbs.setAction(ICON[target?.kind] ?? '✋', !!target && target.enabled !== false);
+      }
       updateBubbles();
 
       slow -= dt;

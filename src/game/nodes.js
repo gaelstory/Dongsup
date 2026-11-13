@@ -4,7 +4,8 @@
 import * as THREE from 'three';
 import { COMMON } from '../lib/index.js';
 import { fromValley, paint, pathDistance, TARN, tarnDistance } from '../valley/world.js';
-import { nodeGeometry } from './models.js';
+import { NODE_TINTS, nodeGeometry } from './models.js';
+import { ADDITIVE } from './paint.js';
 
 const TAU = Math.PI * 2;
 
@@ -43,13 +44,13 @@ void main() {
   vec3 at = aAt.xyz;
   at.y += 0.12 * sin(uTime * 1.7 + aAt.w * 40.0);
   float dist = distance(at, uCamPos);
-  float size = max(0.2, dist * 0.014);
+  float size = max(0.42, dist * 0.03);
   vec3 cr = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
   vec3 cu = vec3(viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]);
   vec3 world = at + (cr * position.x + cu * position.y) * size;
   vQ = position.xy * 2.0;
   float twinkle = 0.55 + 0.45 * sin(uTime * 3.1 + aAt.w * 90.0);
-  vShow = aOn * twinkle * (1.0 - smoothstep(38.0, 60.0, dist)) * smoothstep(1.5, 4.0, dist);
+  vShow = aOn * twinkle * (1.0 - smoothstep(34.0, 56.0, dist)) * smoothstep(1.5, 4.0, dist);
   gl_Position = projectionMatrix * viewMatrix * vec4(world, 1.0);
 }
 `;
@@ -59,12 +60,13 @@ in vec2 vQ;
 in float vShow;
 layout(location = 0) out vec4 outC;
 void main() {
-  // a four-pointed glint
+  // a soft round glint with a small bright heart and four faint rays
+  float d2 = dot(vQ, vQ);
+  if (d2 > 1.0) discard;
   vec2 q = abs(vQ);
-  float star = max(0.0, 1.0 - (q.x + q.y) - 3.2 * q.x * q.y * 4.0);
-  float core = smoothstep(0.0, 0.5, star);
-  if (core * vShow < 0.12) discard;
-  outC = vec4(vec3(4.2, 3.8, 2.4) * core * vShow, 0.5);
+  float rays = exp(-min(q.x, q.y) * 26.0) * (1.0 - d2);
+  float glow = (1.0 - d2) * (1.0 - d2) * 0.3 + exp(-d2 * 34.0) * 1.6 + rays * 0.5;
+  outC = vec4(vec3(1.5, 1.35, 0.9) * glow * vShow, 0.0);
 }
 `;
 
@@ -178,7 +180,6 @@ export function createNodes({ field, trees, stones, paints, reach }) {
 
   // ---- drawing -------------------------------------------------------------------------------------------------
   const group = new THREE.Group();
-  const meshes = {};
   const matrix = new THREE.Matrix4();
   const q = new THREE.Quaternion();
   const UP = new THREE.Vector3(0, 1, 0);
@@ -188,24 +189,50 @@ export function createNodes({ field, trees, stones, paints, reach }) {
     mesh.setMatrixAt(n.index, matrix);
     mesh.instanceMatrix.needsUpdate = true;
   };
+  // what grows leans with the wind, and comes in more than one colour
+  const PLANTS = new Set(['bush', 'mushroom', 'flower', 'reed', 'tuft']);
+  const tinted = (type, mine) => {
+    if (!PLANTS.has(type) && type !== 'berries') return nodeGeometry(type);
+    const geometry = nodeGeometry(type).clone();
+    const tints = new Float32Array(mine.length * 3);
+    const choice = NODE_TINTS[type] ?? [[1, 1, 1]];
+    // (things of a kind near one another are of a colour: it goes by where they are)
+    mine.forEach((n, i) => tints.set(choice[Math.abs(Math.floor(n.x / 45) * 7 + Math.floor(n.z / 45) * 13 + (i % 5 === 0 ? i : 0)) % choice.length], i * 3));
+    geometry.setAttribute('aTint', new THREE.InstancedBufferAttribute(tints, 3));
+    return geometry;
+  };
+  // each kind is a few meshes, one to a part of the valley, so what is behind you is not drawn
+  const TILES = 4;
+  const span = 2 * reach;
+  const tileOf = (n) => Math.min(TILES - 1, Math.max(0, Math.floor(((n.x + reach) / span) * TILES))) + TILES * Math.min(TILES - 1, Math.max(0, Math.floor(((n.z + reach) / span) * TILES)));
+  const instanced = (type, mine, material) => {
+    const mesh = new THREE.InstancedMesh(tinted(type, mine), material, mine.length);
+    return mesh;
+  };
   for (const type of ['branch', 'pebble', 'bush', 'mushroom', 'flower', 'reed', 'tuft', 'clay']) {
-    const mine = list.filter((n) => n.type === type);
-    if (!mine.length) continue;
-    const mesh = new THREE.InstancedMesh(nodeGeometry(type), paints.prop, mine.length);
-    mesh.frustumCulled = false;
-    meshes[type] = mesh;
-    mine.forEach((n, i) => {
-      n.index = i;
-      place(mesh, n, true);
-    });
-    group.add(mesh);
-    if (type === 'bush') {
-      // (the bush stays when its berries are picked)
-      const berries = new THREE.InstancedMesh(nodeGeometry('berries'), paints.prop, mine.length);
-      berries.frustumCulled = false;
-      meshes.berries = berries;
-      mine.forEach((n) => place(berries, n, true));
-      group.add(berries);
+    for (let tile = 0; tile < TILES * TILES; tile++) {
+      const mine = list.filter((n) => n.type === type && tileOf(n) === tile);
+      if (!mine.length) continue;
+      const mesh = instanced(type, mine, PLANTS.has(type) ? paints.plantTinted : paints.prop);
+      mine.forEach((n, i) => {
+        n.index = i;
+        n.mesh = mesh;
+        place(mesh, n, true);
+      });
+      mesh.computeBoundingSphere();
+      mesh.boundingSphere.radius += 2.5;
+      group.add(mesh);
+      if (type === 'bush') {
+        // (the bush stays when its berries are picked)
+        const berries = instanced('berries', mine, paints.plantTinted);
+        mine.forEach((n) => {
+          n.fruit = berries;
+          place(berries, n, true);
+        });
+        berries.computeBoundingSphere();
+        berries.boundingSphere.radius += 2.5;
+        group.add(berries);
+      }
     }
   }
 
@@ -224,14 +251,15 @@ export function createNodes({ field, trees, stones, paints, reach }) {
   const onAttribute = new THREE.InstancedBufferAttribute(on, 1).setUsage(THREE.DynamicDrawUsage);
   sparkGeometry.setAttribute('aOn', onAttribute);
   sparkGeometry.instanceCount = glinting.length;
-  const sparks = new THREE.Mesh(sparkGeometry, new THREE.ShaderMaterial({ glslVersion: THREE.GLSL3, uniforms: field.uniforms, vertexShader: sparkVertex, fragmentShader: sparkFragment }));
+  const sparks = new THREE.Mesh(sparkGeometry, new THREE.ShaderMaterial({ glslVersion: THREE.GLSL3, uniforms: field.uniforms, vertexShader: sparkVertex, fragmentShader: sparkFragment, ...ADDITIVE }));
   sparks.frustumCulled = false;
+  sparks.renderOrder = 4;
   group.add(sparks);
 
   const show = (n, shown) => {
     n.ready = shown;
-    if (n.type === 'bush') place(meshes.berries, n, shown);
-    else if (meshes[n.type]) place(meshes[n.type], n, shown);
+    if (n.fruit) place(n.fruit, n, shown);
+    else if (n.mesh) place(n.mesh, n, shown);
     if (n.glint !== undefined) {
       on[n.glint] = shown ? 1 : 0;
       onAttribute.needsUpdate = true;
