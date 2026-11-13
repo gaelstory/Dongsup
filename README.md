@@ -64,7 +64,7 @@ npm run serve    # http://127.0.0.1:5383
 
 ### 휴대폰에서 하기
 
-`dist/`는 정적 파일이라 HTTPS로 올리기만 하면 됩니다. 이 저장소에는 GitHub Pages로 올리는 워크플로가 들어 있습니다(`.github/workflows/pages.yml`, 직접 실행할 때만 돕니다): 저장소 Settings → Pages에서 Source를 **GitHub Actions**로 고른 뒤, Actions → *Publish to GitHub Pages* → Run workflow.
+`dist/`는 정적 파일이라 HTTPS로 올리기만 하면 됩니다. 이 저장소에는 GitHub Pages로 올리는 워크플로가 들어 있습니다(`.github/workflows/pages.yml`): 저장소 Settings → Pages에서 Source를 **GitHub Actions**로 한 번 골라 두면, `main`이 바뀔 때마다 자동으로 다시 올라갑니다(Actions → *Publish to GitHub Pages* → Run workflow로 직접 돌릴 수도 있습니다).
 
 올린 주소를 휴대폰 브라우저로 열고 **홈 화면에 추가**(iOS 사파리: 공유 → 홈 화면에 추가 / 안드로이드 크롬: 메뉴 → 앱 설치)하면 주소창 없이 전체 화면으로 실행되고, 한 번 받은 파일은 기기에 남아 다음부터 바로 열립니다. 저장은 기기마다 따로입니다.
 

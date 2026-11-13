@@ -1,9 +1,11 @@
 # Builds the game and puts it on GitHub Pages, so it can be opened on a phone as well as a computer.
-# It runs only when started by hand (Actions → "Publish to GitHub Pages" → Run workflow), and needs Pages turned
-# on for the repository with "GitHub Actions" as its source (Settings → Pages).
+# It runs whenever main changes, or when started by hand (Actions → "Publish to GitHub Pages" → Run workflow), and
+# needs Pages turned on for the repository with "GitHub Actions" as its source (Settings → Pages).
 name: Publish to GitHub Pages
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
