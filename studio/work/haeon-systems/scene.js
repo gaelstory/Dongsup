@@ -1408,7 +1408,7 @@ export function createHarbor(canvasEl, opts = {}) {
         }`,
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
     }));
-    const refl = new THREE.Mesh(g, rm); refl.frustumCulled = false; refl.renderOrder = -4; scene.add(refl);
+    const refl = new THREE.Mesh(g, rm); refl.frustumCulled = false; refl.renderOrder = -4; scene.add(refl); window.__refl = { n, a1: Array.from(a1.slice(0, 12)), a2: Array.from(a2.slice(0, 12)), mesh: refl, rm };
     quad.dispose();
   }
 

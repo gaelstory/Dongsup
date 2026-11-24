@@ -172,7 +172,7 @@
     dotOrange: '#B9661A', dotDark: '#33241C', blotch: '#3B2A20', gyp: '#FFFFFF'
   };
   var INK = {
-    edge: 'rgba(59,42,32,0.16)', edgeW: 'rgba(59,42,32,0.13)', vein: 'rgba(255,255,255,0.42)', veinD: 'rgba(59,42,32,0.12)',
+    edge: 'rgba(59,42,32,0.16)', edgeW: 'rgba(59,42,32,0.2)', vein: 'rgba(255,255,255,0.42)', veinD: 'rgba(59,42,32,0.12)',
     stem: '#1F5C3A', stemL: '#3A7D50', gypE: 'rgba(110,90,100,0.32)', dark: 'rgba(43,30,26,0.78)', rim: 'rgba(130,70,15,0.35)'
   };
 

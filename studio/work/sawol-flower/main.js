@@ -451,7 +451,7 @@
           var tr = p.target.getBoundingClientRect(), tx = tr.left + tr.width * p.tf, ty = tr.top + (p.target.tagName === 'H2' ? 8 : -1);
           if (p.landed) {
             p.x = tr.left + p.ox; p.y = ty - p.len * 0.12;
-            p.rot += (p.rest - p.rot) * Math.min(1, dt * 6); p.flip += (0 - p.flip) * Math.min(1, dt * 6);
+            p.rot += (p.rest - p.rot) * Math.min(1, dt * 6);
             if (tr.bottom < -30 || tr.top > H + 30) p.max = Math.min(p.max, p.life);
           } else if (p.y > ty + 40) { p.target = null; p.max = Math.min(p.max, p.life + 1.5); }
           else {
