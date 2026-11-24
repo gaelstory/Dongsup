@@ -292,7 +292,8 @@ export function createHarbor(canvasEl, opts = {}) {
   const scene = new THREE.Scene();
   const FOG = 0.006;
   scene.fog = new THREE.FogExp2(HEX.night, FOG);
-  const camera = new THREE.PerspectiveCamera(32, 1, 2, 4000);
+  // near plane well away from the eye: keeps 16-bit depth buffers able to separate the water from what floats on it
+  const camera = new THREE.PerspectiveCamera(32, 1, 8, 4000);
 
   const U = {
     time: { value: 0 }, scale: { value: 800 }, fogD: { value: FOG }, twin: { value: 0 },
@@ -365,19 +366,19 @@ export function createHarbor(canvasEl, opts = {}) {
   const [lcv, lg] = canvas(LW, LH);
   const px = (x) => (x - LB.x0) / (LB.x1 - LB.x0) * LW, pz = (z) => (z - LB.z0) / (LB.z1 - LB.z0) * LH;
   const ps = (s) => s / (LB.x1 - LB.x0) * LW;
-  lg.fillStyle = '#0d1937'; lg.fillRect(0, 0, LW, LH);
+  lg.fillStyle = '#122046'; lg.fillRect(0, 0, LW, LH);
   const rectW = (x0, z0, x1, z1, fill) => { lg.fillStyle = fill; lg.fillRect(px(x0), pz(z0), ps(x1 - x0), ps(z1 - z0)); };
   // container yard apron with lane grid
-  rectW(-5.5, -13, 6.5, 19, '#0f1b3d');
+  rectW(-5.5, -13, 6.5, 19, '#16254f');
   lg.strokeStyle = 'rgba(120,150,210,0.10)'; lg.lineWidth = 1;
   for (let x = -5; x < 6.5; x += 1.2) { lg.beginPath(); lg.moveTo(px(x), pz(-13)); lg.lineTo(px(x), pz(19)); lg.stroke(); }
   for (let z = -13; z < 19; z += 3.2) { lg.beginPath(); lg.moveTo(px(-5.5), pz(z)); lg.lineTo(px(6.5), pz(z)); lg.stroke(); }
   // tower plaza
-  rectW(4, -21, 25, 1.5, '#101d42');
+  rectW(4, -21, 25, 1.5, '#182851');
   lg.strokeStyle = 'rgba(160,190,240,0.07)';
   for (let x = 4; x < 25; x += 1.5) { lg.beginPath(); lg.moveTo(px(x), pz(-21)); lg.lineTo(px(x), pz(1.5)); lg.stroke(); }
   // terminal forecourt and parking
-  rectW(0, 20.5, 36, 27.5, '#0e1a3b');
+  rectW(0, 20.5, 36, 27.5, '#152349');
   lg.strokeStyle = 'rgba(160,190,240,0.12)';
   for (let x = 32; x < 46; x += 0.8) { lg.beginPath(); lg.moveTo(px(x), pz(17)); lg.lineTo(px(x), pz(19.5)); lg.stroke(); lg.beginPath(); lg.moveTo(px(x), pz(21)); lg.lineTo(px(x), pz(23.5)); lg.stroke(); }
   // parks
@@ -388,10 +389,10 @@ export function createHarbor(canvasEl, opts = {}) {
     gr.addColorStop(0, `rgba(${rgb},${a})`); gr.addColorStop(1, `rgba(${rgb},0)`);
     lg.fillStyle = gr; lg.fillRect(px(x) - ps(rad), pz(z) - ps(rad), ps(rad * 2), ps(rad * 2));
   };
-  for (let z = -11; z < 19; z += 5.5) pool(0.5, z, 5.2, '255,214,170', 0.26);
-  for (let z = -10; z < 19; z += 7) pool(-5, z, 3.2, '255,214,170', 0.18);
-  for (let i = 0; i < 9; i++) pool(6 + i * 2.4, -20 + (i % 3) * 9, 3.2, '159,212,255', 0.07);
-  for (let x = 3; x < 32; x += 4) pool(x, 21.5, 3, '255,201,138', 0.14);
+  for (let z = -11; z < 19; z += 5.5) pool(0.5, z, 5.6, '255,214,170', 0.34);
+  for (let z = -10; z < 19; z += 7) pool(-5, z, 3.6, '255,214,170', 0.26);
+  for (let i = 0; i < 9; i++) pool(6 + i * 2.4, -20 + (i % 3) * 9, 3.4, '159,212,255', 0.12);
+  for (let x = 3; x < 32; x += 4) pool(x, 21.5, 3.4, '255,201,138', 0.22);
   for (let i = 0; i < 26; i++) pool(26 + r() * 66, -30 + r() * 56, 2 + r() * 2.5, r() < 0.7 ? '255,201,138' : '159,212,255', 0.05 + r() * 0.07);
   // quay edge glow along the coastline
   lg.save(); lg.beginPath();
@@ -436,7 +437,7 @@ export function createHarbor(canvasEl, opts = {}) {
         const Cq = [B[0], 0.62, B[2]], D = [A[0], 0.62, A[2]];
         glows.quad(A, B, Cq, D, [n[0], 0, n[1]], qc); glows.quad(B, A, D, Cq, [n[0], 0, n[1]], qc);
       }
-      rows.push([[p[0] + n[0] * 0.05, 0.03, p[1] + n[1] * 0.05, wc.r, wc.g, wc.b, 0.2], [p[0] + n[0] * 1.6, 0.03, p[1] + n[1] * 1.6, wc.r, wc.g, wc.b, 0]]);
+      rows.push([[p[0] + n[0] * 0.05, 0.06, p[1] + n[1] * 0.05, wc.r, wc.g, wc.b, 0.2], [p[0] + n[0] * 1.6, 0.06, p[1] + n[1] * 1.6, wc.r, wc.g, wc.b, 0]]);
     }
     ribbon(rows);
   }
@@ -483,6 +484,7 @@ export function createHarbor(canvasEl, opts = {}) {
     props.box(-5.2, LAND_Y, z, 0.12, 4.2, 0.12, C(0x5a6a98));
     for (const dx of [-0.25, 0.25]) lights.add(-5.2 + dx, LAND_Y + 4.25, z, 0xfff1dc, 0.16, 1);
     halos.add(-5.2, LAND_Y + 4.2, z, 0xffe2bc, 3.4, 0.2);
+    halos.add(-5.2, LAND_Y + 4.2, z, 0xffe2bc, 7, 0.08);
   }
   for (let z = -8; z < 18; z += 6.5) {
     props.box(3.6, LAND_Y, z, 0.12, 3.8, 0.12, C(0x5a6a98));
@@ -505,8 +507,8 @@ export function createHarbor(canvasEl, opts = {}) {
     // a lit lamp at the pier head
     halos.add(p.x1 + 0.4, 1.8, p.z, HEX.warm, 2.4, 0.22);
     lights.add(p.x1 + 0.4, 1.8, p.z, 0xfff0dc, 0.22, 1);
-    reflections.push([p.x1 + 0.4, p.z, C(HEX.warm), 7, 0.55, 0.5]);
-    for (let x = -9; x > p.x1 + 2; x -= 5) reflections.push([x, p.z - p.w / 2 - 0.2, C(0xffd8a8), 3.5, 0.35, 0.28]);
+    reflections.push([p.x1 + 0.4, p.z, C(HEX.warm), 8, 0.7, 0.7]);
+    for (let x = -8; x > p.x1 + 0.5; x -= 3) reflections.push([x, p.z + (p.z > 5 ? 1 : -1) * (p.w / 2 + 0.3), C(0xffd8a8), 5, 0.45, 0.5]);
   }
 
   // ship-to-shore gantry crane, built once and placed four times
@@ -545,6 +547,7 @@ export function createHarbor(canvasEl, opts = {}) {
     lights.add(k.x - 0.4, LAND_Y + 4.7, k.z + 4.2 * sgn, 0xfff2e0, 0.2, 1);
     halos.add(k.x, LAND_Y + 4.6, k.z + 4.2 * sgn, 0xffe2b8, 3.2, 0.16);
     halos.add(k.x, LAND_Y + 5.2, k.z + 8 * sgn, 0xffe2b8, 2.2, 0.8);
+    reflections.push([k.x, k.z + 7.5 * sgn, C(0xffe2b8), 7, 0.8, 0.45]);
     halos.add(k.x, LAND_Y + 5.2, k.z + 8 * sgn, 0xffe2b8, 5.5, 0.14);
     const v = new V3();
     for (let i = 0; i < craneE.p.length; i += 3) { v.set(craneE.p[i], craneE.p[i + 1], craneE.p[i + 2]).applyMatrix4(m); edges.p.push(v.x, v.y, v.z); }
@@ -675,8 +678,8 @@ export function createHarbor(canvasEl, opts = {}) {
     }
   };
   halos.add(-15, 3.2, 8.7, 0xffe2bc, 4, 0.14); halos.add(-15.5, 3, 1.3, 0xffe2bc, 4, 0.12);
-  shipLights(shipA, [[shipA.L * 0.3, 2.6, 0, 0xfff0dc, 0.4, 0.9], [shipA.L * 0.62, 2.6, 0, 0xfff0dc, 0.4, 0.9], [shipA.L - 0.3, 1.3, 0, 0xffffff, 0.4, 1], [1.2, 3.6, 0, 0xffffff, 0.45, 1], [shipA.L * 0.5, 1.0, 1.3, 0xffd8a8, 0.32, 0.8], [shipA.L * 0.75, 1.0, -1.3, 0xffd8a8, 0.32, 0.8]]);
-  shipLights(shipB, [[shipB.L - 0.3, 1.3, 0, 0xffffff, 0.4, 1], [1.4, 3.2, 0, 0xffffff, 0.45, 1], [shipB.L * 0.5, 1.2, 0, 0xffd8a8, 0.3, 0.8]]);
+  shipLights(shipA, [[shipA.L - 0.3, 1.3, 0, 0xffffff, 0.4, 1], [1.5, 3.7, 0, 0xffffff, 0.45, 1], [1.5, 1.6, 1.4, 0xffd8a8, 0.35, 0.9], [1.5, 1.6, -1.4, 0xffd8a8, 0.35, 0.9]]);
+  shipLights(shipB, [[shipB.L - 0.3, 1.3, 0, 0xffffff, 0.4, 1], [1.5, 3.3, 0, 0xffffff, 0.45, 1], [1.5, 1.5, 1.3, 0xffd8a8, 0.35, 0.9]]);
   shipLights(shipD, [[shipD.L - 0.3, 1.2, 0, 0xffffff, 1.4, 1], [1, 2.4, 0, 0xffe0b8, 1.6, 1], [shipD.L * 0.5, 1.0, 0, 0xffd8a8, 1.2, 0.7]]);
   reflections.push([shipD.x, shipD.z, C(0xffe0b8), 30, 2.2, 0.5]);
 
@@ -705,6 +708,7 @@ export function createHarbor(canvasEl, opts = {}) {
     edges.box(x - 0.3, b, z, 3.0, 1.5, 3.4);
     glows.box(x - 0.3, b + 0.55, z + 1.71, 2.4, 0.28, 0.02, C(0xffcf96));
     reflections.push([x - 3.1, z, C(HEX.cyan), 12, 0.9, 0.55]);
+    halos.add(x, b + 12.7, z, 0x9fdcff, 7, 0.16);
   }
 
   // ---------------------------------------------------------------- towers and offices
@@ -873,7 +877,8 @@ export function createHarbor(canvasEl, opts = {}) {
       for (let i = 0; i <= L.n; i += 2) {
         lutAt(L, i / L.n, v, t); const sx = -t[2], sz = t[0], sl = Math.hypot(sx, sz) || 1, hw = 1.5;
         const y = v[1] + 0.035;
-        rows.push([[v[0] + sx / sl * hw, y, v[2] + sz / sl * hw, cc.r, cc.g, cc.b, 0], [v[0], y, v[2], cc.r, cc.g, cc.b, 0.11], [v[0] - sx / sl * hw, y, v[2] - sz / sl * hw, cc.r, cc.g, cc.b, 0]]);
+        const X = (o) => [v[0] + sx / sl * o, y, v[2] + sz / sl * o];
+        rows.push([[...X(hw + 0.5), cc.r, cc.g, cc.b, 0], [...X(1.05), cc.r, cc.g, cc.b, 0.75], [...X(0.6), cc.r, cc.g, cc.b, 0.16], [...X(-0.6), cc.r, cc.g, cc.b, 0.16], [...X(-1.05), cc.r, cc.g, cc.b, 0.75], [...X(-hw - 0.5), cc.r, cc.g, cc.b, 0]]);
       }
       ribbon(rows);
     });
@@ -914,7 +919,7 @@ export function createHarbor(canvasEl, opts = {}) {
         for (const s of [-1, 1]) {
           if (k !== 2 && (i + (s > 0 ? 0 : 1)) % 2) continue;
           const x = v[0] + sx / sl * off * s, z = v[2] + sz / sl * off * s;
-          const cl = k === 2 ? 0xd8f0ff : 0xffd9a8;
+          const cl = k === 2 ? 0xd8f0ff : (i % 4 < 2 ? 0xfff2e0 : 0xffd9a8);
           lights.add(x, v[1] + (k === 2 ? 0.35 : 0.55), z, cl, k === 2 ? 0.15 : 0.12, 0.9);
           if (k === 2 && v[1] > 1 && i % 2 === 0) reflections.push([x, z, C(cl), 5 + v[1], 0.4, 0.32]);
         }
@@ -1315,6 +1320,7 @@ export function createHarbor(canvasEl, opts = {}) {
     gr.addColorStop(0, `rgba(${rgb},${a})`); gr.addColorStop(1, `rgba(${rgb},0)`);
     pg.fillStyle = gr; pg.fillRect(0, 0, 256, 256);
   };
+  blob(12, 0, 75, '70,120,215', 0.13); blob(4, 6, 40, '90,150,235', 0.1);
   blob(-8, 0, 22, '255,190,120', 0.32); blob(-10, 12, 14, '255,190,120', 0.28); blob(-9, -6, 12, '95,212,255', 0.26);
   blob(16, 34, 34, '255,190,120', 0.4); blob(-24, -1, 8, '95,212,255', 0.32); blob(12, -38, 18, '200,230,255', 0.2);
   blob(24, -60, 16, '200,230,255', 0.16); blob(60, -72, 40, '255,200,150', 0.16); blob(-9, 5, 10, '159,212,255', 0.2);
@@ -1348,7 +1354,8 @@ export function createHarbor(canvasEl, opts = {}) {
         float sFade = smoothstep(20.0, 60.0, dist) * (1.0 - smoothstep(150.0, 320.0, dist));
         vec3 col = uBase + uCyan * 0.14 * streak * sFade * (1.0 - uLand);
         float fres = pow(1.0 - clamp(v.y, 0.0, 1.0), 5.0);
-        col = mix(col, uHorizon * 0.75, fres * 0.32 * (1.0 - uLand));
+        // the far water mirrors the dusk sky: steel blue with a little violet
+        col = mix(col, mix(uHorizon, vec3(0.22, 0.32, 0.58), 0.7) * 0.9, fres * 0.55 * (1.0 - uLand));
         vec2 puv = (p - uPoolRect.xy) / uPoolRect.zw;
         vec3 pool = texture2D(uPool, puv).rgb * step(0.0, puv.x) * step(puv.x, 1.0) * step(0.0, puv.y) * step(puv.y, 1.0);
         col += pool * (1.1 + 0.3 * sin(n1 * 2.6 + uTime * 0.6) + streak * 1.2) * (1.0 - uLand);
@@ -1391,7 +1398,7 @@ export function createHarbor(canvasEl, opts = {}) {
           vec2 base = aA.xy; vec2 toCam = normalize(uCam.xz - base); vec2 side = vec2(-toCam.y, toCam.x);
           float wob = sin(position.y * 9.0 + uTime * 1.3 + base.x) * 0.18;
           vec2 xz = base + toCam * position.y * aA.z + side * (position.x * aA.w * (0.6 + position.y * 0.8) + wob * position.y * aA.w);
-          vec4 mv = viewMatrix * vec4(xz.x, 0.03, xz.y, 1.0);
+          vec4 mv = viewMatrix * vec4(xz.x, 0.06, xz.y, 1.0);
           vFog = exp(-pow(uFog * 0.6 * -mv.z, 2.0));
           vUv = vec2(position.x + 0.5, position.y); vB = aB;
           gl_Position = projectionMatrix * mv;
@@ -1408,7 +1415,7 @@ export function createHarbor(canvasEl, opts = {}) {
         }`,
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
     }));
-    const refl = new THREE.Mesh(g, rm); refl.frustumCulled = false; refl.renderOrder = -4; scene.add(refl); window.__refl = { n, a1: Array.from(a1.slice(0, 12)), a2: Array.from(a2.slice(0, 12)), mesh: refl, rm };
+    const refl = new THREE.Mesh(g, rm); refl.frustumCulled = false; refl.renderOrder = -4; scene.add(refl);
     quad.dispose();
   }
 
@@ -1418,7 +1425,7 @@ export function createHarbor(canvasEl, opts = {}) {
 
   // soft light haze over the complex (additive, no depth): the city glows into the night air
   const hazes = [];
-  for (const [x, y, z, sx, sy, hex, op] of [[20, 7, -10, 110, 36, 0x4a5cb0, 0.3], [8, 3, 12, 70, 20, 0xffb47a, 0.1], [-8, 2, -2, 40, 14, 0x5fd4ff, 0.07]]) {
+  for (const [x, y, z, sx, sy, hex, op] of [[20, 7, -10, 110, 36, 0x4a5cb0, 0.3], [8, 3, 12, 70, 20, 0xffb47a, 0.1], [-4, 2, -2, 22, 10, 0x5fd4ff, 0.07]]) {
     const sm = keep(new THREE.SpriteMaterial({ map: glowTex, color: hex, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, fog: false }));
     const sp = new THREE.Sprite(sm); sp.position.set(x, y, z); sp.scale.set(sx, sy, 1); sp.renderOrder = 8; site.add(sp);
     hazes.push([sm, op]);
@@ -1453,7 +1460,7 @@ export function createHarbor(canvasEl, opts = {}) {
   // ---------------------------------------------------------------- sky, stars, mountains
   const skyU = {
     uZenith: { value: C(HEX.deep) }, uBand: { value: C(HEX.dusk) }, uWarm: { value: C(0xf2a07e) },
-    uSeaFar: { value: C(HEX.night).lerp(C(HEX.dusk), 0.28) }, uGlow: { value: new THREE.Vector2(0.9, -0.43).normalize() },
+    uSeaFar: { value: C(HEX.night).lerp(C(0x2c3c70), 0.45) }, uGlow: { value: new THREE.Vector2(0.9, -0.43).normalize() },
   };
   const skyMat = keep(new THREE.ShaderMaterial({
     uniforms: skyU, depthWrite: false, side: THREE.BackSide,
@@ -1465,7 +1472,8 @@ export function createHarbor(canvasEl, opts = {}) {
         vec3 d = normalize(vD); float el = degrees(asin(clamp(d.y, -1.0, 1.0)));
         vec2 dh = normalize(d.xz + 1e-5); float side = clamp(dot(dh, uGlow) * 0.5 + 0.5, 0.0, 1.0);
         float band = exp(-max(el, 0.0) / mix(2.0, 4.4, side * side));
-        vec3 col = mix(uZenith, uBand * 1.32, band * mix(0.72, 1.0, side));
+        vec3 bandC = mix(vec3(0.16, 0.24, 0.46), uBand * 1.4, exp(-max(el, 0.0) / 1.3));
+        vec3 col = mix(uZenith, bandC, band * mix(0.72, 1.0, side));
         float warm = exp(-max(el, 0.0) / 1.6) * pow(side, 2.2);
         col += uWarm * 0.38 * warm;
         // long thin cloud strata, dark against the glow with a faint lit underside
@@ -1551,6 +1559,13 @@ export function createHarbor(canvasEl, opts = {}) {
     const cfg = isMobileView() ? CAMS.mob : CAMS.desk;
     rig.hfov = cfg.hfov || 26;
     rig.pos.fromArray(cfg.pos); rig.tgt.fromArray(cfg.tgt); rig.fov = cfg.fov;
+    // narrower landscape screens: the copy column is relatively wider, so the complex steps right and back a little
+    if (!isMobileView() && window.innerWidth < 1180) {
+      const k = Math.min(1, (1180 - window.innerWidth) / 220);
+      rig.pos.sub(rig.tgt).multiplyScalar(1 + 0.07 * k).add(rig.tgt);
+      const dx = -0.81 * 5 * k, dz = -0.58 * 5 * k;
+      rig.pos.x += dx; rig.pos.z += dz; rig.tgt.x += dx; rig.tgt.z += dz;
+    }
   }
   applyCamBase();
   const UP = new V3(0, 1, 0);
@@ -1586,6 +1601,7 @@ export function createHarbor(canvasEl, opts = {}) {
   }
 
   let W = 1, H = 1;
+  const dbSize = new THREE.Vector2();
   function resize() {
     const rect = canvasEl.getBoundingClientRect();
     W = Math.max(1, Math.round(rect.width)); H = Math.max(1, Math.round(rect.height));
@@ -1594,16 +1610,19 @@ export function createHarbor(canvasEl, opts = {}) {
     applyCamBase();
     const aspect = W / H;
     // keep the horizontal framing on narrower screens
-    let fov = rig.fov;
+    let fov = rig.fov, shift = 1;
     if (isMobileView()) {
-      // phones: keep a fixed horizontal field of view whatever the hero height is
-      fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(rig.hfov / 2)) / aspect));
-    } else if (aspect < 1.6) {
-      fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(fov / 2)) * 1.6 / aspect));
+      // portrait: fixed horizontal field of view, and a lens shift that drops the complex below the copy
+      shift = 1.32;
+      fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(rig.hfov / 2)) / (aspect / shift)));
+      camera.setViewOffset(W, H * shift, 0, 0, W, H);
+    } else {
+      camera.clearViewOffset();
+      if (aspect < 1.6) fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(fov / 2)) * 1.6 / aspect));
     }
-    camera.fov = Math.min(fov, 75); camera.aspect = aspect; camera.updateProjectionMatrix();
-    const dbH = renderer.getDrawingBufferSize(new THREE.Vector2()).y;
-    U.scale.value = dbH / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+    camera.fov = Math.min(fov, 80); camera.aspect = aspect; camera.updateProjectionMatrix();
+    const dbH = renderer.getDrawingBufferSize(dbSize).y;
+    U.scale.value = dbH * shift / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
   }
 
   // ---------------------------------------------------------------- per-frame update

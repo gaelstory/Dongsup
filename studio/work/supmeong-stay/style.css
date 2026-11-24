@@ -16,6 +16,7 @@
   --ink: var(--fir);
   --ink-2: #29473D;
   --scrim: rgba(238, 243, 240, 0.68);
+  --scrim-m: rgba(238, 243, 240, 0.5);
   --halo: rgba(238, 243, 240, 0.92);
   --halo-soft: rgba(238, 243, 240, 0.6);
   --hdr-glass: rgba(226, 233, 229, 0.5);
@@ -31,6 +32,7 @@ html.is-dusk {
   --ink: var(--snow);
   --ink-2: #DCE4E0;
   --scrim: rgba(13, 24, 40, 0.62);
+  --scrim-m: rgba(13, 24, 40, 0.5);
   --halo: rgba(13, 24, 40, 0.88);
   --halo-soft: rgba(13, 24, 40, 0.55);
   --hdr-glass: rgba(13, 24, 40, 0.5);
@@ -191,10 +193,10 @@ html.is-dusk .btn--primary { background: var(--lamp); color: var(--night); }
 /* a soft local haze behind the words only: full-bleed band on phones, an elliptical glow on wider screens,
    and a halo hugging each glyph so contrast holds wherever the column drifts */
 .scrim::before {
-  content: ''; position: absolute; z-index: -1; inset: -72px -20px; pointer-events: none;
-  background: var(--scrim);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 72px, #000 calc(100% - 72px), transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 72px, #000 calc(100% - 72px), transparent);
+  content: ''; position: absolute; z-index: -1; inset: -56px -20px; pointer-events: none;
+  background: var(--scrim-m);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 56px, #000 calc(100% - 56px), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 56px, #000 calc(100% - 56px), transparent);
   transition: background-color 700ms ease;
 }
 .scrim > * { text-shadow: 0 0 1px var(--halo), 0 0 8px var(--halo), 0 0 22px var(--halo-soft); transition: text-shadow 700ms ease; }
@@ -299,7 +301,7 @@ html.is-dusk .btn--primary { background: var(--lamp); color: var(--night); }
 html.js .spot:hover + .tip:not(.is-on), html.js .spot:focus-visible + .tip:not(.is-on) { opacity: 0; visibility: hidden; }
 .tip.is-instant { transition-duration: 0s; }
 @media (max-width: 599px) {
-  html.js .tip { position: static; display: none; width: 100%; margin-top: 12px; transform: none; opacity: 1; visibility: visible; transition: none; }
+  html.js .tip { position: relative; left: auto !important; top: auto; display: none; width: 100%; margin-top: 12px; transform: none; opacity: 1; visibility: visible; transition: none; }
   html.js .tip.is-on { display: block; transform: none; }
   html.js .tip::after { left: 24px; top: -6px; bottom: auto; }
 }
@@ -322,9 +324,9 @@ html.js .spot:hover + .tip:not(.is-on), html.js .spot:focus-visible + .tip:not(.
 .cal__fallback { color: var(--fog-ink); }
 .cal__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
 .cal__hint { color: var(--fog-ink); font-size: 15px; line-height: 1.5; min-height: 3em; display: flex; align-items: center; }
-.cal__legend { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-size: 14px; color: var(--fog-ink); }
-.cal__key { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-size: 13px; font-weight: 700; color: var(--snow); position: relative; margin-left: 6px; }
-.cal__key:first-child { margin-left: 0; }
+.cal__legend { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; font-size: 14px; color: var(--fog-ink); }
+.cal__lg { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.cal__key { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-size: 13px; font-weight: 700; color: var(--snow); position: relative; }
 .cal__key--off { color: rgba(246, 248, 247, 0.42); }
 .cal__key--off::after { content: ''; position: absolute; left: 7px; right: 7px; top: 50%; height: 1.5px; background: rgba(246, 248, 247, 0.8); transform: rotate(-35deg); }
 .cal__key--today { border: 1px solid rgba(246, 248, 247, 0.5); }
@@ -471,7 +473,7 @@ html.bar-off body .concept-badge { bottom: calc(16px + env(safe-area-inset-botto
   .brand__en { display: inline; }
   .hero { padding-top: max(150px, 22svh); }
   .scrim::before {
-    inset: -110px -220px;
+    inset: -110px -220px; background: var(--scrim);
     -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 52%, rgba(0, 0, 0, 0.5) 74%, transparent 100%);
     mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 52%, rgba(0, 0, 0, 0.5) 74%, transparent 100%);
   }

@@ -84,9 +84,9 @@
       </ul>
     </nav>
     <div class="top__actions">
-      <button class="cart-btn" type="button" id="cart-open" aria-haspopup="dialog" aria-controls="cart">
+      <button class="cart-btn" type="button" id="cart-open" aria-haspopup="dialog" aria-controls="cart" aria-label="장바구니, 담긴 병 0개">
         <span class="cart-btn__label">장바구니</span>
-        <span class="cart-btn__count" id="cart-count" aria-label="담긴 병 0개">0</span>
+        <span class="cart-btn__count" id="cart-count" aria-hidden="true">0</span>
       </button>
       <button class="menu-btn" type="button" id="menu-btn" aria-expanded="false" aria-controls="nav-list">
         <span class="menu-btn__bars" aria-hidden="true"></span>
@@ -249,7 +249,7 @@
       </ol>
     </div>
 
-    <div class="wrap time" aria-labelledby="time-title">
+    <section class="wrap time" aria-labelledby="time-title">
       <div class="time__head">
         <h3 class="h3" id="time-title">시간이 지나면</h3>
         <p>향은 피부 위에서 세 번 바뀝니다. 손잡이를 아래로 내려 여섯 시간을 지나 보세요.</p>
@@ -259,12 +259,6 @@
           <button type="button" class="chip" data-time-scent="2" aria-pressed="false"><i style="--c:#5C7A4A" aria-hidden="true"></i>이끼</button>
           <button type="button" class="chip" data-time-scent="3" aria-pressed="false"><i style="--c:#6C8EB4" aria-hidden="true"></i>비</button>
         </div>
-        <svg class="tnotes__rings" viewBox="0 0 200 200" aria-hidden="true">
-            <circle class="ring ring--0" cx="100" cy="100" r="30"/>
-            <circle class="ring ring--1" cx="100" cy="100" r="54"/>
-            <circle class="ring ring--2" cx="100" cy="100" r="80"/>
-            <circle class="ring__core" cx="100" cy="100" r="6"/>
-          </svg>
       </div>
       <div class="time__body">
         <div class="tslider" id="tslider">
@@ -278,6 +272,7 @@
         </div>
         <div class="tnotes" aria-live="polite">
           <p class="tnotes__clock"><span class="num" id="tclock">0분</span> 뒤</p>
+          <div class="tnotes__row">
           <div class="tnotes__stack">
             <div class="tnote" data-phase="0">
               <p class="tnote__label">처음 향</p>
@@ -295,10 +290,17 @@
               <p class="tnote__desc">살결의 온도와 섞여 저녁까지 가까이 남습니다.</p>
             </div>
           </div>
+          <svg class="tnotes__rings" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="ring ring--0" cx="100" cy="100" r="30"/>
+            <circle class="ring ring--1" cx="100" cy="100" r="54"/>
+            <circle class="ring ring--2" cx="100" cy="100" r="80"/>
+            <circle class="ring__core" cx="100" cy="100" r="6"/>
+          </svg>
+          </div>
 
         </div>
       </div>
-    </div>
+    </section>
   </section>
 
   <section class="finder" id="finder" aria-labelledby="finder-title">
@@ -349,6 +351,11 @@
           <p class="result__kicker">어울리는 향</p>
           <p class="result__name" id="result-name"><span class="num">No.3</span> 이끼</p>
           <p class="result__line" id="result-line">비 갠 숲의 돌담</p>
+          <dl class="notes result__notes" id="result-notes">
+            <div><dt>처음</dt><dd>젖은 흙, 갈바넘</dd></div>
+            <div><dt>한 시간 뒤</dt><dd>이끼, 제비꽃 잎</dd></div>
+            <div><dt>잔향</dt><dd>베티버, 참나무 이끼</dd></div>
+          </dl>
           <div class="result__actions">
             <button type="button" class="btn" id="result-add" data-add="2">이 향 담기</button>
             <button type="button" class="btn btn--ghost" id="quiz-reset">다시 답하기</button>

@@ -26,7 +26,8 @@ function init() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
   renderer.outputColorSpace = SRGB;
-  renderer.transmissionResolutionScale = isPhone ? 0.6 : 1;
+  // phones render the refraction at reduced resolution; at DPR >= 2 a little more keeps the bands crisp
+  renderer.transmissionResolutionScale = isPhone ? ((devicePixelRatio || 1) >= 2 ? 0.8 : 0.6) : 1;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color().setRGB(0.91, 0.9, 0.886, SRGB);
@@ -67,24 +68,33 @@ function init() {
     }
     // a soft top light
     const tg = eg.createLinearGradient(0, 0, 0, H * 0.12);
-    tg.addColorStop(0, '#ffffff'); tg.addColorStop(1, 'rgba(255,255,255,0)');
+    tg.addColorStop(0, 'rgba(255,255,255,0.55)'); tg.addColorStop(1, 'rgba(255,255,255,0)');
     eg.fillStyle = tg; eg.fillRect(0, 0, W, H * 0.12);
   }
   const envTex = new THREE.CanvasTexture(envCanvas);
   envTex.mapping = THREE.EquirectangularReflectionMapping;
   envTex.colorSpace = SRGB;
   const pmrem = new THREE.PMREMGenerator(renderer);
-  let envRT = null;
-  let envBlob = '';
-  function updateEnv(rgb) {
-    const c = 'rgb(' + Math.round(rgb[0] * 255) + ',' + Math.round(rgb[1] * 255) + ',' + Math.round(rgb[2] * 255) + ')';
-    if (c === envBlob) return false;
-    envBlob = c;
-    drawEnv(c);
+  // one environment per scent, baked once (re-baking during scroll costs frames on phones)
+  const envs = [];
+  function bakeEnv(i) {
+    if (envs[i]) return envs[i];
+    drawEnv(TEUM.scents[i].hex);
     envTex.needsUpdate = true;
-    envRT = pmrem.fromEquirectangular(envTex, envRT);
-    scene.environment = envRT.texture;
-    return true;
+    envs[i] = pmrem.fromEquirectangular(envTex);
+    return envs[i];
+  }
+  let envShown = -1;
+  function showEnv(i) {
+    if (i === envShown) return;
+    let rt = envs[i];
+    if (!rt) {
+      // not baked yet: use whichever is ready, bake this one next
+      rt = envs.find(Boolean) || bakeEnv(i);
+      if (!envs[i]) setTimeout(() => { bakeEnv(i); envShown = -1; dirty = true; }, 30);
+    }
+    scene.environment = rt.texture;
+    envShown = envs[i] ? i : -1;
   }
 
   /* ---------- the big 틈 behind the bottle (opaque so the glass refracts it) ---------- */
@@ -136,27 +146,31 @@ function init() {
   body.push(new V2(0.0001, 0));
   for (let i = 0; i <= 8; i++) {
     const a = -Math.PI / 2 + (i / 8) * (Math.PI / 2);
-    body.push(new V2(0.56 + 0.06 * Math.cos(a), 0.06 + 0.06 * Math.sin(a)));
+    body.push(new V2(0.54 + 0.06 * Math.cos(a), 0.06 + 0.06 * Math.sin(a)));
   }
-  body.push(new V2(0.62, 1.28));
+  // a slight belly (0.60 at heel and shoulder, 0.635 mid-height) so the strokes behind the glass bow
+  const belly = (y) => 0.6 + 0.035 * (1 - Math.pow((y - 0.7) / 0.58, 2));
+  for (let i = 0; i <= 14; i++) { const y = 0.12 + (1.16 * i) / 14; body.push(new V2(belly(y), y)); }
   const bez = (p0, p1, p2, p3, t) => {
     const u = 1 - t;
     return new V2(
       u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
       u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1]);
   };
-  for (let i = 1; i <= 16; i++) body.push(bez([0.62, 1.28], [0.62, 1.6], [0.46, 1.68], [0.2, 1.69], i / 16));
+  for (let i = 1; i <= 16; i++) body.push(bez([0.6, 1.28], [0.6, 1.58], [0.45, 1.68], [0.2, 1.69], i / 16));
   body.push(new V2(0.2, 1.7));
   body.push(new V2(0.0001, 1.7));
   const glassGeo = new THREE.LatheGeometry(body, isPhone ? 72 : 112);
 
-  const liquidPts = [new V2(0.0001, 0.16)];
+  // liquid sits on a thick clear heel and stops below the shoulder, leaving clear glass above it
+  const LIQ_TOP = 1.2;
+  const liquidPts = [new V2(0.0001, 0.17)];
   for (let i = 0; i <= 6; i++) {
     const a = -Math.PI / 2 + (i / 6) * (Math.PI / 2);
-    liquidPts.push(new V2(0.5 + 0.045 * Math.cos(a), 0.205 + 0.045 * Math.sin(a)));
+    liquidPts.push(new V2(belly(0.2) - 0.115 + 0.04 * Math.cos(a), 0.21 + 0.04 * Math.sin(a)));
   }
-  liquidPts.push(new V2(0.545, 1.35));
-  liquidPts.push(new V2(0.0001, 1.35));
+  for (let i = 1; i <= 10; i++) { const y = 0.21 + ((LIQ_TOP - 0.21) * i) / 10; liquidPts.push(new V2(belly(y) - 0.075, y)); }
+  liquidPts.push(new V2(0.0001, LIQ_TOP));
   const liquidGeo = new THREE.LatheGeometry(liquidPts, isPhone ? 56 : 88);
 
   const capPts = [new V2(0.0001, 0), new V2(0.29, 0), new V2(0.3, 0.012)];
@@ -167,29 +181,36 @@ function init() {
   capPts.push(new V2(0.0001, 0.53));
   const capGeo = new THREE.LatheGeometry(capPts, 64);
 
+  // glass: drawn first, clear and thin, not writing depth, so the liquid inside can show through it
   const glassMat = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff, metalness: 0, roughness: 0.04, transmission: 1, thickness: 1.2, ior: 1.5,
-    clearcoat: 1, clearcoatRoughness: 0.04, attenuationColor: new THREE.Color(), attenuationDistance: 0.9,
-    envMapIntensity: 2.6, specularIntensity: 1
+    color: 0xffffff, metalness: 0, roughness: 0.04, transmission: 1, thickness: 0.3, ior: 1.5,
+    clearcoat: 1, clearcoatRoughness: 0.04, attenuationColor: new THREE.Color(), attenuationDistance: 6,
+    envMapIntensity: 0.7, specularIntensity: 1, depthWrite: false
   });
+  // liquid: drawn second, carries the scent colour
   const liquidMat = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff, metalness: 0, roughness: 0.1, transmission: 1, thickness: 1.1, ior: 1.36,
-    attenuationColor: new THREE.Color(), attenuationDistance: 1.15, side: THREE.DoubleSide, envMapIntensity: 1.4
+    color: 0xffffff, metalness: 0, roughness: 0.08, transmission: 1, thickness: 1.1, ior: 1.36,
+    attenuationColor: new THREE.Color(), attenuationDistance: 0.7, side: THREE.FrontSide, envMapIntensity: 0.6
+  });
+  // reflection-only shell on top: the liquid covers the glass highlights, so they are added back here
+  const shellMat = new THREE.MeshPhysicalMaterial({
+    color: 0x000000, roughness: 0.03, clearcoat: 1, clearcoatRoughness: 0.02, transparent: true,
+    blending: THREE.AdditiveBlending, depthWrite: false, envMapIntensity: 0.55
   });
   const capMat = new THREE.MeshStandardMaterial({ color: 0x121212, roughness: 0.5, metalness: 0, envMapIntensity: 0.9 });
   const collarMat = new THREE.MeshStandardMaterial({ color: 0xcfc9bf, roughness: 0.22, metalness: 1, envMapIntensity: 1.2 });
 
+  // pivot at the base so a pointer tilt rocks the bottle on its foot instead of sliding it off its shadow
   const tilt = new THREE.Group();
-  tilt.position.y = 1.1;
   const spin = new THREE.Group();
-  spin.position.y = -1.1;
   tilt.add(spin);
   const holder = new THREE.Group();
   holder.add(tilt);
   scene.add(holder);
 
-  const liquid = new THREE.Mesh(liquidGeo, liquidMat); liquid.renderOrder = 1; spin.add(liquid);
-  const glass = new THREE.Mesh(glassGeo, glassMat); glass.renderOrder = 2; spin.add(glass);
+  const glass = new THREE.Mesh(glassGeo, glassMat); glass.renderOrder = 1; spin.add(glass);
+  const liquid = new THREE.Mesh(liquidGeo, liquidMat); liquid.renderOrder = 2; spin.add(liquid);
+  const shell = new THREE.Mesh(glassGeo, shellMat); shell.renderOrder = 5; spin.add(shell);
   const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.232, 0.232, 0.07, 64), collarMat);
   collar.position.y = 1.735; spin.add(collar);
   const cap = new THREE.Mesh(capGeo, capMat); cap.position.y = 1.77; spin.add(cap);
@@ -217,19 +238,19 @@ function init() {
     lg.fillStyle = '#171717';
     lg.font = '400 50px "Noto Serif KR", serif';
     lg.fillText(s.no + ' ' + s.name, W / 2, 322);
-    lg.font = '300 28px "Jost", sans-serif';
-    lg.fillStyle = 'rgba(23,23,23,0.7)';
-    lg.fillText('eau de parfum  50 ml', W / 2, 378);
+    lg.font = '400 38px "Jost", sans-serif';
+    lg.fillStyle = 'rgba(23,23,23,0.75)';
+    lg.fillText('50 ml', W / 2, 384);
     labelTex.needsUpdate = true;
     labelDrawn = i;
   }
   const labelTex = new THREE.CanvasTexture(labelCanvas);
   labelTex.colorSpace = SRGB;
   labelTex.anisotropy = 4;
-  const labelMat = new THREE.MeshStandardMaterial({ map: labelTex, transparent: true, roughness: 0.75, metalness: 0, envMapIntensity: 1.1 });
-  const label = new THREE.Mesh(new THREE.CylinderGeometry(0.633, 0.633, 0.4, 48, 1, true, -0.6, 1.2), labelMat);
+  const labelMat = new THREE.MeshStandardMaterial({ map: labelTex, emissive: 0xffffff, emissiveMap: labelTex, emissiveIntensity: 0.8, transparent: true, roughness: 0.75, metalness: 0, envMapIntensity: 0.3 });
+  const label = new THREE.Mesh(new THREE.CylinderGeometry(0.642, 0.642, 0.4, 48, 1, true, -0.6, 1.2), labelMat);
   label.position.y = 0.7;
-  label.renderOrder = 3;
+  label.renderOrder = 4;
   spin.add(label);
 
   // contact shadow
@@ -244,6 +265,25 @@ function init() {
   shadow.rotation.x = -Math.PI / 2;
   shadow.position.y = -0.003;
   holder.add(shadow);
+  // coloured liquid throws coloured light: a soft pool with two caustic streaks on the floor in front
+  const poolCanvas = document.createElement('canvas');
+  poolCanvas.width = 256; poolCanvas.height = 256;
+  const pc = poolCanvas.getContext('2d');
+  const pg = pc.createRadialGradient(128, 128, 0, 128, 128, 120);
+  pg.addColorStop(0, 'rgba(255,255,255,0.9)'); pg.addColorStop(0.5, 'rgba(255,255,255,0.35)'); pg.addColorStop(1, 'rgba(255,255,255,0)');
+  pc.fillStyle = pg; pc.fillRect(0, 0, 256, 256);
+  pc.globalCompositeOperation = 'lighter';
+  [[96, 18], [160, 12]].forEach(([x, w]) => {
+    const lgS = pc.createLinearGradient(x - w, 0, x + w, 0);
+    lgS.addColorStop(0, 'rgba(255,255,255,0)'); lgS.addColorStop(0.5, 'rgba(255,255,255,0.55)'); lgS.addColorStop(1, 'rgba(255,255,255,0)');
+    pc.fillStyle = lgS; pc.fillRect(x - w, 40, w * 2, 176);
+  });
+  const poolMat = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(poolCanvas), color: new THREE.Color(), transparent: true, opacity: 0.26, depthWrite: false, toneMapped: false });
+  const pool = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 0.7), poolMat);
+  pool.rotation.x = -Math.PI / 2;
+  pool.position.set(0, 0.001, 0.62);
+  pool.renderOrder = 0;
+  holder.add(pool);
 
   /* ---------- framing (matches the CSS poster: --base, --bfrac) ---------- */
   let W = 1, H = 1, Vw = 1, Vh = 1;
@@ -262,13 +302,13 @@ function init() {
     camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
     // glyph and horizon live at z=-1.9; place them by where they should land on screen
     const D = DIST + 1.9, kz = D / DIST;
-    const hz = base - (W > H ? 0.035 : 0.03);
+    const hz = base - (W > H ? 0.015 : 0.03);
     const toY = (frac) => CAMY + ((yTop - frac * Vh) - CAMY) * kz;
     line.position.y = toY(hz);
     line.scale.set(Vw * kz * 1.4, Vh * kz / H, 1);
-    const gh = W > H ? 0.6 : 0.5;
+    const gh = W > H ? 0.66 : 0.74;
     let inkH = gh * Vh;
-    const maxW = Vw * (W > H ? 0.92 : 0.84);
+    const maxW = Vw * (W > H ? 0.92 : 1.04);
     if (inkH * 0.9 > maxW) inkH = maxW / 0.9;
     frameInfo.inkH = inkH * kz;
     frameInfo.centerY = toY(hz - (inkH / Vh) / 2);
@@ -291,7 +331,7 @@ function init() {
   const tmpA = new THREE.Color();
   const WHITE = new THREE.Color(1, 1, 1);
   let idle = -0.35, restU = -0.35, last = 0, raf = 0, visible = true, dirty = true, ready = false;
-  let envTimer = 0, lastSig = '', glyphX = 0, prevX = 0;
+  let lastSig = '', glyphX = 0, prevX = 0, driftT = 0;
   const REST = -0.35;
 
   function setColor(c, rgb) { c.setRGB(rgb[0], rgb[1], rgb[2], SRGB); }
@@ -308,12 +348,11 @@ function init() {
     glyphMat.uniforms.bg.value.copy(scene.background);
     setColor(glyphMat.uniforms.ink.value, st.ink);
     setColor(liquidMat.attenuationColor, st.liquid);
-    liquidMat.attenuationColor.lerp(WHITE, 0.16);
     setColor(tmpA, st.liquid);
-    glassMat.attenuationColor.copy(tmpA).lerp(WHITE, 0.42);
-
-    envTimer -= dt;
-    if (envTimer <= 0 && updateEnv(st.liquid)) envTimer = 0.16;
+    glassMat.attenuationColor.copy(tmpA).lerp(WHITE, 0.9);
+    poolMat.color.copy(tmpA);
+    // the environment swaps with the label, while the bottle has its back to the viewer
+    showEnv(st.labelIdx);
 
     if (st.labelIdx !== labelDrawn) drawLabel(st.labelIdx);
 
@@ -331,6 +370,8 @@ function init() {
     tilt.rotation.z = -px * 0.12 * 0.6;
     tilt.rotation.x = py * 0.12 * 0.5;
     scene.environmentRotation.y = px * 0.55;
+    shadow.position.x = px * 0.05;
+    pool.position.x = -px * 0.18;
 
     // desktop scents: the bottle moves to the side opposite the copy
     const bx = st.x * Vw * 0.2;
@@ -338,7 +379,10 @@ function init() {
     // the 틈 trails the bottle a little, so it seems to pass behind the glass as the bottle moves
     const vel = (bx - prevX) / Math.max(dt, 0.001);
     prevX = bx;
-    const target = bx * 0.82 - px * 0.32 - (still ? 0 : Math.max(-1.2, Math.min(1.2, vel * 0.12)));
+    // while the hero idles, the 틈 drifts slowly sideways behind the glass (stops with the pause button)
+    if (spinOn) driftT += dt * st.heroW;
+    const drift = still ? 0 : Math.sin((driftT / 14) * TAU) * Vw * 0.05 * st.heroW;
+    const target = bx * 0.82 - px * 0.32 + drift - (still ? 0 : Math.max(-1.2, Math.min(1.2, vel * 0.12)));
     glyphX += (target - glyphX) * (still ? 1 : 1 - Math.exp(-dt * 5));
     glyph.position.x = glyphX;
     const gscale = W > H ? 0.82 + 0.18 * st.glyph : 1;
@@ -347,12 +391,13 @@ function init() {
     // shrink toward the horizon so the glyph keeps standing on the same line
     glyph.position.y = frameInfo.hzY + (frameInfo.centerY - frameInfo.hzY) * gscale;
     setColor(lineMat.uniforms.ink.value, st.ink);
+    glyphMat.uniforms.amt.value = W > H ? 0.94 : 0.85;
     const hv = Math.max(0, 1 - st.pass * 1.8) * (st.horizonDraw == null ? 1 : st.horizonDraw);
     line.visible = hv > 0.01;
     line.scale.x = Vw * frameInfo.kz * 1.4 * Math.max(0.001, st.horizonDraw == null ? 1 : st.horizonDraw);
     lineMat.uniforms.amt.value = 0.42 * Math.max(0, 1 - st.pass * 1.8);
 
-    const sig = [hv.toFixed(3), spin.rotation.y.toFixed(4), bx.toFixed(3), glyphX.toFixed(3), ptr.x.toFixed(3), ptr.y.toFixed(3), st.bg.join(), st.ink.join(), st.liquid.join(), envBlob, labelDrawn].join('|');
+    const sig = [hv.toFixed(3), spin.rotation.y.toFixed(4), bx.toFixed(3), glyphX.toFixed(3), ptr.x.toFixed(3), ptr.y.toFixed(3), st.bg.join(), st.ink.join(), st.liquid.join(), envShown, labelDrawn].join('|');
     if (sig === lastSig && !dirty) return;
     lastSig = sig; dirty = false;
     renderer.render(scene, camera);
@@ -394,16 +439,26 @@ function init() {
   fontsP.then(applyFonts, applyFonts);
 
   frame();
-  updateEnv(TEUM.state.liquid);
+  bakeEnv(TEUM.state.labelIdx);
+  showEnv(TEUM.state.labelIdx);
   drawLabel(TEUM.state.labelIdx);
   start();
+  // bake the other three environments after the first paint, one at a time
+  let bakeNext = 0;
+  const bakeLater = () => {
+    while (bakeNext < 4 && envs[bakeNext]) bakeNext++;
+    if (bakeNext >= 4) return;
+    bakeEnv(bakeNext);
+    setTimeout(bakeLater, 250);
+  };
+  setTimeout(bakeLater, 900);
 
   addEventListener('pagehide', () => {
     stop();
     [glassGeo, liquidGeo, capGeo, glyph.geometry, label.geometry, shadow.geometry, collar.geometry].forEach((g) => g.dispose());
-    [glassMat, liquidMat, capMat, collarMat, glyphMat, labelMat, shadow.material].forEach((m) => m.dispose());
+    [glassMat, liquidMat, shellMat, capMat, collarMat, glyphMat, lineMat, labelMat, shadow.material, poolMat].forEach((m) => m.dispose());
+    envs.forEach((rt) => rt && rt.dispose());
     [envTex, glyphTex, labelTex].forEach((t) => t.dispose());
-    if (envRT) envRT.dispose();
     pmrem.dispose();
     renderer.dispose();
   });

@@ -169,7 +169,7 @@
       var lim = want, m = hr * 1.6;
       for (var i = 0; i < copy.length; i++) {
         var c = copy[i];
-        if (x > c.l - m && x < c.r + m) lim = Math.min(lim, groundY - c.b - 12 - hr * 1.45);
+        if (x > c.l - m && x < c.r + m) lim = Math.min(lim, groundY - c.b - 18 - hr * 1.45);
       }
       return Math.max(36, lim);
     }
@@ -564,10 +564,10 @@
         var q = function (c) { return svg.querySelector(c); }, neck = '280 ' + (494 + dy);
         G.timeline()
           .from(q('.bq-stems'), { y: -26, opacity: 0, duration: 0.32, ease: 'power3.out' })
-          .from(q('.bq-back'), { scaleY: 0.45, opacity: 0, duration: 0.36, ease: 'power3.out', svgOrigin: neck }, 0.08)
+          .from(q('.bq-back'), { scaleY: 0.2, scaleX: 0.7, duration: 0.4, ease: 'power3.out', svgOrigin: neck }, 0.06)
           .from(q('.bq-leaves'), { opacity: 0, scale: 0.86, duration: 0.32, ease: 'power2.out', svgOrigin: '280 ' + (300 + dy) }, 0.18)
           .add(function () { bloomIn(setter, 0.03); }, 0.24)
-          .from(q('.bq-front'), { scaleY: 0.5, opacity: 0, duration: 0.34, ease: 'power3.out', svgOrigin: '280 ' + (506 + dy) }, 0.42)
+          .from(q('.bq-front'), { scaleY: 0.25, duration: 0.36, ease: 'power3.out', svgOrigin: '280 ' + (506 + dy) }, 0.42)
           .from(q('.bq-ribbon'), { scale: 0.5, opacity: 0, duration: 0.42, ease: 'back.out(2.2)', transformOrigin: '50% 30%' }, 0.62);
       } });
     }

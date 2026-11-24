@@ -26,6 +26,7 @@
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
+<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false"><filter id="hand" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
 
 <header class="topbar">
   <div class="topbar__inner">
@@ -88,6 +89,23 @@
       <path d="M22 390h16l-6 40h-4Z" fill="#9AA5AE"/>
       <path d="M28 430h4l-2 18Z" fill="#DE3327"/>
     </svg>
+    <svg class="prop prop--ruler" viewBox="0 0 70 460" focusable="false">
+      <rect x="6" y="6" width="58" height="448" rx="4" fill="#F4F1E4" stroke="#C9CDB8" stroke-width="2"/>
+      <path d="M64 30h-18M64 54h-10M64 78h-18M64 102h-10M64 126h-18M64 150h-10M64 174h-18M64 198h-10M64 222h-24M64 246h-10M64 270h-18M64 294h-10M64 318h-18M64 342h-10M64 366h-18M64 390h-10M64 414h-18" stroke="#6F7468" stroke-width="2"/>
+      <text x="22" y="226" font-family="'Gothic A1', sans-serif" font-size="13" font-weight="800" fill="#6F7468" transform="rotate(-90 22 226)">15 cm</text>
+    </svg>
+    <svg class="prop prop--sheets" viewBox="0 0 260 200" focusable="false">
+      <rect x="40" y="30" width="210" height="160" fill="#F7F6EE" stroke="#D8D9CC" stroke-width="2" transform="rotate(-8 145 110)"/>
+      <rect x="24" y="22" width="210" height="160" fill="#FAFAF4" stroke="#D8D9CC" stroke-width="2" transform="rotate(4 129 102)"/>
+      <g transform="rotate(4 129 102)" stroke="#E8A49B" stroke-width="1.4" fill="none"><path d="M40 52h180v28H40zM40 92h180v28H40zM40 132h180v28H40z"/><path d="M58 52v28M76 52v28M94 52v28M112 52v28M130 52v28M148 52v28M166 52v28M184 52v28M202 52v28M58 92v28M76 92v28M94 92v28M112 92v28M130 92v28M148 92v28M166 92v28M184 92v28M202 92v28"/></g>
+    </svg>
+    <svg class="prop prop--marker" viewBox="0 0 60 330" focusable="false">
+      <rect x="14" y="60" width="32" height="220" rx="12" fill="#C9F27B"/>
+      <rect x="16" y="60" width="9" height="220" rx="4" fill="#DDF8A8"/>
+      <rect x="12" y="8" width="36" height="64" rx="10" fill="#9BC94A"/>
+      <path d="M20 280h20l-4 26h-12Z" fill="#E9EEF2" stroke="#9AA5AE" stroke-width="2"/>
+      <path d="M24 306h12l-3 14h-6Z" fill="#8BC34A"/>
+    </svg>
     <div class="prop prop--note"><span>수요일 4시</span><span>레벨 테스트</span><span>3명 예약</span></div>
   </div>
 
@@ -97,29 +115,36 @@
       <span class="sheet__title">밑줄 국어논술학원 답안지</span>
       <span class="sheet__field">과목 <b>국어</b></span>
       <span class="sheet__field sheet__field--name">이름 <i></i></span>
+      <span class="sheet__field sheet__field--score">점수 <em class="tally" id="tally"></em></span>
     </div>
 
     <section class="hero" id="top" aria-labelledby="hero-title">
       <p class="hero__q" aria-hidden="true"><b>1.</b> 다음 문장을 원고지에 옮겨 쓰시오.</p>
       <div class="ms-wrap">
         <h1 id="hero-title" class="ms-title"><span class="sr-only">읽는 힘이 성적을 바꿉니다</span>
-          <span class="ms" aria-hidden="true"><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__ch" style="--c:2;--r:1">읽</span><span class="ms__ch" style="--c:3;--r:1">는</span><span class="ms__ch" style="--c:4;--r:1">힘</span><span class="ms__ch" style="--c:5;--r:1">이</span><span class="ms__ch" style="--c:2;--r:2">성</span><span class="ms__ch" style="--c:3;--r:2">적</span><span class="ms__ch" style="--c:4;--r:2">을</span><span class="ms__ch" style="--c:6;--r:2">바</span><span class="ms__ch" style="--c:7;--r:2">꿉</span><span class="ms__ch" style="--c:8;--r:2">니</span><span class="ms__ch" style="--c:9;--r:2">다</span></span>
+          <span class="ms" aria-hidden="true"><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__cell"></span><span class="ms__ch" style="--c:2;--r:1">읽</span><span class="ms__ch" style="--c:3;--r:1">는</span><span class="ms__ch ms__ch--shift" style="--c:5;--r:1">힘</span><span class="ms__ch ms__ch--shift" style="--c:6;--r:1">이</span><span class="ms__ch" style="--c:2;--r:2">성</span><span class="ms__ch" style="--c:3;--r:2">적</span><span class="ms__ch" style="--c:4;--r:2">을</span><span class="ms__ch" style="--c:6;--r:2">바</span><span class="ms__ch" style="--c:7;--r:2">꿉</span><span class="ms__ch" style="--c:8;--r:2">니</span><span class="ms__ch" style="--c:9;--r:2">다</span></span>
         </h1>
-        <svg class="marks marks--d" viewBox="0 0 2000 550" aria-hidden="true" focusable="false">
-          <path class="pen pen--wave" id="hw-d" d="M108 112c22-12 40 12 62 0s40-12 62 0 40 12 62 0 40-12 62 0 30 8 40 4"/>
-          <path class="pen" id="hc-d" d="M318 186c-8-34-88-46-160-34-60 10-86 40-66 66 24 30 120 36 180 22 44-10 62-34 42-58-12-14-34-22-58-26"/>
-          <path class="pen" id="hv-d" d="M272 -34 300 8 328 -36"/>
-          <path class="pen" id="ha-d" d="M1010 352C860 318 560 300 336 262"/>
-          <path class="pen" id="hh-d" d="M366 242 332 262 362 284"/>
-          <g class="nib" opacity="0"><g transform="rotate(40)"><path d="M0 0 9 -18H-9Z" fill="#B92519"/><path d="M-9 -18h18l6 -40h-30Z" fill="#E9E9E4"/><rect x="-15" y="-210" width="30" height="154" rx="9" fill="#DE3327"/><rect x="-12" y="-206" width="8" height="146" rx="4" fill="#EC6A60"/></g></g>
+        <svg class="marks marks--d" viewBox="0 0 2000 592" aria-hidden="true" focusable="false">
+          <path class="pen pen--vee" id="hv-d" d="M252 -62C264 -42 284 -8 301 12C312 -14 330 -46 350 -66"/>
+          <text class="pen-label" x="358" y="-30" font-size="52" transform="rotate(-4 358 -30)">띄어 쓰기</text>
+          <path class="pen pen--wave" id="hw-d" d="M92 120Q124 109 137 117Q150 125 162 116Q173 108 189 119Q204 130 219 120Q234 110 248 119Q261 128 273 120Q285 112 297 122Q309 132 324 120Q339 108 354 119Q369 129 382 120Q394 111 409 122Q424 134 439 124Q455 115 469 124Q483 134 496 125Q510 115 505 120Q500 125 504 116L508 108"/>
+          <path class="pen" id="hc-d" d="M315 181Q303 175 295 169Q288 164 283 159Q278 154 267 153Q256 152 243 150Q230 149 222 148Q213 148 201 148Q190 148 176 150Q163 152 153 157Q144 162 134 166Q125 169 115 174Q106 179 97 183Q89 187 86 194Q83 201 79 205Q74 209 72 216Q71 223 72 231Q73 238 76 244Q79 250 87 253Q95 255 100 261Q105 267 112 270Q120 274 133 275Q147 276 157 277Q167 279 179 282Q190 284 201 281Q211 277 222 277Q234 276 245 272Q255 267 268 266Q280 264 289 257Q297 251 305 244Q313 238 318 232Q323 226 327 222Q330 218 329 211Q328 203 329 196Q330 188 325 185Q321 182 318 174Q315 166 306 164Q298 162 287 157Q276 153 264 150Q253 147 244 146Q235 145 223 143L211 141"/>
+          <path class="pen" id="ha-d" d="M592 372C520 408 404 386 322 268"/>
+          <path class="pen" id="hh-d" d="M327 306Q323 286 322 268Q338 274 357 285"/>
+          <path class="pen" id="hr1-d" d="M1873 590Q1891 580 1896 575Q1900 570 1907 563Q1915 555 1917 547Q1919 539 1919 532Q1919 524 1921 515Q1924 506 1923 499Q1922 491 1917 483Q1912 475 1910 470Q1909 466 1902 459Q1896 453 1886 447Q1875 441 1869 437Q1863 433 1856 431Q1849 430 1837 431Q1825 431 1816 432Q1807 434 1800 435Q1793 436 1784 440Q1776 443 1768 447Q1761 451 1757 458Q1754 464 1749 472Q1744 479 1742 488Q1740 498 1738 506Q1736 514 1735 522Q1735 530 1735 538Q1735 545 1742 552Q1749 559 1754 567Q1760 576 1764 581Q1769 585 1777 590Q1784 594 1795 598Q1806 601 1811 602Q1816 603 1828 606Q1840 608 1848 606Q1856 603 1865 600Q1874 598 1881 593Q1888 589 1896 583Q1904 577 1908 569L1912 561"/>
+          <path class="pen pen--thin" id="hr2-d" d="M1777 495Q1767 510 1767 513Q1767 515 1770 521Q1772 527 1775 531Q1777 536 1780 541Q1783 545 1785 551Q1788 557 1792 561Q1797 564 1802 564Q1807 564 1813 567Q1819 570 1823 570Q1826 569 1834 570Q1842 571 1848 571Q1854 570 1860 567Q1865 564 1869 562Q1872 559 1875 556Q1877 553 1880 548Q1884 543 1889 538Q1893 533 1891 528Q1889 523 1892 516Q1894 509 1890 505Q1887 501 1885 497Q1882 493 1881 487Q1880 481 1876 478Q1871 474 1869 470Q1866 466 1858 464Q1851 463 1845 461Q1839 460 1834 459Q1829 458 1823 459Q1818 460 1810 463Q1801 466 1797 467Q1793 468 1788 473Q1784 477 1782 480Q1780 483 1775 487Q1770 490 1770 496L1770 501"/>
+          <g class="nib" opacity="0"><g transform="rotate(22) scale(0.62)"><path d="M0 0 9 -18H-9Z" fill="#B92519"/><path d="M-9 -18h18l6 -40h-30Z" fill="#E9E9E4"/><rect x="-15" y="-210" width="30" height="154" rx="9" fill="#DE3327"/><rect x="-12" y="-206" width="8" height="146" rx="4" fill="#EC6A60"/></g></g>
         </svg>
-        <svg class="marks marks--m" viewBox="0 0 1000 700" aria-hidden="true" focusable="false">
-          <path class="pen pen--wave" id="hw-m" d="M108 112c22-12 40 12 62 0s40-12 62 0 40 12 62 0 40-12 62 0 30 8 40 4"/>
-          <path class="pen" id="hc-m" d="M318 186c-8-34-88-46-160-34-60 10-86 40-66 66 24 30 120 36 180 22 44-10 62-34 42-58-12-14-34-22-58-26"/>
-          <path class="pen" id="hv-m" d="M272 -34 300 8 328 -36"/>
-          <path class="pen" id="ha-m" d="M330 458C290 390 250 330 226 270"/>
-          <path class="pen" id="hh-m" d="M198 296 224 266 252 290"/>
-          <g class="nib" opacity="0"><g transform="rotate(40)"><path d="M0 0 9 -18H-9Z" fill="#B92519"/><path d="M-9 -18h18l6 -40h-30Z" fill="#E9E9E4"/><rect x="-15" y="-210" width="30" height="154" rx="9" fill="#DE3327"/><rect x="-12" y="-206" width="8" height="146" rx="4" fill="#EC6A60"/></g></g>
+        <svg class="marks marks--m" viewBox="0 0 1000 756" aria-hidden="true" focusable="false">
+          <path class="pen pen--vee" id="hv-m" d="M252 -62C264 -42 284 -8 301 12C312 -14 330 -46 350 -66"/>
+          <text class="pen-label" x="358" y="-30" font-size="64" transform="rotate(-4 358 -30)">띄어 쓰기</text>
+          <path class="pen pen--wave" id="hw-m" d="M92 120Q124 109 137 117Q150 125 162 116Q173 108 189 119Q204 130 219 120Q234 110 248 119Q261 128 273 120Q285 112 297 122Q309 132 324 120Q339 108 354 119Q369 129 382 120Q394 111 409 122Q424 134 439 124Q455 115 469 124Q483 134 496 125Q510 115 505 120Q500 125 504 116L508 108"/>
+          <path class="pen" id="hc-m" d="M315 181Q303 175 295 169Q288 164 283 159Q278 154 267 153Q256 152 243 150Q230 149 222 148Q213 148 201 148Q190 148 176 150Q163 152 153 157Q144 162 134 166Q125 169 115 174Q106 179 97 183Q89 187 86 194Q83 201 79 205Q74 209 72 216Q71 223 72 231Q73 238 76 244Q79 250 87 253Q95 255 100 261Q105 267 112 270Q120 274 133 275Q147 276 157 277Q167 279 179 282Q190 284 201 281Q211 277 222 277Q234 276 245 272Q255 267 268 266Q280 264 289 257Q297 251 305 244Q313 238 318 232Q323 226 327 222Q330 218 329 211Q328 203 329 196Q330 188 325 185Q321 182 318 174Q315 166 306 164Q298 162 287 157Q276 153 264 150Q253 147 244 146Q235 145 223 143L211 141"/>
+          <path class="pen" id="ha-m" d="M354 382C332 362 318 322 316 276"/>
+          <path class="pen" id="hh-m" d="M299 309Q309 292 316 276Q325 291 336 308"/>
+          <path class="pen" id="hr1-m" d="M919 766Q933 752 937 748Q942 743 946 736Q951 729 953 723Q955 717 956 710Q958 702 958 693Q957 685 958 678Q960 672 956 665Q952 659 947 651Q942 642 938 638Q934 634 927 629Q920 625 914 620Q907 616 898 614Q889 612 880 612Q871 612 861 612Q852 611 844 615Q836 619 829 622Q822 625 816 629Q809 633 802 639Q794 645 792 652Q791 658 785 665Q779 672 778 681Q776 689 779 699Q781 708 782 715Q783 721 786 728Q790 735 797 742Q804 750 808 754Q812 758 822 764Q831 771 839 772Q848 774 855 778Q863 781 872 782Q881 782 888 781Q895 779 903 775Q910 770 918 767Q925 764 935 759Q944 755 950 748L956 741"/>
+          <path class="pen pen--thin" id="hr2-m" d="M819 678Q812 689 812 693Q811 696 811 702Q812 707 814 711Q815 716 820 720Q825 725 827 729Q830 733 836 734Q843 735 846 740Q848 745 855 745Q861 745 865 748Q868 750 873 749Q878 748 886 745Q895 742 898 741Q901 739 906 736Q912 734 917 732Q922 730 923 725Q924 721 925 714Q926 707 930 704Q933 701 934 697Q935 692 934 685Q933 678 931 675Q928 672 923 666Q917 661 913 656Q910 651 907 649Q903 648 900 644Q897 640 889 641Q882 643 877 641Q872 639 865 640Q857 641 851 642Q846 644 842 646Q838 647 834 651Q831 654 825 659Q820 664 817 667Q813 670 812 675L812 681"/>
+          <g class="nib" opacity="0"><g transform="rotate(22) scale(0.62)"><path d="M0 0 9 -18H-9Z" fill="#B92519"/><path d="M-9 -18h18l6 -40h-30Z" fill="#E9E9E4"/><rect x="-15" y="-210" width="30" height="154" rx="9" fill="#DE3327"/><rect x="-12" y="-206" width="8" height="146" rx="4" fill="#EC6A60"/></g></g>
         </svg>
         <p class="ms-memo"><span class="sr-only">선생님 메모: 여기가 핵심!</span><span class="ms-memo__ink" aria-hidden="true">여기가 핵심!</span></p>
       </div>
@@ -132,23 +157,23 @@
     <section class="part method" id="method" aria-labelledby="method-title">
       <h2 id="method-title">읽고, 줄이고, 다시 씁니다</h2>
       <div class="ann">
-        <p><span class="hl">밑줄의 수업은 매번 같은 순서로 흘러갑니다.</span> <span class="hl">한 편의 글을 끝까지 읽고, 한 문장으로 줄이고, 그 문장을 자기 말로 다시 씁니다.</span> <span class="key">한 문단을 한 문장으로 줄일 수 있으면, 그 글을 읽은 것입니다.</span></p>
+        <p>밑줄의 수업은 매번 같은 순서로 흘러갑니다. <span class="hl">한 편의 글을 끝까지 읽고, 한 문장으로 줄이고, 그 문장을 자기 말로 다시 씁니다.</span> <span class="key">한 문단을 한 문장으로 줄일 수 있으면, 그 글을 읽은 것입니다.</span></p>
         <p class="note" data-note><span class="note__ink">이 문장 하나만 기억하세요</span></p>
       </div>
       <ol class="steps">
         <li class="step">
           <h3 class="step__name"><span class="step__no" aria-hidden="true">1</span>읽기</h3>
-          <p><span class="hl">지문을 소리 내지 않고 끝까지 읽습니다.</span> <span class="hl">모르는 낱말에는 연필로 동그라미만 치고 멈추지 않습니다.</span></p>
+          <p><span class="hl">지문을 소리 내지 않고 끝까지 읽습니다.</span> 모르는 낱말에는 연필로 동그라미만 치고 멈추지 않습니다.</p>
           <p class="specimen" aria-hidden="true">비가 오면 <mark>개구리</mark>가 우는 까닭은 짝을 찾기 위해서다. 물웅덩이가 생겨야 <mark>알을 낳을 수</mark> 있기 때문이다.</p>
         </li>
         <li class="step">
           <h3 class="step__name"><span class="step__no" aria-hidden="true">2</span>요약</h3>
-          <p><span class="hl">문단마다 중심 문장에 밑줄을 긋고, 글 전체를 두 줄로 줄입니다.</span> <span class="hl">줄인 문장은 그 자리에서 바로 고쳐 줍니다.</span></p>
+          <p><span class="hl">문단마다 중심 문장에 밑줄을 긋고, 글 전체를 두 줄로 줄입니다.</span> 줄인 문장은 그 자리에서 바로 고쳐 줍니다.</p>
           <p class="specimen" aria-hidden="true"><u>개구리는 알 낳을 물이 생기는 비 오는 날 짝을 부른다.</u></p>
         </li>
         <li class="step">
           <h3 class="step__name"><span class="step__no" aria-hidden="true">3</span>쓰기</h3>
-          <p><span class="hl">요약한 내용을 자기 말로 다시 씁니다.</span> <span class="hl">중등은 300자, 고등은 800자 논술 답안까지 조금씩 늘려 갑니다.</span></p>
+          <p><span class="hl">요약한 내용을 자기 말로 다시 씁니다.</span> 중등은 300자, 고등은 800자 논술 답안까지 조금씩 늘려 갑니다.</p>
           <p class="specimen specimen--pencil" aria-hidden="true">비 오는 날 개구리 울음은 사랑 노래이자 출산 준비다.<span class="tick">✓</span></p>
         </li>
       </ol>
@@ -157,7 +182,7 @@
     <section class="part sample" id="sample" aria-labelledby="sample-title">
       <h2 id="sample-title">빨간 펜이 지나간 자리</h2>
       <div class="ann">
-        <p><span class="hl">중학교 2학년 학생 답안을 바탕으로 만든 견본입니다.</span> <span class="key">고친 자리마다 왜 고쳤는지 한 줄씩 적어 돌려줍니다.</span> <span class="hl">버튼을 누르면 선생님이 고친 자리가 보입니다.</span></p>
+        <p><span class="hl">중학교 2학년 학생 답안을 바탕으로 만든 견본입니다.</span> <span class="key">고친 자리마다 왜 고쳤는지 한 줄씩 적어 돌려줍니다.</span> 버튼을 누르면 선생님이 고친 자리가 보입니다.</p>
         <p class="note" data-note><span class="note__ink">채점보다 이유가 먼저예요</span></p>
       </div>
       <div class="proof" id="proof">
@@ -204,37 +229,37 @@
           <h3 class="panel__title">중1</h3>
           <table class="tt"><caption class="sr-only">중1 반 시간표</caption>
             <thead><tr><th scope="col">반</th><th scope="col">요일</th><th scope="col">시간</th><th scope="col">자리</th></tr></thead>
-            <tbody><tr><th scope="row">독해 기초 A반</th><td data-label="요일">화, 목</td><td data-label="시간">오후 5:00~6:30</td><td data-label="자리"><span class="seat">빈자리 2</span></td></tr><tr><th scope="row">독해 기초 B반</th><td data-label="요일">수, 금</td><td data-label="시간">오후 6:40~8:10</td><td data-label="자리"><span class="seat">빈자리 1</span></td></tr></tbody></table>
+            <tbody><tr><th scope="row">독해 기초 A반</th><td data-label="요일">화, 목</td><td data-label="시간">오후 5:00~6:30</td><td data-label="자리"><span class="seat">빈자리 2</span></td></tr><tr><th scope="row">독해 기초 B반</th><td data-label="요일">수, 금</td><td data-label="시간">오후 6:40~8:10</td><td data-label="자리"><span class="seat">빈자리 1</span></td></tr><tr><th scope="row">겨울 방학 독서반</th><td data-label="요일">월~금</td><td data-label="시간">오전 10:00~11:30</td><td data-label="자리"><span class="seat">빈자리 5</span></td></tr></tbody></table>
         </div>
         <div class="panel" role="tabpanel" id="panel-m2" aria-labelledby="tab-m2" tabindex="0">
           <h3 class="panel__title">중2</h3>
           <table class="tt"><caption class="sr-only">중2 반 시간표</caption>
             <thead><tr><th scope="col">반</th><th scope="col">요일</th><th scope="col">시간</th><th scope="col">자리</th></tr></thead>
-            <tbody><tr><th scope="row">독해 심화반</th><td data-label="요일">월, 수</td><td data-label="시간">오후 5:30~7:10</td><td data-label="자리"><span class="seat">빈자리 1</span></td></tr><tr><th scope="row">서술형 대비반</th><td data-label="요일">토</td><td data-label="시간">오전 10:00~11:40</td><td data-label="자리"><span class="seat">빈자리 3</span></td></tr></tbody></table>
+            <tbody><tr><th scope="row">독해 심화반</th><td data-label="요일">월, 수</td><td data-label="시간">오후 5:30~7:10</td><td data-label="자리"><span class="seat">빈자리 1</span></td></tr><tr><th scope="row">서술형 대비반</th><td data-label="요일">토</td><td data-label="시간">오전 10:00~11:40</td><td data-label="자리"><span class="seat">빈자리 3</span></td></tr><tr><th scope="row">겨울 방학 독서반</th><td data-label="요일">월~금</td><td data-label="시간">오전 10:00~11:30</td><td data-label="자리"><span class="seat">빈자리 4</span></td></tr></tbody></table>
         </div>
         <div class="panel" role="tabpanel" id="panel-m3" aria-labelledby="tab-m3" tabindex="0">
           <h3 class="panel__title">중3</h3>
           <table class="tt"><caption class="sr-only">중3 반 시간표</caption>
             <thead><tr><th scope="col">반</th><th scope="col">요일</th><th scope="col">시간</th><th scope="col">자리</th></tr></thead>
-            <tbody><tr><th scope="row">독해 심화반</th><td data-label="요일">화, 목</td><td data-label="시간">오후 7:00~8:40</td><td data-label="자리"><span class="seat seat--full">마감</span></td></tr><tr><th scope="row">고교 국어 준비반</th><td data-label="요일">토</td><td data-label="시간">오후 1:00~3:30</td><td data-label="자리"><span class="seat">빈자리 2</span></td></tr></tbody></table>
+            <tbody><tr><th scope="row">독해 심화반</th><td data-label="요일">화, 목</td><td data-label="시간">오후 7:00~8:40</td><td data-label="자리"><span class="seat seat--full">마감</span></td></tr><tr><th scope="row">고교 국어 준비반</th><td data-label="요일">토</td><td data-label="시간">오후 1:00~3:30</td><td data-label="자리"><span class="seat">빈자리 2</span></td></tr><tr><th scope="row">고교 문학 미리보기</th><td data-label="요일">일</td><td data-label="시간">오후 2:00~4:00</td><td data-label="자리"><span class="seat">빈자리 3</span></td></tr></tbody></table>
         </div>
         <div class="panel" role="tabpanel" id="panel-h1" aria-labelledby="tab-h1" tabindex="0">
           <h3 class="panel__title">고1</h3>
           <table class="tt"><caption class="sr-only">고1 반 시간표</caption>
             <thead><tr><th scope="col">반</th><th scope="col">요일</th><th scope="col">시간</th><th scope="col">자리</th></tr></thead>
-            <tbody><tr><th scope="row">수능 국어반</th><td data-label="요일">월, 목</td><td data-label="시간">오후 7:00~9:30</td><td data-label="자리"><span class="seat">빈자리 2</span></td></tr><tr><th scope="row">서술형 내신반</th><td data-label="요일">토</td><td data-label="시간">오전 10:00~12:00</td><td data-label="자리"><span class="seat">빈자리 4</span></td></tr></tbody></table>
+            <tbody><tr><th scope="row">수능 국어반</th><td data-label="요일">월, 목</td><td data-label="시간">오후 7:00~9:30</td><td data-label="자리"><span class="seat">빈자리 2</span></td></tr><tr><th scope="row">서술형 내신반</th><td data-label="요일">토</td><td data-label="시간">오전 10:00~12:00</td><td data-label="자리"><span class="seat">빈자리 4</span></td></tr><tr><th scope="row">개별 첨삭</th><td data-label="요일">상담 후</td><td data-label="시간">시간 조율</td><td data-label="자리"><span class="seat">상담 후 배정</span></td></tr></tbody></table>
         </div>
         <div class="panel" role="tabpanel" id="panel-h2" aria-labelledby="tab-h2" tabindex="0">
           <h3 class="panel__title">고2</h3>
           <table class="tt"><caption class="sr-only">고2 반 시간표</caption>
             <thead><tr><th scope="col">반</th><th scope="col">요일</th><th scope="col">시간</th><th scope="col">자리</th></tr></thead>
-            <tbody><tr><th scope="row">수능 국어반</th><td data-label="요일">화, 금</td><td data-label="시간">오후 7:00~9:30</td><td data-label="자리"><span class="seat">빈자리 1</span></td></tr><tr><th scope="row">논술 첨삭반</th><td data-label="요일">토</td><td data-label="시간">오후 2:00~5:00</td><td data-label="자리"><span class="seat">빈자리 2</span></td></tr></tbody></table>
+            <tbody><tr><th scope="row">수능 국어반</th><td data-label="요일">화, 금</td><td data-label="시간">오후 7:00~9:30</td><td data-label="자리"><span class="seat">빈자리 1</span></td></tr><tr><th scope="row">논술 첨삭반</th><td data-label="요일">토</td><td data-label="시간">오후 2:00~5:00</td><td data-label="자리"><span class="seat">빈자리 2</span></td></tr><tr><th scope="row">개별 첨삭</th><td data-label="요일">상담 후</td><td data-label="시간">시간 조율</td><td data-label="자리"><span class="seat">상담 후 배정</span></td></tr></tbody></table>
         </div>
         <div class="panel" role="tabpanel" id="panel-h3" aria-labelledby="tab-h3" tabindex="0">
           <h3 class="panel__title">고3</h3>
           <table class="tt"><caption class="sr-only">고3 반 시간표</caption>
             <thead><tr><th scope="col">반</th><th scope="col">요일</th><th scope="col">시간</th><th scope="col">자리</th></tr></thead>
-            <tbody><tr><th scope="row">수능 파이널반</th><td data-label="요일">월, 수, 금</td><td data-label="시간">오후 8:00~10:00</td><td data-label="자리"><span class="seat seat--full">마감</span></td></tr><tr><th scope="row">논술 첨삭반</th><td data-label="요일">일</td><td data-label="시간">오후 1:00~4:00</td><td data-label="자리"><span class="seat">빈자리 1</span></td></tr></tbody></table>
+            <tbody><tr><th scope="row">수능 파이널반</th><td data-label="요일">월, 수, 금</td><td data-label="시간">오후 8:00~10:00</td><td data-label="자리"><span class="seat seat--full">마감</span></td></tr><tr><th scope="row">논술 첨삭반</th><td data-label="요일">일</td><td data-label="시간">오후 1:00~4:00</td><td data-label="자리"><span class="seat">빈자리 1</span></td></tr><tr><th scope="row">개별 첨삭</th><td data-label="요일">상담 후</td><td data-label="시간">시간 조율</td><td data-label="자리"><span class="seat">상담 후 배정</span></td></tr></tbody></table>
         </div>
       </div>
     </section>
@@ -262,7 +287,7 @@
     <section class="part teacher" id="teacher" aria-labelledby="teacher-title">
       <h2 id="teacher-title">첨삭하는 사람</h2>
       <div class="ann">
-        <p><span class="hl">국어교육을 전공하고 14년째 학생 글을 고치고 있습니다.</span> <span class="hl">한 반을 여섯 명까지만 받는 이유는 단순합니다.</span> <span class="key">모든 답안을 받은 날 안에 빨간 펜으로 돌려드리기 위해서입니다.</span></p>
+        <p><span class="hl">국어교육을 전공하고 14년째 학생 글을 고치고 있습니다.</span> 한 반을 여섯 명까지만 받는 이유는 단순합니다. <span class="key">모든 답안을 받은 날 안에 빨간 펜으로 돌려드리기 위해서입니다.</span></p>
         <p class="note" data-note><span class="note__ink">약속은 지킵니다</span></p>
       </div>
       <div class="teacher__body">
@@ -330,15 +355,20 @@
       </form>
     </section>
 
+    <span class="sheet__fold" aria-hidden="true"></span>
     <div class="total" id="total">
       <p class="total__label">총점</p>
       <div class="total__box">
-        <svg class="score" viewBox="0 0 340 200" role="img" aria-label="100점" focusable="false">
-          <path class="pen pen--score" d="M78 70 98 52V154"/>
-          <path class="pen pen--score" d="M168 56c-26 2-34 40-30 64 4 26 20 38 34 34 20-6 26-44 20-70-4-18-14-28-26-28"/>
-          <path class="pen pen--score" d="M248 54c-26 4-32 42-28 66 4 24 20 36 34 32 20-6 26-46 18-70-6-18-14-26-26-26"/>
-          <path class="pen pen--score" d="M300 40C262 4 120 8 70 40 24 70 30 150 90 172c60 22 190 18 226-28 24-30 10-78-22-102"/>
-          <path class="pen pen--score" d="M86 186c60 6 150 6 226-4"/>
+        <svg class="score" viewBox="0 0 340 220" role="img" aria-label="100점" focusable="false">
+          <g transform="rotate(-7 170 105)">
+            <path class="pen pen--score" d="M86 74 108 52"/>
+            <path class="pen pen--score" d="M108 48C106 86 104 120 100 160"/>
+            <path class="pen pen--score" d="M174 59Q172 59 169 56Q165 54 163 56Q161 57 158 58Q155 59 155 59Q154 59 152 63Q149 66 147 71Q144 76 142 77Q139 78 141 83Q143 89 140 93Q136 98 137 105Q137 111 137 114Q137 116 139 122Q141 128 144 133Q147 138 146 140Q145 142 149 147Q153 153 152 154Q151 156 157 157Q163 158 163 159Q163 160 168 158Q173 156 175 155Q177 154 177 152Q177 150 181 147Q184 145 187 142Q190 140 193 136Q196 132 197 127Q198 122 196 115Q193 108 195 104Q196 100 196 94Q195 88 192 85L189 83"/>
+            <path class="pen pen--score" d="M252 57Q250 58 248 57Q246 55 242 55Q238 54 238 55Q239 56 237 59Q235 62 230 61Q226 61 225 65Q225 69 221 74Q216 80 218 85Q221 90 220 92Q220 95 217 100Q213 104 217 109Q221 114 218 118Q216 122 217 127Q218 131 220 135Q223 139 225 145Q227 150 229 152Q231 154 235 155Q240 156 242 157Q244 158 247 156Q250 154 251 153Q253 152 255 152Q258 152 260 146Q263 141 265 139Q267 138 268 133Q269 129 269 122Q269 115 271 110Q274 105 273 101Q271 97 270 91Q269 85 268 83L266 81"/>
+          </g>
+          <path class="pen pen--score" d="M306 66Q293 51 284 48Q274 45 263 39Q253 32 240 31Q226 30 212 30Q198 30 184 28Q170 27 158 29Q146 31 130 33Q114 35 102 39Q90 42 79 49Q69 57 59 64Q49 70 43 76Q38 82 32 89Q26 95 21 106Q16 116 17 122Q18 127 23 136Q29 145 31 151Q33 157 41 163Q49 169 58 175Q67 181 80 184Q93 188 105 189Q118 191 131 195Q145 198 162 197Q179 195 190 192Q202 190 216 187Q230 184 242 180Q255 175 267 169Q279 163 290 157Q301 151 308 143Q314 136 320 129Q325 123 326 113Q327 103 328 95Q328 88 326 80Q324 71 318 64Q313 56 304 52Q294 47 283 43Q272 39 261 33Q251 27 236 26Q222 25 206 22Q190 20 177 22Q165 24 150 25Q134 27 120 29Q106 32 95 39Q84 46 71 49Q57 52 48 62Q38 71 30 76Q23 82 17 92Q12 102 12 109Q12 116 13 125L13 135"/>
+          <path class="pen pen--score" d="M74 204C140 212 230 208 318 192"/>
+          <path class="pen pen--score pen--thin" d="M118 214C170 218 236 216 290 206"/>
         </svg>
       </div>
       <p class="total__note"><span class="note__ink">끝까지 읽었네요. 그게 제일 어려운 일이에요.</span></p>

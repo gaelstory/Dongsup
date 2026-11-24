@@ -54,7 +54,7 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  var stage = $('#stage'), header = $('#top'), hero = $('.hero');
+  var stage = $('#stage'), header = $('#top'), hero = $('.hero'), stickyEl = $('.stage__sticky');
   var panels = $$('.scent');
   var horizon = $('#poster-line');
   var announcer = $('#announcer');
@@ -64,12 +64,12 @@
   var anchors = [], refOffset = 0, stageBottom = 0, rawSp = -1, smSp = -1;
   function measure() {
     var vh = innerHeight, y = scrollY;
-    refOffset = vh * (mqWide.matches ? 0.5 : 0.74);
+    refOffset = vh * (mqWide.matches ? 0.5 : 0.66);
     anchors = [refOffset];
     panels.forEach(function (p) {
       var t = mqWide.matches ? p : $('.scent__text', p);
       var r = t.getBoundingClientRect();
-      anchors.push(r.top + y + r.height / 2);
+      anchors.push(r.top + y + (mqWide.matches ? r.height / 2 : 56));
     });
     var sr = stage.getBoundingClientRect();
     stageBottom = sr.bottom + y;
@@ -117,19 +117,19 @@
       heroLiquid[c] += reduce ? d : d * k;
     }
     heroLabel = st.spin - spinFrom < 0.5 && spinPending ? spinOld : TEUM.selected;
-    var sc = spinPending ? Math.sin(Math.PI * clamp(st.spin - spinFrom, 0, 1)) * 0.62 : 0;
+    var sc = spinPending ? Math.sin(Math.PI * clamp(st.spin - spinFrom, 0, 1)) * 0.3 : 0;
     heroLiquidShown = sc > 0 ? mixc(heroLiquid, [0.97, 0.96, 0.94], sc) : heroLiquid;
 
     var s = clamp(smSp, -1, 3);
     var i = Math.min(Math.floor(s), 2), f = s - i;
-    var e = smooth(0.16, 0.84, f);
+    var e = smooth(0.3, 0.7, f);
     var A = stateOf(i), B = stateOf(i + 1);
     st.sp = s;
     st.bg = mixc(A.bg, B.bg, e);
     st.ink = mixc(A.ink, B.ink, e);
     st.liquid = mixc(A.liquid, B.liquid, e);
     // mid-turn the liquid clears toward light, so one scent hands over to the next without passing through mud
-    var clear = Math.sin(Math.PI * e) * (A.label === B.label ? 0 : 0.62);
+    var clear = Math.sin(Math.PI * e) * (A.label === B.label ? 0 : 0.3);
     if (clear > 0) st.liquid = mixc(st.liquid, [0.97, 0.96, 0.94], clear);
     st.x = mqWide.matches && !reduce ? A.x + (B.x - A.x) * e : 0;
     st.glyph = A.glyph + (B.glyph - A.glyph) * e;
@@ -144,6 +144,12 @@
     if (!header._past) header.style.setProperty('--stage-bg', bgc);
     if (horizon) horizon.style.opacity = String(clamp(1 - st.pass * 1.8, 0, 1));
     stage.style.setProperty('--poster-ink', css(st.ink));
+    if (mqWide.matches) {
+      var vh = innerHeight, leftOver = stageBottom - scrollY - vh;
+      // leftOver hits 0 when the last scent rests; below that the next section is sliding over the stage
+      var exitO = clamp(1 + leftOver / (vh * 0.35), 0, 1);
+      if (stickyEl._o !== exitO) { stickyEl._o = exitO; stickyEl.style.opacity = exitO.toFixed(3); }
+    } else if (stickyEl._o !== 1) { stickyEl._o = 1; stickyEl.style.opacity = ''; }
 
     if (moving || smSp !== rawSp || spinPending) settleFrames = 0; else settleFrames++;
     if (settleFrames > 4) { running = false; last = 0; return; }
@@ -220,9 +226,10 @@
   var phaseNames = ['처음 향', '한 시간 뒤 향', '잔향'];
   function renderTime() {
     var m = tp * tp * 360;
-    var w0 = 1 - smooth(18, 50, m);
-    var w1 = smooth(22, 62, m) * (1 - smooth(140, 210, m));
-    var w2 = smooth(140, 215, m);
+    // one phase at a time: each note fades out before the next fades in, so no two lines ever overlap
+    var w0 = 1 - smooth(18, 32, m);
+    var w1 = smooth(34, 48, m) * (1 - smooth(150, 175, m));
+    var w2 = smooth(180, 205, m);
     var ws = [w0, w1, w2];
     tslider.style.setProperty('--t', tp.toFixed(4));
     tnotes.forEach(function (n, i) {
@@ -232,7 +239,7 @@
     });
     rings.forEach(function (r, i) {
       r.style.opacity = (0.12 + ws[i] * 0.8).toFixed(3);
-      r.style.transform = 'scale(' + (0.86 + tp * 0.28 + i * 0.02).toFixed(3) + ')';
+      r.style.transform = 'scale(' + Math.min(1, 0.78 + tp * 0.2 + i * 0.02).toFixed(3) + ')';
     });
     var ph = phase(ws);
     tclock.textContent = fmt(m);
@@ -282,12 +289,12 @@
   /* ---------- cart ---------- */
   var cart = [0, 0, 0, 0];
   var countEl = $('#cart-count'), listEl = $('#cart-list'), totalEl = $('#cart-total'), emptyEl = $('#cart-empty');
-  var orderBtn = $('#cart-order'), msgEl = $('#cart-msg');
+  var orderBtn = $('#cart-order'), msgEl = $('#cart-msg'), cartBtn = $('#cart-open');
   function won(n) { return n.toLocaleString('ko-KR'); }
   function bottleSvg(i) {
     return '<svg viewBox="0 0 140 240" aria-hidden="true" style="--liquid:' + SCENTS[i].hex + '"><use href="#bottle"/></svg>';
   }
-  function renderCart() {
+  function renderCart(holdCount) {
     var n = 0, sum = 0, html = '';
     cart.forEach(function (q, i) {
       if (!q) return;
@@ -303,8 +310,8 @@
     emptyEl.hidden = n > 0;
     orderBtn.disabled = n === 0;
     totalEl.textContent = won(sum);
-    countEl.textContent = String(n);
-    countEl.setAttribute('aria-label', '담긴 병 ' + n + '개');
+    if (!holdCount) countEl.textContent = String(n);
+    cartBtn.setAttribute('aria-label', '장바구니, 담긴 병 ' + n + '개');
     return n;
   }
   function bump() {
@@ -312,10 +319,33 @@
       gsap.fromTo(countEl, { scale: 1.5 }, { scale: 1, duration: 0.75, ease: 'elastic.out(1.1, 0.42)', overwrite: true });
     }
   }
+  function fly(i, btn) {
+    if (!window.gsap || mqReduce.matches || !btn) { renderCart(); bump(); return; }
+    // the list is current at once; only the visible count waits for the drop to land
+    renderCart(true);
+    var item = btn.closest('.shelf__item');
+    if (item) {
+      item.style.setProperty('--fill', '0.85');
+      setTimeout(function () { item.style.setProperty('--fill', '1'); }, 260);
+    }
+    var a = btn.getBoundingClientRect(), b = countEl.getBoundingClientRect();
+    var dot = document.createElement('span');
+    dot.className = 'drop';
+    dot.setAttribute('aria-hidden', 'true');
+    dot.style.background = SCENTS[i].hex;
+    dot.style.left = (a.left + a.width / 2 - 4) + 'px';
+    dot.style.top = (a.top - 4) + 'px';
+    document.body.appendChild(dot);
+    var dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - a.top;
+    gsap.timeline({ onComplete: function () { document.body.removeChild(dot); countEl.textContent = String(cart.reduce(function (x, y) { return x + y; }, 0)); bump(); } })
+      .to(dot, { x: dx, duration: 0.55, ease: 'power1.inOut' }, 0)
+      .to(dot, { y: Math.min(dy, -40) - 40, duration: 0.25, ease: 'power2.out' }, 0)
+      .to(dot, { y: dy, duration: 0.3, ease: 'power2.in' }, 0.25)
+      .to(dot, { scale: 0.6, duration: 0.15 }, 0.45);
+  }
   function add(i, btn) {
     cart[i]++;
-    renderCart();
-    bump();
+    if (btn && btn.closest('.shelf__item')) fly(i, btn); else { renderCart(); bump(); }
     announce(SCENTS[i].no + ' ' + SCENTS[i].name + '를 장바구니에 담았습니다. 모두 ' + cart.reduce(function (a, b) { return a + b; }, 0) + '병입니다.');
     if (btn) {
       var t = $('.add__t', btn) || btn;
@@ -417,7 +447,8 @@
     var score = [0, 0, 0, 0];
     score[answer(0)] += 1; score[answer(1)] += 1; score[answer(2)] += 1.5;
     var best = score.indexOf(Math.max.apply(null, score));
-    $('#result-name').innerHTML = '<span class="num">' + SCENTS[best].no + '</span>' + SCENTS[best].name;
+    $('#result-name').innerHTML = '<span class="num">' + SCENTS[best].no + '</span> ' + SCENTS[best].name;
+    $$('#result-notes dd').forEach(function (dd, n) { dd.textContent = SCENTS[best].notes[n]; });
     $('#result-line').textContent = SCENTS[best].line;
     $('#result-add').dataset.add = String(best);
     finderBottle.style.setProperty('--liquid', SCENTS[best].hex);

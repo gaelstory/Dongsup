@@ -34,7 +34,8 @@ nav.addEventListener('click', (e) => { if (e.target.closest('a') && menuOpen()) 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && menuOpen()) { setMenu(false, false); menuBtn.focus(); }
 });
-document.addEventListener('pointerdown', (e) => { if (menuOpen() && !header.contains(e.target)) setMenu(false, false); });
+// a tap outside the header, or on the dimmed layer the open header draws below itself, closes the menu
+document.addEventListener('pointerdown', (e) => { if (menuOpen() && (!header.contains(e.target) || e.target === header)) setMenu(false, false); });
 header.addEventListener('focusout', (e) => { if (menuOpen() && e.relatedTarget && !header.contains(e.relatedTarget)) setMenu(false, false); });
 window.matchMedia('(min-width: 768px)').addEventListener('change', (e) => { if (e.matches) setMenu(false, false); });
 
@@ -158,7 +159,8 @@ form.addEventListener('submit', (e) => {
   $('.done-company', done).textContent = form.elements.company.value.trim();
   form.hidden = true;
   done.hidden = false;
-  done.focus();
+  done.focus({ preventScroll: true });
+  done.scrollIntoView({ block: 'nearest', behavior: isReduced() ? 'auto' : 'smooth' });
 });
 form.addEventListener('input', (e) => { if (e.target.getAttribute('aria-invalid') === 'true') validate(e.target); });
 form.addEventListener('change', (e) => { if (e.target.getAttribute('aria-invalid') === 'true') validate(e.target); });
@@ -233,6 +235,24 @@ if (gsap && window.ScrollTrigger) {
         if (canDraw) tl.from(lines, { drawSVG: 0, duration: 0.8, ease: 'power2.out', stagger: 0.04 });
         tl.from(extra, { opacity: 0, duration: 0.3, ease: 'power1.out' }, canDraw ? '-=0.35' : 0);
       });
+
+      // hovering a solution row sends one signal along its diagram's cyan path
+      if (canPath && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        $$('.sol-row').forEach((row) => {
+          const svg = $('.sol-art', row), path = svg && $('path.draw.cyan', svg);
+          if (!svg || !path) return;
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.setAttribute('r', '4'); dot.setAttribute('class', 'flow-dot'); svg.appendChild(dot);
+          let tw = null;
+          row.addEventListener('pointerenter', (e) => {
+            if (e.pointerType !== 'mouse' || (tw && tw.isActive())) return;
+            tw = gsap.fromTo(dot, { opacity: 1 }, {
+              motionPath: { path, align: path, alignOrigin: [0.5, 0.5] }, duration: 1.2, ease: 'power1.inOut',
+              onComplete: () => gsap.to(dot, { opacity: 0, duration: 0.25 }),
+            });
+          });
+        });
+      }
 
       // 2. case maps: the site plan is traced, then the numbers settle in
       $$('.case').forEach((c) => {

@@ -7,7 +7,7 @@
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var G = window.gsap, Flip = window.Flip, ST = window.ScrollTrigger;
   var CAN = !!(G && Flip);
-  if (G) G.registerPlugin.apply(G, [Flip, ST].filter(Boolean));
+  if (G) G.registerPlugin.apply(G, [Flip, ST, window.Draggable].filter(Boolean));
   var MOTION = CAN && !REDUCED && !SHOT;
 
   // the same twelve transactions everywhere on the page (deposits add up to 1,284,300원)
@@ -75,9 +75,11 @@
     var app = document.getElementById('hero-app'), pile = app.querySelector('[data-pile]');
     var chips = Array.prototype.slice.call(pile.querySelectorAll('.chip'));
     var rows = Array.prototype.slice.call(app.querySelectorAll('[data-rows] tr'));
-    var totalEl = app.querySelector('[data-total]'), prog = app.querySelector('[data-progress]'), count = app.querySelector('[data-count]');
+    var totalEl = app.querySelector('[data-total]'), totalBox = app.querySelector('.ledger__sum-num'), prog = app.querySelector('[data-progress]'), count = app.querySelector('[data-count]');
     var hint = app.querySelector('[data-hint]'), live = app.querySelector('[data-live]'), replayBtn = app.querySelector('[data-act="replay"]');
-    var filled = 0, sum = 0, tl = null, shown = { v: 0 }, totTween = null, flights = [];
+    var sums = {}; app.querySelectorAll('[data-sum]').forEach(function (el) { sums[el.getAttribute('data-sum')] = el; });
+    var filled = 0, sum = 0, acc = { amt: 0, fee: 0, vat: 0 }, tl = null, shown = { v: 0 }, totTween = null, flights = [], drags = [], usedKeys = false;
+    var FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     function setTotal(v, anim) {
       if (totTween) totTween.kill();
@@ -87,6 +89,7 @@
     function status() {
       prog.textContent = filled + '/12건 정산';
       count.textContent = (12 - filled) + '건';
+      sums.amt.textContent = won(acc.amt); sums.fee.textContent = won(acc.fee); sums.vat.textContent = won(acc.vat); sums.dep.textContent = won(sum);
       app.classList.toggle('is-clear', filled === 12);
     }
     function fillRow(row, d, anim) {
@@ -95,16 +98,28 @@
       row.classList.remove('is-empty');
       if (anim) G.from([c[0], c[2], c[3], c[4]], { opacity: 0, y: 4, duration: 0.26, stagger: 0.04, ease: 'power2.out', clearProps: 'opacity,transform' });
     }
-    function done() {
+    function manualHint() {
+      return '칩을 눌러 표에 넣어 보세요.' + (FINE ? ' 끌어다 놓아도 돼요.' : '') + (usedKeys ? ' 키보드로는 Tab으로 고르고 Enter로 넣어요.' : '');
+    }
+    // the "딱" moment: rows ring top to bottom, the total flashes lime and a seal lands beside it
+    function done(anim) {
       live.textContent = '정산 완료. 12건, 입금 예정 1,284,300원';
-      if (app.getAttribute('data-mode') === 'manual') hint.textContent = '딱 맞췄어요. 12건 모두 정산했어요.';
+      if (app.getAttribute('data-mode') === 'manual') hint.textContent = '딱 맞췄어요. 12건 모두 시간 순서대로 정산했어요.';
+      if (anim) {
+        rows.forEach(function (r, i) {
+          var c = r.cells[1].querySelector('.chip');
+          if (c) setTimeout(function () { c.classList.remove('is-flash'); void c.offsetWidth; c.classList.add('is-flash'); }, i * 20);
+        });
+        setTimeout(function () { totalBox.classList.add('is-snap'); setTimeout(function () { totalBox.classList.remove('is-snap'); }, 600); }, 260);
+        setTimeout(function () { app.classList.add('is-done'); }, 300);
+      } else app.classList.add('is-done');
     }
     function place(chip, anim) {
-      if (chip.parentNode !== pile || filled >= rows.length) return;
-      var row = rows[filled], d = ROWS[+chip.getAttribute('data-i')], cell = row.cells[1], slot = cell.querySelector('.slot');
+      if (chip.parentNode !== pile) return;
+      var i = +chip.getAttribute('data-i'), row = rows[i], d = ROWS[i], cell = row.cells[1], slot = cell.querySelector('.slot');
       var next = chips.filter(function (c) { return c !== chip && c.parentNode === pile; })[0];
       var hadFocus = document.activeElement === chip;
-      filled++; sum += d.dep;
+      filled++; sum += d.dep; acc.amt += d.amt; acc.fee += d.fee; acc.vat += d.vat;
       chip.setAttribute('tabindex', '-1');
       if (!anim) {
         if (slot) slot.remove();
@@ -113,6 +128,7 @@
       } else {
         var state = Flip.getState(chip);
         cell.appendChild(chip);
+        if (G) G.set(chip, { clearProps: 'x,y,transform' });
         flights.push(Flip.from(state, {
           duration: 0.45, ease: 'power3.out', absolute: true, zIndex: 30,
           onComplete: function () {
@@ -124,45 +140,73 @@
         }));
       }
       if (hadFocus) (next || replayBtn).focus();
-      if (filled === rows.length) setTimeout(done, anim ? 500 : 0);
+      if (filled === rows.length) setTimeout(function () { done(anim && MOTION); }, anim ? 520 : 0);
     }
+    var FLIP_PROPS = 'position,top,left,width,height,transform,zIndex,margin,boxSizing,maxWidth,maxHeight,minWidth,minHeight,translate,rotate,scale,x,y';
     function reset(anim) {
       if (tl) { tl.kill(); tl = null; }
-      flights.forEach(function (f) { f.progress(1); });
-      flights = [];
-      if (G) G.killTweensOf(chips);
       var placed = chips.filter(function (c) { return c.parentNode !== pile; });
+      // capture where everything is on screen right now, mid-flight included, then stop the old flights
       var state = anim && placed.length ? Flip.getState(placed) : null;
+      flights.forEach(function (f) { f.kill(); });
+      flights = [];
+      if (G) { G.killTweensOf(chips); G.set(chips, { clearProps: FLIP_PROPS }); }
       rows.forEach(function (r) {
         var c = r.cells;
         c[0].innerHTML = PH; c[2].innerHTML = PH; c[3].innerHTML = PH; c[4].innerHTML = PH;
         if (!c[1].querySelector('.slot')) c[1].insertAdjacentHTML('afterbegin', '<span class="slot" aria-hidden="true"></span>');
         r.classList.add('is-empty');
       });
-      chips.forEach(function (c) { c.removeAttribute('tabindex'); c.classList.remove('is-flash'); if (G) G.set(c, { clearProps: 'transform' }); pile.appendChild(c); });
-      filled = 0; sum = 0; setTotal(0, false); status(); live.textContent = '';
+      chips.forEach(function (c) { c.removeAttribute('tabindex'); c.classList.remove('is-flash'); pile.appendChild(c); });
+      filled = 0; sum = 0; acc = { amt: 0, fee: 0, vat: 0 }; setTotal(0, false); status(); live.textContent = '';
+      app.classList.remove('is-done');
+      totalBox.classList.remove('is-snap');
       if (state) Flip.from(state, { duration: 0.42, ease: 'power3.inOut', absolute: true, zIndex: 30, stagger: 0.012 });
     }
     function auto(delay) {
       if (tl) tl.kill();
       tl = G.timeline({ delay: delay });
-      chips.forEach(function (c, i) { tl.call(function () { place(c, true); }, null, i * 0.25); });
+      chips.forEach(function (c, i) { tl.call(function () { place(c, true); }, null, i * 0.22); });
+    }
+    // drag a chip onto the ledger (fine pointers, manual mode); click and Enter stay the main way
+    function enableDrag(on) {
+      drags.forEach(function (d) { d.kill(); });
+      drags = [];
+      if (!on || !FINE || !window.Draggable || !MOTION) return;
+      var ledger = app.querySelector('.ledger');
+      chips.forEach(function (c) {
+        if (c.parentNode !== pile) return;
+        drags.push(window.Draggable.create(c, {
+          type: 'x,y', minimumMovement: 6, zIndexBoost: true, dragClickables: true,
+          onDragEnd: function () {
+            var self = this;
+            if (this.hitTest(ledger, '20%')) { self.kill(); place(c, true); }
+            else G.to(c, { x: 0, y: 0, duration: 0.3, ease: 'power3.out', clearProps: 'x,y,transform' });
+          }
+        })[0]);
+      });
     }
     pile.addEventListener('click', function (e) {
       var chip = e.target.closest('.chip');
       if (chip) place(chip, MOTION);
     });
-    app.querySelector('[data-act="replay"]').addEventListener('click', function () {
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab' && !usedKeys) { usedKeys = true; if (app.getAttribute('data-mode') === 'manual' && filled < 12) hint.textContent = manualHint(); }
+    });
+    replayBtn.addEventListener('click', function () {
       app.setAttribute('data-mode', 'auto'); hint.textContent = '';
+      enableDrag(false);
       if (!MOTION) { reset(false); chips.forEach(function (c) { place(c, false); }); return; }
       reset(true); auto(0.5);
     });
     app.querySelector('[data-act="try"]').addEventListener('click', function () {
       app.setAttribute('data-mode', 'manual');
       reset(MOTION);
-      hint.textContent = '칩을 눌러 표에 넣어 보세요. 키보드로는 Tab과 Enter를 쓰면 돼요.';
+      hint.textContent = manualHint();
+      setTimeout(function () { enableDrag(true); }, MOTION ? 450 : 0);
     });
 
+    status();
     if (SHOT) { chips.slice(0, 6).forEach(function (c) { place(c, false); }); return; }
     if (!MOTION) { chips.forEach(function (c) { place(c, false); }); return; }
     // phones: the table sits below the pile, so start when it can be seen
@@ -234,8 +278,7 @@
       if (flight) { flight.progress(1); flight = null; }
       pending.forEach(function (d) { d.kill(); });
       pending = [];
-      if (G) G.killTweensOf(chips, 'opacity,y,scale');
-      G.set(chips, { clearProps: 'opacity,transform' });
+      if (G) { G.killTweensOf(chips, 'opacity,y,scale'); G.set(chips, { clearProps: 'opacity,transform' }); }
       allOn();
       var state = anim ? Flip.getState(chips) : null;
       settle(false, anim);
@@ -267,16 +310,23 @@
     if (!CAN || !ST) { Stage(original, 1); return; }
     var pristine = original.cloneNode(true);
     original.remove();
+    var ios = [];
     function stacked() {
       var made = [1, 2, 3].map(function (n) {
         var el = pristine.cloneNode(true);
         el.classList.add('is-stacked');
         slots[n - 1].appendChild(el);
         var stage = Stage(el, MOTION ? n - 1 : n);
-        if (MOTION) ST.create({ trigger: el, start: 'top 72%', once: true, onEnter: function () { stage.go(n, true); } });
+        // play only while the window is actually on screen, so a jump past it never resizes
+        // anything above the reader
+        if (MOTION && 'IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { io.disconnect(); stage.go(n, true); } }, { threshold: 0.35 });
+          io.observe(el);
+          ios.push(io);
+        } else if (MOTION) stage.go(n, false);
         return el;
       });
-      return function () { made.forEach(function (m) { m.remove(); }); };
+      return function () { ios.forEach(function (o) { o.disconnect(); }); ios = []; made.forEach(function (m) { m.remove(); }); };
     }
     function sticky() {
       var el = pristine.cloneNode(true);
@@ -305,7 +355,8 @@
   function initCalendar() {
     var card = document.querySelector('.month-card'), pop = document.getElementById('cal-pop');
     var rowsEl = pop.querySelector('[data-pop-rows]'), titleEl = document.getElementById('cal-pop-title'), totalEl = pop.querySelector('[data-pop-total]');
-    var days = Array.prototype.slice.call(card.querySelectorAll('button.day')), openDay = null, closeT = 0;
+    var days = Array.prototype.slice.call(card.querySelectorAll('button.day')), openDay = null, closeT = 0, wasOpen = false;
+    var byDay = {}; days.forEach(function (d) { byDay[+d.getAttribute('data-day')] = d; });
     var ORDER = ['card', 'pay', 'b', 'a'];
     function fill(day) {
       var dep = {}, sum = 0, done = day.classList.contains('day--done');
@@ -314,14 +365,17 @@
       rowsEl.innerHTML = ORDER.filter(function (k) { return dep[k]; }).map(function (k) { sum += dep[k]; return '<li><span class="dot dot--' + k + '" aria-hidden="true"></span>' + CHN[k] + '<strong>' + won(dep[k]) + '원</strong></li>'; }).join('');
       totalEl.textContent = won(sum) + '원';
     }
+    // above the day when there is room, otherwise below; it never takes pointer events,
+    // so moving on to the next day is never blocked
     function place(day) {
       var cr = card.getBoundingClientRect(), dr = day.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
       var cx = dr.left - cr.left + dr.width / 2, left = Math.max(8, Math.min(cr.width - pw - 8, cx - pw / 2));
-      var below = dr.bottom - cr.top + 8, above = dr.top - cr.top - ph - 8, up = below + ph > cr.height + 24 && above > -24;
+      var above = dr.top - cr.top - ph - 12, up = above > 8;
       pop.style.left = left + 'px';
-      pop.style.top = (up ? above : below) + 'px';
-      pop.style.setProperty('--ox', (cx - left) + 'px');
+      pop.style.top = (up ? above : dr.bottom - cr.top + 12) + 'px';
+      pop.style.setProperty('--ox', Math.max(18, Math.min(pw - 18, cx - left)) + 'px');
       pop.style.setProperty('--oy', up ? '100%' : '0%');
+      pop.setAttribute('data-side', up ? 'above' : 'below');
     }
     function open(day) {
       clearTimeout(closeT);
@@ -343,11 +397,43 @@
       pop.classList.add('is-closing');
       closeT = setTimeout(function () { if (!openDay) { pop.hidden = true; pop.classList.remove('is-closing'); } }, 120);
     }
+    // one tab stop for the whole month; arrows move by day and week, Home and End to the week's ends
+    var current = byDay[24] || days[0];
+    function rove(day, focus) {
+      days.forEach(function (d) { d.tabIndex = d === day ? 0 : -1; });
+      current = day;
+      if (focus) day.focus();
+    }
+    function step(from, delta) {
+      for (var n = from + delta, k = 0; k < 10 && n >= 1 && n <= 30; n += delta, k++) if (byDay[n]) return byDay[n];
+      return null;
+    }
+    rove(current, false);
     var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     days.forEach(function (d) {
       if (fine) d.addEventListener('pointerenter', function () { open(d); });
-      d.addEventListener('focus', function () { open(d); });
-      d.addEventListener('click', function () { if (openDay === d && !fine) close(); else open(d); });
+      d.addEventListener('pointerdown', function () { wasOpen = openDay === d; });
+      d.addEventListener('focus', function () { rove(d, false); open(d); });
+      d.addEventListener('click', function (e) {
+        // keyboard clicks toggle; a mouse always opens; a tap opens, and a second tap on the same day closes
+        if (e.detail === 0) { if (openDay === d) close(); else open(d); }
+        else if (fine) open(d);
+        else if (wasOpen) close();
+        else open(d);
+      });
+      d.addEventListener('keydown', function (e) {
+        var n = +d.getAttribute('data-day'), t = null;
+        if (e.key === 'ArrowRight') t = step(n, 1);
+        else if (e.key === 'ArrowLeft') t = step(n, -1);
+        else if (e.key === 'ArrowDown') t = step(n, 7);
+        else if (e.key === 'ArrowUp') t = step(n, -7);
+        else if (e.key === 'Home' || e.key === 'End') {
+          var wd = '월화수목금'.indexOf(d.getAttribute('data-wd'));
+          t = e.key === 'Home' ? byDay[n - wd] || step(n - wd, 1) : byDay[n + 4 - wd] || step(n + 4 - wd, -1);
+        } else return;
+        e.preventDefault();
+        if (t) rove(t, true);
+      });
     });
     if (fine) card.addEventListener('pointerleave', function () { closeT = setTimeout(function () { close(); }, 140); });
     card.addEventListener('focusout', function (e) { if (!card.contains(e.relatedTarget)) close(); });
@@ -415,8 +501,9 @@
       opts.forEach(function (o) { var on = o.getAttribute('data-bill') === bill; o.setAttribute('aria-checked', String(on)); o.tabIndex = on ? 0 : -1; if (on && focus) o.focus(); });
       nums.forEach(function (r) { r.set(+r.el.getAttribute(bill === 'year' ? 'data-year' : 'data-month'), MOTION); });
       pers.forEach(function (p) {
-        var m = +p.parentNode.querySelector('.pt-num').getAttribute('data-year');
-        p.textContent = bill === 'year' ? '매달, 연 ' + won(m * 12) + '원 한 번 결제' : '매달';
+        var m = +p.parentNode.querySelector('.pt-num').getAttribute('data-year'), p2 = p.parentNode.querySelector('[data-per2]');
+        p.textContent = bill === 'year' ? '한 달 기준' : '매달 결제';
+        p2.textContent = bill === 'year' ? '1년 ' + won(m * 12) + '원을 한 번에 결제' : '언제든 해지할 수 있어요';
       });
     }
     opts.forEach(function (o, i) {

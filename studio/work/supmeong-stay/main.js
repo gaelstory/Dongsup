@@ -325,8 +325,13 @@
   var header = $('.site-header'), clockEl = $('.clock'), bar = $('#book-bar');
   var watchers = [];
   function surfaceWatch(target, margin) {
+    // several surfaces can sit on the line at once (a section ending, a ridge edge starting): an opaque surface wins over the scene
+    var on = new Set();
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) target.setAttribute('data-mode', e.target.getAttribute('data-surface')); });
+      entries.forEach(function (e) { if (e.isIntersecting) on.add(e.target); else on.delete(e.target); });
+      var mode = 'scene';
+      on.forEach(function (el) { var m = el.getAttribute('data-surface'); if (m !== 'scene') mode = m; });
+      if (on.size) target.setAttribute('data-mode', mode);
     }, { rootMargin: margin });
     $$('[data-surface]').forEach(function (s) { io.observe(s); });
     watchers.push(io);
@@ -464,7 +469,7 @@
       '<div class="cal__navs"><button type="button" class="cal__nav" data-dir="-1" aria-label="이전 달 보기"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M12.5 4 6.5 10l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
       '<button type="button" class="cal__nav" data-dir="1" aria-label="다음 달 보기"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M7.5 4l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>' +
       '<div class="cal__months"></div>' +
-      '<p class="cal__legend"><span class="cal__key cal__key--off" aria-hidden="true">17</span>사선은 예약 마감 <span class="cal__key cal__key--today" aria-hidden="true">24</span>동그라미는 오늘 <span class="cal__key cal__key--sel" aria-hidden="true">5</span>고른 날</p>';
+      '<p class="cal__legend"><span class="cal__lg"><span class="cal__key cal__key--off" aria-hidden="true">17</span>사선은 예약 마감</span> <span class="cal__lg"><span class="cal__key cal__key--today" aria-hidden="true">24</span>동그라미는 오늘</span> <span class="cal__lg"><span class="cal__key cal__key--sel" aria-hidden="true">5</span>노란 칸은 고른 날</span></p>';
     var monthsEl = $('.cal__months', cal), hint = $('#cal-hint'), navs = $$('.cal__nav', cal);
     var status = $('#book-status');
 

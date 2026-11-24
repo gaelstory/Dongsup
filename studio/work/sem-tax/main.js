@@ -20,14 +20,24 @@
   function announce(t) { announcer.textContent = ''; setTimeout(function () { announcer.textContent = t; }, 40); }
 
   /* ---------- keep every block on the 56px rows ---------- */
-  var SNAP = '.grid > .sec__head, .grid > .hero__copy, .grid > .people__text, .grid > .people__seal, .lrow--svc, .calc__inputs .field, .calc__note, .consult .field, .consult__done, .faq__in > p, .month__body, .foot__main';
+  var SNAP = '.grid > .sec__head, .grid > .hero__copy, .grid > .people__text, .grid > .people__seal, .svc__desc, .lrow--svc > .lc, .lrow--svc, .calc__inputs .field, .calc__inputs, .calc__note, .calc__out, .consult .field, .consult__done, .consult, .contact, .faq__btn, .faq__in > p, .month__body, .ledger__note, .cal__foot, .foot__main';
   function snap() {
     $$(SNAP).forEach(function (el) { el.style.minHeight = ''; });
-    $$(SNAP).forEach(function (el) {
+    // innermost first, so a container is measured after its children have been rounded up
+    $$(SNAP).reverse().forEach(function (el) {
       var h = el.getBoundingClientRect().height;
       if (h > 0) el.style.minHeight = Math.ceil((h - 0.5) / ROW) * ROW + 'px';
     });
   }
+
+  // Noto Serif KR has no tabular figures: wrap each digit in a 0.62em slot so columns line up
+  function tab(el) {
+    if (!el || el.querySelector('.td')) return;
+    el.innerHTML = el.innerHTML.replace(/(^|>)([^<]*)/g, function (m, a, txt) {
+      return a + txt.replace(/\d/g, '<span class="td">$&</span>');
+    });
+  }
+  function tabStr(str) { return String(str).replace(/\d/g, '<span class="td">$&</span>'); }
 
   /* ---------- odometer ---------- */
   function Odo(el, opts) {
@@ -102,17 +112,23 @@
   var heroRows = $$('.hero__ledger .lrow:not(.lrow--head)');
   var totalRow = $('#total-row'), seal = $('#seal'), dbl = $('.dbl');
   var noted = $('.hero__ledger .lrow.is-noted');
-  if (!still) {
+  var wasLine = $('.was__line');
+  if (still) {
+    heroRows.forEach(function (row) { var o = new Odo($('.amt', row), { cycles: 3 }); o.box.classList.add('is-still'); });
+  } else {
     noted.classList.add('is-quiet');
     var odos = heroRows.map(function (row) { return new Odo($('.amt', row), { cycles: 3 }); });
     odos.forEach(function (o) { o.zero(); });
     gsap.set(seal, { opacity: 0, scale: 1.6, rotation: -4 });
     gsap.set(dbl, { scaleX: 0 });
+    gsap.set(wasLine, { scaleX: 0 });
     var start = function () {
       // rows land one after another from 0.3s; the total lands at 2.2s
       odos.forEach(function (o, i) {
         o.render(o.value, { duration: 1.0, delay: 0.3 + i * 0.15, ease: 'power3.out' });
       });
+      // the old tax is struck through in red just before the new one lands, so the total visibly reconciles
+      gsap.to(wasLine, { scaleX: 1, duration: 0.22, ease: 'power2.inOut', delay: 1.75 });
       var tl = gsap.timeline({ delay: 2.2 });
       tl.to(dbl, { scaleX: 1, duration: 0.2, ease: 'power2.inOut' })
         .to(seal, { opacity: 1, scale: 1, rotation: -12, duration: 0.2, ease: 'power4.in' }, 0.2)
@@ -125,7 +141,8 @@
 
   // memos in the margin: hover or focus a row (desktop), tap a row (touch)
   heroRows.forEach(function (row) {
-    if (row === totalRow) return;
+    if (row === totalRow || row.classList.contains('lrow--fix')) return;
+    if (!mqWide.matches) row.setAttribute('aria-expanded', 'false');
     row.addEventListener('pointerenter', function (e) {
       if (e.pointerType !== 'mouse') return;
       row.classList.add('is-hot');
@@ -141,8 +158,9 @@
     row.addEventListener('click', function (e) {
       if (mqWide.matches && e.pointerType === 'mouse') return;
       var open = !row.classList.contains('is-open');
-      heroRows.forEach(function (r) { r.classList.remove('is-open', 'is-hot'); });
+      heroRows.forEach(function (r) { r.classList.remove('is-open', 'is-hot'); if (r !== totalRow) r.setAttribute('aria-expanded', 'false'); });
       if (open) row.classList.add('is-open', 'is-hot');
+      row.setAttribute('aria-expanded', String(open));
     });
     row.addEventListener('keydown', function (e) {
       if ((e.key === 'Enter' || e.key === ' ') && !mqWide.matches) { e.preventDefault(); row.click(); }
@@ -187,8 +205,8 @@
 
   /* ---------- calculator ---------- */
   var BIZ = {
-    food: { ratio: 72, gap: 0.045 }, cafe: { ratio: 69, gap: 0.05 }, retail: { ratio: 80, gap: 0.035 },
-    beauty: { ratio: 58, gap: 0.06 }, free: { ratio: 38, gap: 0.08 }, make: { ratio: 76, gap: 0.04 }
+    food: { ratio: 72, gap: 0.03 }, cafe: { ratio: 69, gap: 0.035 }, retail: { ratio: 80, gap: 0.02 },
+    beauty: { ratio: 58, gap: 0.04 }, free: { ratio: 38, gap: 0.04 }, make: { ratio: 76, gap: 0.025 }
   };
   var BRACKETS = [[14e6, 0.06, 0], [50e6, 0.15, 1.26e6], [88e6, 0.24, 5.76e6], [150e6, 0.35, 15.44e6],
     [300e6, 0.38, 19.94e6], [500e6, 0.40, 25.94e6], [1e9, 0.42, 35.94e6], [Infinity, 0.45, 65.94e6]];
@@ -201,6 +219,8 @@
     var now = incomeTax(rev * (1 - ratio) - 1.5e6) * 1.1;
     var r2 = Math.min(0.95, ratio + gap);
     var after = incomeTax(rev * (1 - r2) - 1.5e6 - Math.min(5e6, rev * 0.03)) * 1.1;
+    // an example, not a promise: never show more than a quarter off
+    after = Math.max(after, now * 0.75);
     now = Math.round(now / 1e4) * 1e4; after = Math.round(after / 1e4) * 1e4;
     return { now: now, after: Math.min(now, after) };
   }
@@ -208,17 +228,35 @@
     n = Math.round(n / 1e4) * 1e4;
     var eok = Math.floor(n / 1e8), man = Math.round((n % 1e8) / 1e4);
     var s = '';
-    if (eok) s += eok + '억';
+    if (eok) s += eok.toLocaleString('ko-KR') + '억';
     if (man) s += (s ? ' ' : '') + man.toLocaleString('ko-KR') + '만';
     return (s || '0') + ' 원';
   }
-  var MIN = 3e7, MAX = 1e9;
-  function revFromSlider(v) { return Math.round(MIN * Math.pow(MAX / MIN, v / 1000) / 1e6) * 1e6; }
-  function sliderFromRev(r) { return Math.round(1000 * Math.log(Math.min(MAX, Math.max(MIN, r)) / MIN) / Math.log(MAX / MIN)); }
+  var MIN = 3e7, MAX = 1e9, STEPS = 350;
+  // about 1% per step; rounded to 10만 below 1억 and 100만 above, so every arrow press changes the value
+  function revFromSlider(v) {
+    var r = MIN * Math.pow(MAX / MIN, v / STEPS), unit = r < 1e8 ? 1e5 : 1e6;
+    return Math.round(r / unit) * unit;
+  }
+  function sliderFromRev(r) { return Math.round(STEPS * Math.log(Math.min(MAX, Math.max(MIN, r)) / MIN) / Math.log(MAX / MIN)); }
+  // reads 182400000, 182,400,000, 1억 8240만, 1.5억, 5천만, 8,240만 원
+  var UNITS = { '억': 1e8, '천만': 1e7, '백만': 1e6, '만': 1e4, '천': 1e3 };
+  function parseKRW(str) {
+    var t = String(str).replace(/[\s,원]/g, '');
+    if (!t) return NaN;
+    if (/^\d+(\.\d+)?$/.test(t)) return parseFloat(t);
+    var re = /(\d+(?:\.\d+)?)(억|천만|백만|만|천)/g, m, total = 0, used = '';
+    while ((m = re.exec(t))) { total += parseFloat(m[1]) * UNITS[m[2]]; used += m[0]; }
+    var rest = t.replace(re, '');
+    if (rest && !/^\d+$/.test(rest)) return NaN;
+    if (!used) return NaN;
+    return total + (rest ? parseFloat(rest) : 0);
+  }
 
   var cBiz = $('#c-biz'), cRev = $('#c-rev'), cRevNum = $('#c-rev-num'), cRevWords = $('#c-rev-words'), cRevErr = $('#c-rev-err');
   var cRatio = $('#c-ratio'), cRatioOut = $('#c-ratio-out');
-  var barNow = $('#bar-now'), barAfter = $('#bar-after');
+  var barNow = $('#bar-now'), barAfter = $('#bar-after'), barGap = $('#bar-gap'), diffLine = $('#diff-line');
+  var settleT;
   var oNow = new Odo($('#out-now')), oAfter = new Odo($('#out-after')), oDiff = new Odo($('#out-diff'));
   [oNow, oAfter, oDiff].forEach(function (o) { o.box.classList.add('is-still'); });
   var revenue = 182400000;
@@ -235,16 +273,22 @@
     oAfter.render(won(res.after), a);
     oDiff.render(won(res.now - res.after), a);
     var max = Math.max(res.now, 1);
-    var sNow = res.now > 0 ? 1 : 0.002, sAfter = Math.max(0.002, res.after / max);
+    var wNow = res.now > 0 ? 100 : 0.2, wAfter = Math.max(0.2, (res.after / max) * 100);
+    // the after bar is solid; the part that might be saved is hatched in seal red up to the current tax
     if (window.gsap && a) {
-      gsap.to(barNow, { scaleX: sNow, duration: 0.5, ease: 'power3.out', transformOrigin: '0% 50%', overwrite: true });
-      gsap.to(barAfter, { scaleX: sAfter, duration: 0.5, ease: 'power3.out', transformOrigin: '0% 50%', overwrite: true });
+      gsap.to(barNow, { attr: { width: wNow }, duration: 0.5, ease: 'power3.out', overwrite: true });
+      gsap.to(barAfter, { attr: { width: wAfter }, duration: 0.5, ease: 'power3.out', overwrite: true });
+      gsap.to(barGap, { attr: { x: wAfter, width: Math.max(0, wNow - wAfter) }, duration: 0.5, ease: 'power3.out', overwrite: true });
     } else {
-      barNow.style.transformOrigin = '0% 50%'; barAfter.style.transformOrigin = '0% 50%';
-      barNow.style.transform = 'scaleX(' + sNow + ')';
-      barAfter.style.transform = 'scaleX(' + sAfter + ')';
+      barNow.setAttribute('width', wNow); barAfter.setAttribute('width', wAfter);
+      barGap.setAttribute('x', wAfter); barGap.setAttribute('width', Math.max(0, wNow - wAfter));
     }
-    barAfter.setAttribute('width', '100');
+    // the gold double rule is drawn again once the figure settles
+    if (window.gsap && a) {
+      clearTimeout(settleT);
+      gsap.set(diffLine, { scaleX: 0 });
+      settleT = setTimeout(function () { gsap.to(diffLine, { scaleX: 1, duration: 0.2, ease: 'power2.inOut' }); }, 600);
+    }
     cRatioOut.textContent = cRatio.value + '%';
     cRatio.setAttribute('aria-valuetext', cRatio.value + '%');
   }
@@ -261,15 +305,17 @@
     cRevErr.textContent = ''; cRevNum.removeAttribute('aria-invalid');
     compute(true);
   });
+  function revError(msg) {
+    cRevErr.textContent = msg;
+    if (msg) cRevNum.setAttribute('aria-invalid', 'true'); else cRevNum.removeAttribute('aria-invalid');
+    snap();
+  }
   cRevNum.addEventListener('input', function () {
-    var digits = cRevNum.value.replace(/[^\d]/g, '');
-    var r = digits ? Math.min(99999999999, parseInt(digits, 10)) : 0;
-    if (!r) {
-      cRevErr.textContent = '연 매출을 숫자로 넣어 주세요. 예: 182,400,000';
-      cRevNum.setAttribute('aria-invalid', 'true');
-      return;
-    }
-    cRevErr.textContent = ''; cRevNum.removeAttribute('aria-invalid');
+    var r = Math.round(parseKRW(cRevNum.value));
+    if (!r || isNaN(r)) { revError('연 매출을 숫자로 넣어 주세요. 예: 182,400,000 또는 1억 8천만'); return; }
+    // out of range: keep the last result and say why
+    if (r < 1e7 || r > 1e10) { revError('연 매출은 1,000만 원에서 100억 원 사이로 넣어 주세요.'); return; }
+    if (cRevErr.textContent) revError('');
     setRevenue(r, 'num');
     compute(true);
   });
@@ -301,18 +347,25 @@
     [],
     [{ d: 25, t: '부가가치세 예정신고', who: '법인 사업자', fine: '무신고 가산세 20%' }],
     [{ d: 30, t: '종합소득세 중간예납', who: '개인사업자', fine: '고지서 금액 미납 시 납부지연 가산세' }],
-    [{ d: 15, t: '연말 절세 점검 상담', who: '셈 기장 고객', fine: '올해 안에 써야 공제되는 항목을 챙깁니다', firm: true }]
+    []
   ];
+  var NOTES = { 11: '셈 기장 고객은 12월 중순에 연말 절세 점검을 따로 해 드립니다. 올해 안에 써야 공제되는 항목을 챙깁니다.' };
   var today = new Date();
   today.setHours(0, 0, 0, 0);
   var tY = today.getFullYear(), tM = today.getMonth(), tD = today.getDate();
   function dueList(m) { return [MONTHLY].concat(CAL[m]).sort(function (a, b) { return a.d - b.d; }); }
-  function nextDate(m, d) {
-    var y = tY;
-    var dt = new Date(y, m, d);
-    if (dt < today) dt = new Date(y + 1, m, d);
+  // a deadline on a Saturday or Sunday moves to the next Monday (public holidays are not modelled)
+  function shift(dt) {
+    var wd = dt.getDay();
+    if (wd === 6) dt.setDate(dt.getDate() + 2); else if (wd === 0) dt.setDate(dt.getDate() + 1);
     return dt;
   }
+  function nextDate(m, d) {
+    var dt = shift(new Date(tY, m, d));
+    if (dt < today) dt = shift(new Date(tY + 1, m, d));
+    return dt;
+  }
+  var WD = ['일', '월', '화', '수', '목', '금', '토'];
   function dday(dt) { return Math.round((dt - today) / 86400000); }
   function ddText(n) { return n === 0 ? '오늘' : 'D-' + n; }
   var calEl = $('#cal');
@@ -340,21 +393,25 @@
     if (isNow) ruler += '<span class="ruler__today' + (tD > dim * 0.8 ? ' is-flip' : '') + '" style="left:' + ((tD - 1) / (dim - 1)) * 100 + '%"><span>오늘 ' + tD + '일</span></span>';
     ruler += '</div>';
     var list = '<ul class="dues">' + items.map(function (x) {
-      var past = isNow && x.d < tD;
-      var dd = dday(nextDate(m, x.d));
-      return '<li class="due"><span class="due__d' + (past ? ' is-past' : '') + '">' + x.d + '일</span>' +
+      var nd = nextDate(m, x.d);
+      var moved = nd.getDate() !== x.d || nd.getMonth() !== m;
+      var past = isNow && nd < today;
+      var dd = dday(nd);
+      var shiftNote = moved ? '<span class="due__shift">주말이라 ' + (nd.getMonth() + 1) + '월 ' + nd.getDate() + '일(' + WD[nd.getDay()] + ')까지</span>' : '';
+      return '<li class="due"><span class="due__d' + (past ? ' is-past' : '') + '">' + tabStr(x.d) + '일' + shiftNote + '</span>' +
         '<span class="due__t">' + x.t + '</span><span class="due__who">' + x.who + '</span>' +
-        '<span class="due__fine">' + x.fine + '</span><span class="due__dd">' + (past ? '지남' : ddText(dd)) + '</span></li>';
-    }).join('') + '</ul>';
+        '<span class="due__fine">' + x.fine + '</span><span class="due__dd">' + (past ? '지남' : tabStr(ddText(dd))) + '</span></li>';
+    }).join('') + '</ul>' + (NOTES[m] ? '<p class="month__note">' + NOTES[m] + '</p>' : '');
     html += '<div class="month' + (isNow ? ' is-now is-open' : '') + '" role="listitem">' +
       '<button type="button" class="month__btn" aria-expanded="' + isNow + '" aria-controls="mp-' + m + '">' +
       '<span class="month__name"><span class="month__m">' + (m + 1) + '월</span><span class="month__sum">' + sum + '</span></span>' +
       '<span class="month__dates">' + dates + '</span><span class="month__who">' + who + '</span>' +
-      '<span class="month__dday"><span class="visually-hidden">가장 가까운 기한까지 </span>' + ddText(n) + '</span></button>' +
+      '<span class="month__dday"><span class="visually-hidden">가장 가까운 기한까지 </span>' + tabStr(ddText(n)) + '</span></button>' +
       '<div class="month__panel" id="mp-' + m + '"><div class="month__in"><div class="month__body">' + ruler + list + '</div></div></div></div>';
   }
-  html += '<p class="cal__foot">기한이 주말이나 공휴일이면 다음 영업일까지입니다. 남은 날은 오늘을 기준으로 셉니다.</p>';
   calEl.insertAdjacentHTML('beforeend', html);
+  // the footnote sits after the list, not inside it
+  calEl.insertAdjacentHTML('afterend', '<p class="cal__foot">주말 기한은 다음 월요일로 옮겨 셌고, 공휴일은 따로 반영하지 않았습니다. 남은 날은 오늘을 기준으로 셉니다.</p>');
   $$('.month', calEl).forEach(function (mo) {
     var btn = $('.month__btn', mo), panel = $('.month__panel', mo);
     panel.inert = !mo.classList.contains('is-open');
@@ -370,6 +427,8 @@
       if (window.ScrollTrigger) setTimeout(function () { ScrollTrigger.refresh(); }, 320);
     });
   });
+
+  $$('.fee__n').forEach(tab);
 
   /* ---------- FAQ ---------- */
   $$('.faq__btn').forEach(function (btn) {
