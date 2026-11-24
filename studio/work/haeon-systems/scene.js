@@ -1598,7 +1598,14 @@ export function createHarbor(canvasEl, opts = {}) {
   document.addEventListener('visibilitychange', onVis);
   let rz = 0;
   const onResize = () => { clearTimeout(rz); rz = setTimeout(() => { resize(); if (still) renderStill(); }, 150); };
-  window.addEventListener('resize', onResize);
+  // the hero can change height without a window resize (web fonts settling, copy wrapping), so watch the canvas itself
+  let lastW = 0, lastH = 0;
+  const ro = new ResizeObserver((es) => {
+    const r = es[0].contentRect;
+    if (Math.abs(r.width - lastW) < 1 && Math.abs(r.height - lastH) < 1) return;
+    lastW = r.width; lastH = r.height; onResize();
+  });
+  ro.observe(canvasEl);
   const onPointer = (e) => { rig.pointer.set((e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1); };
   const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (fine && !still) window.addEventListener('pointermove', onPointer, { passive: true });
@@ -1635,7 +1642,7 @@ export function createHarbor(canvasEl, opts = {}) {
     resize,
     dispose() {
       stop(); io.disconnect(); document.removeEventListener('visibilitychange', onVis);
-      window.removeEventListener('resize', onResize); window.removeEventListener('pointermove', onPointer);
+      ro.disconnect(); window.removeEventListener('pointermove', onPointer);
       scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach((m) => m.dispose()); });
       disposables.forEach((d) => d.dispose && d.dispose());
       renderer.dispose();

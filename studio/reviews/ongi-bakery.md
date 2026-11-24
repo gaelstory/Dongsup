@@ -8,6 +8,8 @@
 
 Severity counts: 🔴 0 · 🟠 7 · 🟡 9
 
+Screenshot names like `o-d-shake-done` refer to my Playwright captures in `/tmp/claude-0/-home-user-Dongsup/91ec7568-002e-5f27-a892-53c86a0d89d0/scratchpad/pw/out/` (temporary); `desktop-NN.jpg` / `phone-NN.jpg` are in `studio/.shots/review-ongi-bakery/ongi-bakery/`.
+
 ## Findings
 
 ### 🟠 Important
@@ -57,7 +59,7 @@ Severity counts: 🔴 0 · 🟠 7 · 🟡 9
     Fix: hide it until the first stamp (`hidden` toggled in `say()`), which also removes a useless control from the empty state.
 
 14. **Red body text is at the limit** (`style.css:393`, `:416`): milk on cherry and `--cherry-deep` on milk are both ≈4.6:1 with a very thin face at 17–19px. Passes AA on paper, reads faint (see `desktop-04.jpg` story paragraphs).
-    Fix: story text 19px → 20px and `font-weight: 700` is not available, so darken the band instead: story background `#D40028` gives 5.2:1; recipe note colour `#A3001E`.
+    Fix: Gowun Dodum has no bold, so darken the grounds instead: story background `#D40028` (5.2:1 with milk) and recipe note colour `#A3001E`; story text 19px → 20px.
 
 15. **Menu wobble has no touch/keyboard equivalent and re-fires on every re-entry** (`main.js:685-693`). Minor, but on phones the menu rows are completely static.
     Fix: run the same 300ms wobble once when each row scrolls into view on touch devices (stagger 70ms, already have the ScrollTrigger batch).

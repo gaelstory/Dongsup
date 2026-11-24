@@ -175,7 +175,7 @@
   /* ---------- the three-step demo window ---------- */
   function Stage(el, start) {
     var chips = Array.prototype.slice.call(el.querySelectorAll('.chip')).sort(function (a, b) { return a.getAttribute('data-i') - b.getAttribute('data-i'); });
-    var trays = {}, tokens = {}, step = 1, flight = null;
+    var trays = {}, tokens = {}, step = 1, flight = null, pending = [];
     el.querySelectorAll('[data-group]').forEach(function (g) { trays[g.getAttribute('data-group')] = g.querySelector('.tray__chips'); });
     el.querySelectorAll('.mc__tokens').forEach(function (t) { tokens[t.getAttribute('data-dep')] = t; });
     var cells = Array.prototype.map.call(el.querySelectorAll('.ledger__table--stage tbody tr'), function (r) { return r.cells[0]; });
@@ -223,15 +223,19 @@
         layers(1);
         if (!anim) { allOn(); return; }
         ['a', 'b', 'card', 'pay'].forEach(function (ch, k) {
-          G.delayedCall(0.15 + k * 0.32, function () {
+          pending.push(G.delayedCall(0.15 + k * 0.32, function () {
             setConn(ch, true);
             var mine = chips.filter(function (c) { return c.getAttribute('data-ch') === ch; });
-            G.from(mine, { opacity: 0, y: -8, scale: 0.94, duration: 0.32, stagger: 0.06, ease: 'power3.out', clearProps: 'all' });
-          });
+            G.from(mine, { opacity: 0, y: -8, scale: 0.94, duration: 0.32, stagger: 0.06, ease: 'power3.out', clearProps: 'opacity,transform' });
+          }));
         });
         return;
       }
       if (flight) { flight.progress(1); flight = null; }
+      pending.forEach(function (d) { d.kill(); });
+      pending = [];
+      if (G) G.killTweensOf(chips, 'opacity,y,scale');
+      G.set(chips, { clearProps: 'opacity,transform' });
       allOn();
       var state = anim ? Flip.getState(chips) : null;
       settle(false, anim);
@@ -245,7 +249,7 @@
       s.addEventListener('click', function () {
         var on = s.getAttribute('aria-checked') !== 'true', ch = s.getAttribute('data-conn');
         setConn(ch, on);
-        if (on && MOTION) G.from(chips.filter(function (c) { return c.getAttribute('data-ch') === ch; }), { opacity: 0, y: -6, duration: 0.26, stagger: 0.05, ease: 'power3.out', clearProps: 'all' });
+        if (on && MOTION) G.from(chips.filter(function (c) { return c.getAttribute('data-ch') === ch; }), { opacity: 0, y: -6, duration: 0.26, stagger: 0.05, ease: 'power3.out', clearProps: 'opacity,transform' });
       });
     });
     // place everything for the starting step without animation

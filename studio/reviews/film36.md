@@ -8,6 +8,8 @@
 
 Severity counts: 🔴 1 · 🟠 7 · 🟡 9
 
+Screenshot names like `f2-p-0.5` refer to my Playwright captures in `/tmp/claude-0/-home-user-Dongsup/91ec7568-002e-5f27-a892-53c86a0d89d0/scratchpad/pw/out/` (temporary); `desktop-NN.jpg` / `phone-NN.jpg` are in `studio/.shots/review-film36/film36/`.
+
 ## Findings
 
 ### 🔴 Blocking
