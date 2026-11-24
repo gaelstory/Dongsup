@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>셈 세무회계 | 컨셉 시안 · 첫화면 스튜디오</title>
+<meta name="description" content="개인사업자와 법인의 기장, 신고, 절세 설계. 담당 세무사가 매달 숫자로 보고하는 셈 세무회계.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F3F5EE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='4' fill='%23123D30'/%3E%3Ctext x='32' y='44' font-family='serif' font-weight='900' font-size='34' text-anchor='middle' fill='%23F3F5EE'%3E%EC%85%88%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;700&family=Noto+Serif+KR:wght@600;900&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<svg class="defs" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <!-- ink bleed for seals: displacement for the wobbly edge, a low-frequency mask for uneven pressure -->
+    <filter id="ink" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="4" result="grain"/>
+      <feDisplacementMap in="SourceGraphic" in2="grain" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="bled"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="11" result="press"/>
+      <feColorMatrix in="press" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 2.05" result="pressMask"/>
+      <feComposite in="bled" in2="pressMask" operator="in" result="pressed"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="2" result="speck"/>
+      <feColorMatrix in="speck" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3 2.4" result="speckMask"/>
+      <feComposite in="pressed" in2="speckMask" operator="in"/>
+    </filter>
+    <path id="seal-arc" d="M22 60a38 38 0 0 1 76 0"/>
+  </defs>
+</svg>
+
+<div class="rules" aria-hidden="true"><div class="rules__grid"><i></i><i></i><i></i><i></i></div></div>
+
+<header class="top">
+  <div class="top__in">
+    <a class="brand" href="#main" aria-label="셈 세무회계 처음으로"><span class="brand__mark" aria-hidden="true">셈</span><span class="brand__name">세무회계</span></a>
+    <nav class="nav" aria-label="주요 메뉴">
+      <ul class="nav__list" id="nav-list">
+        <li><a href="#work">하는 일</a></li>
+        <li><a href="#calc">계산기</a></li>
+        <li><a href="#calendar">세무 달력</a></li>
+        <li><a href="#people">세무사</a></li>
+        <li><a href="#consult">상담</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--top" href="#consult">무료 세무 진단 신청</a>
+    <p class="folio" aria-hidden="true"><span>제</span><span class="folio__n" id="folio-n">1</span><span>면</span></p>
+    <button class="menu-btn" type="button" id="menu-btn" aria-expanded="false" aria-controls="nav-list">
+      <span class="menu-btn__icon" aria-hidden="true"></span>
+      <span class="menu-btn__t">메뉴</span>
+    </button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <!-- 제 1 면 -->
+  <section class="sec hero" id="cover" data-folio="1" aria-labelledby="hero-title">
+    <div class="sheet grid">
+      <div class="hero__copy">
+        <h1 class="hero__title" id="hero-title">세금, 맞게 내고 계신가요</h1>
+        <p class="hero__lede">개인사업자와 법인의 기장, 신고, 절세 설계. 담당 세무사가 매달 숫자로 보고합니다.</p>
+        <p class="hero__cta"><a class="btn" href="#consult">무료 세무 진단 신청</a></p>
+      </div>
+      <div class="ledger hero__ledger" role="table" aria-label="예시 장부: 한 카페 사장님의 지난해 종합소득세 점검" aria-describedby="ledger-note">
+        <div class="lrow lrow--head" role="row">
+          <span class="lc lc--label" role="columnheader">항목</span>
+          <span class="lc lc--memo" role="columnheader">메모</span>
+          <span class="lc lc--amt" role="columnheader">금액(원)</span>
+        </div>
+        <div class="lrow" role="row" tabindex="0">
+          <span class="lc lc--label" role="rowheader">매출</span>
+          <span class="lc lc--memo" role="cell"><span class="memo">카드, 현금영수증, 배달앱 정산을 한 줄로 맞춥니다</span></span>
+          <span class="lc lc--amt" role="cell"><span class="amt" data-amt>182,400,000</span></span>
+        </div>
+        <div class="lrow" role="row" tabindex="0">
+          <span class="lc lc--label" role="rowheader">매입</span>
+          <span class="lc lc--memo" role="cell"><span class="memo">세금계산서 없는 매입은 따로 표시해 둡니다</span></span>
+          <span class="lc lc--amt" role="cell"><span class="amt" data-amt>96,300,000</span></span>
+        </div>
+        <div class="lrow" role="row" tabindex="0">
+          <span class="lc lc--label" role="rowheader">인건비</span>
+          <span class="lc lc--memo" role="cell"><span class="memo">4대 보험과 원천세 신고까지 함께 봅니다</span></span>
+          <span class="lc lc--amt" role="cell"><span class="amt" data-amt>31,200,000</span></span>
+        </div>
+        <div class="lrow is-noted" role="row" tabindex="0">
+          <span class="lc lc--label" role="rowheader">경비 누락분</span>
+          <span class="lc lc--memo" role="cell"><span class="memo">놓치기 쉬운 통신비, 차량 유지비</span></span>
+          <span class="lc lc--amt" role="cell"><span class="amt" data-amt>8,740,000</span></span>
+        </div>
+        <div class="lrow" role="row" tabindex="0">
+          <span class="lc lc--label" role="rowheader">공제·감면</span>
+          <span class="lc lc--memo" role="cell"><span class="memo">노란우산공제와 고용 증대 공제를 챙겼습니다</span></span>
+          <span class="lc lc--amt" role="cell"><span class="amt" data-amt>2,150,000</span></span>
+        </div>
+        <div class="lrow" role="row" tabindex="0">
+          <span class="lc lc--label" role="rowheader">납부세액</span>
+          <span class="lc lc--memo" role="cell"><span class="memo">지방소득세까지 더한 금액입니다</span></span>
+          <span class="lc lc--amt" role="cell"><span class="amt" data-amt>4,870,000</span></span>
+        </div>
+        <div class="lrow lrow--total" role="row" id="total-row">
+          <span class="lc lc--label" role="rowheader">아낀 세금</span>
+          <span class="lc lc--memo" role="cell">
+            <svg class="seal seal--ok" id="seal" viewBox="0 0 120 120" role="img" aria-label="확인 도장">
+              <g filter="url(#ink)">
+                <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="4.5"/>
+                <circle cx="60" cy="60" r="47" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                <text class="seal__arc" font-size="11"><textPath href="#seal-arc" startOffset="50%" text-anchor="middle">셈 세무회계</textPath></text>
+                <text class="seal__word" x="60" y="77" text-anchor="middle" font-size="35">확인</text>
+                <path d="M38 88h44" stroke="currentColor" stroke-width="1.6"/>
+              </g>
+            </svg>
+          </span>
+          <span class="lc lc--amt" role="cell"><span class="amt amt--total" data-amt>3,420,000</span><span class="won">원</span><span class="dbl" aria-hidden="true"></span></span>
+        </div>
+        <p class="ledger__note" id="ledger-note">예시 장부입니다</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 제 2 면 -->
+  <section class="sec" id="work" data-folio="2" aria-labelledby="work-title">
+    <div class="sheet grid">
+      <div class="sec__head">
+        <h2 class="h2" id="work-title">맡기시면 이렇게 정리됩니다</h2>
+        <p class="sec__lede">왼쪽은 하는 일, 가운데는 주고받는 것, 오른쪽은 비용입니다. 사업 규모가 달라도 줄은 같습니다.</p>
+      </div>
+      <div class="ledger ledger--full" role="table" aria-label="하는 일과 월 수수료">
+        <div class="lrow lrow--head" role="row">
+          <span class="lc" role="columnheader">적요</span>
+          <span class="lc" role="columnheader">차변, 맡기실 것</span>
+          <span class="lc" role="columnheader">대변, 돌려드릴 것</span>
+          <span class="lc lc--amt" role="columnheader">잔액, 수수료</span>
+        </div>
+        <div class="lrow lrow--svc" role="row">
+          <div class="lc" role="rowheader"><p class="svc__name">기장 대행</p><p class="svc__desc">매달 들어오고 나간 돈을 장부로 옮기고, 다음 달 10일까지 손익을 보고합니다.</p></div>
+          <div class="lc" role="cell"><p class="svc__io">영수증 사진, 카드와 통장 내역 연동</p></div>
+          <div class="lc" role="cell"><p class="svc__io">월별 장부, 한 장짜리 손익 보고서</p></div>
+          <div class="lc lc--amt" role="cell"><p class="fee"><span class="fee__n">99,000</span><span class="fee__u">월, 부터</span></p></div>
+        </div>
+        <div class="lrow lrow--svc" role="row">
+          <div class="lc" role="rowheader"><p class="svc__name">세무 신고</p><p class="svc__desc">부가세, 종합소득세, 법인세, 원천세. 기한 2주 전에 먼저 연락드립니다.</p></div>
+          <div class="lc" role="cell"><p class="svc__io">홈택스 위임 한 번</p></div>
+          <div class="lc" role="cell"><p class="svc__io">신고서 사본과 납부서, 세액 설명</p></div>
+          <div class="lc lc--amt" role="cell"><p class="fee"><span class="fee__n">기장에 포함</span><span class="fee__u">기장 고객</span></p></div>
+        </div>
+        <div class="lrow lrow--svc" role="row">
+          <div class="lc" role="rowheader"><p class="svc__name">절세 설계</p><p class="svc__desc">지난 3년 신고서를 다시 읽고, 놓친 공제와 내년 계획을 표 한 장으로 드립니다.</p></div>
+          <div class="lc" role="cell"><p class="svc__io">최근 3년 신고서</p></div>
+          <div class="lc" role="cell"><p class="svc__io">경정청구 가능 금액, 내년 절세 계획</p></div>
+          <div class="lc lc--amt" role="cell"><p class="fee"><span class="fee__n">300,000</span><span class="fee__u">1회</span></p></div>
+        </div>
+        <div class="lrow lrow--svc" role="row">
+          <div class="lc" role="rowheader"><p class="svc__name">법인 전환</p><p class="svc__desc">개인으로 둘 때와 법인으로 바꿀 때의 세금을 나란히 계산해 시점을 정합니다.</p></div>
+          <div class="lc" role="cell"><p class="svc__io">사업 현황, 앞으로 3년 매출 예상</p></div>
+          <div class="lc" role="cell"><p class="svc__io">전환 시점 분석, 설립과 신고 대행</p></div>
+          <div class="lc lc--amt" role="cell"><p class="fee"><span class="fee__n">별도 견적</span><span class="fee__u">규모에 따라</span></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 제 3 면 -->
+  <section class="sec" id="calc" data-folio="3" aria-labelledby="calc-title">
+    <div class="sheet grid">
+      <div class="sec__head">
+        <h2 class="h2" id="calc-title">대략 얼마나 달라질까요</h2>
+        <p class="sec__lede">업종과 매출만 넣어 보세요. 빠진 경비와 공제를 찾으면 세금이 어떻게 바뀌는지 보여 드립니다.</p>
+      </div>
+      <form class="calc" id="calc-form" novalidate>
+        <div class="calc__inputs">
+          <div class="field">
+            <label class="field__label" for="c-biz">업종</label>
+            <select class="field__control" id="c-biz" name="biz">
+              <option value="food">음식점</option>
+              <option value="cafe" selected>카페, 디저트</option>
+              <option value="retail">소매, 온라인 쇼핑몰</option>
+              <option value="beauty">미용, 생활 서비스</option>
+              <option value="free">프리랜서, 인적용역</option>
+              <option value="make">제조업</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field__row">
+              <label class="field__label" for="c-rev-num">연 매출</label>
+              <span class="field__hint" id="c-rev-words">1억 8,240만 원</span>
+            </div>
+            <div class="field__num">
+              <input class="field__control field__control--num" id="c-rev-num" name="revenue" type="text" inputmode="numeric" autocomplete="off" value="182,400,000" aria-describedby="c-rev-words c-rev-err">
+              <span class="field__unit" aria-hidden="true">원</span>
+            </div>
+            <input class="range" id="c-rev" type="range" min="0" max="1000" step="1" value="500" aria-label="연 매출 조절" aria-valuetext="1억 8,240만 원">
+            <div class="range__ends" aria-hidden="true"><span>3천만</span><span>10억</span></div>
+            <p class="field__err" id="c-rev-err"></p>
+          </div>
+          <div class="field">
+            <div class="field__row">
+              <label class="field__label" for="c-ratio">경비율</label>
+              <output class="field__hint" id="c-ratio-out" for="c-ratio">62%</output>
+            </div>
+            <input class="range" id="c-ratio" name="ratio" type="range" min="0" max="90" step="1" value="62" aria-valuetext="62%">
+            <div class="range__ends" aria-hidden="true"><span>0%</span><span>90%</span></div>
+          </div>
+        </div>
+        <div class="calc__out" aria-live="polite">
+          <div class="crow">
+            <p class="crow__label">지금 예상 세액</p>
+            <svg class="crow__bar" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true"><rect class="bar bar--now" id="bar-now" x="0" y="4" width="100" height="12"/></svg>
+            <p class="crow__amt"><span class="amt" id="out-now">8,290,000</span><span class="won">원</span></p>
+          </div>
+          <div class="crow">
+            <p class="crow__label">점검 후 예상 세액</p>
+            <svg class="crow__bar" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true"><rect class="bar bar--after" id="bar-after" x="0" y="4" width="60" height="12"/></svg>
+            <p class="crow__amt"><span class="amt" id="out-after">4,870,000</span><span class="won">원</span></p>
+          </div>
+          <div class="crow crow--diff">
+            <p class="crow__label">줄어드는 세금</p>
+            <p class="crow__amt"><span class="amt" id="out-diff">3,420,000</span><span class="won">원</span></p>
+          </div>
+          <p class="calc__note">단순 예시 계산이며 실제 세액과 다릅니다. 종합소득세와 지방소득세만 넣었고, 기본공제 한 사람과 업종별로 자주 빠지는 경비를 가정했습니다.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 제 4 면 -->
+  <section class="sec" id="calendar" data-folio="4" aria-labelledby="cal-title">
+    <div class="sheet grid">
+      <div class="sec__head">
+        <h2 class="h2" id="cal-title">놓치면 가산세가 붙는 날들</h2>
+        <p class="sec__lede">신고를 하루만 늦어도 무신고 가산세 20%가 붙을 수 있습니다. 이번 달을 펼쳐 두었습니다.</p>
+      </div>
+      <div class="ledger ledger--full cal" id="cal" role="list" aria-label="열두 달 세무 일정">
+        <div class="lrow lrow--head" aria-hidden="true">
+          <span class="lc">달</span>
+          <span class="lc">기한</span>
+          <span class="lc">대상</span>
+          <span class="lc lc--amt">남은 날</span>
+        </div>
+        <!-- months are rendered from data by main.js; this list is the no-script version -->
+        <div class="cal__static" id="cal-static" role="listitem">
+          <p>1월 25일 부가가치세 확정신고(2기), 3월 31일 법인세 신고, 5월 31일 종합소득세 신고, 7월 25일 부가가치세 확정신고(1기). 원천세는 매달 10일입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 제 5 면 -->
+  <section class="sec" id="people" data-folio="5" aria-labelledby="people-title">
+    <div class="sheet grid">
+      <div class="sec__head people__text">
+        <h2 class="h2" id="people-title">숫자를 책임지는 사람</h2>
+        <p class="people__role">대표 세무사 <strong>서윤재</strong></p>
+        <p>세무서에서 8년 동안 신고서를 검토했고, 개업한 지 11년이 되었습니다. 그때 가장 많이 본 것은 몰라서 더 낸 세금이었습니다.</p>
+        <p>셈에서는 담당자가 바뀌지 않습니다. 장부를 정리한 사람이 신고서에 도장을 찍고, 문제가 생기면 그 사람이 전화를 받습니다. 지금 맡고 있는 사장님은 백스물두 분입니다.</p>
+        <p class="people__sign">세무사 등록번호 <span class="num">00000</span>, 한국세무사회 정회원</p>
+      </div>
+      <div class="people__seal" aria-hidden="true">
+        <svg class="seal seal--name" viewBox="0 0 120 120">
+          <g filter="url(#ink)">
+            <rect x="6" y="6" width="108" height="108" rx="6" fill="none" stroke="currentColor" stroke-width="5"/>
+            <rect x="14" y="14" width="92" height="92" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <text class="seal__name" x="87" y="56" text-anchor="middle" font-size="34">서</text>
+            <text class="seal__name" x="87" y="96" text-anchor="middle" font-size="34">윤</text>
+            <text class="seal__name" x="34" y="56" text-anchor="middle" font-size="34">재</text>
+            <text class="seal__name" x="34" y="96" text-anchor="middle" font-size="34">인</text>
+          </g>
+        </svg>
+        <p class="people__cap">신고서마다 직접 찍는 도장</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 제 6 면 -->
+  <section class="sec" id="consult" data-folio="6" aria-labelledby="consult-title">
+    <div class="sheet grid">
+      <div class="sec__head">
+        <h2 class="h2" id="consult-title">장부를 한번 보여 주세요</h2>
+        <p class="sec__lede">지난해 신고서 한 부면 충분합니다. 이틀 안에 담당 세무사가 직접 전화로 진단 결과를 말씀드립니다. 비용은 받지 않습니다.</p>
+      </div>
+      <form class="consult" id="consult-form" novalidate>
+        <div class="field">
+          <label class="field__label" for="f-name">성함</label>
+          <input class="field__control" id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
+          <p class="field__err" id="f-name-err"></p>
+        </div>
+        <div class="field">
+          <label class="field__label" for="f-tel">연락처</label>
+          <input class="field__control" id="f-tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" required aria-describedby="f-tel-err">
+          <p class="field__err" id="f-tel-err"></p>
+        </div>
+        <div class="field">
+          <label class="field__label" for="f-type">사업 형태</label>
+          <select class="field__control" id="f-type" name="type">
+            <option>개인사업자</option>
+            <option>법인</option>
+            <option>프리랜서</option>
+            <option>아직 창업 전</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label" for="f-msg">궁금한 점 <span class="field__opt">(선택)</span></label>
+          <textarea class="field__control field__control--area" id="f-msg" name="msg" rows="3" placeholder="예: 작년 종합소득세가 갑자기 늘었어요"></textarea>
+        </div>
+        <div class="field field--check">
+          <input class="check" id="f-agree" name="agree" type="checkbox" required aria-describedby="f-agree-err">
+          <label for="f-agree">상담 연락을 위해 성함과 연락처를 쓰는 데 동의합니다.</label>
+          <p class="field__err" id="f-agree-err"></p>
+        </div>
+        <p class="consult__submit"><button class="btn" type="submit">무료 세무 진단 신청</button></p>
+        <div class="consult__done" id="consult-done" tabindex="-1" hidden>
+          <svg class="seal seal--recv" viewBox="0 0 120 120" aria-hidden="true">
+            <g filter="url(#ink)">
+              <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="4.5"/>
+              <circle cx="60" cy="60" r="47" fill="none" stroke="currentColor" stroke-width="1.6"/>
+              <text class="seal__word" x="60" y="72" text-anchor="middle" font-size="35">접수</text>
+            </g>
+          </svg>
+          <div>
+            <p class="consult__done-title" id="consult-done-title">신청서를 받았습니다</p>
+            <p class="consult__done-text">컨셉 시안이라 실제로 접수되지는 않습니다. 실제 사무소라면 이틀 안에 담당 세무사가 전화를 드립니다.</p>
+          </div>
+        </div>
+      </form>
+      <dl class="contact" aria-label="사무소 정보">
+        <div class="contact__row"><dt>전화</dt><dd><a href="tel:02-000-0000">02-000-0000</a></dd></div>
+        <div class="contact__row"><dt>주소</dt><dd>서울 OO구 가상로 12, 5층</dd></div>
+        <div class="contact__row"><dt>상담 시간</dt><dd>평일 9시부터 6시</dd></div>
+        <div class="contact__row"><dt>신고 기간</dt><dd>토요일 오전도 엽니다</dd></div>
+      </dl>
+      <div class="faq" aria-labelledby="faq-title">
+        <h3 class="h3" id="faq-title">상담 전에 많이 묻는 것</h3>
+        <div class="faq__list">
+          <div class="faq__item">
+            <h4 class="faq__q"><button type="button" class="faq__btn" aria-expanded="false" aria-controls="faq-a1" id="faq-q1"><span>기장을 맡기면 제가 할 일은 무엇인가요?</span><span class="pm" aria-hidden="true"></span></button></h4>
+            <div class="faq__a" id="faq-a1" role="region" aria-labelledby="faq-q1"><div class="faq__in"><p>카드와 통장은 처음 한 번만 연동하시면 됩니다. 그 밖의 영수증은 사진으로 보내 주시면 저희가 장부에 옮깁니다. 매달 10일쯤 한 장짜리 보고서를 확인하시는 것이 전부입니다.</p></div></div>
+          </div>
+          <div class="faq__item">
+            <h4 class="faq__q"><button type="button" class="faq__btn" aria-expanded="false" aria-controls="faq-a2" id="faq-q2"><span>다른 사무소와 계약 중인데 옮길 수 있나요?</span><span class="pm" aria-hidden="true"></span></button></h4>
+            <div class="faq__a" id="faq-a2" role="region" aria-labelledby="faq-q2"><div class="faq__in"><p>네. 홈택스 수임 동의만 해 주시면 지난 장부와 신고 내역은 저희가 넘겨받습니다. 신고 기간 한가운데만 피하면 한 달 안에 정리됩니다.</p></div></div>
+          </div>
+          <div class="faq__item">
+            <h4 class="faq__q"><button type="button" class="faq__btn" aria-expanded="false" aria-controls="faq-a3" id="faq-q3"><span>매출이 적은 프리랜서도 맡길 수 있나요?</span><span class="pm" aria-hidden="true"></span></button></h4>
+            <div class="faq__a" id="faq-a3" role="region" aria-labelledby="faq-q3"><div class="faq__in"><p>종합소득세 신고만 따로 맡기실 수 있습니다. 3.3% 떼인 세금을 돌려받는 경우가 많아서, 신고 수수료보다 환급액이 큰지 먼저 계산해 드립니다.</p></div></div>
+          </div>
+          <div class="faq__item">
+            <h4 class="faq__q"><button type="button" class="faq__btn" aria-expanded="false" aria-controls="faq-a4" id="faq-q4"><span>법인 전환은 언제 하는 게 좋나요?</span><span class="pm" aria-hidden="true"></span></button></h4>
+            <div class="faq__a" id="faq-a4" role="region" aria-labelledby="faq-q4"><div class="faq__in"><p>보통 과세표준이 1억 원을 넘기 시작할 때 따져 볼 만합니다. 다만 대출, 가족 급여, 부동산 여부에 따라 달라서 두 경우의 세금을 나란히 계산한 표를 보고 정하시길 권합니다.</p></div></div>
+          </div>
+          <div class="faq__item">
+            <h4 class="faq__q"><button type="button" class="faq__btn" aria-expanded="false" aria-controls="faq-a5" id="faq-q5"><span>세무서에서 소명 요청을 받았어요.</span><span class="pm" aria-hidden="true"></span></button></h4>
+            <div class="faq__a" id="faq-a5" role="region" aria-labelledby="faq-q5"><div class="faq__in"><p>받으신 안내문을 사진으로 보내 주세요. 기한과 요구 자료를 그날 정리해 드리고, 소명서는 대표 세무사가 직접 씁니다. 기장 고객은 추가 비용이 없습니다.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="sheet grid">
+    <div class="foot__main">
+      <p class="foot__brand">셈 세무회계</p>
+      <p>대표 세무사 서윤재, 사업자등록번호 000-00-00000</p>
+      <p>서울 OO구 가상로 12, 5층. 전화 <a href="tel:02-000-0000">02-000-0000</a></p>
+      <p class="foot__legal">이 사이트는 첫화면 스튜디오가 만든 가상의 브랜드 컨셉 시안입니다. 실제 업체, 가격, 후기가 아닙니다.</p>
+    </div>
+    <p class="foot__end" aria-hidden="true">끝</p>
+  </div>
+</footer>
+
+<p class="visually-hidden" id="announcer" aria-live="polite"></p>
+
+<script src="../../assets/vendor/gsap/gsap.min.js"></script>
+<script src="../../assets/vendor/gsap/ScrollTrigger.min.js"></script>
+<script src="main.js"></script>
+<script src="../../assets/shared/concept-badge.js" defer></script>
+</body>
+</html>

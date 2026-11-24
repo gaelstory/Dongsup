@@ -233,7 +233,7 @@
       last = now;
       s.time += dt;
       var idle = s.time - s.moved > 3.2;
-      var target = idle ? 0.62 + 0.17 * Math.sin(s.time * 0.23) : s.tx;
+      var target = idle ? 0.58 + 0.14 * Math.sin(s.time * 0.23) : s.tx;
       s.cx += (target - s.cx) * (1 - Math.exp(-dt * (idle ? 1.1 : 5.5)));
       for (var q = swells.length - 1; q >= 0; q--) if (s.time - swells[q].t0 > 3.4) swells.splice(q, 1);
       draw();

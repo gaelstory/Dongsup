@@ -107,7 +107,7 @@
       ' col=mix(col,MOON,.06*inside*uOpen*(.5+.5*inkN));',
       ' float outside=max(rr,0.);',
       ' col+=BRASS*exp(-outside*3.6)*(1.-inside)*(.25+.75*inkN)*.2*uOpen*(1.-.5*uS);',
-      ' float ra=ringA*(.55+.45*inkN)*uOpen*(1.-.82*uS);',
+      ' float ra=ringA*(.55+.45*inkN)*uOpen*pow(1.-uS,1.6);',
       ' col=mix(col,MOON,clamp(ra,0.,1.));',
       ' vec2 uv=gl_FragCoord.xy/uRes;',
       ' col*=1.-.38*pow(length(uv-.5)*1.2,2.);',
@@ -202,7 +202,7 @@
       var target = Math.min(1, Math.max(0, (window.scrollY || 0) / Math.max(1, heroH * 0.85)));
       sSmooth += (target - sSmooth) * (1 - Math.exp(-dt * 7));
       s = sSmooth;
-      R += s * 0.55;
+      R += s * 0.45;
     }
 
     var ux, uy;

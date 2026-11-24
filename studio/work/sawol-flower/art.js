@@ -11,8 +11,8 @@
     return '<g transform="translate(' + n(x) + ' ' + n(y) + ') rotate(' + n(rot * 57.29578) + ')' + (flip ? ' scale(-1 1)' : '') + '">' +
       '<g transform="scale(1 ' + n(tilt) + ')"><g data-h="' + idx + '">' + F.svgHead(head, 1) + '</g></g></g>';
   }
-  function leafUse(x, y, rot, len, w, fill, flip) {
-    return '<use href="#fl-s-leaf" fill="url(#fl-f-' + fill + ')" transform="translate(' + n(x) + ' ' + n(y) + ') rotate(' + n(rot * 57.29578) + ') scale(' + n(len * w * (flip ? -1 : 1)) + ' ' + n(len) + ')"/>' +
+  function leafUse(x, y, rot, len, w, fill, flip, shape) {
+    return '<use href="#fl-s-' + (shape || 'leaf') + '" fill="url(#fl-f-' + fill + ')" transform="translate(' + n(x) + ' ' + n(y) + ') rotate(' + n(rot * 57.29578) + ') scale(' + n(len * w * (flip ? -1 : 1)) + ' ' + n(len) + ')"/>' +
       '<use href="#fl-s-midrib" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="' + n(0.8 / len) + '" transform="translate(' + n(x) + ' ' + n(y) + ') rotate(' + n(rot * 57.29578) + ') scale(' + n(len * w * (flip ? -1 : 1)) + ' ' + n(len) + ')"/>';
   }
   function stem(b, c, t, w0, w1, fill) { return '<path d="' + F.stemPath(b, c, t, w0, w1) + '" fill="' + (fill || '#1F5C3A') + '"/>'; }
@@ -26,24 +26,26 @@
     fresh: { name: '싱그러운', paper: ['#CFE1FF', '#E7F1FF', '#B7D1FA', '#9DBDF0'], ribbon: ['#1F5C3A', '#154329'], leaves: 12, leaf: 'leafL',
       hues: { tulip: 'yellow', freesia: 'yellow', ranunculus: 'yellow', daisy: 'white', poppy: 'yellow', gyp: 'white' } }
   };
-  var SIZE = { S: { n: 7, rx: 116, r: 31 }, M: { n: 11, rx: 146, r: 33 }, L: { n: 16, rx: 176, r: 35 } };
-  var KMUL = { tulip: 0.95, freesia: 0.8, ranunculus: 1.05, daisy: 0.95, poppy: 1.08, gyp: 1.1 };
+  var SIZE = { S: { n: 9, rx: 112, r: 39 }, M: { n: 14, rx: 140, r: 42 }, L: { n: 20, rx: 166, r: 44 } };
+  var KMUL = { tulip: 0.98, freesia: 1.1, ranunculus: 1.05, daisy: 0.95, poppy: 1.06, gyp: 1.5 };
   var EDGE = { freesia: 1, gyp: 1 };
 
-  function bouquet(state) {
+  function bouquet(state, uid) {
+    var u = uid || '';
     var m = MOOD[state.mood], sz = SIZE[state.size], kinds = state.kinds.slice(0, 3);
     var r = F.rng(hash(state.mood + state.size + kinds.join('')));
-    var neck = [280, 474], s = sz.rx / 146;
+    var neck = [280, 474], s = sz.rx / 128;
     function P(x, y) { return n(neck[0] + (x - neck[0]) * s) + ' ' + n(neck[1] + (y - neck[1]) * s); }
-    var D = [neck[0], neck[1] + (262 - neck[1]) * s], rx = sz.rx, ry = rx * 0.6, N = sz.n, i;
+    var D = [neck[0], neck[1] + (262 - neck[1]) * s], rx = sz.rx * 1.06, ry = sz.rx * 0.86, N = sz.n, i;
 
     // how many of each kind; edge-loving kinds (freesia, baby's breath) go to the rim
-    var counts = {}, c1 = Math.round(N * 0.42), c2 = Math.round(N * 0.33);
+    var counts = {}, K = kinds.length, c1 = K === 1 ? N : K === 2 ? Math.round(N * 0.58) : Math.round(N * 0.42), c2 = K === 2 ? N - c1 : Math.round(N * 0.33);
     kinds.forEach(function (k, j) { counts[k] = j === 0 ? c1 : j === 1 ? c2 : N - c1 - c2; });
+    if (!K) N = 0;
     var slots = [], off = r() * TAU;
     for (i = 0; i < N; i++) {
       var rho = Math.sqrt((i + 0.5) / N), th = i * F.GOLD + off;
-      var x = D[0] + rho * rx * 0.84 * Math.cos(th), y = D[1] + rho * ry * 0.84 * Math.sin(th) - (1 - rho * rho) * ry * 0.3;
+      var x = D[0] + rho * rx * 0.84 * Math.cos(th), y = D[1] + rho * ry * 0.84 * Math.sin(th) - (1 - rho * rho) * ry * 0.22;
       slots.push({ x: x, y: y, rho: rho });
     }
     if (kinds.indexOf('gyp') >= 0) {
@@ -70,9 +72,9 @@
     });
     hs.sort(function (a, b) { return (a.back === b.back) ? a.y - b.y : (a.back ? -1 : 1); });
 
-    var svg = '<defs><linearGradient id="bq-back" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + m.paper[1] + '"/><stop offset="1" stop-color="' + m.paper[3] + '"/></linearGradient>' +
-      '<linearGradient id="bq-fl" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="' + m.paper[3] + '"/><stop offset="0.55" stop-color="' + m.paper[0] + '"/><stop offset="1" stop-color="' + m.paper[1] + '"/></linearGradient>' +
-      '<linearGradient id="bq-fr" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="' + m.paper[3] + '"/><stop offset="0.6" stop-color="' + m.paper[2] + '"/><stop offset="1" stop-color="' + m.paper[0] + '"/></linearGradient></defs>';
+    var svg = '<defs><linearGradient id="bq-back' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + m.paper[1] + '"/><stop offset="1" stop-color="' + m.paper[3] + '"/></linearGradient>' +
+      '<linearGradient id="bq-fl' + u + '" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="' + m.paper[3] + '"/><stop offset="0.55" stop-color="' + m.paper[0] + '"/><stop offset="1" stop-color="' + m.paper[1] + '"/></linearGradient>' +
+      '<linearGradient id="bq-fr' + u + '" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="' + m.paper[3] + '"/><stop offset="0.6" stop-color="' + m.paper[2] + '"/><stop offset="1" stop-color="' + m.paper[0] + '"/></linearGradient></defs>';
     svg += '<ellipse cx="282" cy="606" rx="' + n(150 * s) + '" ry="13" fill="rgba(8,32,18,0.38)"/>';
     svg += '<g class="bq">';
     for (i = 0; i < 7; i++) {
@@ -80,18 +82,23 @@
       svg += '<path d="M' + n(x0) + ' 470 L' + n(x1) + ' ' + n(y1) + '" stroke="' + (i % 2 ? '#2D7048' : '#24603D') + '" stroke-width="4.2" stroke-linecap="round" fill="none"/>' +
         '<path d="M' + n(x1 - 2) + ' ' + n(y1 + 1) + ' L' + n(x1 + 2) + ' ' + n(y1 - 1) + '" stroke="#A9C98F" stroke-width="2" stroke-linecap="round"/>';
     }
-    svg += '<path d="M' + P(268, 494) + ' L' + P(82, 226) + ' Q' + P(94, 164) + ' ' + P(150, 146) + ' Q' + P(212, 98) + ' ' + P(280, 112) + ' Q' + P(348, 98) + ' ' + P(410, 146) +
-      ' Q' + P(466, 164) + ' ' + P(478, 226) + ' L' + P(292, 494) + ' Z" fill="url(#bq-back)"/>';
-    svg += '<path d="M' + P(280, 488) + ' L' + P(150, 146) + ' M' + P(280, 488) + ' L' + P(410, 146) + '" stroke="rgba(255,255,255,0.45)" stroke-width="1.4" fill="none"/>';
+    svg += '<path d="M' + P(268, 494) + ' L' + P(104, 262) + ' Q' + P(98, 214) + ' ' + P(152, 196) + ' Q' + P(210, 152) + ' ' + P(280, 166) + ' Q' + P(350, 152) + ' ' + P(408, 196) +
+      ' Q' + P(462, 214) + ' ' + P(456, 262) + ' L' + P(292, 494) + ' Z" fill="url(#bq-back' + u + ')"/>';
+    svg += '<path d="M' + P(280, 488) + ' L' + P(152, 196) + ' M' + P(280, 488) + ' L' + P(408, 196) + '" stroke="rgba(255,255,255,0.45)" stroke-width="1.4" fill="none"/>';
     var nl = m.leaves;
     for (i = 0; i < nl; i++) {
-      var la = -2.2 + 4.4 * (i + 0.5) / nl + (r() - 0.5) * 0.3, len = F.rr(r, 52, 80) * Math.sqrt(s);
-      svg += leafUse(D[0] + Math.sin(la) * rx * 0.86, D[1] - Math.cos(la) * ry * 0.9, la, len, 1, i % 3 === 2 ? 'leafL' : m.leaf, i % 2);
+      var la = -2.15 + 4.3 * (i + 0.5) / nl + (r() - 0.5) * 0.3, len = F.rr(r, 58, 88) * Math.sqrt(s);
+      svg += leafUse(D[0] + Math.sin(la) * rx * 0.8, D[1] - Math.cos(la) * ry * 0.82, la, len, 1, i % 3 === 2 ? 'leafL' : m.leaf, i % 2);
+    }
+    // greenery tucked between the heads so gaps read as foliage, not paper
+    if (N) for (i = 0; i < Math.round(N * 0.9); i++) {
+      var fr = Math.sqrt(F.rr(r, 0.1, 0.85)), fa = r() * TAU, fl = F.rr(r, 34, 56);
+      svg += leafUse(D[0] + Math.cos(fa) * rx * 0.8 * fr, D[1] + Math.sin(fa) * ry * 0.8 * fr + 20, fa + Math.PI / 2 + F.rr(r, -0.6, 0.6), fl, 1.15, i % 2 ? m.leaf : 'leafL', i % 2);
     }
     hs.forEach(function (h, j) { svg += headGroup(h.head, h.x, h.y, h.rot, h.flip, h.tilt, j); heads.push(h.head); });
-    svg += '<path d="M' + P(296, 504) + ' L' + P(92, 298) + ' Q' + P(186, 336) + ' ' + P(306, 352) + ' Z" fill="url(#bq-fl)"/>';
-    svg += '<path d="M' + P(264, 504) + ' L' + P(468, 298) + ' Q' + P(374, 336) + ' ' + P(254, 352) + ' Z" fill="url(#bq-fr)"/>';
-    svg += '<path d="M' + P(92, 298) + ' Q' + P(186, 336) + ' ' + P(306, 352) + ' M' + P(468, 298) + ' Q' + P(374, 336) + ' ' + P(254, 352) + '" stroke="rgba(255,255,255,0.6)" stroke-width="1.6" fill="none"/>';
+    svg += '<path d="M' + P(296, 506) + ' L' + P(104, 342) + ' Q' + P(192, 376) + ' ' + P(308, 388) + ' Z" fill="url(#bq-fl' + u + ')"/>';
+    svg += '<path d="M' + P(264, 506) + ' L' + P(456, 342) + ' Q' + P(368, 376) + ' ' + P(252, 388) + ' Z" fill="url(#bq-fr' + u + ')"/>';
+    svg += '<path d="M' + P(104, 342) + ' Q' + P(192, 376) + ' ' + P(308, 388) + ' M' + P(456, 342) + ' Q' + P(368, 376) + ' ' + P(252, 388) + '" stroke="rgba(255,255,255,0.6)" stroke-width="1.6" fill="none"/>';
     var rb = m.ribbon;
     svg += '<g transform="translate(280 480)">' +
       '<path d="M-6 6 C-16 40 -28 70 -46 96 L-32 100 C-18 76 -6 48 4 8 Z" fill="' + rb[1] + '"/>' +
@@ -110,9 +117,10 @@
   function vase(kind) {
     var r = F.rng(kind === 'jar' ? 3301 : 7717), heads = [], svg = '', i;
     var set = kind === 'jar'
-      ? { c: [120, 150], rx: 58, ry: 34, list: [['chrysanthemum', 'yellow', 26], ['gyp', 'white', 30], ['ranunculus', 'cream', 27], ['chrysanthemum', 'white', 24], ['gyp', 'white', 26]], neck: [96, 144], base: 286 }
-      : { c: [120, 104], rx: 84, ry: 52, list: [['chrysanthemum', 'white', 28], ['ranunculus', 'coral', 30], ['gyp', 'white', 34], ['anemone', 'white', 27], ['chrysanthemum', 'yellow', 26], ['gyp', 'white', 30], ['ranunculus', 'coral', 27], ['chrysanthemum', 'white', 25], ['anemone', 'blush', 26], ['gyp', 'white', 28], ['chrysanthemum', 'yellow', 24]], neck: [92, 148], base: 286 };
+      ? { c: [120, 148], rx: 64, ry: 40, list: [['chrysanthemum', 'yellow', 33], ['gyp', 'white', 40], ['ranunculus', 'cream', 34], ['chrysanthemum', 'white', 30], ['gyp', 'white', 36], ['ranunculus', 'cream', 29]], neck: [96, 144], base: 286 }
+      : { c: [120, 98], rx: 92, ry: 58, list: [['chrysanthemum', 'white', 33], ['ranunculus', 'coral', 35], ['gyp', 'white', 42], ['anemone', 'white', 32], ['chrysanthemum', 'yellow', 30], ['gyp', 'white', 38], ['ranunculus', 'coral', 31], ['chrysanthemum', 'white', 29], ['anemone', 'blush', 30], ['gyp', 'white', 36], ['chrysanthemum', 'yellow', 28], ['ranunculus', 'cream', 30]], neck: [92, 148], base: 286 };
     var N = set.list.length, pos = [];
+    svg += '<ellipse cx="120" cy="288" rx="' + (kind === 'jar' ? 58 : 66) + '" ry="7" fill="rgba(59,42,32,0.12)"/>';
     for (i = 0; i < N; i++) {
       var rho = Math.sqrt((i + 0.5) / N), th = i * F.GOLD + 0.6;
       pos.push([set.c[0] + rho * set.rx * Math.cos(th), set.c[1] + rho * set.ry * Math.sin(th) - (1 - rho * rho) * set.ry * 0.4, rho]);
@@ -144,15 +152,15 @@
 
   /* ---------- today's flowers ---------- */
   var SPEC = {
-    tulip: { hue: 'pink', r: 52, tip: [100, 132] }, freesia: { hue: 'yellow', r: 46, tip: [66, 146], dir: 1 },
+    tulip: { hue: 'pink', r: 52, tip: [100, 132] }, freesia: { hue: 'yellow', r: 54, tip: [54, 150], dir: 1 },
     ranunculus: { hue: 'coral', r: 52, tip: [100, 104] }, daisy: { hue: 'white', r: 54, tip: [100, 104] },
-    poppy: { hue: 'coral', r: 52, tip: [100, 104] }, gyp: { hue: 'white', r: 70, tip: [100, 150] }
+    poppy: { hue: 'coral', r: 52, tip: [100, 104] }, gyp: { hue: 'white', r: 84, tip: [100, 160] }
   };
   function specimen(kind) {
     var sp = SPEC[kind], head = F.build(kind, { r: sp.r, hue: sp.hue, seed: hash(kind) % 100000 + 11 });
     var t = sp.tip, svg = '<circle cx="100" cy="104" r="78" fill="#EAF2FF"/>';
     svg += stem([100, 252], [t[0] + (100 - t[0]) * 0.2 - 6, (252 + t[1]) / 2], t, kind === 'gyp' ? 2.2 : 3.4, kind === 'gyp' ? 1.2 : 2.2);
-    svg += leafUse(100 - 1, 214, kind === 'tulip' ? -0.35 : -0.75, kind === 'tulip' ? 70 : 34, kind === 'tulip' ? 1.4 : 1, 'leaf', 1);
+    svg += kind === 'tulip' ? leafUse(99, 232, -0.32, 78, 0.8, 'leaf', 1, 'leafBroad') : leafUse(99, 214, -0.75, 34, 1, 'leaf', 1);
     svg += headGroup(head, t[0], t[1], 0, sp.dir ? head.dir !== sp.dir : false, head.front ? 0.92 : 1, 0);
     return { svg: svg, heads: [head] };
   }
@@ -172,7 +180,7 @@
   var RACEME = { freesia: 1, lily: 1 };
   function month(mi) {
     var list = MONTHS[mi], r = F.rng(500 + mi * 31), svg = '', heads = [];
-    var spots = list.length === 2 ? [[31, 46, 17], [61, 64, 15]] : [[22, 60, 13], [46, 40, 15], [70, 64, 13]];
+    var spots = list.length === 2 ? [[30, 44, 21], [62, 64, 18]] : [[21, 60, 16], [46, 38, 18], [71, 64, 16]];
     list.forEach(function (it, j) {
       var sp = spots[j], kind = it[0], hr = sp[2] * (kind === 'gyp' ? 1.3 : RACEME[kind] ? 0.9 : kind === 'tulip' ? 0.95 : 1);
       var head = F.build(kind, { r: hr, hue: it[1], seed: (r() * 1e9) | 0 });
@@ -215,5 +223,22 @@
     return svg;
   }
 
-  root.SawolArt = { MOOD: MOOD, SIZE: SIZE, KNAME: KNAME, MONTHS: MONTHS, bouquet: bouquet, vase: vase, specimen: specimen, icon: icon, month: month, stemGeom: stemGeom, gardenSVG: gardenSVG, hash: hash };
+  /* ---------- the little meadow growing out of the footer soil ---------- */
+  function meadow(W, H) {
+    var r = F.rng(2604), svg = '', cnt = Math.round(W / 46), kinds = [['daisy', 'white'], ['gyp', 'white'], ['ranunculus', 'cream'], ['daisy', 'white'], ['tulip', 'pink'], ['poppy', 'coral'], ['gyp', 'white'], ['freesia', 'yellow']], d = '';
+    for (var g = 0; g < W / 3; g++) {
+      var gx = r() * W, gh = F.rr(r, 8, 26), ga = F.rr(r, -0.4, 0.4), gw = F.rr(r, 1, 2.2);
+      d += 'M' + n(gx - gw) + ' ' + H + 'Q' + n(gx) + ' ' + n(H - gh * 0.6) + ' ' + n(gx + Math.sin(ga) * gh) + ' ' + n(H - Math.cos(ga) * gh) + 'Q' + n(gx) + ' ' + n(H - gh * 0.6) + ' ' + n(gx + gw) + ' ' + H + 'Z';
+    }
+    for (var i = 0; i < cnt; i++) {
+      var x = (i + 0.5 + F.rr(r, -0.4, 0.4)) / cnt * W, h = F.rr(r, 26, H - 26), it = kinds[(r() * kinds.length) | 0];
+      var head = F.build(it[0], { r: F.rr(r, 9, 14) * (it[0] === 'gyp' ? 1.4 : 1), hue: it[1], seed: (r() * 1e9) | 0 }), lean = F.rr(r, -0.12, 0.12);
+      var tx = x + Math.sin(lean) * h, ty = H - Math.cos(lean) * h;
+      svg += stem([x, H], [x + Math.sin(lean) * h * 0.3, H - h * 0.5], [tx, ty], 1.8, 1.1, '#2E6E46');
+      svg += headGroup(head, tx, ty, lean + F.rr(r, -0.25, 0.25), false, head.front ? F.rr(r, 0.6, 0.9) : 1, i);
+    }
+    return { svg: svg + '<path d="' + d + '" fill="#2E6E46"/>' };
+  }
+
+  root.SawolArt = { meadow: meadow, MOOD: MOOD, SIZE: SIZE, KNAME: KNAME, MONTHS: MONTHS, bouquet: bouquet, vase: vase, specimen: specimen, icon: icon, month: month, stemGeom: stemGeom, gardenSVG: gardenSVG, hash: hash };
 })(typeof window !== 'undefined' ? window : globalThis);

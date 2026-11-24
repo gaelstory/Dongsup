@@ -63,7 +63,11 @@
 
   /* ---------- unit shapes ---------- */
   var SH = {};
-  function def(name, s) { SH[name] = typeof s === 'string' ? parse(s) : s; }
+  var RAW = {};
+  function def(name, s) { if (typeof s === 'string' && /A/.test(s)) RAW[name] = s; else SH[name] = typeof s === 'string' ? parse(s) : s; }
+  function n2(v) { return Math.round(v * 100) / 100; }
+  function arcDot(x, y, r) { return 'M' + n2(x + r) + ' ' + n2(y) + 'A' + n2(r) + ' ' + n2(r) + ' 0 1 0 ' + n2(x - r) + ' ' + n2(y) + 'A' + n2(r) + ' ' + n2(r) + ' 0 1 0 ' + n2(x + r) + ' ' + n2(y) + 'Z'; }
+  function shapeD(name) { return RAW[name] || str(SH[name]); }
   def('tulip', 'M0 0 C0.26 -0.02 0.42 -0.36 0.41 -0.64 C0.4 -0.86 0.2 -0.99 0 -1 C-0.2 -0.99 -0.4 -0.86 -0.41 -0.64 C-0.42 -0.36 -0.26 -0.02 0 0 Z');
   def('tulipTip', 'M0 0 C0.28 -0.04 0.43 -0.4 0.39 -0.68 C0.35 -0.88 0.14 -0.96 0.02 -1.04 C-0.16 -0.95 -0.37 -0.86 -0.4 -0.66 C-0.43 -0.38 -0.26 -0.03 0 0 Z');
   def('round', 'M0 0 C0.26 0 0.5 -0.32 0.5 -0.6 C0.5 -0.86 0.3 -1 0 -1 C-0.3 -1 -0.5 -0.86 -0.5 -0.6 C-0.5 -0.32 -0.26 0 0 0 Z');
@@ -117,14 +121,14 @@
     }
     // seed and floret textures packed on a golden spiral
     function dots(n, R, rad, seed) {
-      var o = [], q = rng(seed);
-      for (var j = 0; j < n; j++) { var dd = R * Math.sqrt((j + 0.5) / n), aa = j * GOLD; o = o.concat(circ(dd * Math.cos(aa), dd * Math.sin(aa), rad * rr(q, 0.8, 1.15))); }
+      var o = '', q = rng(seed);
+      for (var j = 0; j < n; j++) { var dd = R * Math.sqrt((j + 0.5) / n), aa = j * GOLD; o += arcDot(dd * Math.cos(aa), dd * Math.sin(aa), rad * rr(q, 0.8, 1.15)); }
       return o;
     }
     def('florets', dots(30, 0.8, 0.085, 7));
     def('seeds', dots(80, 0.92, 0.045, 9));
-    out = []; r = rng(77);
-    for (i = 0; i < 34; i++) { a = i / 34 * TAU + rr(r, -0.06, 0.06); d = rr(r, 0.72, 1); out = out.concat(circ(Math.cos(a) * d, Math.sin(a) * d, rr(r, 0.05, 0.08))); }
+    out = ''; r = rng(77);
+    for (i = 0; i < 34; i++) { a = i / 34 * TAU + rr(r, -0.06, 0.06); d = rr(r, 0.72, 1); out += arcDot(Math.cos(a) * d, Math.sin(a) * d, rr(r, 0.05, 0.08)); }
     def('stamens', out);
     out = [];
     for (i = 0; i < 8; i++) { a = i / 8 * TAU; out.push(['M', 0, 0], ['L', Math.sin(a) * 0.92, -Math.cos(a) * 0.92]); }
@@ -135,8 +139,8 @@
     out = [];
     for (i = 0; i < 5; i++) out = out.concat(xf(SH.pointed, 0, 0, i * TAU / 5, 1.5, 1));
     def('calyx', out);
-    out = [];
-    for (i = 0; i < 5; i++) { a = i * TAU / 5; out = out.concat(circ(Math.sin(a) * 0.5, -Math.cos(a) * 0.5, 0.52)); }
+    out = '';
+    for (i = 0; i < 5; i++) { a = i * TAU / 5; out += arcDot(Math.sin(a) * 0.5, -Math.cos(a) * 0.5, 0.52); }
     def('puff', out);
   })();
 
@@ -395,7 +399,7 @@
   }
 
   var pathCache = {};
-  function path2d(name) { return pathCache[name] || (pathCache[name] = new Path2D(str(SH[name]))); }
+  function path2d(name) { return pathCache[name] || (pathCache[name] = new Path2D(shapeD(name))); }
   function canvasFill(ctx, key) {
     var c = ctx.__flora || (ctx.__flora = {});
     if (c[key]) return c[key];
@@ -426,19 +430,17 @@
   function drawShape(ctx, name, fill) { ctx.fillStyle = canvasFill(ctx, fill); ctx.fill(path2d(name)); }
 
   function fillAttr(key) { var d = FILL[key]; return typeof d === 'string' ? d : 'url(#fl-f-' + key + ')'; }
+  function sig(v) { return +v.toPrecision(3); }
   function attrs(p, bloom) {
     partState(p, bloom);
-    var sx = p.sx * ST.k, sy = p.sy * ST.k;
-    return {
-      tf: 'translate(' + num(p.x) + ' ' + num(p.y) + ') rotate(' + num(ST.r * 57.29578) + ') scale(' + num(sx) + ' ' + num(sy) + ')',
-      op: p.o * ST.v,
-      lw: p.lw / Math.max(0.01, Math.sqrt(Math.abs(sx * sy)))
-    };
+    var sx = n2(p.sx * ST.k), sy = n2(p.sy * ST.k), deg = Math.round(ST.r * 572.9578) / 10;
+    var tf = (p.x || p.y ? 'translate(' + n2(p.x) + ' ' + n2(p.y) + ')' : '') + (deg ? 'rotate(' + deg + ')' : '') + 'scale(' + sx + (sx === sy ? '' : ' ' + sy) + ')';
+    return { tf: tf, op: p.o * ST.v, lw: sig(p.lw / Math.max(0.01, Math.sqrt(Math.abs(sx * sy)))) };
   }
   function svgPart(p, bloom) {
     var a = attrs(p, bloom), s = '<use href="#fl-s-' + p.s + '" transform="' + a.tf + '" fill="' + (p.f ? fillAttr(p.f) : 'none') + '"';
-    if (p.st) s += ' stroke="' + INK[p.st] + '" stroke-width="' + num(a.lw) + '"';
-    if (a.op < 1) s += ' opacity="' + num(a.op) + '"';
+    if (p.st) s += ' stroke="' + INK[p.st] + '" stroke-width="' + a.lw + '"';
+    if (a.op < 1) s += ' opacity="' + n2(a.op) + '"';
     return s + '/>';
   }
   function svgHead(head, bloom) {
@@ -454,14 +456,15 @@
       for (var i = 0; i < parts.length; i++) {
         var a = attrs(parts[i], b), el = els[i];
         el.setAttribute('transform', a.tf);
-        el.setAttribute('opacity', num(a.op));
-        if (parts[i].st) el.setAttribute('stroke-width', num(a.lw));
+        el.setAttribute('opacity', n2(a.op));
+        if (parts[i].st) el.setAttribute('stroke-width', a.lw);
       }
     };
   }
   function defs() {
     var s = '', k, f;
     for (k in SH) s += '<path id="fl-s-' + k + '" d="' + str(SH[k]) + '"/>';
+    for (k in RAW) s += '<path id="fl-s-' + k + '" d="' + RAW[k] + '"/>';
     for (f in FILL) {
       var d = FILL[f];
       if (typeof d === 'string') continue;
@@ -501,11 +504,11 @@
 
   var GARDEN = ['tulip', 'freesia', 'ranunculus', 'daisy', 'poppy'];
   var HUES = { tulip: ['pink', 'pink', 'coral', 'yellow', 'white'], freesia: ['yellow', 'yellow', 'white', 'coral'], ranunculus: ['coral', 'pink', 'cream', 'coral', 'yellow'], daisy: ['white'], poppy: ['coral', 'pink', 'yellow', 'white', 'coral'] };
-  var HEADK = { tulip: 0.9, freesia: 0.72, ranunculus: 1, daisy: 0.92, poppy: 1.12, gyp: 1.1 };
+  var HEADK = { tulip: 0.92, freesia: 1.15, ranunculus: 1.02, daisy: 1, poppy: 1.1, gyp: 1.15 };
   function leavesFor(kind, r) {
     var L = [], side = r() < 0.5 ? -1 : 1, i, n;
     if (kind === 'tulip') {
-      for (i = 0; i < 2; i++) { L.push({ t: rr(r, 0.02, 0.09), side: side, len: rr(r, 0.32, 0.46), ang: rr(r, 0.16, 0.3), s: 'leafBroad', w: 1 }); side = -side; }
+      for (i = 0; i < 2; i++) { L.push({ t: rr(r, 0.02, 0.08), side: side, len: rr(r, 0.24, 0.36), ang: rr(r, 0.18, 0.34), s: 'leafBroad', w: 0.72 }); side = -side; }
     } else if (kind === 'freesia') {
       for (i = 0; i < 2; i++) { L.push({ t: rr(r, 0, 0.05), side: side, len: rr(r, 0.38, 0.58), ang: rr(r, 0.08, 0.22), s: 'blade', w: 1.2 }); side = -side; }
     } else if (kind === 'gyp') {
@@ -542,7 +545,7 @@
     for (i = 0; i < count; i++) {
       var fx = (i + 0.5 + rr(r, -0.36, 0.36)) / count, z = r(), d = Math.min(1, Math.abs(fx - 0.5) * 2.4);
       var env = valley ? 0.5 + 0.5 * d : 0.78 + 0.22 * d;
-      var fh = env * rr(r, 0.66, 1) * (0.84 + 0.16 * z);
+      var fh = env * rr(r, 0.5, 1) * (0.84 + 0.16 * z);
       list.push(plant(kinds[i], r, { fx: fx, fh: fh, z: z, lean: (fx - 0.5) * rr(r, 0.05, 0.22) + rr(r, -0.05, 0.05) }));
     }
     var fill = Math.max(2, Math.round(count / 3.5));

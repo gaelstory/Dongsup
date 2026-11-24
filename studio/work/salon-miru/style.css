@@ -463,9 +463,9 @@ html:not(.book-js) #book-back, html:not(.book-js) #book-next, html:not(.book-js)
 .map-roads path { stroke: var(--chrome); stroke-width: 16; fill: none; stroke-linecap: round; opacity: 0.75; }
 .map-route { fill: none; stroke: var(--wine); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
 .map-station circle { fill: var(--pearl); stroke: var(--wine); stroke-width: 2; }
-.map-text { font-family: var(--f-body); font-size: 17px; font-weight: 500; fill: var(--ink-soft); }
+.map-text { font-family: var(--f-body); font-size: 21px; font-weight: 500; fill: var(--ink-soft); }
 .map-text-strong { fill: var(--ink); }
-.map-label { font-family: var(--f-display); font-size: 28px; fill: var(--wine); stroke: var(--wine); stroke-width: 0.5px; }
+.map-label { font-family: var(--f-display); font-size: 34px; fill: var(--wine); stroke: var(--wine); stroke-width: 0.5px; }
 .map-pin path { fill: var(--wine); }
 .map-pin-dot { fill: var(--pearl); }
 .map-pin-halo { fill: rgba(86, 26, 43, 0.08); }
@@ -492,9 +492,16 @@ html:not(.book-js) #book-back, html:not(.book-js) #book-next, html:not(.book-js)
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  *, *::before, *::after { transition-duration: 0s !important; transition-delay: 0s !important; animation-duration: 0s !important; animation-iteration-count: 1 !important; }
 }
 @media print {
   .site-header, .comb-hint, .comb-cursor, .hero-art { display: none; }
   .hero { min-height: 0; }
 }
+
+/* without the scripts, hide controls that only work with them; the fallback hair still follows the swatch */
+html:not(.tabs-js) .tabs, html:not(.tabs-js) .dur-toggle, html:not(.reel-js) .reel-controls, .hero:not(.has-canvas) .comb-hint { display: none; }
+.hero:has(input[value="ash"]:checked) { --hair-root: #6B5A4E; --hair-tip: #B9A999; }
+.hero:has(input[value="choco"]:checked) { --hair-root: #2E1B14; --hair-tip: #6A4632; }
+.hero:has(input[value="rose"]:checked) { --hair-root: #7A3B46; --hair-tip: #E3A9A0; }
+.hero:has(input[value="black"]:checked) { --hair-root: #0F0D0E; --hair-tip: #3A3436; }

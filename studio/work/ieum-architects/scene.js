@@ -9,6 +9,8 @@ const stage = document.getElementById('stage');
 const canvas = stage && stage.querySelector('.stage__canvas');
 const S = (window.IEUM = window.IEUM || { p: [0, 0, 0, 0, 0, 0] });
 const SHOT = /[?&]shot=1/.test(location.search);
+// ?t=<0..7> freezes the drawing at one timeline position (used to review single states).
+const FIX_T = parseFloat(new URLSearchParams(location.search).get('t'));
 const mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
 const mqSmall = matchMedia('(max-width: 767px)');
 const mqFine = matchMedia('(hover: hover) and (pointer: fine)');
@@ -43,8 +45,8 @@ const TR = {
   north: [0, [1.1, 1.6, 1, 'out']],
   person: [0, [1.35, 1.75, 1, 'out']],
   sunArc: [0, [1.05, 1.55, 1, 'out']],
-  sunArcA: [1, [2.05, 2.5, 0.38, 'io'], [6.55, 7.0, 0.22, 'io']],
-  sunA: [0, [1.1, 1.3, 1, 'out'], [6.75, 7.0, 0.75, 'io']],
+  sunArcA: [1, [2.05, 2.5, 0.38, 'io'], [6.0, 6.6, 0, 'io']],
+  sunA: [0, [1.1, 1.3, 1, 'out'], [6.2, 6.7, 0, 'io']],
   sunPos: [0.04, [1.15, 1.95, 0.5, 'io'], [6.0, 6.95, 0.92, 'io']],
   plan: [0, [2.0, 2.55, 1, 'out']],
   frames1: [0, [2.55, 2.95, 1, 'out']],
@@ -68,9 +70,11 @@ const TR = {
   route: [0, [5.5, 5.95, 1, 'out']],
   routeA: [1, [6.1, 6.45, 0, 'io']],
   glass: [0, [6.3, 6.8, 0.5, 'out']],
-  zoom: [1, [1.0, 1.55, 0.82, 'io'], [2.0, 2.6, 1, 'io'], [3.0, 3.6, 0.96, 'io'], [5.0, 5.5, 0.8, 'io'], [6.0, 6.5, 0.96, 'io']],
-  camY: [1.5, [2.0, 2.8, 1.9, 'io'], [3.0, 3.8, 2.6, 'io'], [5.0, 5.5, 4.6, 'io'], [6.0, 6.5, 2.6, 'io']],
+  zoom: [1, [1.0, 1.55, 0.74, 'io'], [2.0, 2.6, 1, 'io'], [3.0, 3.6, 0.96, 'io'], [5.0, 5.5, 0.8, 'io'], [6.0, 6.6, 0.88, 'io']],
+  camY: [1.5, [2.0, 2.8, 1.9, 'io'], [3.0, 3.8, 2.6, 'io'], [5.0, 5.5, 4.6, 'io'], [6.0, 6.6, 3.0, 'io']],
   az: [0, [6.0, 7.0, -45, 'io']],
+  el: [0, [6.0, 7.0, -12, 'io']],
+  camX: [0.2, [6.0, 7.0, -1.1, 'io']],
 };
 function tr(k, t) {
   const a = TR[k];
@@ -289,7 +293,7 @@ function init() {
   const labelLayer = stage.querySelector('.stage__labels');
   const LABELS = [
     ['w9', 0.7, 99], ['d7', 0.8, 99], ['living', 2.45, 99], ['bedroom', 3.75, 99],
-    ['person', 1.55, 99], ['sunApex', 1.45, 2.4], ['route', 5.72, 6.2], ['roof', 4.6, 5.05],
+    ['person', 1.55, 5.1], ['sunApex', 1.45, 2.4], ['route', 5.72, 6.2], ['roof', 4.6, 5.05],
   ].map(([key, from, to]) => {
     const el = labelLayer && labelLayer.querySelector(`[data-tag="${key}"]`);
     const a = model.anchors[key];
@@ -309,7 +313,7 @@ function init() {
   const scaleMarks = stage.querySelectorAll('.scalebar__mark');
   let sheetIdx = -1;
 
-  let W = 1, H = 1, headerPx = 0;
+  let W = 1, H = 1, headerPx = 0, hudPx = 0;
   const REQ_W = 17, REQ_H = 16;
   let halfH = 8;
 
@@ -319,6 +323,8 @@ function init() {
     H = Math.max(1, Math.round(r.height));
     const hdr = document.querySelector('.site-header');
     headerPx = hdr ? Math.min(hdr.getBoundingClientRect().height, H * 0.2) : 0;
+    // keep the drawing clear of the title block / sheet strip along the bottom edge
+    hudPx = matchMedia('(min-width: 900px)').matches ? 60 : 36;
     const ndpr = Math.min(window.devicePixelRatio || 1, mqSmall.matches ? 1.5 : 2);
     if (ndpr !== dpr) {
       dpr = ndpr;
@@ -331,7 +337,7 @@ function init() {
     const aspect = W / H;
     halfH = Math.max(REQ_H / 2, REQ_W / 2 / aspect);
     // push the drawing below the fixed header that overlaps the top of the stage
-    const s = headerPx / H;
+    const s = (headerPx - hudPx) / H;
     camera.top = halfH * (1 + s);
     camera.bottom = -halfH * (1 - s);
     camera.left = -halfH * aspect;
@@ -340,9 +346,9 @@ function init() {
   }
 
   const target = new THREE.Vector3();
-  function placeCamera(zoom, ty, azDeg, elDeg) {
+  function placeCamera(zoom, tx, ty, azDeg, elDeg) {
     const az = azDeg * DEG, el = elDeg * DEG, D = 80;
-    target.set(0.2, ty, 0.4);
+    target.set(tx, ty, 0.4);
     camera.position.set(target.x + D * Math.cos(el) * Math.sin(az), target.y + D * Math.sin(el), target.z + D * Math.cos(el) * Math.cos(az));
     camera.up.set(0, 1, 0);
     camera.lookAt(target);
@@ -395,7 +401,7 @@ function init() {
     const gv = tr('glass', t);
     for (const k in glass) { glass[k].material.opacity = gv; glass[k].visible = gv > 0.001; }
     curZoom = tr('zoom', t);
-    placeCamera(curZoom, tr('camY', t), 45 + tr('az', t) + ptr.az, 35.264 + ptr.el);
+    placeCamera(curZoom, tr('camX', t), tr('camY', t), 45 + tr('az', t) + ptr.az, 35.264 + tr('el', t) + ptr.el);
 
     const idx = Math.max(0, Math.min(6, Math.ceil(t - 1.35)));
     if (idx !== sheetIdx && sheetNo && sheetName) {
@@ -429,8 +435,8 @@ function init() {
   }
 
   // ---------- state, pointer, loop ----------
-  let mode = SHOT ? 'shot' : mqReduce.matches ? 'static' : 'live';
-  let tCur = mode === 'shot' ? 5 : mode === 'static' ? 7 : 0;
+  let mode = SHOT || Number.isFinite(FIX_T) ? 'shot' : mqReduce.matches ? 'static' : 'live';
+  let tCur = Number.isFinite(FIX_T) ? FIX_T : mode === 'shot' ? 5 : mode === 'static' ? 7 : 0;
   let introStart = null;
   let dirty = true;
   const ptr = { az: 0, el: 0, tx: 0, ty: 0 };

@@ -7,7 +7,7 @@
   if (isShot) root.classList.add('is-shot');
 
   var mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
-  var mqWide = matchMedia('(min-width: 900px)');
+  var mqWide = matchMedia('(min-width: 900px) and (min-aspect-ratio: 5/4)');
   var mqFine = matchMedia('(hover: hover) and (pointer: fine)');
 
   function hex(h) { var n = parseInt(h.slice(1), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; }
@@ -180,11 +180,10 @@
     b.addEventListener('click', function () { select(+b.dataset.scent); });
   });
 
-  var spinBtn = $('#spin-toggle'), spinLabel = $('#spin-label');
+  var spinBtn = $('#spin-toggle');
   spinBtn.addEventListener('click', function () {
     TEUM.spinPaused = !TEUM.spinPaused;
     spinBtn.setAttribute('aria-pressed', String(TEUM.spinPaused));
-    spinLabel.textContent = TEUM.spinPaused ? '병 회전 다시 돌리기' : '병 회전 멈추기';
   });
   if (mqReduce.matches) spinBtn.hidden = true;
   mqReduce.addEventListener('change', function () { spinBtn.hidden = mqReduce.matches; wake(); });
@@ -205,16 +204,6 @@
     if (menuBtn.getAttribute('aria-expanded') === 'true' && !e.target.closest('.top')) setMenu(false);
   });
   mqWide.addEventListener('change', function () { setMenu(false); });
-
-  /* ---------- batch ledger: 300 bottles, 86 left ---------- */
-  var grid = $('#batch-grid');
-  var frag = document.createDocumentFragment();
-  for (var b = 0; b < 300; b++) {
-    var el = document.createElement('i');
-    if (b >= 214) el.className = 'is-left';
-    frag.appendChild(el);
-  }
-  grid.appendChild(frag);
 
   /* ---------- time slider ---------- */
   var tslider = $('#tslider'), track = $('#tslider-track'), thumb = $('#tslider-thumb');
@@ -327,7 +316,7 @@
     cart[i]++;
     renderCart();
     bump();
-    announce(SCENTS[i].no + ' ' + SCENTS[i].name + '을 장바구니에 담았습니다. 모두 ' + cart.reduce(function (a, b) { return a + b; }, 0) + '병입니다.');
+    announce(SCENTS[i].no + ' ' + SCENTS[i].name + '를 장바구니에 담았습니다. 모두 ' + cart.reduce(function (a, b) { return a + b; }, 0) + '병입니다.');
     if (btn) {
       var t = $('.add__t', btn) || btn;
       var orig = btn._orig || (btn._orig = t.textContent);
@@ -433,7 +422,7 @@
     $('#result-add').dataset.add = String(best);
     finderBottle.style.setProperty('--liquid', SCENTS[best].hex);
     finderBottle.classList.add('is-filled');
-    $('#finder-cap').textContent = SCENTS[best].no + ' ' + SCENTS[best].name + '을 채웠습니다';
+    $('#finder-cap').textContent = SCENTS[best].no + ' ' + SCENTS[best].name + '를 채웠습니다';
     quiz.classList.add('is-done');
     result.focus();
     if (window.gsap && !mqReduce.matches) {
@@ -493,7 +482,7 @@
     }
 
     var mm = gsap.matchMedia();
-    mm.add({ motion: '(prefers-reduced-motion: no-preference)', reduce: '(prefers-reduced-motion: reduce)', wide: '(min-width: 900px)' }, function (ctx) {
+    mm.add({ motion: '(prefers-reduced-motion: no-preference)', reduce: '(prefers-reduced-motion: reduce)', wide: '(min-width: 900px) and (min-aspect-ratio: 5/4)' }, function (ctx) {
       var c = ctx.conditions;
       if (c.reduce || isShot) return;
 
@@ -511,11 +500,11 @@
         .from('.hero__pick', { y: 8, opacity: 0, duration: 0.5 }, 0.5)
         .from('.cta-orb', { scale: 0.9, opacity: 0, duration: 0.55 }, 0.55);
 
-      // the scent copy settles in as each bottle arrives
-      panels.forEach(function (p) {
+      // the scent copy settles in as each bottle arrives (wide layout; on phones it slides out from under the bottle)
+      if (c.wide) panels.forEach(function (p) {
         var t = $('.scent__text', p);
-        gsap.from(t.children, { y: 18, opacity: 0, duration: 0.7, stagger: 0.06,
-          scrollTrigger: { trigger: t, start: 'top 82%', once: true } });
+        gsap.from(t.children, { y: 14, opacity: 0, duration: 0.55, stagger: 0.05,
+          scrollTrigger: { trigger: t, start: 'top 85%', once: true } });
       });
       // the ledger fills in sale order, so 214 of 300 reads as something that happened
       gsap.from('#batch-grid i.is-left', { opacity: 0, scale: 0.9, duration: 0.4, stagger: { each: 0.012, from: 'end' }, ease: 'power2.out',

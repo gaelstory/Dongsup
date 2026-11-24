@@ -208,7 +208,7 @@ svg { display: block; }
 .hero__pick { display: grid; justify-items: start; gap: 10px; order: -1; }
 .hero__now { font-size: 15px; color: var(--ink-2); line-height: 1.4; }
 .hero__now .num { font-size: 15px; }
-.swatches { display: flex; align-items: center; gap: 6px; }
+.swatches { display: flex; align-items: center; gap: 8px; }
 .swatch {
   width: 44px; height: 44px; border: 0; padding: 0; background: transparent; cursor: pointer; border-radius: 50%;
   display: grid; place-items: center; position: relative;
@@ -256,8 +256,8 @@ svg { display: block; }
 .scents { position: relative; z-index: 1; }
 .scent {
   position: relative;
-  min-height: 78svh;
-  padding: 28px var(--gutter-r) 72px var(--gutter);
+  min-height: 0;
+  padding: 36px var(--gutter-r) 64px var(--gutter);
   display: flex; align-items: flex-start;
 }
 .scent__text { max-width: 34rem; position: relative; }
@@ -278,8 +278,8 @@ svg { display: block; }
   fill: none; stroke: var(--accent); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round;
 }
 
-/* ---------- desktop stage layout ---------- */
-@media (min-width: 900px) {
+/* ---------- desktop stage layout (landscape only; portrait tablets use the stacked stage) ---------- */
+@media (min-width: 900px) and (min-aspect-ratio: 5/4) {
   :root { --stage-h: 100svh; --base: 0.75; --bfrac: 0.58; }
   .stage__sticky { z-index: 0; height: var(--stage-h); margin-bottom: calc(var(--stage-h) * -1); }
   .stage__fade { display: none; }
@@ -306,12 +306,12 @@ svg { display: block; }
     min-height: 100svh; padding: 96px var(--gutter-r) 72px var(--gutter);
     align-items: center; max-width: 1440px; margin-inline: auto;
   }
-  .scent__text { width: min(36vw, 32rem); }
+  .scent__text { width: min(34vw, 32rem); }
   .scent[data-index="1"], .scent[data-index="3"] { justify-content: flex-end; }
   .scent__drawing { right: -12px; top: 0; width: 120px; height: 90px; }
   .scent__name { font-size: clamp(80px, 8.4vw, 132px); }
 }
-@media (min-width: 900px) and (max-height: 700px) {
+@media (min-width: 900px) and (min-aspect-ratio: 5/4) and (max-height: 700px) {
   :root { --base: 0.72; }
 }
 
@@ -430,7 +430,7 @@ svg { display: block; }
 .tnote__label { font-size: 15px; color: var(--ink-2); }
 .tnote__text { font-size: clamp(28px, 7vw, 46px); line-height: 1.25; letter-spacing: -0.03em; font-weight: 200; margin-top: 4px; }
 .tnote__desc { margin-top: 12px; color: var(--ink-2); font-size: 16px; max-width: 24em; }
-.tnotes__rings { display: block; width: 200px; height: 200px; margin-top: 28px; overflow: visible; }
+.tnotes__rings { display: block; width: 150px; height: 150px; margin-top: 24px; overflow: visible; }
 .ring { fill: none; stroke: var(--tc, var(--fig)); stroke-width: 1; transform-origin: 100px 100px; }
 .ring__core { fill: var(--tc, var(--fig)); }
 /* without JS every phase stacks readably */
@@ -549,6 +549,7 @@ html:not(.js) .quiz__nav { display: none; }
 .foot__grid { display: grid; gap: 28px; font-size: 15px; line-height: 1.9; }
 .foot__mark { font-family: var(--latin); font-weight: 300; letter-spacing: 0.42em; font-size: 28px; color: var(--white); }
 .foot a { color: var(--white); text-underline-offset: 3px; }
+.foot :focus-visible { outline-color: var(--white); }
 .foot__legal { margin-top: 48px; font-size: 13px; color: #A9A6A1; line-height: 1.7; }
 @media (min-width: 900px) {
   .foot__grid { grid-template-columns: 1.4fr 1fr 1fr; }
@@ -604,3 +605,4 @@ html:not(.js) .quiz__nav { display: none; }
 @media print {
   .stage__sticky, .top, .sheet { display: none; }
 }
+#main:focus { outline: none; }

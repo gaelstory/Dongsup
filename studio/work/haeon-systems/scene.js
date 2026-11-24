@@ -224,7 +224,7 @@ const PIERS = [
 const TOWERS = [
   { x: 14, z: -10, w: 4.6, d: 4.6, h: 10.2, top: { w: 3.3, d: 3.3, h: 5.2 }, crown: HEX.cyan, seed: 11 }, // tallest, 2-tier
   { x: 7.5, z: -3.5, w: 3.5, d: 3.0, h: 11.2, crown: null, seed: 23 },
-  { x: 20.5, z: -2.5, w: 3.0, d: 4.2, h: 8.6, crown: HEX.warm, seed: 37 },
+  { x: 20.5, z: -2.5, w: 3.8, d: 3.8, h: 9.4, crown: HEX.warm, seed: 37, round: true },
   { x: 21.5, z: -16, w: 4.0, d: 3.2, h: 12.6, crown: HEX.cool, seed: 41 },
   { x: 8, z: -17.5, w: 3.2, d: 3.2, h: 7.2, crown: null, seed: 53 },
 ];
@@ -237,23 +237,23 @@ const OFFICES = [
 ];
 const WAREHOUSES = [[40, 14, 9, 5, 2.2], [52, 13, 8, 6, 2.6], [64, 9, 7, 5, 2.4], [74, 4, 8, 5, 2.2], [55, 24, 10, 3.4, 1.8]];
 const TERMINAL = { x0: 1.5, x1: 31.5, z: 16, w: 8 };
-const CONTROL = { x: -3.2, z: -17 };
+const CONTROL = { x: -3.4, z: -6.2 };
 const PARKS = [
   [24, 6, 34, 10], [3, -27, 10, -22], [26, -19, 33, -14], [44, -3, 54, 0.5], [8, 20.5, 30, 23.5], [36, -30, 52, -27],
   [60, 14, 70, 18], [-4.5, 20, 3, 24],
 ];
 const ROAD_PTS = [
   // waterfront boulevard: terminal forecourt, along the yard, up to the bridge head
-  [[44, 25.5], [24, 25], [6, 23.5], [-1.5, 17], [-2.2, 0], [-1.5, -18], [2.5, -24]],
+  [[44, 25.5], [24, 25], [7, 23.5], [1.4, 18], [0.6, 6], [0.6, -8], [2.4, -19], [7, -25], [16, -27.6], [30, -29.6]],
   // avenue through the tower district toward the east
-  [[-2.2, 6.5], [10, 5.8], [24, 3.5], [36, -1], [50, -4.5], [70, -7], [96, -8]],
+  [[0.6, 6], [10, 5.8], [24, 3.5], [36, -1], [50, -4.5], [70, -7], [96, -8]],
 ];
-const BRIDGE_PTS = [[2.5, LAND_Y, -24], [6, 1.6, -31], [11, 3.9, -40], [17.5, 5.0, -49], [24, 4.3, -58], [29, 2.3, -66], [33, 0.9, -73], [36, 0.62, -80]];
+const BRIDGE_PTS = [[30, LAND_Y, -29.6], [28.6, 1.8, -36], [28, 4.0, -44], [31, 5.0, -51.5], [37.5, 4.3, -58.5], [43.5, 2.4, -63.5], [48, 1.0, -67.5], [51, LAND_Y, -72]];
 const MAINLAND = [[24, -70], [34, -66], [56, -66], [90, -70], [140, -76], [230, -86], [420, -110], [420, -520], [230, -360], [120, -210], [62, -118], [36, -92], [26, -80]];
 
 const CAMS = {
-  desk: { pos: [-46, 25, 58], tgt: [-2, 5.5, -14], fov: 32 },
-  mob: { pos: [-30, 46, 70], tgt: [10, 2, -6], fov: 50 },
+  desk: { pos: [-59, 29, 65.5], tgt: [-3, 5, -16.6], fov: 32 },
+  mob: { pos: [-62, 80, 92], tgt: [12, 16, -10], fov: 50, hfov: 26 },
 };
 
 // ---------------------------------------------------------------------------------------------
@@ -344,7 +344,7 @@ export function createHarbor(canvasEl, opts = {}) {
   const [lcv, lg] = canvas(LW, LH);
   const px = (x) => (x - LB.x0) / (LB.x1 - LB.x0) * LW, pz = (z) => (z - LB.z0) / (LB.z1 - LB.z0) * LH;
   const ps = (s) => s / (LB.x1 - LB.x0) * LW;
-  lg.fillStyle = '#0c1734'; lg.fillRect(0, 0, LW, LH);
+  lg.fillStyle = '#0d1937'; lg.fillRect(0, 0, LW, LH);
   const rectW = (x0, z0, x1, z1, fill) => { lg.fillStyle = fill; lg.fillRect(px(x0), pz(z0), ps(x1 - x0), ps(z1 - z0)); };
   // container yard apron with lane grid
   rectW(-5.5, -13, 6.5, 19, '#0f1b3d');
@@ -367,7 +367,8 @@ export function createHarbor(canvasEl, opts = {}) {
     gr.addColorStop(0, `rgba(${rgb},${a})`); gr.addColorStop(1, `rgba(${rgb},0)`);
     lg.fillStyle = gr; lg.fillRect(px(x) - ps(rad), pz(z) - ps(rad), ps(rad * 2), ps(rad * 2));
   };
-  for (let z = -11; z < 19; z += 5.5) pool(0.5, z, 4.2, '255,201,138', 0.16);
+  for (let z = -11; z < 19; z += 5.5) pool(0.5, z, 5.2, '255,214,170', 0.26);
+  for (let z = -10; z < 19; z += 7) pool(-5, z, 3.2, '255,214,170', 0.18);
   for (let i = 0; i < 9; i++) pool(6 + i * 2.4, -20 + (i % 3) * 9, 3.2, '159,212,255', 0.07);
   for (let x = 3; x < 32; x += 4) pool(x, 21.5, 3, '255,201,138', 0.14);
   for (let i = 0; i < 26; i++) pool(26 + r() * 66, -30 + r() * 56, 2 + r() * 2.5, r() < 0.7 ? '255,201,138' : '159,212,255', 0.05 + r() * 0.07);
@@ -387,21 +388,40 @@ export function createHarbor(canvasEl, opts = {}) {
   // mainland (far shore): flat, almost invisible except for its lights
   const ms = new THREE.Shape(MAINLAND.map((p) => new THREE.Vector2(p[0], -p[1])));
   const mGeo = keep(new THREE.ShapeGeometry(ms)); mGeo.rotateX(-Math.PI / 2); mGeo.translate(0, 0.35, 0);
-  const mainland = new THREE.Mesh(mGeo, keep(new THREE.MeshBasicMaterial({ color: 0x0b1433 }))); site.add(mainland);
-  // mainland city lights: denser near the coast, thinning inland
-  for (let i = 0; i < (mobile ? 160 : 320); i++) {
-    const u = r(), along = 30 + Math.pow(u, 0.9) * 360;
-    const coastZ = -66 - Math.max(0, along - 60) * 0.12;
-    const inland = Math.pow(r(), 1.6) * 90;
-    const x = along + inland * 0.55, z = coastZ - inland;
-    const warm = r() < 0.72;
-    lights.add(x, 0.6, z, warm ? 0xffd2a0 : 0xa9d8ff, 0.5 + r() * 0.55, 0.45 + r() * 0.4);
+  const mainland = new THREE.Mesh(mGeo, keep(new THREE.MeshBasicMaterial({ color: 0x0c1636 }))); site.add(mainland);
+  // mainland city lights: denser near the coast, thinning inland, only where there is land
+  const inMain = (x, z) => {
+    let inside = false;
+    for (let i = 0, j = MAINLAND.length - 1; i < MAINLAND.length; j = i++) {
+      const [xi, zi] = MAINLAND[i], [xj, zj] = MAINLAND[j];
+      if ((zi > z) !== (zj > z) && x < ((xj - xi) * (z - zi)) / (zj - zi) + xi) inside = !inside;
+    }
+    return inside;
+  };
+  const coastZ = (x) => {
+    const c = MAINLAND.slice(0, 7);
+    for (let i = 0; i < c.length - 1; i++) if (x >= c[i][0] && x <= c[i + 1][0]) return c[i][1] + (c[i + 1][1] - c[i][1]) * (x - c[i][0]) / (c[i + 1][0] - c[i][0]);
+    return c[c.length - 1][1];
+  };
+  for (let i = 0, placed = 0; i < 2400 && placed < (mobile ? 160 : 340); i++) {
+    const x = 26 + Math.pow(r(), 1.15) * 380, z = coastZ(x) - 1.5 - Math.pow(r(), 1.7) * 140;
+    if (!inMain(x, z)) continue;
+    const warm = r() < 0.72; placed++;
+    lights.add(x, 0.6, z, warm ? 0xffd2a0 : 0xa9d8ff, 0.2 + r() * 0.25, 0.45 + r() * 0.45);
   }
-  for (let x = 26; x < 230; x += 2.2 + r() * 2) {
-    const t = (x - 26) / 204; const z = -68 - t * t * 18 - (x < 40 ? (40 - x) * 0.25 : 0);
-    lights.add(x, 0.7, z, 0xffd9ae, 0.6, 0.75);
-  }
+  for (let x = 27; x < 300; x += 2.2 + r() * 2) lights.add(x, 0.7, coastZ(x) - 1.2, 0xffd9ae, 0.26, 0.8);
 
+  // high-mast floodlights over the yard
+  for (let z = -10; z < 19; z += 7) {
+    props.box(-5.2, LAND_Y, z, 0.12, 4.2, 0.12, C(0x5a6a98));
+    for (const dx of [-0.25, 0.25]) lights.add(-5.2 + dx, LAND_Y + 4.25, z, 0xfff1dc, 0.16, 1);
+    halos.add(-5.2, LAND_Y + 4.2, z, 0xffe2bc, 3.4, 0.2);
+  }
+  for (let z = -8; z < 18; z += 6.5) {
+    props.box(3.6, LAND_Y, z, 0.12, 3.8, 0.12, C(0x5a6a98));
+    lights.add(3.6, LAND_Y + 3.85, z, 0xfff1dc, 0.15, 1);
+    halos.add(3.6, LAND_Y + 3.8, z, 0xffe2bc, 3, 0.16);
+  }
   // ---------------------------------------------------------------- piers, cranes, containers
   const pierCol = C(0x17224a), pierTop = C(0x1b2a55);
   for (const p of PIERS) {
@@ -409,12 +429,12 @@ export function createHarbor(canvasEl, opts = {}) {
     props.box(cx, -0.4, p.z, len, LAND_Y + 0.4 - 0.05, p.w, pierCol, { top: pierTop });
     edges.box(cx, 0, p.z, len, LAND_Y, p.w);
     for (let x = -7; x > p.x1; x -= 1.6) {
-      lights.add(x, LAND_Y + 0.25, p.z - p.w / 2 + 0.12, 0xffd8a8, 0.32, 0.8);
-      lights.add(x, LAND_Y + 0.25, p.z + p.w / 2 - 0.12, 0xffd8a8, 0.32, 0.8);
+      lights.add(x, LAND_Y + 0.25, p.z - p.w / 2 + 0.12, 0xffd8a8, 0.13, 0.75);
+      lights.add(x, LAND_Y + 0.25, p.z + p.w / 2 - 0.12, 0xffd8a8, 0.13, 0.75);
     }
     // a lit lamp at the pier head
-    halos.add(p.x1 + 0.4, 1.8, p.z, HEX.warm, 2.2, 0.35);
-    lights.add(p.x1 + 0.4, 1.8, p.z, 0xfff0dc, 0.55, 1);
+    halos.add(p.x1 + 0.4, 1.8, p.z, HEX.warm, 2.4, 0.22);
+    lights.add(p.x1 + 0.4, 1.8, p.z, 0xfff0dc, 0.22, 1);
     reflections.push([p.x1 + 0.4, p.z, C(HEX.warm), 7, 0.55, 0.5]);
     for (let x = -9; x > p.x1 + 2; x -= 5) reflections.push([x, p.z - p.w / 2 - 0.2, C(0xffd8a8), 3.5, 0.35, 0.28]);
   }
@@ -422,7 +442,7 @@ export function createHarbor(canvasEl, opts = {}) {
   // ship-to-shore gantry crane, built once and placed four times
   const craneB = new Builder(), craneE = new Edges();
   {
-    const cc = C(0x52628f), dark = C(0x2a3660);
+    const cc = C(0x6a7cae), dark = C(0x3a4878);
     const L = [[-1.15, -1.0], [1.15, -1.0], [-1.15, 1.0], [1.15, 1.0]];
     for (const [x, z] of L) craneB.box(x, 0, z, 0.2, 4.6, 0.2, cc);
     craneB.box(-1.15, 4.4, 0, 0.26, 0.3, 2.3, cc); craneB.box(1.15, 4.4, 0, 0.26, 0.3, 2.3, cc);
@@ -431,7 +451,7 @@ export function createHarbor(canvasEl, opts = {}) {
     // boom over the water (local +z) and back-reach
     craneB.box(-0.42, 4.95, 2.4, 0.22, 0.34, 11.5, cc); craneB.box(0.42, 4.95, 2.4, 0.22, 0.34, 11.5, cc);
     for (let z = -3; z < 8; z += 1.4) craneB.box(0, 4.95, z, 0.9, 0.08, 0.08, dark);
-    craneB.box(0, 5.3, -2.4, 1.3, 0.9, 1.6, C(0x3a4a7a));
+    craneB.box(0, 5.3, -2.4, 1.3, 0.9, 1.6, C(0x8a96bc));
     craneB.box(0, 4.55, 4.2, 0.9, 0.4, 0.8, dark);
     craneB.box(0, 3.0, 4.2, 1.2, 0.18, 0.5, C(0x6b5a48));
     // A-frame apex and stays
@@ -450,9 +470,9 @@ export function createHarbor(canvasEl, opts = {}) {
     const m = new THREE.Matrix4().compose(new V3(k.x, LAND_Y, k.z), new THREE.Quaternion().setFromAxisAngle(new V3(0, 1, 0), k.ry), new V3(1, 1, 1));
     props.geom2(craneGeo, m);
     const sgn = Math.cos(k.ry) > 0 ? 1 : -1;
-    lights.add(k.x, LAND_Y + 8.1, k.z - 0.6 * sgn, 0xffe4c4, 0.45, 1);
-    lights.add(k.x, LAND_Y + 5.2, k.z + 8 * sgn, 0xffe4c4, 0.4, 0.9);
-    lights.add(k.x - 0.4, LAND_Y + 4.7, k.z + 4.2 * sgn, 0xfff2e0, 0.5, 1);
+    lights.add(k.x, LAND_Y + 8.1, k.z - 0.6 * sgn, 0xffe4c4, 0.18, 1);
+    lights.add(k.x, LAND_Y + 5.2, k.z + 8 * sgn, 0xffe4c4, 0.16, 0.9);
+    lights.add(k.x - 0.4, LAND_Y + 4.7, k.z + 4.2 * sgn, 0xfff2e0, 0.2, 1);
     halos.add(k.x, LAND_Y + 4.6, k.z + 4.2 * sgn, 0xffe2b8, 3.2, 0.16);
     const v = new V3();
     for (let i = 0; i < craneE.p.length; i += 3) { v.set(craneE.p[i], craneE.p[i + 1], craneE.p[i + 2]).applyMatrix4(m); edges.p.push(v.x, v.y, v.z); }
@@ -482,9 +502,10 @@ export function createHarbor(canvasEl, opts = {}) {
   {
     const yardStacks = [];
     for (let bx = -4.8; bx < 5.8; bx += 0.62) {
-      if (Math.abs(bx - 0.6) < 0.5) continue; // drive lane
+      if (Math.abs(bx - 0.6) < 1.35) continue; // drive lane (the waterfront road)
       for (let bz = -11; bz < 18; bz += 2.75) {
         if (Math.abs(bz - 5.5) < 1.2) continue;
+        if (Math.hypot(bx - CONTROL.x, bz - CONTROL.z) < 2.9) continue; // control tower plot
         yardStacks.push([bx, bz]);
       }
     }
@@ -575,11 +596,12 @@ export function createHarbor(canvasEl, opts = {}) {
     const m = new THREE.Matrix4().compose(new V3(o.x, 0, o.z), new THREE.Quaternion().setFromAxisAngle(new V3(0, 1, 0), o.ry), new V3(1, 1, 1));
     for (const [lx, ly, lz, c, s, a] of list) {
       const v = new V3(lx, ly, lz).applyMatrix4(m);
-      lights.add(v.x, v.y, v.z, c, s, a);
+      lights.add(v.x, v.y, v.z, c, s * 0.4, a);
       if (ly < 3.5) reflections.push([v.x, v.z, C(c), 4 + s * 4, 0.4, 0.3 * a]);
     }
   };
-  shipLights(shipA, [[shipA.L - 0.3, 1.3, 0, 0xffffff, 0.4, 1], [1.2, 3.6, 0, 0xffffff, 0.45, 1], [shipA.L * 0.5, 1.0, 1.3, 0xffd8a8, 0.32, 0.8], [shipA.L * 0.75, 1.0, -1.3, 0xffd8a8, 0.32, 0.8]]);
+  halos.add(-15, 3.2, 8.7, 0xffe2bc, 4, 0.14); halos.add(-15.5, 3, 1.3, 0xffe2bc, 4, 0.12);
+  shipLights(shipA, [[shipA.L * 0.3, 2.6, 0, 0xfff0dc, 0.4, 0.9], [shipA.L * 0.62, 2.6, 0, 0xfff0dc, 0.4, 0.9], [shipA.L - 0.3, 1.3, 0, 0xffffff, 0.4, 1], [1.2, 3.6, 0, 0xffffff, 0.45, 1], [shipA.L * 0.5, 1.0, 1.3, 0xffd8a8, 0.32, 0.8], [shipA.L * 0.75, 1.0, -1.3, 0xffd8a8, 0.32, 0.8]]);
   shipLights(shipB, [[shipB.L - 0.3, 1.3, 0, 0xffffff, 0.4, 1], [1.4, 3.2, 0, 0xffffff, 0.45, 1], [shipB.L * 0.5, 1.2, 0, 0xffd8a8, 0.3, 0.8]]);
   shipLights(shipD, [[shipD.L - 0.3, 1.2, 0, 0xffffff, 1.4, 1], [1, 2.4, 0, 0xffe0b8, 1.6, 1], [shipD.L * 0.5, 1.0, 0, 0xffd8a8, 1.2, 0.7]]);
   reflections.push([shipD.x, shipD.z, C(0xffe0b8), 30, 2.2, 0.5]);
@@ -594,15 +616,21 @@ export function createHarbor(canvasEl, opts = {}) {
     props.geom(flare, m, C(0x2c3a6a)); edges.geom(flare, m, 20); flare.dispose();
     const cab = new THREE.CylinderGeometry(2.05, 1.5, 1.55, 8, 1, true); cab.translate(0, b + 12.65, 0);
     glows.geom(cab, m, C(0x8fd8ff)); edges.geom(cab, m, 20); cab.dispose();
+    for (let k = 0; k < 8; k++) {
+      const a = (k / 8) * TAU + Math.PI / 8;
+      const bot = new V3(x + Math.sin(a) * 1.5, b + 11.88, z + Math.cos(a) * 1.5), topP = new V3(x + Math.sin(a) * 2.07, b + 13.44, z + Math.cos(a) * 2.07);
+      props.beam(bot, topP, 0.09, C(0x1a2448));
+    }
+    glows.geom((() => { const g = new THREE.CylinderGeometry(1.62, 1.62, 0.1, 8, 1, true); g.translate(0, b + 12.05, 0); return g; })(), m, C(0x2a5a7a));
     const roof = new THREE.CylinderGeometry(2.25, 2.1, 0.32, 8); roof.translate(0, b + 13.55, 0);
     props.geom(roof, m, C(0x22305c)); roof.dispose();
     const ant = new THREE.CylinderGeometry(0.05, 0.08, 1.8, 6); ant.translate(0, b + 14.6, 0);
     props.geom(ant, m, C(0x8090b8)); ant.dispose();
     // base building
-    props.box(x + 1.6, b, z + 0.5, 4.2, 1.6, 3.2, C(0x1d2a55), { top: C(0x24335f) });
-    edges.box(x + 1.6, b, z + 0.5, 4.2, 1.6, 3.2);
-    glows.box(x + 1.6, b + 0.6, z + 2.11, 3.6, 0.3, 0.02, C(0xffcf96));
-    reflections.push([x - 2.2, z, C(HEX.cyan), 12, 0.9, 0.55]);
+    props.box(x - 0.3, b, z, 3.0, 1.5, 3.4, C(0x1d2a55), { top: C(0x24335f) });
+    edges.box(x - 0.3, b, z, 3.0, 1.5, 3.4);
+    glows.box(x - 0.3, b + 0.55, z + 1.71, 2.4, 0.28, 0.02, C(0xffcf96));
+    reflections.push([x - 3.1, z, C(HEX.cyan), 12, 0.9, 0.55]);
   }
 
   // ---------------------------------------------------------------- towers and offices
@@ -621,21 +649,38 @@ export function createHarbor(canvasEl, opts = {}) {
     // podium with a warm lobby band
     buildings.box(t.x, base, t.z, t.w + 1.2, 0.9, t.d + 1.2, C(0xffffff), { uv: wuv(su + 0.31, sv2 + 0.4) });
     glows.box(t.x, base + 0.15, t.z, t.w + 1.22, 0.32, t.d + 1.22, C(0xffc58a), { skip: [4] });
-    buildings.box(t.x, base + 0.9, t.z, t.w, t.h - 0.9, t.d, C(0xffffff), { uv: wuv(su, sv2) });
-    edges.box(t.x, base, t.z, t.w + 1.2, 0.9, t.d + 1.2); edges.box(t.x, base + 0.9, t.z, t.w, t.h - 0.9, t.d);
+    if (t.round) {
+      const rad = t.w / 2, hh = t.h - 0.9;
+      const cyl = new THREE.CylinderGeometry(rad, rad, hh, 28, 1, true); cyl.translate(0, hh / 2, 0);
+      // window uvs in world scale: u around the circumference, v by floor
+      const uvA = cyl.attributes.uv.array, pA = cyl.attributes.position.array;
+      for (let k = 0; k < uvA.length / 2; k++) { uvA[k * 2] = su + uvA[k * 2] * (TAU * rad) / CW / 32; uvA[k * 2 + 1] = sv2 + pA[k * 3 + 1] / FH / 32; }
+      const cm = new THREE.Matrix4().makeTranslation(t.x, base + 0.9, t.z);
+      buildings.geom(cyl, cm, C(0xffffff)); edges.geom(cyl, cm, 20); cyl.dispose();
+      const cap = new THREE.CircleGeometry(rad, 28); cap.rotateX(-Math.PI / 2); cap.translate(t.x, base + t.h, t.z);
+      const capUv = cap.attributes.uv.array; for (let k = 0; k < capUv.length; k++) capUv[k] = 0.5 / 256;
+      buildings.geom(cap, new THREE.Matrix4(), C(0xffffff)); cap.dispose();
+      edges.box(t.x, base, t.z, t.w + 1.2, 0.9, t.d + 1.2);
+    } else {
+      buildings.box(t.x, base + 0.9, t.z, t.w, t.h - 0.9, t.d, C(0xffffff), { uv: wuv(su, sv2) });
+      edges.box(t.x, base, t.z, t.w + 1.2, 0.9, t.d + 1.2); edges.box(t.x, base + 0.9, t.z, t.w, t.h - 0.9, t.d);
+    }
     let top = base + t.h, tw = t.w, td = t.d;
     if (t.top) {
       buildings.box(t.x, top, t.z, t.top.w, t.top.h, t.top.d, C(0xffffff), { uv: wuv(su + 0.5, sv2 + 0.25) });
       edges.box(t.x, top, t.z, t.top.w, t.top.h, t.top.d);
       // setback terrace lights
-      for (const [dx, dz] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) lights.add(t.x + dx * (t.w / 2 - 0.2), top + 0.15, t.z + dz * (t.d / 2 - 0.2), 0xfff0dc, 0.3, 0.9);
+      for (const [dx, dz] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) lights.add(t.x + dx * (t.w / 2 - 0.2), top + 0.15, t.z + dz * (t.d / 2 - 0.2), 0xfff0dc, 0.13, 0.9);
       top += t.top.h; tw = t.top.w; td = t.top.d;
     }
     // roof plant boxes
     props.box(t.x - tw * 0.18, top, t.z + td * 0.1, tw * 0.4, 0.45, td * 0.35, C(0x1a2650));
     props.box(t.x + tw * 0.22, top, t.z - td * 0.15, tw * 0.25, 0.3, td * 0.3, C(0x1a2650));
-    if (t.crown) glows.box(t.x, top - 0.18, t.z, tw + 0.04, 0.12, td + 0.04, C(t.crown), { skip: [4] });
-    for (const [dx, dz] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) lights.add(t.x + dx * (tw / 2 - 0.12), top + 0.1, t.z + dz * (td / 2 - 0.12), i === 0 ? 0xffffff : 0xffe6c8, 0.28, 0.85);
+    if (t.crown && t.round) {
+      const ring = new THREE.CylinderGeometry(tw / 2 + 0.03, tw / 2 + 0.03, 0.12, 28, 1, true); ring.translate(t.x, top - 0.18, t.z);
+      glows.geom(ring, new THREE.Matrix4(), C(t.crown)); ring.dispose();
+    } else if (t.crown) glows.box(t.x, top - 0.18, t.z, tw + 0.04, 0.12, td + 0.04, C(t.crown), { skip: [4] });
+    for (const [dx, dz] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) lights.add(t.x + dx * (tw / 2 - 0.12), top + 0.1, t.z + dz * (td / 2 - 0.12), i === 0 ? 0xffffff : 0xffe6c8, 0.13, 0.85);
     TOWER_TOPS.push(new V3(t.x, top, t.z));
   });
   // tallest tower mast
@@ -649,14 +694,26 @@ export function createHarbor(canvasEl, opts = {}) {
     buildings.box(x, LAND_Y, z, w, h, d, C(0xffffff), { uv: wuv((i * 0.173) % 1, (i * 0.37) % 1) });
     edges.box(x, LAND_Y, z, w, h, d);
     props.box(x + w * 0.1, LAND_Y + h, z, w * 0.3, 0.3, d * 0.3, C(0x18234b));
-    if (i % 3 === 0) lights.add(x + w / 2 - 0.1, LAND_Y + h + 0.1, z + d / 2 - 0.1, 0xffe6c8, 0.26, 0.8);
+    if (i % 3 === 0) lights.add(x + w / 2 - 0.1, LAND_Y + h + 0.1, z + d / 2 - 0.1, 0xffe6c8, 0.12, 0.8);
   });
+  // far shore skyline: low and mid-rise blocks along the coast, fogged into the night
+  {
+    const sr = rng(808);
+    for (let i = 0, n = 0; i < 400 && n < (mobile ? 22 : 40); i++) {
+      const x = 36 + sr() * 150, z = coastZ(x) - 3 - sr() * 26;
+      if (!inMain(x - 3, z) || !inMain(x + 3, z - 3)) continue;
+      const w = 2.5 + sr() * 3.5, d = 2.5 + sr() * 3.5, h = 2.5 + Math.pow(sr(), 2.2) * 12;
+      buildings.box(x, 0.35, z, w, h, d, C(0xffffff), { uv: wuv(sr(), sr()) });
+      if (sr() < 0.35) lights.add(x, 0.4 + h, z, 0xffe6c8, 0.22, 0.8);
+      n++;
+    }
+  }
   WAREHOUSES.forEach((o) => {
     const [x, z, w, d, h] = o;
     props.box(x, LAND_Y, z, w, h, d, C(0x1c2850), { top: C(0x2a3a68) });
     edges.box(x, LAND_Y, z, w, h, d);
     glows.box(x, LAND_Y + 0.25, z + d / 2 + 0.01, w * 0.7, 0.35, 0.02, C(0xc99a6a));
-    for (let k = 0; k < 3; k++) lights.add(x - w / 2 + (k + 0.5) * w / 3, LAND_Y + h - 0.2, z + d / 2 + 0.05, 0xffd4a0, 0.3, 0.8);
+    for (let k = 0; k < 3; k++) lights.add(x - w / 2 + (k + 0.5) * w / 3, LAND_Y + h - 0.2, z + d / 2 + 0.05, 0xffd4a0, 0.12, 0.8);
   });
 
   // ---------------------------------------------------------------- terminal (에너지 최적화)
@@ -755,7 +812,7 @@ export function createHarbor(canvasEl, opts = {}) {
           if (k !== 2 && (i + (s > 0 ? 0 : 1)) % 2) continue;
           const x = v[0] + sx / sl * off * s, z = v[2] + sz / sl * off * s;
           const cl = k === 2 ? 0xd8f0ff : 0xffd9a8;
-          lights.add(x, v[1] + (k === 2 ? 0.35 : 0.55), z, cl, k === 2 ? 0.34 : 0.3, 0.9);
+          lights.add(x, v[1] + (k === 2 ? 0.35 : 0.55), z, cl, k === 2 ? 0.15 : 0.12, 0.9);
           if (k === 2 && v[1] > 1 && i % 2 === 0) reflections.push([x, z, C(cl), 5 + v[1], 0.4, 0.32]);
         }
       }
@@ -770,6 +827,10 @@ export function createHarbor(canvasEl, opts = {}) {
         const A = [v[0] + ox, v[1] - 0.45, v[2] + oz], B = [v2[0] + ox, v2[1] - 0.45, v2[2] + oz], Cq = [v2[0] + ox, v2[1], v2[2] + oz], D = [v[0] + ox, v[1], v[2] + oz];
         const nn = [sx / sl * s, 0, sz / sl * s];
         props.quad(A, B, Cq, D, nn, C(0x1d2a58)); props.quad(B, A, D, Cq, nn, C(0x1d2a58));
+        // parapet light line: the bridge reads as one clean lit curve at night
+        const ex = ox * 1.03, ez = oz * 1.03;
+        const E0 = [v[0] + ex, v[1] + 0.02, v[2] + ez], E1 = [v2[0] + ex, v2[1] + 0.02, v2[2] + ez], E2 = [v2[0] + ex, v2[1] + 0.16, v2[2] + ez], E3 = [v[0] + ex, v[1] + 0.16, v[2] + ez];
+        glows.quad(E0, E1, E2, E3, nn, C(0xbfe6ff)); glows.quad(E1, E0, E3, E2, nn, C(0xbfe6ff));
       }
     }
     for (let i = 1; i < 12; i++) {
@@ -804,8 +865,8 @@ export function createHarbor(canvasEl, opts = {}) {
 
   // ---------------------------------------------------------------- trees
   {
-    const tg2 = keep(new THREE.IcosahedronGeometry(0.42, 1)); tg2.translate(0, 0.38, 0);
-    const tm = keep(new THREE.MeshStandardMaterial({ color: 0x0c1d1c, roughness: 0.95, metalness: 0, flatShading: true }));
+    const tg2 = keep(new THREE.IcosahedronGeometry(0.36, 1)); tg2.translate(0, 0.34, 0);
+    const tm = keep(new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0, flatShading: true }));
     const trees = new THREE.InstancedMesh(tg2, tm, counts.trees);
     const spots = [];
     for (const p of PARKS) {
@@ -830,7 +891,7 @@ export function createHarbor(canvasEl, opts = {}) {
       if (z > 11.6 && z < 20.6 && x > TERMINAL.x0 - 0.5 && x < TERMINAL.x1 + 0.5) continue;
       const s = 0.7 + r() * 0.65;
       m4.compose(new V3(x, LAND_Y, z), q.setFromAxisAngle(new V3(0, 1, 0), r() * TAU), new V3(s, s * (0.8 + r() * 0.4), s));
-      trees.setMatrixAt(n, m4); tc.setHSL(0.45 + r() * 0.08, 0.35, 0.05 + r() * 0.04); trees.setColorAt(n, tc); n++;
+      trees.setMatrixAt(n, m4); tc.setHSL(0.44 + r() * 0.1, 0.38, 0.07 + r() * 0.05); trees.setColorAt(n, tc); n++;
     }
     trees.count = n; trees.instanceMatrix.needsUpdate = true; if (trees.instanceColor) trees.instanceColor.needsUpdate = true;
     site.add(trees);
@@ -848,7 +909,7 @@ export function createHarbor(canvasEl, opts = {}) {
 
   // ---------------------------------------------------------------- moving ferry
   const ferry = new THREE.Group(); scene.add(ferry);
-  const FERRY_PATH = { a: new V3(-78, 0, -30), b: new V3(-30, 0, 30), period: 210 };
+  const FERRY_PATH = { a: new V3(84, 0, -42), b: new V3(-50, 0, -62), period: 300 };
   {
     const fb = new Builder(), fg = new Builder(), fe = new Edges();
     const o = { x: 0, z: 0, ry: 0, L: 9, B: 2.1, kind: 'ferry' };
@@ -880,16 +941,16 @@ export function createHarbor(canvasEl, opts = {}) {
         gl_Position = projectionMatrix * mv;
         float d = -mv.z;
         float s = aSize * uScale / d;
-        vA = aAlpha * exp(-pow(uFog * 0.55 * d, 2.0)) * uDim * clamp(s / 2.0, 0.25, 1.0);
-        gl_PointSize = max(s, 2.0) * 2.6;
+        vA = aAlpha * exp(-pow(uFog * 0.55 * d, 2.0)) * uDim * clamp(s / 1.4, 0.35, 1.0);
+        gl_PointSize = clamp(s, 1.4, 7.0) * 4.0;
         vC = aColor;
       }`,
     fragmentShader: `
       uniform sampler2D uTex; varying vec3 vC; varying float vA;
       void main(){
         vec2 c = gl_PointCoord - 0.5; float r = length(c) * 2.0;
-        float core = smoothstep(0.42, 0.18, r);
-        float halo = texture2D(uTex, gl_PointCoord).r * 0.42;
+        float core = smoothstep(0.27, 0.12, r);
+        float halo = exp(-r * r * 9.0) * 0.38 + exp(-r * r * 3.0) * 0.06;
         float a = (core + halo) * vA;
         if (a < 0.003) discard;
         gl_FragColor = vec4(mix(vC, vec3(1.0), core * 0.55) * a, 1.0);
@@ -912,7 +973,7 @@ export function createHarbor(canvasEl, opts = {}) {
     fragmentShader: `
       uniform sampler2D uTex; varying vec3 vC; varying float vA;
       void main(){
-        float g = texture2D(uTex, gl_PointCoord).r; g = g * g;
+        float g = texture2D(uTex, gl_PointCoord).a; g = g * g;
         gl_FragColor = vec4(vC * g * vA, 1.0);
       }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
@@ -931,7 +992,7 @@ export function createHarbor(canvasEl, opts = {}) {
   const NODE_KEYS = { control: 0, energy: 1, twin: 2, safety: 3 };
   for (const nd of NODES) {
     halos.add(nd.x, nd.y, nd.z, HEX.cyan, 5.5, 0.32);
-    lights.add(nd.x, nd.y, nd.z, 0xe8fbff, 0.6, 1);
+    lights.add(nd.x, nd.y, nd.z, 0xe8fbff, 0.3, 1);
   }
   reflections.push([NODES[3].x - 0.6, NODES[3].z, C(HEX.cyan), 9, 0.7, 0.6]);
 
@@ -947,7 +1008,7 @@ export function createHarbor(canvasEl, opts = {}) {
     return new PolyCurve(pts, true);
   };
   const arc = (A, B, lift) => {
-    const pts = []; const d = A.distanceTo(B); const h = lift ?? d * 0.32 + 3;
+    const pts = []; const d = A.distanceTo(B); const h = lift ?? d * 0.2 + 2;
     for (let i = 0; i <= 6; i++) { const s = i / 6; pts.push(new V3().lerpVectors(A, B, s).add(new V3(0, 4 * h * s * (1 - s), 0))); }
     return new THREE.CatmullRomCurve3(pts, false, 'centripetal');
   };
@@ -957,8 +1018,8 @@ export function createHarbor(canvasEl, opts = {}) {
     { c: ellipse(SITE_C.x + 3, 9, SITE_C.z - 2, 18, 13, 28, 52), speed: 1 / 14, links: [] },
     { c: arc(NODES[2], NODES[1]), speed: 1 / 16, links: [2, 1] },
     { c: arc(NODES[0], NODES[2]), speed: 1 / 18, links: [0, 2] },
-    { c: arc(NODES[0], NODES[3], 7), speed: 1 / 15, links: [0, 3] },
-    { c: arc(NODES[0], NODES[4], 8), speed: 1 / 17, links: [0, 4] },
+    { c: arc(NODES[0], NODES[3], 4), speed: 1 / 15, links: [0, 3] },
+    { c: arc(NODES[0], NODES[4], 3.5), speed: 1 / 17, links: [0, 4] },
   ];
   const NC = CURVES.length;
   const curveI = new Float32Array(NC).fill(1), curveIT = new Float32Array(NC).fill(1);
@@ -1020,7 +1081,7 @@ export function createHarbor(canvasEl, opts = {}) {
   }
 
   // particles on curves: bright head + 4 trailing points
-  const TAIL = [[0, 0.5, 1], [0.0045, 0.36, 0.62], [0.009, 0.28, 0.42], [0.0135, 0.21, 0.27], [0.018, 0.15, 0.15]];
+  const TAIL = [[0, 0.5, 1], [0.004, 0.34, 0.55], [0.008, 0.26, 0.36], [0.012, 0.2, 0.22], [0.016, 0.15, 0.12]];
   const parts = [];
   CURVES.forEach((cv, k) => {
     const n = k < 3 ? counts.perCurve[2 - k] : counts.perCurve[0];
@@ -1040,17 +1101,17 @@ export function createHarbor(canvasEl, opts = {}) {
         vec4 mv = modelViewMatrix * vec4(position, 1.0);
         gl_Position = projectionMatrix * mv;
         float s = aSize * uScale / -mv.z;
-        gl_PointSize = max(s, 1.5) * 2.2;
+        gl_PointSize = max(s, 1.5) * 3.0;
         vA = aAlpha * clamp(s / 1.5, 0.3, 1.0);
       }`,
     fragmentShader: `
       uniform vec3 uColor; uniform sampler2D uTex; varying float vA;
       void main(){
         float r = length(gl_PointCoord - 0.5) * 2.0;
-        float core = smoothstep(0.4, 0.05, r);
-        float halo = texture2D(uTex, gl_PointCoord).r;
+        float core = smoothstep(0.26, 0.04, r);
+        float halo = exp(-r * r * 7.0);
         vec3 c = mix(uColor, vec3(1.0), core);
-        float a = (core * 0.95 + halo * 0.55) * vA;
+        float a = (core * 0.95 + halo * 0.5) * vA;
         if (a < 0.003) discard;
         gl_FragColor = vec4(c * a, 1.0);
       }`,
@@ -1139,7 +1200,7 @@ export function createHarbor(canvasEl, opts = {}) {
     gr.addColorStop(0, `rgba(${rgb},${a})`); gr.addColorStop(1, `rgba(${rgb},0)`);
     pg.fillStyle = gr; pg.fillRect(0, 0, 256, 256);
   };
-  blob(-8, 0, 22, '255,190,120', 0.16); blob(-10, 12, 14, '255,190,120', 0.14); blob(-8, -18, 14, '95,212,255', 0.12);
+  blob(-8, 0, 22, '255,190,120', 0.16); blob(-10, 12, 14, '255,190,120', 0.14); blob(-9, -6, 12, '95,212,255', 0.13);
   blob(16, 34, 26, '255,190,120', 0.2); blob(-24, -1, 8, '95,212,255', 0.16); blob(12, -38, 18, '200,230,255', 0.1);
   blob(24, -60, 16, '200,230,255', 0.08); blob(60, -72, 40, '255,200,150', 0.08);
   for (const p of PIERS) blob(p.x1 + 2, p.z, 6, '255,200,150', 0.12);
@@ -1159,18 +1220,22 @@ export function createHarbor(canvasEl, opts = {}) {
         vec3 V = uCam - vW; float dist = length(V); vec3 v = V / dist;
         vec2 p = vW.xz;
         float n1 = sin(p.x*0.09 + p.y*0.06 + uTime*0.13) + sin(p.x*0.045 - p.y*0.11 - uTime*0.09) + 0.5*sin(p.x*0.21 + uTime*0.2);
-        float s1 = sin(dot(p, vec2(0.94, 0.33)) * 1.55 + n1 * 1.7 + uTime * 0.5);
-        float s2 = sin(dot(p, vec2(-0.37, 0.93)) * 2.1 + n1 * 1.3 - uTime * 0.38);
-        float fw = fwidth(s1) * 6.0;
-        float streak = smoothstep(0.82 - fw, 1.0, s1) * (1.0 - clamp(fwidth(s1) * 1.5, 0.0, 1.0));
-        if (uLayers > 1.5) streak += 0.7 * smoothstep(0.86 - fwidth(s2)*6.0, 1.0, s2) * (1.0 - clamp(fwidth(s2) * 1.5, 0.0, 1.0));
-        float sFade = smoothstep(6.0, 26.0, dist) * (1.0 - smoothstep(160.0, 420.0, dist));
+        float s1 = sin(dot(p, vec2(0.62, -0.78)) * 2.2 + n1 * 1.6 + uTime * 0.5);
+        float s2 = sin(dot(p, vec2(0.78, 0.62)) * 0.42 + n1 * 1.3 - uTime * 0.21);
+        float m1 = s1 * (0.5 + 0.5 * s2);
+        float aa = clamp(fwidth(m1) * 2.0, 0.0, 1.0);
+        float streak = smoothstep(0.62, 0.98, m1) * (1.0 - aa);
+        if (uLayers > 1.5) {
+          float s3 = sin(dot(p, vec2(0.45, -0.89)) * 3.1 - n1 * 1.4 - uTime * 0.37) * (0.5 + 0.5 * sin(dot(p, vec2(0.89, 0.45)) * 0.33 + uTime * 0.17));
+          streak += 0.6 * smoothstep(0.7, 0.98, s3) * (1.0 - clamp(fwidth(s3) * 2.0, 0.0, 1.0));
+        }
+        float sFade = smoothstep(40.0, 85.0, dist) * (1.0 - smoothstep(150.0, 320.0, dist));
         vec3 col = uBase + uCyan * 0.08 * streak * sFade;
         float fres = pow(1.0 - clamp(v.y, 0.0, 1.0), 5.0);
         col = mix(col, uHorizon * 0.75, fres * 0.32);
         vec2 puv = (p - uPoolRect.xy) / uPoolRect.zw;
         vec3 pool = texture2D(uPool, puv).rgb * step(0.0, puv.x) * step(puv.x, 1.0) * step(0.0, puv.y) * step(puv.y, 1.0);
-        col += pool * (0.65 + 0.35 * sin(n1 * 2.6 + uTime * 0.6) + streak * 1.6);
+        col += pool * (0.7 + 0.3 * sin(n1 * 2.6 + uTime * 0.6) + streak * 0.8);
         // digital twin: measured grid on the water
         vec2 gp = abs(fract(p / 4.0) - 0.5); float gl = smoothstep(0.03 + fwidth(p.x)*0.25, 0.0, min(gp.x, gp.y));
         col += uCyan * gl * 0.12 * uTwin * (1.0 - smoothstep(30.0, 140.0, dist));
@@ -1230,6 +1295,14 @@ export function createHarbor(canvasEl, opts = {}) {
   // static lights + halos (after reflections so the arrays are complete)
   site.add(lights.build(lightMat));
   const haloPts = halos.build(haloMat); haloPts.renderOrder = 3; site.add(haloPts);
+
+  // soft light haze over the complex (additive, no depth): the city glows into the night air
+  const hazes = [];
+  for (const [x, y, z, sx, sy, hex, op] of [[20, 7, -10, 110, 36, 0x4a5cb0, 0.2], [8, 3, 12, 70, 20, 0xffb47a, 0.07], [-8, 2, -2, 40, 14, 0x5fd4ff, 0.05]]) {
+    const sm = keep(new THREE.SpriteMaterial({ map: glowTex, color: hex, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, fog: false }));
+    const sp = new THREE.Sprite(sm); sp.position.set(x, y, z); sp.scale.set(sx, sy, 1); sp.renderOrder = 8; site.add(sp);
+    hazes.push([sm, op]);
+  }
 
   // ---------------------------------------------------------------- twin wireframe + ground grid
   const edgeGeo = keep(new THREE.BufferGeometry()); edgeGeo.setAttribute('position', new THREE.Float32BufferAttribute(edges.p, 3));
@@ -1314,15 +1387,16 @@ export function createHarbor(canvasEl, opts = {}) {
       const rr = rng(seed); const ph = [rr() * 9, rr() * 9, rr() * 9, rr() * 9];
       return (t, envelope) => {
         const x = t * 10;
-        let h = Math.sin(x * 1.1 + ph[0]) * 0.5 + Math.sin(x * 2.3 + ph[1]) * 0.28 + Math.sin(x * 5.1 + ph[2]) * 0.12 + Math.abs(Math.sin(x * 9.7 + ph[3])) * 0.08 * sharp;
+        let h = Math.sin(x * 1.1 + ph[0]) * 0.5 + Math.sin(x * 2.3 + ph[1]) * 0.28 + Math.sin(x * 5.1 + ph[2]) * 0.14
+          + (Math.abs(Math.sin(x * 9.7 + ph[3])) - 0.5) * 0.1 * sharp + Math.sin(x * 23.0 + ph[0] * 2.0) * 0.035 + Math.sin(x * 41.0 + ph[1]) * 0.018;
         return base + amp * (0.55 + 0.45 * h);
       };
     };
-    const back = ridge(5, 42, 14, 1), front = ridge(9, 30, 4, 1.4);
+    const back = ridge(5, 56, 16, 1), front = ridge(9, 38, 6, 1.4);
     const env = (t, lo, hi) => smooth(lo, hi, t);
     // azimuth -100..20 degrees covers the view; left part (-100..-72) stays low so the open sea shows
-    layer(1250, (t) => back(t) * (0.25 + 0.75 * env(t, 0.12, 0.42)) + 6, C(0x26285a), C(0x3a3170), -100, 20, 180);
-    layer(980, (t) => front(t) * (0.12 + 0.88 * env(t, 0.2, 0.5)) + 3, C(0x141a40), C(0x2a2762), -100, 20, 200);
+    layer(1250, (t) => back(t) * (0.3 + 0.7 * env(t, 0.1, 0.45)) + 10, C(0x2a2a5e), C(0x3b3272), -100, 20, 360);
+    layer(980, (t) => front(t) * (0.15 + 0.85 * env(t, 0.22, 0.55)) + 4, C(0x161b42), C(0x2b2864), -100, 20, 400);
     const mg = keep(mb.build());
     const mtn = new THREE.Mesh(mg, keep(new THREE.MeshBasicMaterial({ vertexColors: true, fog: false })));
     mtn.renderOrder = -8; scene.add(mtn);
@@ -1339,7 +1413,8 @@ export function createHarbor(canvasEl, opts = {}) {
   const isMobileView = () => window.innerWidth < 768;
   function applyCamBase() {
     const cfg = isMobileView() ? CAMS.mob : CAMS.desk;
-    if (camOverride) { rig.pos.set(camOverride[0], camOverride[1], camOverride[2]); rig.tgt.set(camOverride[3], camOverride[4], camOverride[5]); rig.fov = camOverride[6] || cfg.fov; }
+    rig.hfov = cfg.hfov || 26;
+    if (camOverride) { rig.pos.set(camOverride[0], camOverride[1], camOverride[2]); rig.tgt.set(camOverride[3], camOverride[4], camOverride[5]); rig.fov = camOverride[6] || cfg.fov; rig.hfov = camOverride[6] || rig.hfov; }
     else { rig.pos.fromArray(cfg.pos); rig.tgt.fromArray(cfg.tgt); rig.fov = cfg.fov; }
   }
   applyCamBase();
@@ -1384,9 +1459,13 @@ export function createHarbor(canvasEl, opts = {}) {
     const aspect = W / H;
     // keep the horizontal framing on narrower screens
     let fov = rig.fov;
-    const refAspect = isMobileView() ? 0.47 : 1.6;
-    if (aspect < refAspect) fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(fov / 2)) * refAspect / aspect));
-    camera.fov = Math.min(fov, 70); camera.aspect = aspect; camera.updateProjectionMatrix();
+    if (isMobileView()) {
+      // phones: keep a fixed horizontal field of view whatever the hero height is
+      fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(rig.hfov / 2)) / aspect));
+    } else if (aspect < 1.6) {
+      fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(fov / 2)) * 1.6 / aspect));
+    }
+    camera.fov = Math.min(fov, 75); camera.aspect = aspect; camera.updateProjectionMatrix();
     const dbH = renderer.getDrawingBufferSize(new THREE.Vector2()).y;
     U.scale.value = dbH / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
   }
@@ -1416,12 +1495,13 @@ export function createHarbor(canvasEl, opts = {}) {
     hallMat.color.setScalar(1 - tw * 0.8);
     landTop.color.setScalar(1 - tw * 0.45);
     U.dim.value = 1 - tw * 0.55;
+    for (const [sm, op] of hazes) sm.opacity = op * (1 - tw * 0.6);
     edgeMat.opacity = tw * 0.85; edgeLines.visible = tw > 0.01; ferryEdges.visible = edgeLines.visible; grid.visible = tw > 0.01;
 
     placeCamera(t);
 
     // ferry
-    const fp = ((t + 12) / FERRY_PATH.period) % 1;
+    const fp = ((t + 70) / FERRY_PATH.period) % 1;
     ferryL.lerpVectors(FERRY_PATH.a, FERRY_PATH.b, fp);
     ferry.position.copy(ferryL); ferry.position.y = Math.sin(t * 0.8) * 0.03;
     const fvis = smooth(0, 0.06, fp) * (1 - smooth(0.94, 1, fp));
@@ -1458,7 +1538,7 @@ export function createHarbor(canvasEl, opts = {}) {
       const col = tr.dir > 0 ? TW : TC;
       for (let s = 0; s < TSEG; s++) {
         const f = s / (TSEG - 1); // 0 tail .. 1 head
-        const u = head - tr.dir * 0.015 * (L.length > 60 ? 1 : 1.6) * (1 - f);
+        const u = head - tr.dir * 0.015 * (1 - f);
         lutAt(L, u, pv3, tv3);
         const lane = 0.36 * tr.dir;
         const sx = -tv3[2], sz = tv3[0], sl = Math.hypot(sx, sz) || 1;
@@ -1466,13 +1546,13 @@ export function createHarbor(canvasEl, opts = {}) {
         // ribbon width perpendicular to tangent and view
         const vx = camLocal.x - x, vy = camLocal.y - y, vz = camLocal.z - z;
         let wx = tv3[1] * vz - tv3[2] * vy, wy = tv3[2] * vx - tv3[0] * vz, wz = tv3[0] * vy - tv3[1] * vx;
-        const wl = Math.hypot(wx, wy, wz) || 1; const w = 0.07 * (0.35 + 0.65 * f);
+        const wl = Math.hypot(wx, wy, wz) || 1; const w = 0.12 * (0.3 + 0.7 * f);
         wx = wx / wl * w; wy = wy / wl * w; wz = wz / wl * w;
         const o = vi * 3;
         trailPos[o] = x + wx; trailPos[o + 1] = y + wy; trailPos[o + 2] = z + wz;
         trailPos[o + 3] = x - wx; trailPos[o + 4] = y - wy; trailPos[o + 5] = z - wz;
         const edgeFade = smooth(0, 0.04, u) * (1 - smooth(0.96, 1, u));
-        const a = Math.pow(f, 1.6) * 0.95 * edgeFade;
+        const a = Math.pow(f, 1.3) * 1.25 * edgeFade;
         for (let q2 = 0; q2 < 2; q2++) { const c4 = (vi + q2) * 4; trailCol[c4] = col.r; trailCol[c4 + 1] = col.g; trailCol[c4 + 2] = col.b; trailCol[c4 + 3] = a; }
         vi += 2;
       }
@@ -1483,7 +1563,7 @@ export function createHarbor(canvasEl, opts = {}) {
   // ---------------------------------------------------------------- loop control
   let running = false, raf = 0, last = 0, time = 0, firstFrame = false, inView = true, pageVisible = !document.hidden;
   let introStart = -1;
-  const INTRO_DELAY = 0.5, INTRO_DRAW = 1.2;
+  const INTRO_DELAY = 0.35, INTRO_DRAW = 1.2;
   function renderOnce(t) {
     update(t, 1 / 60);
     renderer.render(scene, camera);
@@ -1494,9 +1574,9 @@ export function createHarbor(canvasEl, opts = {}) {
     raf = requestAnimationFrame(tick);
     const dt = Math.min(0.1, (now - last) / 1000 || 0); last = now;
     time += dt;
-    if (introStart < 0 && firstFrame) introStart = time;
-    if (introStart >= 0) {
-      const it = time - introStart - INTRO_DELAY;
+    if (introStart < 0 && firstFrame) introStart = now;
+    if (introStart >= 0 && uRingA.value < 1) {
+      const it = (now - introStart) / 1000 - INTRO_DELAY;
       U.reveal.value = clamp01(it / INTRO_DRAW);
       uRingA.value = clamp01((it - INTRO_DRAW) / 0.3);
       if (it < INTRO_DRAW) for (let i = 0; i < 5; i++) nodePhase[i] = -i * 0.09;

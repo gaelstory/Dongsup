@@ -308,6 +308,7 @@ function init() {
     glyphMat.uniforms.bg.value.copy(scene.background);
     setColor(glyphMat.uniforms.ink.value, st.ink);
     setColor(liquidMat.attenuationColor, st.liquid);
+    liquidMat.attenuationColor.lerp(WHITE, 0.16);
     setColor(tmpA, st.liquid);
     glassMat.attenuationColor.copy(tmpA).lerp(WHITE, 0.42);
 
@@ -374,7 +375,7 @@ function init() {
 
   let rT;
   addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(frame, 150); });
-  matchMedia('(min-width: 900px)').addEventListener('change', () => setTimeout(frame, 60));
+  matchMedia('(min-width: 900px) and (min-aspect-ratio: 5/4)').addEventListener('change', () => setTimeout(frame, 60));
 
   window.TEUM_SCENE = { kick() { dirty = true; start(); } };
 

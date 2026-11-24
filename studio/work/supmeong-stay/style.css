@@ -15,8 +15,8 @@
   /* time-of-day tokens, switched by main.js (html.is-dusk) */
   --ink: var(--fir);
   --ink-2: #29473D;
-  --scrim: rgba(238, 243, 240, 0.66);
-  --hdr-glass: rgba(226, 233, 229, 0.62);
+  --scrim: rgba(238, 243, 240, 0.56);
+  --hdr-glass: rgba(226, 233, 229, 0.5);
 
   --serif: 'Nanum Myeongjo', 'AppleMyungjo', 'Batang', 'Noto Serif KR', serif;
   --italic: 'Cormorant Garamond', 'Nanum Myeongjo', Georgia, serif;
@@ -28,7 +28,7 @@
 html.is-dusk {
   --ink: var(--snow);
   --ink-2: #DCE4E0;
-  --scrim: rgba(13, 24, 40, 0.52);
+  --scrim: rgba(13, 24, 40, 0.56);
   --hdr-glass: rgba(13, 24, 40, 0.5);
 }
 
@@ -73,8 +73,8 @@ html.lenis, html.lenis body { height: auto; }
 .scene .layer {
   position: fixed;
   top: 0;
-  left: -16px;
-  width: calc(100% + 32px);
+  left: 0;
+  width: 100%;
   height: 100vh;
   height: 100lvh;
   z-index: 0;
@@ -82,15 +82,14 @@ html.lenis, html.lenis body { height: auto; }
   overflow: hidden;
 }
 html.js .scene .layer { will-change: transform; }
+.rays-clip { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.rays { position: absolute; left: 0; top: 0; width: 1400px; height: 800px; transform-origin: 100% 50%; opacity: 0; }
+html.js .rays { will-change: transform, opacity; }
+/* room for the pointer drift; only fine pointers drift */
+@media (hover: hover) and (pointer: fine) { .scene .layer { left: -16px; width: calc(100% + 32px); } }
 .layer--vfog { opacity: 1; }
-.smoke { fill: none; stroke: url(#g-smoke); stroke-width: 9; stroke-linecap: round; stroke-dasharray: 26 18; opacity: .55; }
-.c-roof { fill: #2A3D37; }
-.c-face { fill: #6F6052; }
-.c-glass { fill: #3A4D4A; }
-.c-frame { stroke: #2A3D37; }
-.c-lamp { fill: #F3C46B; opacity: .8; }
 
-main, .site-footer { position: relative; z-index: 1; }
+main, .site-footer { position: relative; z-index: 1; overflow-x: clip; }
 
 /* ---------- Header ---------- */
 .site-header {
@@ -136,6 +135,8 @@ html.menu-open .site-header { background: var(--night); color: var(--snow); -web
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .menu-sheet[hidden] { display: none; }
+html.menu-open body { overflow: hidden; }
+html.menu-open .book-bar { visibility: hidden; }
 .menu-sheet__list { list-style: none; display: grid; gap: 4px; }
 .menu-sheet__list a { display: block; padding: 10px 0; font-size: 30px; font-weight: 800; text-decoration: none; }
 .menu-sheet__contact { font-size: 16px; color: var(--fog-ink); padding-bottom: 72px; }
@@ -181,14 +182,12 @@ html.is-dusk .btn--primary { background: var(--lamp); color: var(--night); }
 /* columns that drift over the landscape */
 .col { position: relative; max-width: 560px; padding: 26px 0; }
 .scrim { isolation: isolate; }
+/* a soft local haze behind the words only: full-bleed band on phones, a feathered patch on wider screens */
 .scrim::before {
-  content: ''; position: absolute; z-index: -1; inset: -30px -40px; pointer-events: none;
+  content: ''; position: absolute; z-index: -1; inset: -44px -20px; pointer-events: none;
   background: var(--scrim);
-  border-radius: 48px;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent), linear-gradient(to bottom, transparent, #000 34px, #000 calc(100% - 34px), transparent);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent), linear-gradient(to bottom, transparent, #000 34px, #000 calc(100% - 34px), transparent);
-  mask-composite: intersect;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 44px, #000 calc(100% - 44px), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 44px, #000 calc(100% - 44px), transparent);
   transition: background-color 500ms ease;
 }
 
@@ -389,13 +388,14 @@ html.js .spot:hover + .tip:not(.is-on), html.js .spot:focus-visible + .tip:not(.
 /* ---------- Footer over the night sky ---------- */
 .site-footer {
   min-height: 100svh;
-  padding: 22svh 0 calc(var(--bar-h) + 36svh);
+  padding: 16svh 0 calc(var(--bar-h) + 30svh);
   color: var(--snow);
   background: linear-gradient(#0D1828, #1A2D49);
 }
 html.js .site-footer { background: transparent; }
-.footer__line { font-size: clamp(30px, 4.6vw, 62px); font-weight: 800; line-height: 1.25; letter-spacing: -0.03em; max-width: 12em; text-wrap: balance; text-shadow: 0 2px 24px rgba(13, 24, 40, 0.6); }
-.footer__grid { margin-top: 48px; display: grid; gap: 28px; font-size: 16px; }
+.footer__line { font-size: clamp(27px, 4.6vw, 62px); font-weight: 800; line-height: 1.25; letter-spacing: -0.03em; max-width: 12em; text-wrap: balance; text-shadow: 0 2px 24px rgba(13, 24, 40, 0.6); }
+.footer__grid { margin-top: 36px; display: grid; gap: 22px; font-size: 16px; }
+.footer__nav { display: none; }
 .footer__name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 20px; font-weight: 800; }
 .footer__name span { font: italic 500 20px/1 var(--italic); color: #C9D3DD; }
 .footer__brand p + p { color: #C9D3DD; }
@@ -404,7 +404,7 @@ html.js .site-footer { background: transparent; }
 .footer__contact dt { color: #C9D3DD; }
 .footer__nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 20px; }
 .footer__nav a { display: inline-block; padding: 10px 0; text-decoration: none; font-weight: 700; }
-.footer__note { margin-top: 36px; font-size: 14px; line-height: 1.7; color: #C9D3DD; max-width: 40em; }
+.footer__note { margin-top: 28px; font-size: 14px; line-height: 1.7; color: #C9D3DD; max-width: 40em; }
 .site-footer :focus-visible { outline-color: var(--lamp); }
 
 /* ---------- Booking bar ---------- */
@@ -436,6 +436,13 @@ html body .concept-badge { bottom: calc(var(--bar-h) + 12px + env(safe-area-inse
   .site-header__inner { height: 72px; }
   .brand__en { display: inline; }
   .hero { padding-top: max(150px, 22svh); }
+  .scrim::before {
+    inset: -96px -180px;
+    -webkit-mask-image: linear-gradient(to right, transparent, rgba(0,0,0,.35) 90px, #000 180px, #000 calc(100% - 180px), rgba(0,0,0,.35) calc(100% - 90px), transparent), linear-gradient(to bottom, transparent, rgba(0,0,0,.4) 48px, #000 96px, #000 calc(100% - 96px), rgba(0,0,0,.4) calc(100% - 48px), transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent, rgba(0,0,0,.35) 90px, #000 180px, #000 calc(100% - 180px), rgba(0,0,0,.35) calc(100% - 90px), transparent), linear-gradient(to bottom, transparent, rgba(0,0,0,.4) 48px, #000 96px, #000 calc(100% - 96px), rgba(0,0,0,.4) calc(100% - 48px), transparent);
+    mask-composite: intersect;
+  }
   .col--left { margin-right: auto; }
   .col--right { margin-left: auto; }
   .moment--right .col { margin-left: auto; margin-right: clamp(0px, 4vw, 80px); }
@@ -461,10 +468,11 @@ html body .concept-badge { bottom: calc(var(--bar-h) + 12px + env(safe-area-inse
   .notes { grid-template-columns: 1fr 2fr; gap: 40px; }
   .book { grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 56px; }
   .dir { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: center; }
-  .site-footer { padding-bottom: 22svh; }
-  .footer__line, .footer__grid, .footer__note { max-width: min(700px, 50vw); }
+  .site-footer { padding: 22svh 0 22svh; }
+  .footer__line { max-width: min(700px, 50vw); }
+  .footer__grid, .footer__note { max-width: min(620px, 46vw); }
   .footer__grid { grid-template-columns: 1fr 1fr; }
-  .footer__nav { grid-column: 1 / -1; }
+  .footer__nav { display: block; grid-column: 1 / -1; }
 }
 @media (hover: hover) and (pointer: fine) {
   .nav__list a:hover::after { transform: scaleX(1); }
@@ -478,7 +486,11 @@ html body .concept-badge { bottom: calc(var(--bar-h) + 12px + env(safe-area-inse
     color: var(--snow);
     text-shadow: 0 1px 14px rgba(13, 24, 40, 0.45);
   }
-  .clock[data-mode="light"], .clock[data-mode="dark"] { color: var(--snow); background: rgba(13, 24, 40, 0.86); text-shadow: none; }
+  .clock[data-mode="light"], .clock[data-mode="dark"] { color: var(--snow); }
+  .clock.is-chip { color: var(--snow); background: rgba(13, 24, 40, 0.86); text-shadow: none; grid-template-columns: auto auto; align-items: center; gap: 12px; padding: 8px 16px 8px 12px; border-radius: 999px; margin: 0; bottom: 30px; }
+  .clock.is-chip .clock__dial { width: 40px; height: 22px; }
+  .clock.is-chip .clock__time { font-size: 28px; }
+  .clock.is-chip .clock__ampm { font-size: 13px; }
   .clock__dial { display: block; width: 64px; height: 34px; overflow: visible; }
   .clock__track { fill: none; stroke: currentColor; stroke-opacity: .32; stroke-width: 1.4; }
   .clock__run { fill: none; stroke: var(--lamp); stroke-width: 1.8; stroke-linecap: round; }

@@ -1,0 +1,14 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>html,body{margin:0;background:#0A1430}canvas{display:block;width:100vw;height:100vh}</style></head>
+<body><canvas id="c"></canvas>
+<script type="module">
+import { createHarbor } from './scene.js';
+const q = new URLSearchParams(location.search);
+try {
+  const h = createHarbor(document.getElementById('c'), { mobile: innerWidth < 768, still: q.has('still'), onReady(){ console.log('ready'); } });
+  window.__h = h;
+  if (q.get('twin')) h.setTwin(true);
+  if (q.get('focus')) h.setFocus(q.get('focus'));
+  setTimeout(()=>{ const i=h.info(); console.log('calls', i.render.calls, 'tris', i.render.triangles, 'tex', i.memory.textures, 'geo', i.memory.geometries); }, 1500);
+} catch (e) { console.error('scene failed', e.stack || e); }
+</script></body></html>

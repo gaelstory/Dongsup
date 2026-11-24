@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>헤비클럽 | 컨셉 시안 · 첫화면 스튜디오</title>
+<meta name="description" content="스크롤이 곧 운동. 성수동 24시간 PT·크로스핏 짐 헤비클럽의 오픈 이벤트 랜딩 컨셉 시안입니다. 오픈 기념 첫 달 50% 할인, 1회 무료 체험.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#E4E3DE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FF3B0F'/%3E%3Crect x='4' y='14' width='24' height='4' fill='%23000'/%3E%3Crect x='6' y='8' width='5' height='16' fill='%23000'/%3E%3Crect x='21' y='8' width='5' height='16' fill='%23000'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-plate" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="20" cy="20" r="5" fill="currentColor"/></symbol>
+    <symbol id="i-kettle" viewBox="0 0 120 120"><path d="M38 44 V30 H82 V44" fill="none" stroke="currentColor" stroke-width="12" stroke-linejoin="miter"/><path d="M60 40 C88 40 104 58 104 80 C104 96 96 108 84 112 H36 C24 108 16 96 16 80 C16 58 32 40 60 40Z" fill="currentColor"/><rect x="42" y="70" width="36" height="10" fill="var(--icon-cut, #E4E3DE)"/></symbol>
+    <symbol id="i-bar" viewBox="0 0 120 120"><rect x="4" y="56" width="112" height="8" fill="currentColor"/><rect x="18" y="26" width="14" height="68" fill="currentColor"/><rect x="34" y="36" width="10" height="48" fill="currentColor"/><rect x="88" y="26" width="14" height="68" fill="currentColor"/><rect x="76" y="36" width="10" height="48" fill="currentColor"/></symbol>
+    <symbol id="i-watch" viewBox="0 0 120 120"><rect x="48" y="6" width="24" height="12" fill="currentColor"/><circle cx="60" cy="66" r="42" fill="none" stroke="currentColor" stroke-width="12"/><path d="M60 66 V38" stroke="currentColor" stroke-width="10"/><path d="M60 66 H82" stroke="currentColor" stroke-width="10"/></symbol>
+    <symbol id="i-disc" viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="currentColor"/><circle cx="60" cy="60" r="30" fill="none" stroke="var(--icon-cut, #E4E3DE)" stroke-width="6"/><circle cx="60" cy="60" r="10" fill="var(--icon-cut, #E4E3DE)"/></symbol>
+  </defs>
+</svg>
+
+<header class="bar" id="bar">
+  <div class="bar__inner wrap">
+    <a class="logo" href="#top" aria-label="헤비클럽, 맨 위로">
+      <svg class="logo__mark" viewBox="0 0 40 24" aria-hidden="true"><rect x="0" y="10" width="40" height="4"/><rect x="5" y="2" width="7" height="20"/><rect x="28" y="2" width="7" height="20"/></svg>
+      <span class="logo__word">헤비클럽</span>
+    </a>
+    <nav class="nav" aria-label="주 메뉴">
+      <ul class="nav__list">
+        <li><a href="#program">프로그램</a></li>
+        <li><a href="#coach">코치</a></li>
+        <li><a href="#schedule">시간표</a></li>
+        <li><a href="#price">가격</a></li>
+      </ul>
+      <a class="nav__cta" href="#apply">1회 무료 체험 신청</a>
+      <button class="nav__menu" type="button" aria-expanded="false" aria-controls="sheet">메뉴</button>
+    </nav>
+  </div>
+</header>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="메뉴" hidden>
+  <nav aria-label="메뉴">
+    <ul class="sheet__list">
+      <li><a href="#program">프로그램</a></li>
+      <li><a href="#coach">코치</a></li>
+      <li><a href="#schedule">시간표</a></li>
+      <li><a href="#price">가격</a></li>
+      <li><a class="sheet__cta" href="#apply">1회 무료 체험 신청</a></li>
+    </ul>
+  </nav>
+</div>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <h1 class="lines" id="hero-title">
+      <span class="line line--1"><span class="line__fit"><span class="line__kin"><span class="ch">들</span><span class="ch">어</span><span class="ch">라</span></span></span></span>
+      <span class="line line--2"><span class="line__fit"><span class="line__kin"><span class="ch">버</span><span class="ch">텨</span><span class="ch">라</span></span></span>
+        <svg class="barbell" viewBox="0 0 1000 200" aria-hidden="true" focusable="false">
+          <rect x="0" y="92" width="1000" height="16" fill="#000"/>
+          <rect x="96" y="80" width="18" height="40" fill="#000"/>
+          <rect x="886" y="80" width="18" height="40" fill="#000"/>
+          <g class="barbell__plates" fill="#FF3B0F" stroke="#000" stroke-width="7">
+            <rect x="120" y="8" width="54" height="184"/>
+            <rect x="178" y="28" width="40" height="144"/>
+            <rect x="782" y="28" width="40" height="144"/>
+            <rect x="826" y="8" width="54" height="184"/>
+          </g>
+          <g fill="#000" font-family="Black Han Sans, sans-serif" font-size="30" text-anchor="middle">
+            <text x="147" y="112">20</text>
+            <text x="853" y="112">20</text>
+          </g>
+        </svg>
+      </span>
+      <span class="line line--3"><span class="line__fit"><span class="line__kin"><span class="ch">한</span> <span class="ch">번</span> <span class="ch">더</span></span></span></span>
+    </h1>
+    <div class="strip">
+      <div class="strip__inner wrap">
+        <p class="strip__copy">성수동 24시간 PT·크로스핏. 오픈 기념 첫 달 50% 할인.</p>
+        <a class="btn btn--ink" href="#apply">1회 무료 체험 신청</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="marq" aria-label="오픈 혜택">
+    <div class="marq__row marq__row--ink" data-dir="-1">
+      <div class="marq__track">
+        <ul class="marq__set">
+          <li>첫 달 50%</li><li>24시간</li><li>샤워실</li><li>주차 2시간</li>
+        </ul>
+      </div>
+    </div>
+    <div class="marq__row marq__row--red" data-dir="1">
+      <div class="marq__track">
+        <ul class="marq__set" aria-hidden="true">
+          <li>첫 달 50%</li><li>24시간</li><li>샤워실</li><li>주차 2시간</li>
+        </ul>
+      </div>
+    </div>
+    <button class="marq__pause" type="button" aria-pressed="false" hidden><span class="marq__pause-icon" aria-hidden="true"></span><span class="marq__pause-text">흐르는 글 멈추기</span></button>
+  </section>
+
+  <section class="sec program" id="program" aria-labelledby="program-title">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 class="sec__title kin" id="program-title">네 가지 중에 고르세요</h2>
+        <p class="sec__note">처음이면 웨이트 입문부터. 고르기 어려우면 체험 날 코치가 같이 정합니다.</p>
+      </div>
+      <ul class="prog">
+        <li>
+          <a class="prog__row" href="#apply" data-program="크로스핏">
+            <svg class="prog__icon" aria-hidden="true"><use href="#i-kettle"/></svg>
+            <span class="prog__name">크로스핏</span>
+            <span class="prog__desc">매일 바뀌는 와드를 열두 명이 같이 끝냅니다. 기록은 화이트보드에 남깁니다.</span>
+            <span class="prog__meta"><span>그룹 60분</span><span>하루 6회</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="prog__row" href="#apply" data-program="1:1 PT">
+            <svg class="prog__icon" aria-hidden="true"><use href="#i-watch"/></svg>
+            <span class="prog__name">1:1 PT</span>
+            <span class="prog__desc">코치 한 명이 세트와 휴식 시간을 끝까지 셉니다. 퇴근 뒤 밤 11시 수업도 됩니다.</span>
+            <span class="prog__meta"><span>50분</span><span>예약제</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="prog__row" href="#apply" data-program="웨이트 입문">
+            <svg class="prog__icon" aria-hidden="true"><use href="#i-bar"/></svg>
+            <span class="prog__name">웨이트 입문</span>
+            <span class="prog__desc">빈 봉 20kg으로 스쿼트, 데드리프트, 벤치프레스를 처음부터 배웁니다.</span>
+            <span class="prog__meta"><span>4주</span><span>최대 4명</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="prog__row" href="#apply" data-program="바디프로필 8주">
+            <svg class="prog__icon" aria-hidden="true"><use href="#i-disc"/></svg>
+            <span class="prog__name">바디프로필 8주</span>
+            <span class="prog__desc">PT 16회와 매일 식단 확인. 마지막 주에 촬영 날짜를 같이 잡습니다.</span>
+            <span class="prog__meta"><span>8주</span><span>식단 포함</span></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec coach" id="coach" aria-labelledby="coach-title">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 class="sec__title kin" id="coach-title">옆에서 세어 주는 사람</h2>
+        <p class="sec__note">세 명이 번갈아 24시간 중 18시간을 지킵니다. 새벽 1시부터 6시까지는 무인으로 엽니다.</p>
+      </div>
+      <ul class="coaches">
+        <li class="coach__card">
+          <div class="coach__art">
+            <svg viewBox="0 0 240 280" aria-hidden="true" focusable="false">
+              <g fill="currentColor">
+                <rect x="10" y="30" width="220" height="9"/>
+                <rect x="18" y="4" width="20" height="62"/><rect x="202" y="4" width="20" height="62"/>
+                <circle cx="120" cy="92" r="21"/>
+              </g>
+              <g stroke="currentColor" stroke-width="22" stroke-linecap="square" fill="none">
+                <path d="M120 122 V188"/>
+                <path d="M96 126 L76 82 L72 44"/>
+                <path d="M144 126 L164 82 L168 44"/>
+              </g>
+              <g stroke="currentColor" stroke-width="24" stroke-linecap="square" fill="none">
+                <path d="M108 196 L94 236 L92 262"/>
+                <path d="M132 196 L146 236 L148 262"/>
+              </g>
+              <rect x="98" y="112" width="44" height="80" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3 class="coach__name">강도윤</h3>
+          <p class="coach__role">크로스핏 헤드 코치. 지도 9년.</p>
+          <p class="coach__line">무게보다 자세. 자세가 되면 무게는 따라옵니다.</p>
+        </li>
+        <li class="coach__card">
+          <div class="coach__art">
+            <svg viewBox="0 0 240 280" aria-hidden="true" focusable="false">
+              <g fill="currentColor">
+                <rect x="8" y="98" width="224" height="9"/>
+                <rect x="14" y="70" width="20" height="64"/><rect x="206" y="70" width="20" height="64"/>
+                <circle cx="104" cy="70" r="21"/>
+              </g>
+              <g stroke="currentColor" stroke-width="22" stroke-linecap="square" fill="none">
+                <path d="M96 116 L86 170"/>
+                <path d="M100 112 L66 104"/>
+                <path d="M122 112 L160 104"/>
+              </g>
+              <g stroke="currentColor" stroke-width="26" stroke-linecap="square" fill="none">
+                <path d="M88 176 L148 184 L140 252"/>
+                <path d="M82 182 L112 200 L104 256"/>
+              </g>
+              <path d="M78 96 L118 96 L104 186 L72 180 Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3 class="coach__name">서하린</h3>
+          <p class="coach__role">1:1 PT, 바디프로필. 식단 담당.</p>
+          <p class="coach__line">8주 동안 매일 아침 식단 사진을 봅니다. 답장은 짧게 합니다.</p>
+        </li>
+        <li class="coach__card">
+          <div class="coach__art">
+            <svg viewBox="0 0 240 280" aria-hidden="true" focusable="false">
+              <g fill="currentColor">
+                <circle cx="84" cy="58" r="21"/>
+                <path d="M170 92 V80 H198 V92" fill="none" stroke="currentColor" stroke-width="9"/>
+                <path d="M184 90 C206 90 218 104 218 122 C218 136 210 146 200 150 H168 C158 146 150 136 150 122 C150 104 162 90 184 90Z"/>
+              </g>
+              <g stroke="currentColor" stroke-width="22" stroke-linecap="square" fill="none">
+                <path d="M92 104 L172 92"/>
+                <path d="M96 116 L176 98"/>
+              </g>
+              <g stroke="currentColor" stroke-width="26" stroke-linecap="square" fill="none">
+                <path d="M82 178 L60 226 L58 262"/>
+                <path d="M100 178 L122 226 L126 262"/>
+              </g>
+              <rect x="66" y="86" width="44" height="94" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3 class="coach__name">마준혁</h3>
+          <p class="coach__role">웨이트 입문, 재활 운동.</p>
+          <p class="coach__line">처음 오는 분은 빈 봉으로 시작합니다. 20kg도 충분히 무겁습니다.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec sched" id="schedule" aria-labelledby="schedule-title">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 class="sec__title kin" id="schedule-title">이번 주 수업</h2>
+        <p class="sec__note">칸을 누르면 그 시간의 코치가 보입니다. 오늘은 빨간 줄로 표시했습니다.</p>
+      </div>
+      <div class="sched__app" id="sched-app">
+        <p class="sched__static">평일 06:30, 07:30, 12:10, 19:00, 20:10, 21:20. 주말 10:00, 11:30. 크로스핏, 웨이트 입문, 바디 서킷 수업이 번갈아 열립니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec price" id="price" aria-labelledby="price-title">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 class="sec__title kin" id="price-title">한 달에 얼마</h2>
+        <p class="price__from"><span class="price__from-label">한 달</span><span class="price__from-num">99,000원</span><span class="price__from-label">부터</span></p>
+      </div>
+      <table class="ptable">
+        <caption class="sr-only">이용권별 한 달 가격과 오픈 첫 달 가격</caption>
+        <thead>
+          <tr><th scope="col">이용권</th><th scope="col">한 달</th><th scope="col">오픈 첫 달</th><th scope="col">들어 있는 것</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">24시간 자유 이용</th>
+            <td data-label="한 달"><s>99,000원</s></td>
+            <td data-label="오픈 첫 달" class="ptable__deal">49,500원</td>
+            <td data-label="들어 있는 것">샤워실, 운동복과 수건, 주차 2시간</td>
+          </tr>
+          <tr>
+            <th scope="row">크로스핏 무제한</th>
+            <td data-label="한 달"><s>189,000원</s></td>
+            <td data-label="오픈 첫 달" class="ptable__deal">94,500원</td>
+            <td data-label="들어 있는 것">하루 6회 그룹 수업, 자유 이용 포함</td>
+          </tr>
+          <tr>
+            <th scope="row">1:1 PT 주 2회</th>
+            <td data-label="한 달"><s>480,000원</s></td>
+            <td data-label="오픈 첫 달" class="ptable__deal">240,000원</td>
+            <td data-label="들어 있는 것">PT 8회, 체성분 측정, 자유 이용 포함</td>
+          </tr>
+          <tr>
+            <th scope="row">바디프로필 8주</th>
+            <td data-label="한 달"><s>690,000원</s></td>
+            <td data-label="오픈 첫 달" class="ptable__deal">345,000원</td>
+            <td data-label="들어 있는 것">PT 8회, 매일 식단 확인, 촬영 상담</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="price__fine">가격은 부가세 포함. 오픈 할인은 2027년 1월 31일까지 등록한 첫 달에만 적용됩니다. 일시 정지는 한 달에 한 번, 7일까지.</p>
+    </div>
+  </section>
+
+  <section class="sec apply" id="apply" aria-labelledby="apply-title">
+    <div class="wrap apply__inner">
+      <div class="apply__head">
+        <h2 class="sec__title kin" id="apply-title">일단 한 번 들어 보세요</h2>
+        <p class="apply__lead">체험은 50분, 코치 한 명이 붙습니다. 운동복과 수건은 빌려 드리니 운동화만 챙겨 오세요.</p>
+        <p class="apply__zero"><span class="apply__zero-label">체험비</span><span class="apply__zero-num kin">0원</span></p>
+      </div>
+      <form class="form" id="form" novalidate>
+        <div class="field">
+          <label for="f-name">이름</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" aria-describedby="f-name-err" required>
+          <p class="field__err" id="f-name-err"></p>
+        </div>
+        <div class="field">
+          <label for="f-tel">연락처</label>
+          <input id="f-tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" aria-describedby="f-tel-err" required>
+          <p class="field__err" id="f-tel-err"></p>
+        </div>
+        <fieldset class="chips">
+          <legend>해 보고 싶은 것</legend>
+          <label class="chip"><input type="radio" name="program" value="크로스핏" checked><span>크로스핏</span></label>
+          <label class="chip"><input type="radio" name="program" value="1:1 PT"><span>1:1 PT</span></label>
+          <label class="chip"><input type="radio" name="program" value="웨이트 입문"><span>웨이트 입문</span></label>
+          <label class="chip"><input type="radio" name="program" value="바디프로필 8주"><span>바디프로필 8주</span></label>
+        </fieldset>
+        <fieldset class="chips">
+          <legend>편한 시간</legend>
+          <label class="chip"><input type="radio" name="slot" value="새벽" ><span>새벽</span></label>
+          <label class="chip"><input type="radio" name="slot" value="점심"><span>점심</span></label>
+          <label class="chip"><input type="radio" name="slot" value="저녁" checked><span>저녁</span></label>
+          <label class="chip"><input type="radio" name="slot" value="주말"><span>주말</span></label>
+        </fieldset>
+        <div class="form__actions">
+          <button class="hold" type="button" id="hold" aria-describedby="hold-hint">
+            <span class="hold__label">꾹 눌러 체험 신청 (3초)</span>
+            <span class="hold__fill" aria-hidden="true"><span class="hold__label">꾹 눌러 체험 신청 (3초)</span></span>
+          </button>
+          <button class="form__quick" type="submit">바로 신청하기</button>
+        </div>
+        <p class="form__hint" id="hold-hint">버튼을 3초 동안 누르고 있으면 신청됩니다. 키보드는 Enter나 Space를 누르고 있으면 됩니다.</p>
+        <p class="form__msg" id="form-msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <div class="foot__cols">
+      <p><strong>헤비클럽 성수</strong><br>서울 성동구 가상로 12, 지하 1층</p>
+      <p><strong>문의</strong><br><a href="tel:020000000">02-000-0000</a></p>
+      <p><strong>여는 시간</strong><br>24시간, 연중무휴. 코치 상주 06:00부터 01:00까지</p>
+    </div>
+    <p class="foot__word" aria-hidden="true">HEAVY CLUB</p>
+    <p class="foot__notice">이 사이트는 첫화면 스튜디오가 만든 가상의 브랜드 컨셉 시안입니다. 실제 업체, 가격, 후기가 아닙니다.</p>
+  </div>
+</footer>
+
+<div class="reps" id="reps">
+  <p class="reps__count" aria-hidden="true"><span class="reps__label">스크롤</span><span class="reps__num" id="reps-num">0</span><span class="reps__unit">회</span></p>
+  <p class="reps__done" role="status"></p>
+</div>
+
+<script src="../../assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="../../assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="../../assets/vendor/gsap/CustomEase.min.js" defer></script>
+<script src="main.js" defer></script>
+<script src="../../assets/shared/concept-badge.js" defer></script>
+</body>
+</html>

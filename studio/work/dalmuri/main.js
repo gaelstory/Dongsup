@@ -12,7 +12,7 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
   function safe(fn) {
-    try { fn(); } catch (err) { window.__dalmuriErr = (window.__dalmuriErr || []).concat(String(err && err.stack || err)); root.classList.add("no-motion"); unhide(); }
+    try { fn(); } catch (err) { root.classList.add('no-motion'); unhide(); }
   }
   // 무엇이든 실패하면 숨겨진 채 남은 글이 없도록 되돌린다
   function unhide() {
@@ -267,7 +267,7 @@
 
   /* ---------------- 차례 ---------------- */
   function initToc() {
-    var btn = $('.bar__menu'), toc = $('#toc'), close = $('.toc__close'), label = $('.bar__menu-label');
+    var btn = $('.bar__menu'), toc = $('#toc'), label = $('.bar__menu-label');
     if (!btn || !toc) return;
     var open = false, anim = null;
     function focusables() { return [btn].concat($$('a, button', toc)); }
@@ -308,7 +308,6 @@
       if (returnFocus !== false) btn.focus({ preventScroll: true });
     }
     btn.addEventListener('click', function () { if (open) hide(); else show(); });
-    close.addEventListener('click', function () { hide(); });
     $$('.toc__list a', toc).forEach(function (a) { a.addEventListener('click', function () { hide(false); }); });
     document.addEventListener('keydown', function (e) {
       if (!open) return;

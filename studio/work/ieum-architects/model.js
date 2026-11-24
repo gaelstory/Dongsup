@@ -166,7 +166,7 @@ export function buildModel(THREE, opts = {}) {
     poly(lot, [[-10, 0, -7], [10, 0, -7], [10, 0, 7.6], [-10, 0, 7.6]], true);
     road.push(-14, 0, 8.6, 14, 0, 8.6, -14, 0, 12.6, 14, 0, 12.6);
     // north points to -x, so the court and the big glass face south (+x)
-    const nx = 8.8, nz = 1.6, N = (u, v) => [nx - v, 0.01, nz - u];
+    const nx = -2.4, nz = 6.6, N = (u, v) => [nx - v, 0.01, nz - u];
     ring(north, nx, 0.01, nz, 0.72, 36);
     seg(north, N(0, -0.72), N(0, 1.15));
     seg(north, N(0, 1.15), N(-0.28, 0.45));
@@ -352,7 +352,7 @@ export function buildModel(THREE, opts = {}) {
     seg(p, e, [e[0] + 0.2, e[1], e[2] + 0.32]);
     ring(p, 2.7, yo, 7.6, 0.18, 14, 'xz');
     parts.push({ id: 'route', group: 'lower', segs: p, color: 'marker', alpha: 1, width: 2.4, order: 'seq', spread: 0.05, tip: false, depth: false });
-    anchors.route = { group: 'lower', p: [3.0, yi, -0.3] };
+    anchors.route = { group: 'lower', p: [3.35, yi, -2.4] };
   }
 
   // ---------- human scale figure and 1,700 bar ----------

@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>해온 시스템즈 | 컨셉 시안 · 첫화면 스튜디오</title>
+<meta name="description" content="해온 시스템즈는 선박, 크레인, 차량, 에너지까지 항만과 물류 현장의 신호를 한 화면에 모으고 AI로 운영을 예측하고 제어하는 스마트 공간 솔루션 회사입니다. (가상 브랜드 컨셉 시안)">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0A1430">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A1430'/%3E%3Ccircle cx='32' cy='40' r='6' fill='%235FD4FF'/%3E%3Cpath d='M18 34a16 16 0 0 1 28 0M10 30a24 24 0 0 1 44 0' fill='none' stroke='%235FD4FF' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;500;800&family=Sora:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js');if(/[?&]shot=1/.test(location.search))document.documentElement.classList.add('is-shot');</script>
+</head>
+<body>
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a class="brand" href="#top" aria-label="해온 시스템즈 처음으로">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="21" r="3.2" />
+        <path d="M9.5 17.5a7.6 7.6 0 0 1 13 0" />
+        <path d="M5 14.5a12.6 12.6 0 0 1 22 0" />
+      </svg>
+      <span class="brand-word">HAEON</span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="주요 메뉴">
+      <ul>
+        <li><a href="#solutions">솔루션</a></li>
+        <li><a href="#cases">구축 사례</a></li>
+        <li><a href="#tech">기술</a></li>
+      </ul>
+    </nav>
+    <a class="pill pill-white header-cta" href="#contact">문의하기</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="menu-btn-lines" aria-hidden="true"></span>
+      <span class="sr-only">메뉴 열기</span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-visual" aria-hidden="true">
+      <svg class="hero-fallback" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <defs>
+          <linearGradient id="fb-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#060C1F" />
+            <stop offset="0.7" stop-color="#1F1D4A" />
+            <stop offset="1" stop-color="#3A2E6B" />
+          </linearGradient>
+          <linearGradient id="fb-sea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#14183F" />
+            <stop offset="0.25" stop-color="#0A1430" />
+            <stop offset="1" stop-color="#060C1F" />
+          </linearGradient>
+          <radialGradient id="fb-glow" cx="0.68" cy="0.5" r="0.45">
+            <stop offset="0" stop-color="#4A5CB0" stop-opacity="0.35" />
+            <stop offset="1" stop-color="#4A5CB0" stop-opacity="0" />
+          </radialGradient>
+          <pattern id="fb-win-a" width="24" height="20" patternUnits="userSpaceOnUse">
+            <rect x="2" y="3" width="8" height="5" fill="#FFC98A" opacity="0.85" />
+            <rect x="14" y="3" width="8" height="5" fill="#13204A" />
+            <rect x="2" y="13" width="8" height="5" fill="#13204A" />
+            <rect x="14" y="13" width="8" height="5" fill="#9FD4FF" opacity="0.7" />
+          </pattern>
+          <pattern id="fb-win-b" width="36" height="30" patternUnits="userSpaceOnUse">
+            <rect x="2" y="3" width="8" height="5" fill="#13204A" />
+            <rect x="14" y="3" width="8" height="5" fill="#FFC98A" opacity="0.8" />
+            <rect x="26" y="3" width="8" height="5" fill="#FFC98A" opacity="0.6" />
+            <rect x="2" y="13" width="8" height="5" fill="#FFC98A" opacity="0.7" />
+            <rect x="14" y="13" width="8" height="5" fill="#13204A" />
+            <rect x="26" y="13" width="8" height="5" fill="#13204A" />
+            <rect x="2" y="23" width="8" height="5" fill="#13204A" />
+            <rect x="14" y="23" width="8" height="5" fill="#9FD4FF" opacity="0.6" />
+            <rect x="26" y="23" width="8" height="5" fill="#FFC98A" opacity="0.85" />
+          </pattern>
+        </defs>
+        <rect width="1440" height="120" fill="url(#fb-sky)" />
+        <path d="M0 112 L120 104 L260 98 L420 86 L560 92 L700 70 L860 84 L980 62 L1120 74 L1260 52 L1440 64 L1440 122 L0 122 Z" fill="#2A2A5E" />
+        <path d="M0 118 L200 112 L380 106 L540 100 L640 88 L780 98 L900 82 L1040 92 L1180 76 L1320 86 L1440 80 L1440 124 L0 124 Z" fill="#171C44" />
+        <rect y="120" width="1440" height="780" fill="url(#fb-sea)" />
+        <g class="fb-shimmer" fill="#5FD4FF">
+          <rect x="140" y="420" width="180" height="1" opacity="0.18" />
+          <rect x="260" y="470" width="120" height="1" opacity="0.14" />
+          <rect x="90" y="560" width="220" height="1" opacity="0.1" />
+          <rect x="420" y="520" width="140" height="1" opacity="0.14" />
+          <rect x="300" y="640" width="160" height="1" opacity="0.08" />
+        </g>
+        <rect width="1440" height="900" fill="url(#fb-glow)" />
+        <path class="fb-land" d="M700 160 L1440 150 L1440 300 L1080 330 Z" fill="#0C1636" />
+        <path class="fb-land" d="M640 470 L860 360 L1440 330 L1440 720 L1080 700 L900 640 Z" fill="#0D1937" />
+        <path d="M640 470 L900 640 L1080 700 L1440 720" fill="none" stroke="#FFD6AA" stroke-opacity="0.45" stroke-width="1.5" />
+        <g class="fb-piers" fill="#17224A" stroke="#FFD8A8" stroke-opacity="0.35">
+          <path d="M700 520 L860 600 L840 612 L680 532 Z" />
+          <path d="M650 560 L800 640 L780 652 L630 572 Z" />
+          <path d="M690 610 L1000 690 L985 704 L660 624 Z" />
+        </g>
+        <g class="fb-buildings">
+          <rect x="930" y="270" width="72" height="250" fill="url(#fb-win-b)" />
+          <rect x="946" y="240" width="46" height="34" fill="url(#fb-win-a)" />
+          <rect x="820" y="380" width="62" height="140" fill="url(#fb-win-a)" />
+          <rect x="1100" y="340" width="64" height="170" fill="url(#fb-win-b)" />
+          <rect x="1180" y="400" width="56" height="110" fill="url(#fb-win-a)" />
+          <rect x="1260" y="330" width="80" height="150" fill="url(#fb-win-b)" />
+          <rect x="1350" y="380" width="70" height="110" fill="url(#fb-win-a)" />
+          <rect x="860" y="450" width="48" height="80" fill="url(#fb-win-b)" />
+        </g>
+        <g class="fb-tower">
+          <rect x="706" y="330" width="14" height="190" fill="#1F2C5C" />
+          <path d="M684 306 L742 306 L734 336 L692 336 Z" fill="#8FD8FF" opacity="0.9" />
+          <rect x="680" y="300" width="66" height="7" fill="#22305C" />
+          <rect x="712" y="276" width="2" height="24" fill="#8090B8" />
+        </g>
+        <g class="fb-terminal">
+          <rect x="1110" y="580" width="330" height="80" fill="#E0A768" opacity="0.85" />
+          <path d="M1100 584 Q1270 520 1440 560 L1440 584 Z" fill="#3C4C82" />
+          <path d="M1100 584 Q1270 520 1440 560" fill="none" stroke="#FFD29C" stroke-width="3" />
+        </g>
+        <g class="fb-orbits" fill="none" stroke="#5FD4FF" stroke-width="1">
+          <ellipse cx="980" cy="470" rx="420" ry="150" transform="rotate(-6 980 470)" opacity="0.7" />
+          <ellipse cx="1000" cy="430" rx="320" ry="110" transform="rotate(8 1000 430)" opacity="0.55" />
+          <ellipse cx="1010" cy="400" rx="220" ry="80" transform="rotate(-14 1010 400)" opacity="0.6" />
+          <path d="M713 276 Q830 150 966 240" opacity="0.8" />
+          <path d="M966 240 Q1120 210 1270 560" opacity="0.7" />
+        </g>
+        <g class="fb-dots" fill="#E8FBFF">
+          <circle cx="575" cy="505" r="3" /><circle cx="760" cy="590" r="2.5" /><circle cx="1180" cy="606" r="3" />
+          <circle cx="1390" cy="420" r="2.5" /><circle cx="820" cy="356" r="2.5" /><circle cx="1210" cy="352" r="3" />
+          <circle cx="840" cy="190" r="2.5" /><circle cx="1105" cy="270" r="3" />
+        </g>
+        <g fill="none" stroke="#5FD4FF">
+          <ellipse cx="713" cy="276" rx="26" ry="8" opacity="0.6" />
+          <ellipse cx="966" cy="240" rx="30" ry="9" opacity="0.5" />
+        </g>
+      </svg>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="hero-kicker" lang="en">Sense · Predict · Operate</p>
+        <h1 class="hero-title" id="hero-title"><span class="line">항만의 밤을</span> <span class="line">데이터로 밝힙니다</span></h1>
+        <p class="hero-lead">선박, 크레인, 차량, 에너지까지. 흩어져 있던 현장의 신호를 하나의 화면으로 모읍니다. 해온은 스마트 항만과 물류 공간의 운영을 AI로 예측하고 제어합니다.</p>
+        <div class="hero-actions">
+          <a class="pill pill-white pill-lg" href="#contact">도입 상담 신청</a>
+          <a class="pill pill-line pill-lg" href="#cases">구축 사례 보기</a>
+        </div>
+      </div>
+      <div class="hero-stage" aria-hidden="true"></div>
+
+      <div class="hero-bottom">
+        <ul class="service-links" aria-label="솔루션 바로가기">
+          <li><a href="#sol-control" data-node="control"><span class="svc-ring" aria-hidden="true"></span>통합 관제</a></li>
+          <li><a href="#sol-twin" data-node="twin"><span class="svc-ring" aria-hidden="true"></span>디지털 트윈</a></li>
+          <li><a href="#sol-energy" data-node="energy"><span class="svc-ring" aria-hidden="true"></span>에너지 최적화</a></li>
+          <li><a href="#sol-safety" data-node="safety"><span class="svc-ring" aria-hidden="true"></span>안전 모니터링</a></li>
+        </ul>
+        <button class="twin-toggle" type="button" role="switch" aria-checked="false">
+          <span class="twin-track" aria-hidden="true"><span class="twin-knob"></span></span>
+          <span class="twin-label">디지털 트윈으로 보기</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section solutions" id="solutions" aria-labelledby="solutions-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="solutions-title">현장의 모든 신호를 한 화면으로</h2>
+        <p>해온 플랫폼 하나로 네 가지 운영 업무를 함께 봅니다. 필요한 모듈부터 도입하고, 같은 데이터 위에서 차례로 넓혀 갑니다.</p>
+      </div>
+
+      <div class="sol-list">
+        <article class="sol-row" id="sol-control" aria-labelledby="sol-control-title">
+          <div class="sol-name">
+            <h3 id="sol-control-title">통합 관제</h3>
+            <p>선박 입출항부터 야드 차량까지 실시간으로 봅니다.</p>
+          </div>
+          <ul class="sol-points">
+            <li>AIS와 선석 계획 연동</li>
+            <li>크레인과 야드 차량 위치</li>
+            <li>게이트 대기열과 반출입 현황</li>
+          </ul>
+          <svg class="sol-art" viewBox="0 0 240 140" aria-hidden="true" focusable="false">
+            <rect class="draw" x="86" y="40" width="68" height="46" rx="4" />
+            <path class="draw" d="M106 94 h28 M120 86 v8" />
+            <path class="draw dim" d="M18 112 q14 -10 34 0 q-8 8 -28 6 z" />
+            <path class="draw dim" d="M30 100 v-14 M30 86 h14" />
+            <path class="draw dim" d="M196 30 v36 M196 30 h26 M222 30 v6" />
+            <path class="draw dim" d="M196 104 h24 v-10 h-24 z" />
+            <path class="draw cyan" d="M52 100 C 70 84, 76 70, 86 63" />
+            <path class="draw cyan" d="M196 48 C 180 48, 170 52, 154 56" />
+            <path class="draw cyan" d="M196 100 C 178 96, 166 84, 154 74" />
+            <circle class="node" cx="86" cy="63" r="3" /><circle class="node" cx="154" cy="56" r="3" /><circle class="node" cx="154" cy="74" r="3" />
+          </svg>
+        </article>
+
+        <article class="sol-row" id="sol-twin" aria-labelledby="sol-twin-title">
+          <div class="sol-name">
+            <h3 id="sol-twin-title">디지털 트윈</h3>
+            <p>현장을 그대로 옮긴 3D 모델에서 먼저 시험합니다.</p>
+          </div>
+          <ul class="sol-points">
+            <li>시설물 단위의 3D 모델</li>
+            <li>배치와 동선 변경 시뮬레이션</li>
+            <li>센서 값의 실시간 반영</li>
+          </ul>
+          <svg class="sol-art" viewBox="0 0 240 140" aria-hidden="true" focusable="false">
+            <path class="draw dim" d="M40 92 l36 -20 l36 20 l-36 20 z M40 92 v-34 l36 -20 l36 20 v34 M76 72 v-34" />
+            <path class="draw cyan" d="M128 82 l36 -20 l36 20 l-36 20 z M128 82 v-34 l36 -20 l36 20 v34 M164 62 v-34 M128 48 l36 20 l36 -20 M164 68 v34" />
+            <path class="draw dash" d="M112 76 h16" />
+            <circle class="node" cx="164" cy="28" r="3" />
+          </svg>
+        </article>
+
+        <article class="sol-row" id="sol-energy" aria-labelledby="sol-energy-title">
+          <div class="sol-name">
+            <h3 id="sol-energy-title">에너지 최적화</h3>
+            <p>전력 수요를 예측해 피크 시간의 비용을 낮춥니다.</p>
+          </div>
+          <ul class="sol-points">
+            <li>다음 날 전력 수요 예측</li>
+            <li>냉동 컨테이너 부하 분산</li>
+            <li>태양광과 ESS 운용 계획</li>
+          </ul>
+          <svg class="sol-art" viewBox="0 0 240 140" aria-hidden="true" focusable="false">
+            <path class="draw dim" d="M20 118 h200 M20 118 v-96" />
+            <path class="draw dash" d="M20 50 h200" />
+            <path class="draw dim" d="M20 100 C 50 96, 70 70, 96 44 C 108 30, 126 30, 138 46 C 156 70, 180 92, 220 96" />
+            <path class="draw cyan" d="M20 102 C 50 98, 70 78, 96 56 C 110 50, 126 50, 140 56 C 160 72, 184 92, 220 98" />
+            <circle class="node" cx="118" cy="51" r="3" />
+          </svg>
+        </article>
+
+        <article class="sol-row" id="sol-safety" aria-labelledby="sol-safety-title">
+          <div class="sol-name">
+            <h3 id="sol-safety-title">안전 모니터링</h3>
+            <p>위험 구역 진입과 이상 징후를 먼저 알립니다.</p>
+          </div>
+          <ul class="sol-points">
+            <li>위험 구역 진입 감지</li>
+            <li>장비 진동과 온도 이상</li>
+            <li>강풍과 짙은 안개 사전 알림</li>
+          </ul>
+          <svg class="sol-art" viewBox="0 0 240 140" aria-hidden="true" focusable="false">
+            <path class="draw dim" d="M60 30 h120 l20 80 h-160 z" />
+            <path class="draw dash" d="M84 50 h72 l12 44 h-96 z" />
+            <path class="draw cyan" d="M30 120 C 60 110, 92 92, 112 76" />
+            <circle class="node" cx="116" cy="73" r="4" />
+            <circle class="draw cyan ring" cx="116" cy="73" r="12" />
+            <circle class="draw cyan ring" cx="116" cy="73" r="22" />
+          </svg>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cases" id="cases" aria-labelledby="cases-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="cases-title">바다와 맞닿은 현장에서 검증했습니다</h2>
+        <p>컨테이너 부두, 물류단지, 여객터미널. 성격이 다른 세 현장에서 같은 플랫폼으로 운영 지표를 바꿨습니다.</p>
+      </div>
+
+      <svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="sea-hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)">
+            <rect width="10" height="10" fill="rgba(95,212,255,0.035)" />
+            <path d="M0 5 H10" stroke="rgba(95,212,255,0.12)" stroke-width="1" />
+          </pattern>
+        </defs>
+      </svg>
+      <article class="case" aria-labelledby="case-1-title">
+        <figure class="case-map">
+          <svg viewBox="0 0 480 300" aria-hidden="true" focusable="false">
+            <path class="sea" d="M0 210 C 90 200, 150 196, 210 182 C 280 166, 360 170, 480 150 L480 0 L0 0 Z" />
+            <path class="draw coast" d="M0 210 C 90 200, 150 196, 210 182 C 280 166, 360 170, 480 150" />
+            <path class="draw coast" d="M60 40 C 160 18, 300 16, 420 34" />
+            <path class="ship" d="M178 170 V 104 L189 88 L200 104 V 170 Z" /><path class="ship" d="M298 164 V 100 L309 84 L320 100 V 164 Z" />
+            <path class="draw coast" d="M70 262 C 130 236, 200 226, 280 222" />
+            <g class="draw-g">
+              <path class="draw pier" d="M150 196 v-120 h22 v116" /><path class="draw pier" d="M210 182 v-128 h22 v124" />
+              <path class="draw pier" d="M270 170 v-110 h22 v106" /><path class="draw pier" d="M330 166 v-90 h22 v88" />
+            </g>
+            <g class="draw-g">
+              <path class="draw bld" d="M160 220 h40 v24 h-40 z M214 214 h56 v30 h-56 z M290 206 h40 v40 h-40 z M350 196 h70 v34 h-70 z" />
+            </g>
+            <path class="draw orbit" id="orbit-1" d="M62 150 A190 70 0 1 1 442 150 A190 70 0 1 1 62 150 Z" transform="rotate(-8 252 150)" />
+            <circle class="node" cx="231" cy="60" r="4" /><circle class="node" cx="300" cy="226" r="4" />
+            <circle class="orbit-dot" r="5" cx="0" cy="0" />
+          </svg>
+          <figcaption>동해 신항 3부두 배치와 관제 범위</figcaption>
+        </figure>
+        <div class="case-body">
+          <h3 id="case-1-title">동해 신항 통합 관제</h3>
+          <p class="case-stat"><span class="num">38<small>%</small></span><span class="stat-label">선박 입항 대기 시간 감소</span></p>
+          <p>선석 12곳과 크레인 34기, 야드 차량 210대의 신호를 한 화면에 모았습니다. 도선 일정이 바뀌면 크레인 배정과 야드 작업 순서가 함께 다시 계산됩니다.</p>
+          <dl class="case-meta">
+            <div><dt>기간</dt><dd>2025년 3월부터 11개월</dd></div>
+            <div><dt>범위</dt><dd>컨테이너 부두 4선석, 관제실 1곳</dd></div>
+            <div><dt>연동</dt><dd>AIS, 선석 계획, 장비 텔레매틱스</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <article class="case case-flip" aria-labelledby="case-2-title">
+        <figure class="case-map">
+          <svg viewBox="0 0 480 300" aria-hidden="true" focusable="false">
+            <path class="sea" d="M0 268 C 120 256, 260 262, 480 246 L480 300 L0 300 Z" />
+            <path class="draw coast" d="M0 268 C 120 256, 260 262, 480 246" />
+            <path class="draw road" d="M40 236 H 440 M240 236 V 30 M40 130 H 440" />
+            <g class="draw-g">
+              <path class="draw bld" d="M60 60 h70 v54 h-70 z M150 60 h70 v54 h-70 z M260 50 h80 v64 h-80 z M360 60 h60 v54 h-60 z" />
+              <path class="draw bld" d="M60 150 h70 v66 h-70 z M150 150 h70 v66 h-70 z M260 150 h90 v66 h-90 z" />
+            </g>
+            <g class="draw-g twin">
+              <path class="draw dash" d="M270 160 h90 v66 h-90 z" />
+            </g>
+            <path class="draw orbit" id="orbit-2" d="M40 134 A200 96 0 1 1 440 134 A200 96 0 1 1 40 134 Z" transform="rotate(4 240 134)" />
+            <circle class="node" cx="95" cy="87" r="4" /><circle class="node" cx="305" cy="183" r="4" />
+            <circle class="orbit-dot" r="5" cx="0" cy="0" />
+          </svg>
+          <figcaption>남해 물류단지 창고 7동과 내부 도로</figcaption>
+        </figure>
+        <div class="case-body">
+          <h3 id="case-2-title">남해 물류단지 디지털 트윈</h3>
+          <p class="case-stat"><span class="num">9<small>일</small></span><span class="stat-label">배치 변경 검토 기간, 기존 6주에서</span></p>
+          <p>창고 7동과 내부 도로를 3D 모델로 옮겼습니다. 랙 배치나 차량 동선을 바꾸기 전에 모델에서 먼저 돌려 보고, 병목을 확인한 뒤 현장에 적용합니다.</p>
+          <dl class="case-meta">
+            <div><dt>기간</dt><dd>2024년 9월부터 7개월</dd></div>
+            <div><dt>범위</dt><dd>창고 7동, 부지 18만 m²</dd></div>
+            <div><dt>연동</dt><dd>WMS, 출입 기록, 열화상 센서</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <article class="case" aria-labelledby="case-3-title">
+        <figure class="case-map">
+          <svg viewBox="0 0 480 300" aria-hidden="true" focusable="false">
+            <path class="sea" d="M0 120 C 80 150, 140 200, 220 214 C 300 228, 380 210, 480 222 L480 300 L0 300 Z" />
+            <path class="draw coast" d="M0 120 C 80 150, 140 200, 220 214 C 300 228, 380 210, 480 222" />
+            <path class="ship" d="M150 202 L124 233 L129 238 L157 208 Z" />
+            <g class="draw-g">
+              <path class="draw pier" d="M120 176 l-60 70 l16 12 l58 -70" /><path class="draw pier" d="M190 206 l-30 80 l18 6 l28 -80" />
+            </g>
+            <path class="draw bld" d="M232 150 C 270 118, 340 116, 390 138 L 384 176 C 340 160, 280 162, 238 186 Z" />
+            <g class="draw-g">
+              <path class="draw road" d="M250 80 h150 M250 96 h150 M250 112 h150" />
+              <path class="draw solar" d="M120 40 h90 v40 h-90 z M128 48 h74 M128 58 h74 M128 68 h74" />
+            </g>
+            <path class="draw orbit" id="orbit-3" d="M110 150 A170 84 0 1 1 450 150 A170 84 0 1 1 110 150 Z" transform="rotate(-12 280 150)" />
+            <circle class="node" cx="312" cy="138" r="4" /><circle class="node" cx="165" cy="60" r="4" />
+            <circle class="orbit-dot" r="5" cx="0" cy="0" />
+          </svg>
+          <figcaption>서해 연안 여객터미널, 주차동과 태양광 지붕</figcaption>
+        </figure>
+        <div class="case-body">
+          <h3 id="case-3-title">서해 연안 여객터미널 에너지 관리</h3>
+          <p class="case-stat"><span class="num">27<small>%</small></span><span class="stat-label">피크 시간 전력 요금 절감</span></p>
+          <p>여객 예약과 기상 예보로 다음 날 전력 수요를 예측합니다. 공조와 조명을 미리 조정하고, 피크 시간에는 ESS를 방전해 요금을 낮췄습니다.</p>
+          <dl class="case-meta">
+            <div><dt>기간</dt><dd>2025년 6월부터 6개월</dd></div>
+            <div><dt>범위</dt><dd>여객터미널 1동, 주차동 2동</dd></div>
+            <div><dt>연동</dt><dd>BEMS, 발권 시스템, 기상 예보</dd></div>
+          </dl>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section tech" id="tech" aria-labelledby="tech-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="tech-title">센서에서 판단까지, 한 줄로 이어집니다</h2>
+        <p>현장의 신호는 네 단계를 거쳐 행동이 됩니다. 단계마다 무엇이 일어나는지 관제실에서 그대로 확인할 수 있습니다.</p>
+      </div>
+
+      <div class="pipeline">
+        <svg class="pipe-art pipe-h" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <path id="pipe-path-h" class="pipe-line" d="M40 40 C 200 40, 220 40, 340 40 S 520 40, 640 40 S 820 40, 940 40 S 1100 40, 1160 40" />
+          <g class="pipe-dots"><circle r="4" /><circle r="4" /><circle r="4" /><circle r="4" /><circle r="4" /></g>
+        </svg>
+        <svg class="pipe-art pipe-v" viewBox="0 0 40 1000" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <path id="pipe-path-v" class="pipe-line" d="M20 20 V 980" />
+          <g class="pipe-dots"><circle r="4" /><circle r="4" /><circle r="4" /></g>
+        </svg>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num" aria-hidden="true">1</span>
+            <h3>수집</h3>
+            <p>AIS, CCTV, 진동과 온도 센서, 전력 계량기에서 1초 단위로 신호를 받습니다.</p>
+            <p class="step-io">입력 12종, 초당 4만 건</p>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">2</span>
+            <h3>분석</h3>
+            <p>영상 인식과 이상 탐지로 신호를 사건으로 바꿉니다. 선박 접근, 작업자 진입, 장비 과열 같은 일들입니다.</p>
+            <p class="step-io">현장 엣지 서버에서 처리</p>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">3</span>
+            <h3>예측</h3>
+            <p>선석 혼잡과 전력 수요를 24시간 앞까지 예측합니다. 예측의 근거가 된 데이터도 함께 보여 줍니다.</p>
+            <p class="step-io">15분 간격으로 다시 계산</p>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">4</span>
+            <h3>제어</h3>
+            <p>크레인 배정, 공조 설정, 경보 발령을 제안합니다. 담당자가 승인하면 현장 시스템에 바로 반영됩니다.</p>
+            <p class="step-io">TOS, BEMS, VMS와 연동</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ops" id="ops" aria-labelledby="ops-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="ops-title">관제실의 밤은 이렇게 보입니다</h2>
+        <p>야간 근무자가 가장 먼저 보는 화면입니다. 지금 들어오는 배, 비어 있는 야드, 내일 아침의 전력 피크, 방금 울린 경보까지 한 번에 읽힙니다.</p>
+      </div>
+
+      <div class="console" role="group" aria-label="가상의 관제 대시보드 예시">
+        <div class="console-bar">
+          <div class="console-title"><svg class="brand-mark sm" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="21" r="3.2" /><path d="M9.5 17.5a7.6 7.6 0 0 1 13 0" /><path d="M5 14.5a12.6 12.6 0 0 1 22 0" /></svg><span>해온 관제 콘솔</span><span class="console-site">동해 신항 3부두</span></div>
+          <div class="console-time"><span class="num">02:14</span><span>야간 운영</span></div>
+        </div>
+        <div class="console-grid" id="console-grid" tabindex="0" aria-label="대시보드 패널, 좌우로 넘겨 볼 수 있습니다">
+          <section class="panel panel-ships" aria-labelledby="p-ships">
+            <h3 id="p-ships">선박 입출항 일정</h3>
+            <table class="ship-table">
+              <thead><tr><th scope="col">선명</th><th scope="col">선석</th><th scope="col">예정</th><th scope="col">상태</th></tr></thead>
+              <tbody>
+                <tr><td>누리 오션</td><td class="num">B3</td><td class="num">01:40</td><td><span class="st st-on">하역 중</span></td></tr>
+                <tr><td>해솔 익스프레스</td><td class="num">B4</td><td class="num">02:30</td><td><span class="st st-in">접안 중</span></td></tr>
+                <tr><td>동백 9호</td><td class="num">B1</td><td class="num">03:15</td><td><span class="st st-wait">입항 대기</span></td></tr>
+                <tr><td>아라 브리지</td><td class="num">B2</td><td class="num">05:00</td><td><span class="st st-out">출항 준비</span></td></tr>
+              </tbody>
+            </table>
+          </section>
+          <section class="panel panel-yard" aria-labelledby="p-yard">
+            <h3 id="p-yard">야드 점유율</h3>
+            <ul class="bars">
+              <li><span class="bar-name">A1</span><span class="bar"><span style="--v:.82"></span></span><span class="num">82%</span></li>
+              <li><span class="bar-name">A2</span><span class="bar"><span style="--v:.67"></span></span><span class="num">67%</span></li>
+              <li><span class="bar-name">A3</span><span class="bar"><span style="--v:.91" class="hot"></span></span><span class="num">91%</span></li>
+              <li><span class="bar-name">B1</span><span class="bar"><span style="--v:.54"></span></span><span class="num">54%</span></li>
+              <li><span class="bar-name">B2</span><span class="bar"><span style="--v:.73"></span></span><span class="num">73%</span></li>
+              <li><span class="bar-name">B3</span><span class="bar"><span style="--v:.38"></span></span><span class="num">38%</span></li>
+            </ul>
+          </section>
+          <section class="panel panel-energy" aria-labelledby="p-energy">
+            <h3 id="p-energy">전력 수요 예측 <span class="panel-sub">오늘 00시부터 24시간, MW</span></h3>
+            <svg class="energy-chart" viewBox="0 0 640 240" role="img" aria-label="전력 수요 예측 곡선. 오전 9시 전후 4.1MW로 가장 높고, 해온은 이 시간의 수요를 3.4MW로 낮추도록 계획했습니다.">
+              <rect class="peak-band" x="213.2" y="16" width="96.7" height="180" />
+              <g class="grid-lines"><path d="M44 196 H624 M44 151 H624 M44 106 H624 M44 61 H624 M44 16 H624" /></g>
+              <g class="axis-labels"><text x="34" y="200">0</text><text x="34" y="155">1</text><text x="34" y="110">2</text><text x="34" y="65">3</text><text x="34" y="20">4</text>
+                <text x="44" y="224">0시</text><text x="189" y="224">6시</text><text x="334" y="224">12시</text><text x="479" y="224">18시</text><text x="624" y="224">24시</text></g>
+              <path class="curve-base" d="M44.0 142.0 C56.1 142.8, 92.3 149.5, 116.5 146.5 C140.7 143.5, 168.9 141.2, 189.0 124.0 C209.1 106.8, 225.2 61.8, 237.3 43.0 C249.4 24.3, 253.4 14.5, 261.5 11.5 C269.6 8.5, 273.6 16.0, 285.7 25.0 C297.7 34.0, 317.9 56.5, 334.0 65.5 C350.1 74.5, 366.2 78.2, 382.3 79.0 C398.4 79.8, 414.6 73.0, 430.7 70.0 C446.8 67.0, 462.9 58.8, 479.0 61.0 C495.1 63.2, 511.2 75.2, 527.3 83.5 C543.4 91.8, 559.6 103.0, 575.7 110.5 C591.8 118.0, 615.9 125.5, 624.0 128.5" />
+              <path class="curve-plan" d="M44.0 139.8 C56.1 140.5, 92.3 147.6, 116.5 144.2 C140.7 140.9, 168.9 133.4, 189.0 119.5 C209.1 105.6, 225.2 73.8, 237.3 61.0 C249.4 48.2, 253.4 45.2, 261.5 43.0 C269.6 40.8, 273.6 43.0, 285.7 47.5 C297.7 52.0, 317.9 64.8, 334.0 70.0 C350.1 75.3, 366.2 78.6, 382.3 79.0 C398.4 79.4, 414.6 74.9, 430.7 72.2 C446.8 69.6, 462.9 61.0, 479.0 63.2 C495.1 65.5, 511.2 77.9, 527.3 85.7 C543.4 93.6, 559.6 103.4, 575.7 110.5 C591.8 117.6, 615.9 125.5, 624.0 128.5" />
+              <circle class="peak-dot" cx="261.5" cy="11.5" r="4" />
+              <g class="legend">
+                <path class="curve-base" d="M420 26 h28" /><text class="peak-label" x="458" y="31">예측 피크 4.1</text>
+                <path class="curve-plan" d="M420 50 h28" /><text class="plan-label" x="458" y="55">조정 후 3.4</text>
+              </g>
+            </svg>
+          </section>
+          <section class="panel panel-alerts" aria-labelledby="p-alerts">
+            <h3 id="p-alerts">알림</h3>
+            <ol class="alerts">
+              <li class="al-high"><span class="num">02:11</span><span class="al-level">경보</span><span>B3 크레인 하부에 작업자 진입 감지</span></li>
+              <li class="al-mid"><span class="num">01:58</span><span class="al-level">주의</span><span>7번 크레인 주행 모터 진동 18% 상승</span></li>
+              <li><span class="num">01:40</span><span class="al-level">안내</span><span>09시 전력 피크 예측, ESS 방전 계획 등록</span></li>
+              <li><span class="num">01:22</span><span class="al-level">안내</span><span>동백 9호 도선 일정 25분 지연</span></li>
+            </ol>
+          </section>
+        </div>
+        <div class="console-pager" aria-label="대시보드 페이지">
+          <button type="button" class="pager-btn" data-page="0" aria-current="true"><span class="sr-only">첫 번째 패널 묶음 보기</span></button>
+          <button type="button" class="pager-btn" data-page="1"><span class="sr-only">두 번째 패널 묶음 보기</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap contact-grid">
+      <div class="contact-intro">
+        <h2 id="contact-title">현장 이야기를 들려주세요</h2>
+        <p>운영 중인 현장의 규모와 고민을 남겨 주시면, 항만 운영을 경험한 컨설턴트가 2영업일 안에 연락드립니다.</p>
+        <ol class="process">
+          <li><span class="num">1</span><div><h3>현장 진단 <span>2주</span></h3><p>운영 데이터와 설비 현황을 함께 살펴보고 먼저 풀 문제를 정합니다.</p></div></li>
+          <li><span class="num">2</span><div><h3>파일럿 구축 <span>8~12주</span></h3><p>한 구역부터 연결하고 효과를 숫자로 확인합니다.</p></div></li>
+          <li><span class="num">3</span><div><h3>단계 확장</h3><p>검증된 모듈을 다른 구역과 시설로 넓힙니다.</p></div></li>
+          <li><span class="num">4</span><div><h3>운영 지원</h3><p>관제실 교육과 예측 모델 재학습을 계속 함께합니다.</p></div></li>
+        </ol>
+        <ul class="contact-lines">
+          <li><span>전화</span><a href="tel:020000000">02-000-0000</a></li>
+          <li><span>이메일</span><a href="mailto:contact@haeon.example">contact@haeon.example</a></li>
+          <li><span>주소</span>서울 OO구 가상로 12</li>
+        </ul>
+      </div>
+
+      <div class="form-card">
+        <form class="lead-form" id="lead-form" novalidate>
+          <div class="field">
+            <label for="f-company">회사명</label>
+            <input id="f-company" name="company" type="text" autocomplete="organization" required aria-describedby="e-company">
+            <p class="field-error" id="e-company" hidden>회사명을 입력해 주세요.</p>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-name">담당자</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
+              <p class="field-error" id="e-name" hidden>담당자 이름을 입력해 주세요.</p>
+            </div>
+            <div class="field">
+              <label for="f-phone">연락처</label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required aria-describedby="e-phone" placeholder="010-0000-0000">
+              <p class="field-error" id="e-phone" hidden>연락 가능한 전화번호를 숫자로 입력해 주세요.</p>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-type">현장 유형</label>
+            <div class="select-wrap">
+              <select id="f-type" name="type" required aria-describedby="e-type">
+                <option value="">선택해 주세요</option>
+                <option>컨테이너 항만</option>
+                <option>물류단지와 창고</option>
+                <option>여객터미널</option>
+                <option>산업단지</option>
+                <option>기타</option>
+              </select>
+            </div>
+            <p class="field-error" id="e-type" hidden>현장 유형을 골라 주세요.</p>
+          </div>
+          <div class="field">
+            <label for="f-msg">문의 내용</label>
+            <textarea id="f-msg" name="message" rows="5" aria-describedby="e-msg h-msg"></textarea>
+            <p class="field-hint" id="h-msg">현장 규모, 지금 쓰는 시스템, 가장 먼저 풀고 싶은 문제를 적어 주시면 상담이 빨라집니다.</p>
+            <p class="field-error" id="e-msg" hidden>문의 내용을 10자 이상 적어 주세요.</p>
+          </div>
+          <div class="field check">
+            <input id="f-agree" name="agree" type="checkbox" required aria-describedby="e-agree">
+            <label for="f-agree">상담을 위한 개인정보 수집과 이용에 동의합니다.</label>
+            <p class="field-error" id="e-agree" hidden>동의해 주셔야 상담을 신청할 수 있습니다.</p>
+          </div>
+          <button class="pill pill-white pill-lg submit" type="submit">도입 상담 신청</button>
+        </form>
+        <div class="form-done" id="form-done" role="status" aria-live="polite" tabindex="-1" hidden>
+          <h3>상담 신청 내용을 확인했습니다</h3>
+          <p><strong class="done-company"></strong> 담당자님, 남겨 주신 현장 이야기를 잘 받았습니다. 컨셉 시안이라 실제로 접수되지는 않습니다.</p>
+          <button class="pill pill-line" type="button" id="form-reset">다시 작성하기</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <a class="brand" href="#top" aria-label="해온 시스템즈 처음으로">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="21" r="3.2" /><path d="M9.5 17.5a7.6 7.6 0 0 1 13 0" /><path d="M5 14.5a12.6 12.6 0 0 1 22 0" /></svg>
+        <span class="brand-word">HAEON</span>
+      </a>
+      <p>해온 시스템즈. 스마트 항만과 물류 공간을 위한 운영 플랫폼.</p>
+    </div>
+    <nav class="footer-nav" aria-label="하단 메뉴">
+      <ul>
+        <li><a href="#solutions">솔루션</a></li>
+        <li><a href="#cases">구축 사례</a></li>
+        <li><a href="#tech">기술</a></li>
+        <li><a href="#contact">문의하기</a></li>
+      </ul>
+    </nav>
+    <div class="footer-contact">
+      <p>02-000-0000</p>
+      <p>contact@haeon.example</p>
+      <p>서울 OO구 가상로 12</p>
+    </div>
+  </div>
+  <div class="wrap footer-legal">
+    <div class="footer-legal-inner">
+      <p>© 2026 HAEON Systems</p>
+      <p>이 사이트는 첫화면 스튜디오가 만든 가상의 브랜드 컨셉 시안입니다. 실제 업체, 가격, 후기가 아닙니다.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="../../assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="../../assets/vendor/gsap/DrawSVGPlugin.min.js" defer></script>
+<script src="../../assets/vendor/gsap/MotionPathPlugin.min.js" defer></script>
+<script type="module" src="main.js"></script>
+<script src="../../assets/shared/concept-badge.js" defer></script>
+</body>
+</html>

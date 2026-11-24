@@ -177,41 +177,37 @@ button, input, textarea { font: inherit; color: inherit; }
   padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px));
 }
 .toc[hidden] { display: none; }
-.toc__inner { min-height: calc(100svh - var(--bar-h)); display: flex; flex-direction: column; justify-content: center; gap: 28px; padding-bottom: 96px; }
-.toc__note { color: var(--dim); font-size: var(--t-small); }
+.toc__inner { min-height: calc(100svh - var(--bar-h)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; padding-bottom: 88px; }
+.toc__note { color: var(--dim); font-size: var(--t-small); text-align: center; }
 .toc__list {
   writing-mode: vertical-rl;
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px 0;
-  max-height: 72svh;
+  flex-direction: column;
+  max-width: 100%;
 }
 .toc__list a {
   display: block;
-  padding: 14px 10px;
+  padding: 12px 6px;
   font-family: var(--f-title);
-  font-size: clamp(1.375rem, 1rem + 2vw, 2.75rem);
+  font-size: clamp(1.5rem, 1rem + 2.6vw, 2.75rem);
   line-height: 1.25;
   color: var(--moon);
   text-decoration: none;
   letter-spacing: .06em;
+  white-space: nowrap;
   transition: color 180ms ease;
 }
 .toc__ord {
-  display: block;
-  margin-left: .5em;
+  display: inline-block;
+  margin-block-end: .9rem;
   font-family: var(--f-body);
-  font-size: .9375rem;
+  font-size: .875rem;
   letter-spacing: .04em;
   color: var(--brass);
+  vertical-align: top;
 }
+@media (min-width: 768px) { .toc__list a { padding: 14px 16px; } }
 @media (hover: hover) and (pointer: fine) { .toc__list a:hover { color: var(--brass); } }
-.toc__close {
-  align-self: flex-start;
-  min-height: 44px; padding: 0 18px;
-  border: 1px solid var(--line); border-radius: 999px;
-  background: none; cursor: pointer;
-}
 
 /* ---------- 히어로 ---------- */
 .hero {
@@ -234,6 +230,10 @@ button, input, textarea { font: inherit; color: inherit; }
     radial-gradient(circle at var(--cx) var(--cy), transparent calc(var(--r) - 30px), rgba(244, 241, 232, .62) var(--r), rgba(244, 241, 232, .1) calc(var(--r) + 22px), transparent calc(var(--r) + 60px)),
     radial-gradient(circle at var(--cx) var(--cy), rgba(185, 151, 91, .16), transparent calc(var(--r) * 2.3)),
     var(--black);
+}
+.hero::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22svh; z-index: -1; pointer-events: none;
+  background: linear-gradient(rgba(12, 12, 14, 0), var(--black));
 }
 .hero.is-away .hero__ink, .hero.is-away .hero__fallback { visibility: hidden; }
 .hero__inner {
@@ -354,7 +354,7 @@ button, input, textarea { font: inherit; color: inherit; }
 }
 
 /* ---------- 철학 ---------- */
-.philo { padding-top: clamp(120px, 22vh, 260px); }
+@media (min-width: 1024px) { .philo { padding-top: clamp(120px, 20vh, 240px); } }
 .philo__body { display: grid; gap: 64px; }
 .philo__text { max-width: 30em; display: grid; gap: 1.4em; align-content: start; }
 .philo__text p { text-wrap: pretty; }
@@ -397,7 +397,11 @@ button, input, textarea { font: inherit; color: inherit; }
   gap: 18px;
   margin: 0 calc(-1 * var(--gut));
   padding: 14px var(--gut) 18px;
-  background: linear-gradient(var(--black) 82%, rgba(12, 12, 14, 0));
+  background: var(--black);
+}
+.course__stage::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 28px; pointer-events: none;
+  background: linear-gradient(var(--black), rgba(12, 12, 14, 0));
 }
 .plate { width: 100%; aspect-ratio: 1; }
 .plate__svg { width: 100%; height: 100%; display: block; overflow: visible; }
@@ -436,6 +440,7 @@ button, input, textarea { font: inherit; color: inherit; }
   .course__pin { min-height: 100svh; padding-block: calc(var(--bar-h) + 4svh) 6svh; display: flex; }
   .course__inner { flex: 1; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) auto; column-gap: clamp(40px, 4vw, 80px); align-items: start; }
   .course .sec__head { grid-column: 3; position: static; }
+  .course__stage::after { display: none; }
   .course__stage {
     grid-column: 1; grid-row: 1;
     position: static;
@@ -450,32 +455,31 @@ button, input, textarea { font: inherit; color: inherit; }
   .course__cap-name { font-size: 2rem; }
   .course__cap-desc { display: block; color: var(--hanji); text-wrap: pretty; min-height: 3.6em; }
   .course__menu { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; height: 100%; }
-  .course__list {
+  .js .course__list {
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
     margin: 0;
     gap: 6px;
   }
-  .course__item { border: 0; padding: 0; }
-  .course__item:last-child { border: 0; }
-  .course__pick {
+  .js .course__item { border: 0; padding: 0; }
+  .js .course__item:last-child { border: 0; }
+  .js .course__pick {
     flex-direction: column; align-items: center; gap: 18px;
     width: auto;
     padding: 10px 6px 14px;
     border-radius: 999px;
   }
-  .course__pick::before {
+  .js .course__pick::before {
     content: ""; width: 7px; height: 7px; border-radius: 50%;
     border: 1px solid var(--line);
     transition: background-color 300ms ease, border-color 300ms ease;
   }
-  .course__pick[aria-pressed="true"]::before { background: var(--moon); border-color: var(--moon); box-shadow: 0 0 14px rgba(244, 241, 232, .6); }
-  .course__ord, .course__name { writing-mode: vertical-rl; width: auto; letter-spacing: .06em; }
-  .course__ord { font-size: var(--t-cap); }
-  .course__name { font-size: clamp(1.5rem, 1rem + 1.1vw, 2.125rem); line-height: 1; white-space: nowrap; }
+  .js .course__pick[aria-pressed="true"]::before { background: var(--moon); border-color: var(--moon); box-shadow: 0 0 14px rgba(244, 241, 232, .6); }
+  .js .course__ord, .js .course__name { writing-mode: vertical-rl; width: auto; letter-spacing: .06em; }
+  .js .course__ord { font-size: var(--t-cap); }
+  .js .course__name { font-size: clamp(1.5rem, 1rem + 1.1vw, 2.125rem); line-height: 1; white-space: nowrap; }
   .js .course__desc { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; padding: 0; }
-  .course__desc { writing-mode: vertical-rl; padding: 0; margin: 12px auto 0; max-height: 14em; font-size: var(--t-cap); }
   .course__price { margin-top: auto; padding-top: 40px; max-width: 34em; margin-left: auto; width: 100%; }
   .course__fine { margin-left: auto; max-width: 34em; text-align: start; }
 }
@@ -542,6 +546,7 @@ button, input, textarea { font: inherit; color: inherit; }
 .space__plan { width: 100%; }
 .space__svg { width: 100%; height: auto; display: block; overflow: visible; }
 .plan__labels text { font-family: var(--f-body); }
+@media (max-width: 767px) { .plan__labels text { font-size: 34px; } }
 .plan__seat.is-window { fill: rgba(244, 241, 232, .9); stroke: var(--moon); }
 .space__notes { display: grid; gap: 0; max-width: 28em; }
 .space__notes li { display: grid; gap: 4px; padding: 18px 0; border-top: 1px solid var(--line-soft); color: var(--dim); }
@@ -661,7 +666,7 @@ td[aria-selected="true"] .cal__moon .m-halo { opacity: 1; transform: scale(1); }
   transition: border-color 180ms ease;
 }
 .field textarea { resize: vertical; min-height: 72px; line-height: 1.6; }
-.field input::placeholder { color: #7A766D; }
+.field input::placeholder { color: #918B80; }
 .field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; border-color: transparent; }
 .field input[aria-invalid="true"] { border-color: var(--persimmon); }
 .field__err { font-size: var(--t-cap); color: #E9A693; min-height: 0; }
