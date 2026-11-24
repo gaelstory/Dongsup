@@ -104,6 +104,7 @@ const WATER_Y = -2.6;
 const DIRT = { x0: -110, x1: 13.2, z0: -80, z1: 100 };
 const uTime = { value: 0 };
 const uWind = { value: new THREE.Vector2(1, 0.35) };
+const uPointScale = { value: innerHeight * Math.min(window.devicePixelRatio || 1, 1.5) * 0.5 };
 
 /* =====================================================================
    2. procedural textures (canvas)
@@ -1908,7 +1909,7 @@ function buildCliffAndFalls() {
   const N = 90, mp = new Float32Array(N * 3), ph = new Float32Array(N);
   for (let i = 0; i < N; i++) { mp[i * 3] = fallX + rnd(-11, 11); mp[i * 3 + 1] = WATER_Y + rnd(0, 2); mp[i * 3 + 2] = CLIFF_Z + 3 + rnd(-1, 6); ph[i] = R(); }
   const mg = new THREE.BufferGeometry(); mg.setAttribute('position', new THREE.BufferAttribute(mp, 3)); mg.setAttribute('phase', new THREE.BufferAttribute(ph, 1));
-  const mm = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: { time: uTime, map: { value: TX.puff }, scale: { value: innerHeight * DPR * 0.5 } },
+  const mm = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: { time: uTime, map: { value: TX.puff }, scale: uPointScale },
     vertexShader: `attribute float phase; uniform float time, scale; varying float vA; void main(){ float t = fract(time*0.09 + phase); vec3 p = position + vec3(sin(phase*40.+time*.3)*2., t*9., t*5.); vA = sin(t*3.14159)*0.2; vec4 mv = modelViewMatrix*vec4(p,1.); gl_PointSize = (4. + t*9.) * scale / -mv.z; gl_Position = projectionMatrix*mv; }`,
     fragmentShader: `uniform sampler2D map; varying float vA; void main(){ float a = texture2D(map, gl_PointCoord).a * vA; gl_FragColor = vec4(vec3(.93,.96,.97), a); }` });
   const mist = new THREE.Points(mg, mm); mist.renderOrder = 3; mist.frustumCulled = false; scene.add(mist);
@@ -2268,7 +2269,7 @@ function buildSmoke() {
   const N = 16, pos = [], ph = [], sd = [];
   spots.forEach((p, k) => { for (let i = 0; i < N; i++) { pos.push(p.x, p.y, p.z); ph.push(i / N + R() * 0.03); sd.push(k + (k === 0 ? 0.0 : 0.5)); } });
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('phase', new THREE.Float32BufferAttribute(ph, 1)); g.setAttribute('seed', new THREE.Float32BufferAttribute(sd, 1));
-  const m = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: { time: uTime, map: { value: TX.puff }, scale: { value: innerHeight * DPR * 0.5 }, fogColor: { value: FOG }, sun: { value: SUN_COLOR } },
+  const m = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: { time: uTime, map: { value: TX.puff }, scale: uPointScale, fogColor: { value: FOG }, sun: { value: SUN_COLOR } },
     vertexShader: `attribute float phase, seed; uniform float time, scale; varying float vA; varying float vT;
       void main(){ float t = fract(time*0.055 + phase + seed*0.13); vT = t;
         vec3 p = position + vec3(t*t*3.2 + sin(t*6.+seed)*0.35, t*6.5, -t*t*1.6 + cos(t*5.+seed*2.)*0.3);
@@ -2541,6 +2542,7 @@ function onResize() {
   camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);
   const w = Math.floor(innerWidth * DPR), h = Math.floor(innerHeight * DPR); mainRT.setSize(w, h); post.material.uniforms.res.value.set(w, h);
   reflRT.setSize(Math.floor(w * 0.5), Math.floor(h * 0.5));
+  uPointScale.value = innerHeight * DPR * 0.5;
 }
 const updaters = [];
 const clock = new THREE.Clock();
