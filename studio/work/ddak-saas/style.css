@@ -304,6 +304,12 @@ td.c-chip:has(.chip) .slot { opacity: 0; }
 .ledger__table--stage td.c-fee, .ledger__table--stage td.c-vat { transition: background-color 300ms ease calc(var(--ri, 0) * 25ms), color 300ms ease, opacity 260ms ease; }
 .is-match .ledger__table--stage td.c-fee, .is-match .ledger__table--stage td.c-vat { background: var(--lav); color: var(--violet-text); font-weight: 700; }
 .is-match .ledger__table--stage th.c-fee, .is-match .ledger__table--stage th.c-vat { color: var(--violet-text); font-weight: 700; }
+@media (max-width: 639px) {
+  .ledger__table--stage .c-fee, .ledger__table--stage .c-vat { width: 56px; }
+  .ledger__table--stage .c-dep { width: 72px; }
+  .ledger__table--stage td, .ledger__table--stage th { padding-left: 5px; padding-right: 5px; }
+  .ledger__table--stage .c-chip .chip { padding: 0 7px; gap: 5px; }
+}
 .sx-total { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 8px 2px; font-size: 13px; color: var(--fog); }
 .sx-total strong { font-family: var(--num); font-size: 18px; color: var(--ink); }
 .mini-cal { margin-top: 2px; }
