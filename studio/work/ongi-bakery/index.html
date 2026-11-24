@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>온기 베이커리 | 컨셉 시안 · 첫화면 스튜디오</title>
+<meta name="description" content="골목 끝 노란 차양 아래 동네 빵집, 온기 베이커리. 아침 7시 반 첫 판부터 오후 2시 에그타르트까지, 매일 굽는 여섯 가지 빵과 빵 나오는 시간을 알려 드려요.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFD84D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='34' r='26' fill='%23FFD84D' stroke='%2345220F' stroke-width='5'/%3E%3Cpath d='M20 30c4-6 20-6 24 0' fill='none' stroke='%2345220F' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Gowun+Dodum&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<!--sprites:start-->
+<svg class="sprites" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" width="0" height="0"><defs>
+<radialGradient id="g-cro" cx=".36" cy=".26" r=".9"><stop offset="0" stop-color="#FFE7A8"/><stop offset=".3" stop-color="#F3B457"/><stop offset=".62" stop-color="#D9862F"/><stop offset=".88" stop-color="#A65619"/><stop offset="1" stop-color="#7C3A10"/></radialGradient>
+<radialGradient id="g-salt" cx=".38" cy=".22" r=".95"><stop offset="0" stop-color="#FCE1A6"/><stop offset=".28" stop-color="#F0B05A"/><stop offset=".6" stop-color="#D27F31"/><stop offset=".88" stop-color="#9C5019"/><stop offset="1" stop-color="#6C3210"/></radialGradient>
+<radialGradient id="g-crust" cx=".38" cy=".16" r=".95"><stop offset="0" stop-color="#EBA85C"/><stop offset=".45" stop-color="#C9772F"/><stop offset="1" stop-color="#94491A"/></radialGradient>
+<radialGradient id="g-crumb" cx=".44" cy=".42" r=".72"><stop offset="0" stop-color="#FFFDF5"/><stop offset=".55" stop-color="#FFF2D6"/><stop offset="1" stop-color="#EFD39B"/></radialGradient>
+<radialGradient id="g-dough" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#FBD594"/><stop offset=".5" stop-color="#E9A553"/><stop offset=".82" stop-color="#C27831"/><stop offset="1" stop-color="#8A4919"/></radialGradient>
+<radialGradient id="g-glaze" cx=".34" cy=".28" r=".85"><stop offset="0" stop-color="#FF7482"/><stop offset=".34" stop-color="#F71E3B"/><stop offset=".7" stop-color="#CF0024"/><stop offset="1" stop-color="#93001A"/></radialGradient>
+<radialGradient id="g-tart" cx=".4" cy=".28" r=".82"><stop offset="0" stop-color="#FAD585"/><stop offset=".55" stop-color="#E5A146"/><stop offset=".85" stop-color="#B8692A"/><stop offset="1" stop-color="#874216"/></radialGradient>
+<radialGradient id="g-custard" cx=".42" cy=".36" r=".72"><stop offset="0" stop-color="#FFF6BE"/><stop offset=".35" stop-color="#FFE26A"/><stop offset=".72" stop-color="#FFC23A"/><stop offset="1" stop-color="#E3951D"/></radialGradient>
+<radialGradient id="g-spot"><stop offset="0" stop-color="#5A2709" stop-opacity=".9"/><stop offset=".35" stop-color="#8E4512" stop-opacity=".75"/><stop offset=".7" stop-color="#C9731F" stop-opacity=".35"/><stop offset="1" stop-color="#E0902A" stop-opacity="0"/></radialGradient>
+<radialGradient id="g-rim" cx=".5" cy=".5" r=".5"><stop offset=".72" stop-color="#C46F1E" stop-opacity="0"/><stop offset=".92" stop-color="#A9561A" stop-opacity=".55"/><stop offset="1" stop-color="#7C3A10" stop-opacity=".8"/></radialGradient>
+<radialGradient id="g-bagel" cx=".34" cy=".24" r=".9"><stop offset="0" stop-color="#E9A04E"/><stop offset=".3" stop-color="#BB6A26"/><stop offset=".62" stop-color="#8E4515"/><stop offset="1" stop-color="#55250A"/></radialGradient>
+<radialGradient id="g-bagin" cx=".5" cy=".5" r=".5"><stop offset=".2" stop-color="#3A1706" stop-opacity=".7"/><stop offset=".5" stop-color="#6A3210" stop-opacity=".25"/><stop offset=".7" stop-color="#6A3210" stop-opacity="0"/></radialGradient>
+<radialGradient id="g-anpan" cx=".38" cy=".3" r=".78"><stop offset="0" stop-color="#FFD592"/><stop offset=".28" stop-color="#EDA04C"/><stop offset=".62" stop-color="#C06C24"/><stop offset=".9" stop-color="#83400F"/><stop offset="1" stop-color="#62300C"/></radialGradient>
+<radialGradient id="g-hl"><stop offset="0" stop-color="#FFFDF0" stop-opacity=".95"/><stop offset=".55" stop-color="#FFF6D8" stop-opacity=".45"/><stop offset="1" stop-color="#FFF6D8" stop-opacity="0"/></radialGradient>
+<radialGradient id="g-hole" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="#3A1706" stop-opacity="0"/><stop offset="1" stop-color="#3A1706" stop-opacity=".55"/></radialGradient>
+<linearGradient id="g-butter" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF6BF"/><stop offset=".6" stop-color="#FFE27A"/><stop offset="1" stop-color="#F5C842"/></linearGradient>
+<linearGradient id="g-lettuce" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D6F2B0"/><stop offset="1" stop-color="#6FB54A"/></linearGradient>
+<linearGradient id="g-ham" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB8B0"/><stop offset="1" stop-color="#E9837A"/></linearGradient>
+<filter id="f-bake" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+  <feTurbulence type="fractalNoise" baseFrequency=".032" numOctaves="2" seed="4" result="lo"/>
+  <feTurbulence type="fractalNoise" baseFrequency=".5" numOctaves="1" seed="9" result="hi"/>
+  <feColorMatrix in="lo" type="matrix" values="0 0 0 0 .7  0 0 0 0 .38  0 0 0 0 .14  1.5 0 0 0 -.72" result="mott"/>
+  <feColorMatrix in="hi" type="matrix" values="0 0 0 0 .4  0 0 0 0 .2  0 0 0 0 .07  2.6 0 0 0 -1.62" result="spk"/>
+  <feMerge result="tx"><feMergeNode in="mott"/><feMergeNode in="spk"/></feMerge>
+  <feComposite in="tx" in2="SourceAlpha" operator="in" result="txin"/>
+  <feBlend in="txin" in2="SourceGraphic" mode="multiply"/>
+</filter>
+<filter id="f-crumb" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+  <feTurbulence type="fractalNoise" baseFrequency=".34" numOctaves="2" seed="2" result="n"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 .78  0 0 0 0 .58  0 0 0 0 .3  3.4 0 0 0 -1.95" result="pores"/>
+  <feComposite in="pores" in2="SourceAlpha" operator="in" result="pin"/>
+  <feBlend in="pin" in2="SourceGraphic" mode="multiply"/>
+</filter></defs>
+<symbol id="b-cro" viewBox="0 0 200 200"><g stroke="#45220F" stroke-linejoin="round" stroke-linecap="round" style="stroke-width:var(--ol,6px)">
+<g filter="url(#f-bake)">
+<g transform="translate(27 134) rotate(-66)">
+  <ellipse rx="13" ry="18" fill="url(#g-cro)"/>
+  <path d="M-5.5 -14Q-9.1 0 -5.5 14" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/><path d="M4.9 -14.4Q8.6 0 4.9 14.4" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/>
+</g>
+<g transform="translate(173 134) rotate(66)">
+  <ellipse rx="13" ry="18" fill="url(#g-cro)"/>
+  <path d="M-5.5 -14Q-9.1 0 -5.5 14" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/><path d="M4.9 -14.4Q8.6 0 4.9 14.4" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/>
+</g>
+<g transform="translate(44 113) rotate(-50)">
+  <ellipse rx="18" ry="26" fill="url(#g-cro)"/>
+  <path d="M-7.6 -20.3Q-12.6 0 -7.6 20.3" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/><path d="M6.8 -20.8Q11.9 0 6.8 20.8" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/>
+</g>
+<g transform="translate(156 113) rotate(50)">
+  <ellipse rx="18" ry="26" fill="url(#g-cro)"/>
+  <path d="M-7.6 -20.3Q-12.6 0 -7.6 20.3" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/><path d="M6.8 -20.8Q11.9 0 6.8 20.8" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/>
+</g>
+<g transform="translate(67 92) rotate(-28)">
+  <ellipse rx="25" ry="34" fill="url(#g-cro)"/>
+  <path d="M-10.5 -26.5Q-17.5 0 -10.5 26.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/><path d="M9.5 -27.2Q16.5 0 9.5 27.2" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/>
+  <path d="M-3.8 -24.5Q3 -29.2 7.5 -21.1" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)"/>
+</g>
+<g transform="translate(133 92) rotate(28)">
+  <ellipse rx="25" ry="34" fill="url(#g-cro)"/>
+  <path d="M-10.5 -26.5Q-17.5 0 -10.5 26.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/><path d="M9.5 -27.2Q16.5 0 9.5 27.2" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/>
+  <path d="M-3.8 -24.5Q3 -29.2 7.5 -21.1" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)"/>
+</g>
+<g transform="translate(100 84) rotate(0)">
+  <ellipse rx="36" ry="42" fill="url(#g-cro)"/>
+  <path d="M-15.1 -32.8Q-25.2 0 -15.1 32.8" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/><path d="M13.7 -33.6Q23.8 0 13.7 33.6" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)"/>
+  <path d="M-5.4 -30.2Q4.3 -36.1 10.8 -26" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)"/>
+</g>
+</g>
+<ellipse cx="86" cy="60" rx="13" ry="7" transform="rotate(-24 86 60)" fill="url(#g-hl)" stroke="none"/>
+<ellipse cx="56" cy="76" rx="7" ry="3.6" transform="rotate(-40 56 76)" fill="url(#g-hl)" stroke="none" opacity=".8"/>
+</g></symbol>
+<symbol id="b-salt" viewBox="0 0 200 200"><g stroke="#45220F" stroke-linejoin="round" stroke-linecap="round" style="stroke-width:var(--ol,6px)">
+<g filter="url(#f-bake)">
+<path d="M24 116C20 80 54 54 100 54C148 54 182 80 176 116C173 138 148 148 100 148C52 148 27 138 24 116Z" fill="url(#g-salt)"/>
+<path d="M27 122C42 140 158 140 173 122C168 140 146 149 100 149C54 149 32 140 27 122Z" fill="#8E4416" stroke="none" opacity=".85"/>
+<path d="M58 60C46 82 46 118 58 144" fill="none" stroke="#6B3312" stroke-opacity=".8" style="stroke-width:calc(var(--ol,6px)*.62)"/><path d="M92 55C80 82 80 120 92 148" fill="none" stroke="#6B3312" stroke-opacity=".8" style="stroke-width:calc(var(--ol,6px)*.62)"/><path d="M128 56C116 82 116 120 128 147" fill="none" stroke="#6B3312" stroke-opacity=".8" style="stroke-width:calc(var(--ol,6px)*.62)"/><path d="M158 68C150 88 150 116 158 138" fill="none" stroke="#6B3312" stroke-opacity=".8" style="stroke-width:calc(var(--ol,6px)*.62)"/>
+</g>
+<path d="M24 116C20 80 54 54 100 54C148 54 182 80 176 116C173 138 148 148 100 148C52 148 27 138 24 116Z" fill="none"/>
+<path d="M66 64C62 74 61 86 63 96" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)"/><path d="M100 60C96 72 95 86 97 98" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)"/><path d="M136 62C132 72 131 84 133 94" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)"/>
+<ellipse cx="76" cy="70" rx="14" ry="6" transform="rotate(-12 76 70)" fill="url(#g-hl)" stroke="none"/>
+<path d="M104.9 78L107.4 76L110.1 78.5L107.6 80.2Z" transform="rotate(35.2 107.4 78)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M50.5 71.2L54.3 68.2L58.5 72L54.7 74.6Z" transform="rotate(37.4 54.3 71.2)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M119.5 85.3L122 83.3L124.7 85.8L122.2 87.6Z" transform="rotate(94 122 85.3)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M139.6 90.2L143.4 87.1L147.6 91L143.8 93.6Z" transform="rotate(54 143.4 90.2)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M138.6 93L140.9 91.1L143.4 93.4L141.1 95Z" transform="rotate(155.3 140.9 93)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M54.3 66.7L58.1 63.7L62.2 67.5L58.4 70.1Z" transform="rotate(34.9 58.1 66.7)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M76.2 73.7L78.5 71.8L81 74.1L78.7 75.7Z" transform="rotate(32.6 78.5 73.7)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M102.9 82.6L105.5 80.5L108.4 83.1L105.8 85Z" transform="rotate(179 105.5 82.6)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M112.6 76.7L115.5 74.4L118.6 77.3L115.8 79.3Z" transform="rotate(64.2 115.5 76.7)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M94.1 84.8L97 82.5L100.2 85.4L97.3 87.4Z" transform="rotate(19.7 97 84.8)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/><path d="M95.2 69.9L99.4 66.6L104 70.8L99.8 73.7Z" transform="rotate(178 99.4 69.9)" fill="#FFFFFF" stroke="#E9DCC4" style="stroke-width:.8px"/>
+</g></symbol>
+<symbol id="b-loaf" viewBox="0 0 200 200"><g stroke="#45220F" stroke-linejoin="round" stroke-linecap="round" style="stroke-width:var(--ol,6px)">
+<g filter="url(#f-bake)"><path d="M54 168L52 86C32 82 28 54 46 42C62 30 86 28 100 40C114 28 138 30 154 42C172 54 168 82 148 86L146 168Q146 176 138 176L62 176Q54 176 54 168Z" fill="url(#g-crust)"/></g>
+<g filter="url(#f-crumb)"><path d="M63 165L62 90C46 84 42 60 56 51C70 40 88 40 100 54C112 40 130 40 144 51C158 60 154 84 138 90L137 165Q137 167 135 167L65 167Q63 167 63 165Z" fill="url(#g-crumb)" stroke="none"/></g>
+<path d="M63 165L62 90C46 84 42 60 56 51C70 40 88 40 100 54C112 40 130 40 144 51C158 60 154 84 138 90L137 165Q137 167 135 167L65 167Q63 167 63 165Z" fill="none" stroke="#B9692A" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.4)"/>
+<g transform="rotate(-9 104 106)"><rect x="84" y="88" width="42" height="34" rx="7" fill="url(#g-butter)"/><path d="M90 96L104 95" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)" stroke="#FFFFFF" stroke-opacity=".9"/></g>
+<path d="M58 50C64 40 76 35 88 36" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)"/><ellipse cx="128" cy="40" rx="8" ry="3.5" transform="rotate(10 128 40)" fill="url(#g-hl)" stroke="none" opacity=".8"/>
+</g></symbol>
+<symbol id="b-donut" viewBox="0 0 200 200"><g stroke="#45220F" stroke-linejoin="round" stroke-linecap="round" style="stroke-width:var(--ol,6px)">
+<g filter="url(#f-bake)"><path d="M18 100a82 82 0 1 1 164 0a82 82 0 1 1 -164 0ZM79 100a21 21 0 1 0 42 0a21 21 0 1 0 -42 0Z" fill="url(#g-dough)" fill-rule="evenodd"/></g>
+<path d="M168.6 100C169.1 101.5 169.4 103 169.5 104.6C169.6 106.1 169.6 107.6 169.4 109.1C169.2 110.6 168.7 112.1 168.2 113.6C167.6 115 166.9 116.4 166 117.7C165.2 119 164.2 120.3 163.3 121.5C162.4 122.7 161.2 123.8 160.6 125.1C160 126.4 159.7 127.8 159.7 129.4C159.7 131.1 160.8 133.4 160.5 134.9C160.1 136.4 158.9 137.6 157.5 138.4C156.1 139.3 153.6 139.3 152.1 140C150.6 140.7 149.7 141.7 148.7 142.7C147.6 143.7 147 145 146.1 146.1C145.2 147.2 144.2 148.3 143.2 149.3C142.2 150.2 141 151.1 139.9 152C138.8 152.9 137.5 153.5 136.5 154.7C135.6 155.9 134.7 157.1 134.1 159.1C133.5 161.1 133.8 165.1 133 166.9C132.1 168.7 130.7 170 129 170C127.3 169.9 124.5 167.3 122.6 166.6C120.7 165.9 119.2 165.7 117.6 165.8C116.1 166 114.8 166.9 113.4 167.4C112 167.9 110.5 168.5 109.1 168.8C107.6 169.1 106.1 169.3 104.5 169.3C103 169.3 101.5 169 100 168.9C98.5 168.9 97 168.6 95.5 169.1C93.9 169.6 92.1 171.5 90.5 171.9C88.9 172.3 87.1 172.7 85.8 171.4C84.5 170.2 83.7 166.5 82.7 164.5C81.7 162.5 80.9 160.7 79.8 159.6C78.7 158.5 77.4 158.3 76.1 157.8C74.8 157.3 73.4 157.1 72 156.8C70.6 156.5 69.2 156.2 67.8 155.9C66.3 155.5 65 155 63.4 154.7C61.9 154.5 60.5 154 58.3 154.3C56.1 154.7 52.7 156.4 50.2 156.7C47.7 157.1 44.3 158 43.4 156.6C42.4 155.3 44.1 151.2 44.5 148.7C45 146.1 46.1 143.3 46.1 141.4C46.1 139.4 45.2 138.4 44.5 137.1C43.8 135.8 42.9 134.7 42 133.5C41.2 132.3 40.3 131.1 39.5 129.8C38.7 128.6 38 127.3 37.1 126C36.3 124.8 35.7 123.4 34.5 122.2C33.3 121 31.3 120 29.9 118.8C28.5 117.5 26.1 116.3 25.9 114.7C25.8 113.2 27.8 111.1 29.2 109.3C30.6 107.6 33 105.9 34.2 104.3C35.4 102.8 36 101.4 36.6 100C37.2 98.6 37.5 97.3 37.8 95.9C38.1 94.6 38.4 93.3 38.5 91.9C38.7 90.6 38.7 89.2 38.7 87.8C38.7 86.4 38.6 85 38.5 83.5C38.5 82.1 38.3 80.6 38.3 79.1C38.3 77.5 38.2 76 38.4 74.5C38.5 73 38.7 71.4 39.1 70C39.5 68.5 40 67.1 40.6 65.7C41.3 64.4 42.1 63.1 43 61.9C43.8 60.7 44.9 59.6 45.9 58.5C47 57.4 48.1 56.5 49.3 55.5C50.4 54.5 51.6 53.6 52.7 52.7C53.9 51.8 55 50.9 56.2 50C57.3 49.1 58.4 48.2 59.6 47.3C60.7 46.4 61.8 45.5 63 44.6C64.2 43.8 65.4 42.9 66.6 42.2C67.9 41.5 69.2 40.8 70.5 40.2C71.8 39.6 73.2 39.2 74.7 38.8C76.1 38.5 77.5 38.2 79 38.1C80.4 37.9 81.9 37.9 83.4 37.9C84.8 37.9 86.2 37.9 87.7 37.9C89.1 37.9 90.5 38 91.8 37.9C93.2 37.9 94.5 37.8 95.9 37.6C97.3 37.4 98.6 37.1 100 36.8C101.4 36.4 102.8 36 104.2 35.6C105.7 35.2 107.1 34.7 108.6 34.4C110.1 34 111.7 33.6 113.2 33.4C114.8 33.3 116.4 33.2 117.9 33.3C119.4 33.4 120.9 33.6 122.4 34C123.8 34.5 125.3 35.1 126.6 35.8C127.9 36.5 129.2 37.5 130.4 38.4C131.6 39.4 132.7 40.5 133.8 41.5C134.8 42.6 135.8 43.8 136.9 44.8C137.9 45.9 138.8 47 139.8 48.1C140.8 49.2 141.8 50.2 142.8 51.2C143.8 52.2 144.9 53.1 145.9 54.1C146.9 55.1 147.9 56.1 148.9 57.1C149.9 58.1 150.9 59.1 151.8 60.2C152.7 61.3 153.6 62.5 154.3 63.7C155.1 64.9 155.8 66.2 156.4 67.5C157 68.8 157.4 70.1 157.9 71.4C158.4 72.8 158.7 74.2 159.1 75.5C159.5 76.9 159.9 78.2 160.3 79.5C160.7 80.9 161.1 82.2 161.6 83.5C162.1 84.8 162.7 86.1 163.2 87.4C163.8 88.7 164.5 90.1 165.1 91.4C165.8 92.8 166.5 94.2 167.1 95.6C167.6 97 168.2 98.5 168.6 100ZM132.8 100C133 101.7 133.1 103.5 132.6 105.2C132.2 106.8 131.3 108.4 130.2 109.8C129.1 111.2 127.5 112.3 126.2 113.4C125 114.5 123.6 115.3 122.6 116.4C121.5 117.5 120.8 118.7 120 120C119.2 121.4 118.7 123.1 117.9 124.6C117 126.1 116 127.7 114.7 128.9C113.4 130 111.8 130.9 110.2 131.4C108.6 132 106.8 132 105.1 132C103.4 132 101.7 131.8 100 131.6C98.3 131.5 96.7 131.3 95.1 131.1C93.5 130.8 91.8 130.5 90.3 129.9C88.8 129.3 87.3 128.5 86 127.5C84.7 126.4 83.7 125 82.7 123.8C81.7 122.6 81 121.2 80 120C79 118.9 77.9 118 76.6 117C75.4 116 73.7 115.2 72.3 114.1C71 113 69.3 111.8 68.3 110.3C67.3 108.8 66.6 107 66.4 105.3C66.2 103.6 66.7 101.7 67.2 100C67.7 98.3 68.7 96.7 69.5 95.2C70.2 93.6 71 92.2 71.7 90.8C72.3 89.3 72.8 87.9 73.4 86.5C74.1 85 74.7 83.5 75.6 82.3C76.5 81 77.6 79.8 78.8 78.8C79.9 77.7 81.3 76.9 82.6 76C83.8 75.1 85.1 74.2 86.4 73.2C87.6 72.2 88.8 71 90.2 69.9C91.6 68.8 93.1 67.6 94.8 66.9C96.4 66.3 98.3 65.8 100 66C101.7 66.1 103.5 67 105.1 67.9C106.6 68.8 108 70.3 109.3 71.4C110.6 72.5 111.7 73.7 112.9 74.6C114.2 75.5 115.5 76.1 116.9 76.8C118.2 77.5 119.8 78 121.2 78.8C122.6 79.6 124.1 80.5 125.2 81.7C126.3 82.8 127.2 84.3 128 85.7C128.8 87.2 129.3 88.8 129.8 90.3C130.4 91.8 131 93.4 131.5 95C132 96.6 132.6 98.3 132.8 100Z" fill="url(#g-glaze)" fill-rule="evenodd"/>
+<circle cx="100" cy="100" r="24" fill="url(#g-hole)" stroke="none"/>
+<path d="M52 74C60 58 76 46 96 42" fill="none" stroke="#FFF4F0" stroke-opacity=".85" style="stroke-width:calc(var(--ol,6px)*1.1)"/>
+<path d="M112 43C118 44 123 45 128 47" fill="none" stroke="#FFF4F0" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.9)"/>
+<path d="M86 118C92 124 104 126 112 121" fill="none" stroke="#FF8D99" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.6)"/>
+<rect x="58.5" y="58.7" width="10" height="3.6" rx="1.8" fill="#FFF9EA" transform="rotate(62.3 63.5 60.5)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="120.2" y="56.1" width="10" height="3.6" rx="1.8" fill="#FFD84D" transform="rotate(108.9 125.2 57.9)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="91.8" y="47.7" width="10" height="3.6" rx="1.8" fill="#BDE8D3" transform="rotate(51.3 96.8 49.5)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="54.8" y="76.1" width="10" height="3.6" rx="1.8" fill="#FFF9EA" transform="rotate(6.2 59.8 77.9)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="141" y="105.6" width="10" height="3.6" rx="1.8" fill="#FFB0C0" transform="rotate(16.1 146 107.4)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="65.7" y="138.3" width="10" height="3.6" rx="1.8" fill="#FFF9EA" transform="rotate(167.6 70.7 140.1)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="35.4" y="99.9" width="10" height="3.6" rx="1.8" fill="#FFD84D" transform="rotate(31.5 40.4 101.7)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="133.5" y="55.9" width="10" height="3.6" rx="1.8" fill="#BDE8D3" transform="rotate(78.1 138.5 57.7)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="138.1" y="95.8" width="10" height="3.6" rx="1.8" fill="#FFF9EA" transform="rotate(96.3 143.1 97.6)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="76.5" y="47.2" width="10" height="3.6" rx="1.8" fill="#FFB0C0" transform="rotate(91 81.5 49)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="62" y="62" width="10" height="3.6" rx="1.8" fill="#FFF9EA" transform="rotate(94.7 67 63.8)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="114.4" y="43.7" width="10" height="3.6" rx="1.8" fill="#FFD84D" transform="rotate(148.9 119.4 45.5)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="142.5" y="89.1" width="10" height="3.6" rx="1.8" fill="#BDE8D3" transform="rotate(83.4 147.5 90.9)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="103.4" y="153.5" width="10" height="3.6" rx="1.8" fill="#FFF9EA" transform="rotate(45.6 108.4 155.3)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="116.9" y="142.1" width="10" height="3.6" rx="1.8" fill="#FFB0C0" transform="rotate(3.4 121.9 143.9)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="110.6" y="53.9" width="10" height="3.6" rx="1.8" fill="#FFF9EA" transform="rotate(108.7 115.6 55.7)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="53.4" y="107.1" width="10" height="3.6" rx="1.8" fill="#FFD84D" transform="rotate(106.9 58.4 108.9)" stroke="#7A0016" style="stroke-width:.7px"/><rect x="81.8" y="148.3" width="10" height="3.6" rx="1.8" fill="#BDE8D3" transform="rotate(74.4 86.8 150.1)" stroke="#7A0016" style="stroke-width:.7px"/>
+</g></symbol>
+<symbol id="b-tart" viewBox="0 0 200 200"><g stroke="#45220F" stroke-linejoin="round" stroke-linecap="round" style="stroke-width:var(--ol,6px)">
+<g filter="url(#f-bake)">
+<path d="M183.4 100C183.4 101.1 183.1 102.2 182.7 103.2C182.3 104.3 181.5 105.4 180.8 106.4C180.1 107.4 179.2 108.3 178.4 109.3C177.7 110.2 176.8 111.1 176.3 112.1C175.8 113 175.3 114 175.1 114.9C174.9 115.9 175 117 175.1 118C175.3 119.1 175.7 120.3 176 121.4C176.3 122.6 176.8 123.8 177.1 125C177.4 126.2 177.6 127.5 177.6 128.6C177.6 129.8 177.5 130.9 177.1 131.9C176.6 132.9 176 133.8 175.1 134.6C174.3 135.5 173.3 136.1 172.2 136.8C171.2 137.5 169.9 138 168.9 138.6C167.8 139.2 166.7 139.7 165.9 140.4C165 141 164.3 141.7 163.7 142.6C163.1 143.4 162.8 144.4 162.5 145.4C162.2 146.5 162.1 147.7 162 148.9C161.9 150.1 161.8 151.4 161.6 152.6C161.4 153.9 161.2 155.1 160.8 156.2C160.3 157.2 159.7 158.2 159 159C158.2 159.7 157.2 160.3 156.2 160.8C155.1 161.2 153.9 161.4 152.6 161.6C151.4 161.8 150.1 161.9 148.9 162C147.7 162.1 146.5 162.2 145.4 162.5C144.4 162.8 143.4 163.1 142.6 163.7C141.7 164.3 141 165 140.4 165.9C139.7 166.7 139.2 167.8 138.6 168.9C138 169.9 137.5 171.2 136.8 172.2C136.1 173.3 135.5 174.3 134.6 175.1C133.8 176 132.9 176.6 131.9 177.1C130.9 177.5 129.8 177.6 128.6 177.6C127.5 177.6 126.2 177.4 125 177.1C123.8 176.8 122.6 176.3 121.4 176C120.3 175.7 119.1 175.3 118 175.1C117 175 115.9 174.9 114.9 175.1C114 175.3 113 175.8 112.1 176.3C111.1 176.8 110.2 177.7 109.3 178.4C108.3 179.2 107.4 180.1 106.4 180.8C105.4 181.5 104.3 182.3 103.2 182.7C102.2 183.1 101.1 183.4 100 183.4C98.9 183.4 97.8 183.1 96.8 182.7C95.7 182.3 94.6 181.5 93.6 180.8C92.6 180.1 91.7 179.2 90.7 178.4C89.8 177.7 88.9 176.8 87.9 176.3C87 175.8 86 175.3 85.1 175.1C84.1 174.9 83 175 82 175.1C80.9 175.3 79.7 175.7 78.6 176C77.4 176.3 76.2 176.8 75 177.1C73.8 177.4 72.5 177.6 71.4 177.6C70.2 177.6 69.1 177.5 68.1 177.1C67.1 176.6 66.2 176 65.4 175.1C64.5 174.3 63.9 173.3 63.2 172.2C62.5 171.2 62 169.9 61.4 168.9C60.8 167.8 60.3 166.7 59.6 165.9C59 165 58.3 164.3 57.4 163.7C56.6 163.1 55.6 162.8 54.6 162.5C53.5 162.2 52.3 162.1 51.1 162C49.9 161.9 48.6 161.8 47.4 161.6C46.1 161.4 44.9 161.2 43.8 160.8C42.8 160.3 41.8 159.7 41 159C40.3 158.2 39.7 157.2 39.2 156.2C38.8 155.1 38.6 153.9 38.4 152.6C38.2 151.4 38.1 150.1 38 148.9C37.9 147.7 37.8 146.5 37.5 145.4C37.2 144.4 36.9 143.4 36.3 142.6C35.7 141.7 35 141 34.1 140.4C33.3 139.7 32.2 139.2 31.1 138.6C30.1 138 28.8 137.5 27.8 136.8C26.7 136.1 25.7 135.5 24.9 134.6C24 133.8 23.4 132.9 22.9 131.9C22.5 130.9 22.4 129.8 22.4 128.6C22.4 127.5 22.6 126.2 22.9 125C23.2 123.8 23.7 122.6 24 121.4C24.3 120.3 24.7 119.1 24.9 118C25 117 25.1 115.9 24.9 114.9C24.7 114 24.2 113 23.7 112.1C23.2 111.1 22.3 110.2 21.6 109.3C20.8 108.3 19.9 107.4 19.2 106.4C18.5 105.4 17.7 104.3 17.3 103.2C16.9 102.2 16.6 101.1 16.6 100C16.6 98.9 16.9 97.8 17.3 96.8C17.7 95.7 18.5 94.6 19.2 93.6C19.9 92.6 20.8 91.7 21.6 90.7C22.3 89.8 23.2 88.9 23.7 87.9C24.2 87 24.7 86 24.9 85.1C25.1 84.1 25 83 24.9 82C24.7 80.9 24.3 79.7 24 78.6C23.7 77.4 23.2 76.2 22.9 75C22.6 73.8 22.4 72.5 22.4 71.4C22.4 70.2 22.5 69.1 22.9 68.1C23.4 67.1 24 66.2 24.9 65.4C25.7 64.5 26.7 63.9 27.8 63.2C28.8 62.5 30.1 62 31.1 61.4C32.2 60.8 33.3 60.3 34.1 59.6C35 59 35.7 58.3 36.3 57.4C36.9 56.6 37.2 55.6 37.5 54.6C37.8 53.5 37.9 52.3 38 51.1C38.1 49.9 38.2 48.6 38.4 47.4C38.6 46.1 38.8 44.9 39.2 43.8C39.7 42.8 40.3 41.8 41 41C41.8 40.3 42.8 39.7 43.8 39.2C44.9 38.8 46.1 38.6 47.4 38.4C48.6 38.2 49.9 38.1 51.1 38C52.3 37.9 53.5 37.8 54.6 37.5C55.6 37.2 56.6 36.9 57.4 36.3C58.3 35.7 59 35 59.6 34.1C60.3 33.3 60.8 32.2 61.4 31.1C62 30.1 62.5 28.8 63.2 27.8C63.9 26.7 64.5 25.7 65.4 24.9C66.2 24 67.1 23.4 68.1 22.9C69.1 22.5 70.2 22.4 71.4 22.4C72.5 22.4 73.8 22.6 75 22.9C76.2 23.2 77.4 23.7 78.6 24C79.7 24.3 80.9 24.7 82 24.9C83 25 84.1 25.1 85.1 24.9C86 24.7 87 24.2 87.9 23.7C88.9 23.2 89.8 22.3 90.7 21.6C91.7 20.8 92.6 19.9 93.6 19.2C94.6 18.5 95.7 17.7 96.8 17.3C97.8 16.9 98.9 16.6 100 16.6C101.1 16.6 102.2 16.9 103.2 17.3C104.3 17.7 105.4 18.5 106.4 19.2C107.4 19.9 108.3 20.8 109.3 21.6C110.2 22.3 111.1 23.2 112.1 23.7C113 24.2 114 24.7 114.9 24.9C115.9 25.1 117 25 118 24.9C119.1 24.7 120.3 24.3 121.4 24C122.6 23.7 123.8 23.2 125 22.9C126.2 22.6 127.5 22.4 128.6 22.4C129.8 22.4 130.9 22.5 131.9 22.9C132.9 23.4 133.8 24 134.6 24.9C135.5 25.7 136.1 26.7 136.8 27.8C137.5 28.8 138 30.1 138.6 31.1C139.2 32.2 139.7 33.3 140.4 34.1C141 35 141.7 35.7 142.6 36.3C143.4 36.9 144.4 37.2 145.4 37.5C146.5 37.8 147.7 37.9 148.9 38C150.1 38.1 151.4 38.2 152.6 38.4C153.9 38.6 155.1 38.8 156.2 39.2C157.2 39.7 158.2 40.3 159 41C159.7 41.8 160.3 42.8 160.8 43.8C161.2 44.9 161.4 46.1 161.6 47.4C161.8 48.6 161.9 49.9 162 51.1C162.1 52.3 162.2 53.5 162.5 54.6C162.8 55.6 163.1 56.6 163.7 57.4C164.3 58.3 165 59 165.9 59.6C166.7 60.3 167.8 60.8 168.9 61.4C169.9 62 171.2 62.5 172.2 63.2C173.3 63.9 174.3 64.5 175.1 65.4C176 66.2 176.6 67.1 177.1 68.1C177.5 69.1 177.6 70.2 177.6 71.4C177.6 72.5 177.4 73.8 177.1 75C176.8 76.2 176.3 77.4 176 78.6C175.7 79.7 175.3 80.9 175.1 82C175 83 174.9 84.1 175.1 85.1C175.3 86 175.8 87 176.3 87.9C176.8 88.9 177.7 89.8 178.4 90.7C179.2 91.7 180.1 92.6 180.8 93.6C181.5 94.6 182.3 95.7 182.7 96.8C183.1 97.8 183.4 98.9 183.4 100Z" fill="url(#g-tart)"/>
+<circle cx="100" cy="100" r="66" fill="#C97A33" stroke="none" opacity=".6"/>
+</g>
+<path d="M168.7 113.7L178.5 115.6" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M158.2 138.9L166.5 144.4" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M138.9 158.2L144.4 166.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M113.7 168.7L115.6 178.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M86.3 168.7L84.4 178.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M61.1 158.2L55.6 166.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M41.8 138.9L33.5 144.4" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M31.3 113.7L21.5 115.6" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M31.3 86.3L21.5 84.4" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M41.8 61.1L33.5 55.6" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M61.1 41.8L55.6 33.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M86.3 31.3L84.4 21.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M113.7 31.3L115.6 21.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M138.9 41.8L144.4 33.5" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M158.2 61.1L166.5 55.6" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/><path d="M168.7 86.3L178.5 84.4" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".45"/>
+<circle cx="100" cy="100" r="62" fill="url(#g-custard)"/>
+<ellipse cx="88" cy="84" rx="22" ry="15" transform="rotate(-20 88 84)" fill="url(#g-spot)" stroke="none" opacity="0.7"/><ellipse cx="124" cy="96" rx="16" ry="12" transform="rotate(30 124 96)" fill="url(#g-spot)" stroke="none" opacity="0.8"/><ellipse cx="104" cy="124" rx="24" ry="16" transform="rotate(8 104 124)" fill="url(#g-spot)" stroke="none" opacity="0.7"/><ellipse cx="72" cy="116" rx="13" ry="10" transform="rotate(-40 72 116)" fill="url(#g-spot)" stroke="none" opacity="0.8"/><ellipse cx="132" cy="126" rx="10" ry="8" transform="rotate(0 132 126)" fill="url(#g-spot)" stroke="none" opacity="0.7"/><ellipse cx="108" cy="64" rx="12" ry="8" transform="rotate(10 108 64)" fill="url(#g-spot)" stroke="none" opacity="0.8"/><ellipse cx="138" cy="72" rx="9" ry="7" transform="rotate(0 138 72)" fill="url(#g-spot)" stroke="none" opacity="0.7"/><ellipse cx="62" cy="88" rx="8" ry="6" transform="rotate(0 62 88)" fill="url(#g-spot)" stroke="none" opacity="0.6"/>
+<circle cx="100" cy="100" r="62" fill="url(#g-rim)" stroke="none"/>
+<ellipse cx="80" cy="72" rx="16" ry="8" transform="rotate(-28 80 72)" fill="url(#g-hl)" stroke="none"/>
+<path d="M40 76C46 58 60 44 78 36" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)"/>
+</g></symbol>
+<symbol id="b-bagel" viewBox="0 0 200 200"><g stroke="#45220F" stroke-linejoin="round" stroke-linecap="round" style="stroke-width:var(--ol,6px)">
+<path d="M19 100a81 81 0 1 1 162 0a81 81 0 1 1 -162 0ZM80 100a20 20 0 1 0 40 0a20 20 0 1 0 -40 0Z" fill="url(#g-bagel)" fill-rule="evenodd"/>
+<path d="M46 100a54 54 0 1 1 108 0a54 54 0 1 1 -108 0ZM80 100a20 20 0 1 0 40 0a20 20 0 1 0 -40 0Z" fill="url(#g-bagin)" fill-rule="evenodd" stroke="none"/>
+<path d="M150 150C134 162 112 168 92 166" fill="none" stroke="#6B3312" stroke-opacity=".7" style="stroke-width:calc(var(--ol,6px)*.5)" stroke-opacity=".5"/>
+<path d="M40 86C46 60 68 40 98 34" fill="none" stroke="#FFE9C4" stroke-opacity=".85" style="stroke-width:calc(var(--ol,6px)*1.3)"/>
+<path d="M124 132C132 126 138 118 140 110" fill="none" stroke="#FFD9A0" stroke-opacity=".45" style="stroke-width:calc(var(--ol,6px)*.8)"/>
+<ellipse cx="62" cy="62" rx="14" ry="6" transform="rotate(-40 62 62)" fill="url(#g-hl)" stroke="none"/>
+<ellipse cx="141.3" cy="108.7" rx="3.6" ry="1.9" transform="rotate(462.2 141.3 108.7)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="106" cy="35" rx="3.6" ry="1.9" transform="rotate(340.4 106 35)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="45.3" cy="91.8" rx="3.6" ry="1.9" transform="rotate(316.3 45.3 91.8)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="46.4" cy="116.9" rx="3.6" ry="1.9" transform="rotate(278.3 46.4 116.9)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="51" cy="51.1" rx="3.6" ry="1.9" transform="rotate(314.4 51 51.1)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="105.4" cy="55.4" rx="3.6" ry="1.9" transform="rotate(341.4 105.4 55.4)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="163.8" cy="95.2" rx="3.6" ry="1.9" transform="rotate(444.2 163.8 95.2)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="116.5" cy="52.1" rx="3.6" ry="1.9" transform="rotate(413 116.5 52.1)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="163.9" cy="77.2" rx="3.6" ry="1.9" transform="rotate(413 163.9 77.2)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="45.8" cy="90.5" rx="3.6" ry="1.9" transform="rotate(250.6 45.8 90.5)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="49.1" cy="110.7" rx="3.6" ry="1.9" transform="rotate(296.8 49.1 110.7)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="57.9" cy="55.3" rx="3.6" ry="1.9" transform="rotate(333 57.9 55.3)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="140.5" cy="99.4" rx="3.6" ry="1.9" transform="rotate(449.3 140.5 99.4)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="147.5" cy="47.2" rx="3.6" ry="1.9" transform="rotate(379.3 147.5 47.2)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="76" cy="37.8" rx="3.6" ry="1.9" transform="rotate(305.4 76 37.8)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="162.4" cy="85.7" rx="3.6" ry="1.9" transform="rotate(428 162.4 85.7)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="58.8" cy="72.5" rx="3.6" ry="1.9" transform="rotate(324.7 58.8 72.5)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="135.8" cy="90.3" rx="3.6" ry="1.9" transform="rotate(438.9 135.8 90.3)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="129.3" cy="41" rx="3.6" ry="1.9" transform="rotate(399.8 129.3 41)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="69.9" cy="79.2" rx="3.6" ry="1.9" transform="rotate(310.3 69.9 79.2)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="158.2" cy="121.8" rx="3.6" ry="1.9" transform="rotate(441.7 158.2 121.8)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="74.5" cy="71.9" rx="3.6" ry="1.9" transform="rotate(315.2 74.5 71.9)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="64.3" cy="38.6" rx="3.6" ry="1.9" transform="rotate(346.2 64.3 38.6)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="74.8" cy="48.1" rx="3.6" ry="1.9" transform="rotate(347.3 74.8 48.1)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="96.9" cy="53.1" rx="3.6" ry="1.9" transform="rotate(319.2 96.9 53.1)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/><ellipse cx="154.5" cy="85.7" rx="3.6" ry="1.9" transform="rotate(439.4 154.5 85.7)" fill="#FFF3D2" stroke="#9A6A3A" style="stroke-width:.6px"/>
+</g></symbol>
+<symbol id="b-anpan" viewBox="0 0 200 200"><g stroke="#45220F" stroke-linejoin="round" stroke-linecap="round" style="stroke-width:var(--ol,6px)">
+<path d="M100 22C150 22 182 56 182 102C182 148 148 178 100 178C52 178 18 148 18 102C18 56 50 22 100 22Z" fill="url(#g-anpan)"/>
+<path d="M30 132C46 162 76 174 108 172C140 170 164 150 174 124" fill="none" stroke="#FFE2B0" stroke-opacity=".35" style="stroke-width:calc(var(--ol,6px)*.7)"/>
+<circle cx="104" cy="104" r="14" fill="#8A4313" stroke="none" opacity=".5"/>
+<path d="M92 98C96 92 104 90 110 92" fill="none" stroke="#5A280B" stroke-opacity=".6" style="stroke-width:calc(var(--ol,6px)*.5)"/>
+<ellipse cx="101.6" cy="103.6" rx="2.6" ry="1.4" transform="rotate(41.2 101.6 103.6)" fill="#1E120C" stroke="none"/><ellipse cx="109.7" cy="104.8" rx="2.6" ry="1.4" transform="rotate(158.8 109.7 104.8)" fill="#1E120C" stroke="none"/><ellipse cx="98" cy="104.9" rx="2.6" ry="1.4" transform="rotate(176.9 98 104.9)" fill="#1E120C" stroke="none"/><ellipse cx="99.9" cy="101.7" rx="2.6" ry="1.4" transform="rotate(152 99.9 101.7)" fill="#1E120C" stroke="none"/><ellipse cx="106.1" cy="102.1" rx="2.6" ry="1.4" transform="rotate(18.3 106.1 102.1)" fill="#1E120C" stroke="none"/><ellipse cx="110" cy="104.7" rx="2.6" ry="1.4" transform="rotate(177.1 110 104.7)" fill="#1E120C" stroke="none"/><ellipse cx="99.8" cy="108.1" rx="2.6" ry="1.4" transform="rotate(55.5 99.8 108.1)" fill="#1E120C" stroke="none"/>
+<ellipse cx="72" cy="62" rx="24" ry="13" transform="rotate(-30 72 62)" fill="url(#g-hl)" stroke="none"/>
+<ellipse cx="62" cy="56" rx="7" ry="3.4" transform="rotate(-32 62 56)" fill="#FFFDF2" stroke="none" opacity=".9"/>
+<path d="M150 64C160 78 164 96 160 116" fill="none" stroke="#FFF1C9" stroke-opacity=".55" style="stroke-width:calc(var(--ol,6px)*.45)" stroke-opacity=".35"/>
+</g></symbol>
+<symbol id="b-sand" viewBox="0 0 200 200"><g stroke="#45220F" stroke-linejoin="round" stroke-linecap="round" style="stroke-width:var(--ol,6px)">
+<g filter="url(#f-bake)"><path d="M30 146L170 146Q176 146 174 152L168 162Q166 168 158 168L42 168Q34 168 32 162L26 152Q24 146 30 146Z" fill="url(#g-crust)"/></g>
+<path d="M28 138C40 128 52 146 64 134C76 124 88 144 100 132C112 122 124 144 136 132C148 122 160 144 172 136L172 148L28 148Z" fill="url(#g-lettuce)"/>
+<path d="M36 124L164 124L166 136L34 136Z" fill="url(#g-ham)"/>
+<path d="M40 114L160 114L162 124C150 124 146 134 138 128C132 124 124 124 118 124L38 124Z" fill="#FFD84D"/>
+<g filter="url(#f-bake)"><path d="M30 112C28 70 60 40 100 40C140 40 172 70 170 112Q170 118 164 118L36 118Q30 118 30 112Z" fill="url(#g-salt)"/></g>
+<ellipse cx="74" cy="64" rx="16" ry="7" transform="rotate(-22 74 64)" fill="url(#g-hl)" stroke="none"/>
+<path d="M62 78C62 76 64 76 64 78M88 66C88 64 90 64 90 66M118 70C118 68 120 68 120 70M140 84C140 82 142 82 142 84" fill="none" stroke="#FFF3D2" style="stroke-width:calc(var(--ol,6px)*.7)"/>
+</g></symbol>
+</svg>
+<!--sprites:end-->
+<svg class="sprites" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <filter id="f-ink" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -7 5.3" result="holes"/>
+      <feComposite in="d" in2="holes" operator="in"/>
+    </filter>
+  </defs>
+  <symbol id="stamp-ink" viewBox="0 0 100 100">
+    <g filter="url(#f-ink)" fill="none" stroke="#E3002B" opacity=".92">
+      <circle cx="50" cy="50" r="43" stroke-width="5"/>
+      <circle cx="50" cy="50" r="35" stroke-width="2"/>
+      <text x="50" y="58" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="25" fill="#E3002B" stroke="none">온기</text>
+      <path d="M33 70h34" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M38 28c4-5 20-5 24 0" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </symbol>
+</svg>
+
+
+<header class="site-head">
+  <div class="site-head__in">
+    <a class="logo" href="#top" aria-label="온기 베이커리 처음으로">
+      <svg class="logo__mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30C8 18 15 10 24 10S40 18 40 30C40 36 34 39 24 39S8 36 8 30Z" fill="#D98A3A" stroke="#45220F" stroke-width="3" stroke-linejoin="round"/><path d="M15 24C18 20 22 19 25 20M30 22C32 23 33 25 33 27" fill="none" stroke="#45220F" stroke-width="2.5" stroke-linecap="round"/><path d="M19 6c-2 2 2 3 0 5M27 4c-2 2 2 3 0 5" fill="none" stroke="#45220F" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span class="logo__word">온기 베이커리</span>
+    </a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="menu-btn__icon" aria-hidden="true"><i></i><i></i></span>
+      <span class="menu-btn__label">메뉴</span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="주요 메뉴">
+      <ul>
+        <li><a href="#bake">빵 나오는 시간</a></li>
+        <li><a href="#menu">오늘의 빵</a></li>
+        <li><a href="#story">이야기</a></li>
+        <li><a href="#stamp">스탬프</a></li>
+        <li><a href="#visit">오시는 길</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <canvas class="pile" aria-hidden="true"></canvas>
+    <div class="hero__fallback" aria-hidden="true">
+      <svg viewBox="0 0 200 200" style="--x:52%;--s:13%;--r:-12deg;--b:-1%"><use href="#b-cro"/></svg>
+      <svg viewBox="0 0 200 200" style="--x:63%;--s:11%;--r:20deg;--b:-1%"><use href="#b-donut"/></svg>
+      <svg viewBox="0 0 200 200" style="--x:73%;--s:12%;--r:4deg;--b:-1%"><use href="#b-loaf"/></svg>
+      <svg viewBox="0 0 200 200" style="--x:84%;--s:11%;--r:-24deg;--b:-1%"><use href="#b-bagel"/></svg>
+      <svg viewBox="0 0 200 200" style="--x:68%;--s:10%;--r:8deg;--b:9%"><use href="#b-tart"/></svg>
+      <svg viewBox="0 0 200 200" style="--x:79%;--s:11%;--r:-6deg;--b:9%"><use href="#b-salt"/></svg>
+      <svg viewBox="0 0 200 200" style="--x:40%;--s:10%;--r:30deg;--b:-1%"><use href="#b-anpan"/></svg>
+    </div>
+    <div class="hero__in">
+      <h1 class="hero__title" id="hero-title">
+        <span class="t1">오늘도</span> <span class="t2">갓</span> <span class="t3">구웠습니다</span>
+        <span class="first-batch" aria-hidden="true"><b>첫 판</b><span>07:30</span></span>
+      </h1>
+      <p class="hero__sub">아침 7시 반, 첫 판이 나옵니다. 식기 전에 오세요.</p>
+      <div class="hero__actions">
+        <a class="btn btn--cherry" href="#menu">오늘의 빵 보기</a>
+        <button class="shake" type="button" aria-label="와르르, 빵 더미 흔들기" hidden>
+          <span class="shake__face" aria-hidden="true">와르르</span>
+        </button>
+      </div>
+      <p class="hero__hint" hidden><span class="hint-fine">빵을 잡아서 던져 보세요.</span><span class="hint-touch">화면을 톡 치면 빵이 튀어 올라요.</span></p>
+    </div>
+  </section>
+
+  <section class="bake" id="bake" aria-labelledby="bake-title">
+    <div class="awning awning--valance" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="bake__head">
+        <h2 id="bake-title">빵 나오는 시간</h2>
+        <p class="bake__now" aria-live="polite">오븐 문이 열리는 시간이에요. 시간 맞춰 오시면 제일 따끈한 걸 고르실 수 있어요.</p>
+      </div>
+      <div class="rack">
+        <div class="rack__track" aria-hidden="true">
+          <span class="rack__line"></span>
+          <span class="rack__hours"><i>07</i><i>08</i><i>09</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i><i>17</i></span>
+        </div>
+        <div class="rack__now" hidden aria-hidden="true"><span class="rack__now-label">지금</span></div>
+        <ol class="rack__list">
+          <li class="batch" data-min="450" style="--t:.05">
+            <span class="batch__stem" aria-hidden="true"></span>
+            <div class="batch__card">
+              <svg class="batch__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-loaf"/></svg>
+              <div>
+                <p class="batch__time"><time datetime="07:30">07:30</time><span class="batch__state"></span></p>
+                <h3 class="batch__name">식빵·소금빵</h3>
+                <p class="batch__note">첫 판. 소금빵은 오전에 제일 많이 나가요.</p>
+              </div>
+            </div>
+          </li>
+          <li class="batch" data-min="540" style="--t:.2">
+            <span class="batch__stem" aria-hidden="true"></span>
+            <div class="batch__card">
+              <svg class="batch__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-cro"/></svg>
+              <div>
+                <p class="batch__time"><time datetime="09:00">09:00</time><span class="batch__state"></span></p>
+                <h3 class="batch__name">크루아상</h3>
+                <p class="batch__note">버터 냄새가 골목 입구까지 나는 시간.</p>
+              </div>
+            </div>
+          </li>
+          <li class="batch" data-min="660" style="--t:.4">
+            <span class="batch__stem" aria-hidden="true"></span>
+            <div class="batch__card">
+              <svg class="batch__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-sand"/></svg>
+              <div>
+                <p class="batch__time"><time datetime="11:00">11:00</time><span class="batch__state"></span></p>
+                <h3 class="batch__name">샌드위치</h3>
+                <p class="batch__note">아침에 구운 식빵으로 바로 만들어요.</p>
+              </div>
+            </div>
+          </li>
+          <li class="batch" data-min="840" style="--t:.7">
+            <span class="batch__stem" aria-hidden="true"></span>
+            <div class="batch__card">
+              <svg class="batch__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-tart"/></svg>
+              <div>
+                <p class="batch__time"><time datetime="14:00">14:00</time><span class="batch__state"></span></p>
+                <h3 class="batch__name">에그타르트</h3>
+                <p class="batch__note">오후 간식 시간에 맞춰 한 판 더.</p>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu" id="menu" aria-labelledby="menu-title">
+    <div class="wrap menu__grid">
+      <div class="menu__intro">
+        <h2 id="menu-title">매일 굽는 여섯 가지</h2>
+        <p>같은 반죽, 같은 온도로 매일 굽습니다. 다 팔리면 그날은 끝이에요.</p>
+        <p class="menu__aside">토요일에는 베이글도 따로 한 판 구워요.</p>
+      </div>
+      <ul class="menu__list">
+        <li class="item">
+          <svg class="item__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-salt"/></svg>
+          <div class="item__body">
+            <p class="item__line"><span class="item__name">소금빵</span><span class="item__dots" aria-hidden="true"></span><span class="item__price">3,200원</span></p>
+            <p class="item__desc">발효버터를 돌돌 말아 구워 바닥이 바삭해요. 위에는 소금 몇 알.</p>
+          </div>
+        </li>
+        <li class="item">
+          <svg class="item__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-cro"/></svg>
+          <div class="item__body">
+            <p class="item__line"><span class="item__name">버터 크루아상</span><span class="item__dots" aria-hidden="true"></span><span class="item__price">3,800원</span></p>
+            <p class="item__desc">스물일곱 겹으로 접은 반죽. 한 입 물면 부스러기가 떨어지는 게 정상이에요.</p>
+          </div>
+        </li>
+        <li class="item">
+          <svg class="item__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-loaf"/></svg>
+          <div class="item__body">
+            <p class="item__line"><span class="item__name">우유 식빵</span><span class="item__dots" aria-hidden="true"></span><span class="item__price">6,500원</span></p>
+            <p class="item__desc">물 대신 우유로만 반죽해 결대로 쭉 찢어져요. 반 덩이는 3,500원.</p>
+          </div>
+        </li>
+        <li class="item">
+          <svg class="item__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-donut"/></svg>
+          <div class="item__body">
+            <p class="item__line"><span class="item__name">체리 글레이즈 도넛</span><span class="item__dots" aria-hidden="true"></span><span class="item__price">2,900원</span></p>
+            <p class="item__desc">체리를 졸여 만든 새콤한 글레이즈. 오후 세 시 전에 자주 다 나가요.</p>
+          </div>
+        </li>
+        <li class="item">
+          <svg class="item__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-tart"/></svg>
+          <div class="item__body">
+            <p class="item__line"><span class="item__name">에그타르트</span><span class="item__dots" aria-hidden="true"></span><span class="item__price">2,800원</span></p>
+            <p class="item__desc">겉은 바삭한 페이스트리, 속은 갓 익힌 커스터드. 윗면을 일부러 살짝 태웠어요.</p>
+          </div>
+        </li>
+        <li class="item">
+          <svg class="item__art" viewBox="0 0 200 200" aria-hidden="true"><use href="#b-anpan"/></svg>
+          <div class="item__body">
+            <p class="item__line"><span class="item__name">단팥빵</span><span class="item__dots" aria-hidden="true"></span><span class="item__price">2,600원</span></p>
+            <p class="item__desc">팥을 직접 삶아 덜 달게 채웠어요. 가운데 검은깨가 표시예요.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="story" id="story" aria-labelledby="story-title">
+    <div class="awning awning--milk" aria-hidden="true"></div>
+    <div class="wrap">
+      <h2 id="story-title" class="story__title">밀가루, 버터, 시간. 세 가지는 아끼지 않습니다</h2>
+      <div class="story__grid">
+        <div class="story__text">
+          <p>온기 베이커리는 골목 끝 열두 평 가게에서 둘이 굽습니다. 새벽 다섯 시에 오븐을 켜고, 첫 판이 나오는 일곱 시 반에 문을 엽니다.</p>
+          <p>재료값이 오를 때마다 버터를 줄이자는 이야기가 나왔지만 한 번도 줄이지 않았어요. 대신 가짓수를 여섯 가지로 줄였습니다. 잘하는 것만 매일 똑같이 굽는 게 저희 방식이에요.</p>
+          <p class="story__sign">굽는 사람, 김온유와 박기태</p>
+        </div>
+        <figure class="recipe">
+          <figcaption class="recipe__title">온기의 기본 반죽</figcaption>
+          <dl class="recipe__list">
+            <div><dt>밀가루</dt><dd>국산 밀을 칠 할 섞어 씹을수록 고소하게</dd></div>
+            <div><dt>버터</dt><dd>발효버터만. 소금빵 하나에 10g씩 말아 넣어요</dd></div>
+            <div><dt>시간</dt><dd>냉장고에서 하룻밤, 18시간 숙성</dd></div>
+          </dl>
+          <p class="recipe__note">급하게 구운 빵은 다음 날 아침에 티가 나요.</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="stamp" id="stamp" aria-labelledby="stamp-title">
+    <div class="awning awning--cherry" aria-hidden="true"></div>
+    <div class="wrap stamp__grid">
+      <div class="stamp__intro">
+        <h2 id="stamp-title">열 번 오시면 한 잔 드려요</h2>
+        <p>빵을 사실 때마다 도장 하나. 열 칸을 채우면 아메리카노 한 잔을 드려요. 여기서 미리 찍어 보세요.</p>
+        <p class="stamp__status" aria-live="polite">아직 도장이 없어요. 칸을 눌러 찍어 보세요.</p>
+        <button class="btn btn--ghost stamp__reset" type="button" disabled>다시 모으기</button>
+      </div>
+      <div class="coupon">
+        <div class="coupon__head">
+          <p class="coupon__title">온기 스탬프 카드</p>
+          <p class="coupon__count"><span class="coupon__n">0</span> / 10</p>
+        </div>
+        <ol class="coupon__slots">
+          <li><button class="slot" type="button" aria-pressed="false" aria-label="1번째 칸에 도장 찍기"><span class="slot__num" aria-hidden="true">1</span></button></li>
+          <li><button class="slot" type="button" aria-pressed="false" aria-label="2번째 칸에 도장 찍기"><span class="slot__num" aria-hidden="true">2</span></button></li>
+          <li><button class="slot" type="button" aria-pressed="false" aria-label="3번째 칸에 도장 찍기"><span class="slot__num" aria-hidden="true">3</span></button></li>
+          <li><button class="slot" type="button" aria-pressed="false" aria-label="4번째 칸에 도장 찍기"><span class="slot__num" aria-hidden="true">4</span></button></li>
+          <li><button class="slot" type="button" aria-pressed="false" aria-label="5번째 칸에 도장 찍기"><span class="slot__num" aria-hidden="true">5</span></button></li>
+          <li><button class="slot" type="button" aria-pressed="false" aria-label="6번째 칸에 도장 찍기"><span class="slot__num" aria-hidden="true">6</span></button></li>
+          <li><button class="slot" type="button" aria-pressed="false" aria-label="7번째 칸에 도장 찍기"><span class="slot__num" aria-hidden="true">7</span></button></li>
+          <li><button class="slot" type="button" aria-pressed="false" aria-label="8번째 칸에 도장 찍기"><span class="slot__num" aria-hidden="true">8</span></button></li>
+          <li><button class="slot" type="button" aria-pressed="false" aria-label="9번째 칸에 도장 찍기"><span class="slot__num" aria-hidden="true">9</span></button></li>
+          <li><button class="slot slot--cup" type="button" aria-pressed="false" aria-label="10번째 칸에 도장 찍기, 마지막 칸"><svg class="slot__cup" viewBox="0 0 40 40" aria-hidden="true"><path d="M9 14h20l-2 18a3 3 0 0 1-3 3H14a3 3 0 0 1-3-3Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M29 18h3a4 4 0 0 1 0 8h-4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M15 9c0-2 2-2 2-4M21 9c0-2 2-2 2-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></li>
+        </ol>
+        <div class="coupon__reward" hidden>
+          <p class="coupon__prize">아메리카노 한 잔 무료</p>
+          <p class="coupon__fine">컨셉 시안의 놀이용 쿠폰이라 매장에서 쓰실 수는 없어요.</p>
+        </div>
+        <div class="confetti" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit" id="visit" aria-labelledby="visit-title">
+    <div class="awning awning--mint" aria-hidden="true"></div>
+    <div class="wrap visit__grid">
+      <div class="visit__text">
+        <h2 id="visit-title">골목 끝 노란 차양</h2>
+        <p>가상역 2번 출구에서 나와 꽃집 골목으로 들어오세요. 걸어서 4분, 골목 끝에 노란 차양이 보이면 다 오신 거예요.</p>
+        <dl class="info">
+          <div><dt>주소</dt><dd>서울 OO구 가상로 12, 1층</dd></div>
+          <div><dt>여는 시간</dt><dd>화요일부터 일요일, 07:30부터 20:00까지<br><span class="info__sub">빵이 다 팔리면 조금 일찍 닫아요.</span></dd></div>
+          <div><dt>쉬는 날</dt><dd>매주 월요일</dd></div>
+          <div><dt>전화</dt><dd><a href="tel:020000000">02-000-0000</a></dd></div>
+        </dl>
+      </div>
+      <figure class="map">
+        <svg viewBox="0 0 560 440" role="img" aria-label="약도: 가상역 2번 출구에서 가상로를 따라 걷다가 꽃집 앞 골목으로 들어가 끝까지 가면 노란 차양의 온기 베이커리가 있어요.">
+          <rect width="560" height="440" fill="#FFF9EA"/>
+          <g fill="#FFEFB0" stroke="#45220F" stroke-width="3" stroke-linejoin="round">
+            <rect x="24" y="24" width="186" height="120" rx="18"/>
+            <rect x="24" y="168" width="186" height="140" rx="18"/>
+            <rect x="290" y="24" width="246" height="92" rx="18"/>
+            <rect x="290" y="236" width="120" height="72" rx="18"/>
+            <rect x="434" y="236" width="102" height="72" rx="18"/>
+          </g>
+          <rect x="290" y="140" width="98" height="72" rx="18" fill="#BDE8D3" stroke="#45220F" stroke-width="3"/>
+          <g fill="#45220F" font-family="'Gowun Dodum', sans-serif" font-size="17">
+            <text x="339" y="182" text-anchor="middle">작은 공원</text>
+          </g>
+          <path d="M0 332H560V404H0Z" fill="#FFFFFF" stroke="#45220F" stroke-width="3"/>
+          <path d="M20 368H540" stroke="#45220F" stroke-width="2" stroke-dasharray="14 12" opacity=".35"/>
+          <text x="488" y="396" font-family="'Gowun Dodum', sans-serif" font-size="18" fill="#45220F" text-anchor="middle">가상로</text>
+          <path d="M232 332V40" stroke="#FFFFFF" stroke-width="40" stroke-linecap="round"/>
+          <path d="M212 332V44M252 332V44" stroke="#45220F" stroke-width="3" stroke-linecap="round"/>
+          <text x="0" y="0" transform="translate(232 288) rotate(-90)" font-family="'Gowun Dodum', sans-serif" font-size="16" fill="#45220F">꽃집 골목</text>
+          <path class="map__route" d="M78 386H232V84" fill="none" stroke="#E3002B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 13"/>
+          <g transform="translate(64 386)">
+            <circle r="20" fill="#E3002B" stroke="#45220F" stroke-width="3"/>
+            <text y="7" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="20" fill="#FFF9EA">2</text>
+          </g>
+          <text x="96" y="430" font-family="'Gowun Dodum', sans-serif" font-size="17" fill="#45220F">가상역 2번 출구</text>
+          <g transform="translate(270 300)">
+            <circle r="16" fill="#BDE8D3" stroke="#45220F" stroke-width="3"/>
+            <path d="M0-7a4 4 0 1 1 0 8a4 4 0 1 1 0-8M-7 0a4 4 0 1 1 8 0a4 4 0 1 1-8 0M0 7a4 4 0 1 1 0-8M7 0a4 4 0 1 1-8 0" fill="#E3002B" stroke="none"/>
+            <circle r="2.6" fill="#FFD84D"/>
+          </g>
+          <text x="294" y="292" font-family="'Gowun Dodum', sans-serif" font-size="17" fill="#45220F">꽃집</text>
+          <g class="map__shop" transform="translate(164 22)">
+            <rect x="20" y="22" width="96" height="58" rx="6" fill="#FFF9EA" stroke="#45220F" stroke-width="3"/>
+            <rect x="30" y="44" width="34" height="28" rx="4" fill="#BDE8D3" stroke="#45220F" stroke-width="2.5"/>
+            <rect x="74" y="40" width="30" height="40" rx="4" fill="#D98A3A" stroke="#45220F" stroke-width="2.5"/>
+            <path d="M12 8H124V24H12Z" fill="#FFD84D" stroke="#45220F" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M28 8V24M44 8V24M60 8V24M76 8V24M92 8V24M108 8V24" stroke="#FFF9EA" stroke-width="7"/>
+            <path d="M12 24a8 8 0 0 0 16 0a8 8 0 0 0 16 0a8 8 0 0 0 16 0a8 8 0 0 0 16 0a8 8 0 0 0 16 0a8 8 0 0 0 16 0a8 8 0 0 0 16 0Z" fill="#FFD84D" stroke="#45220F" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M12 8H124V24H12Z" fill="none" stroke="#45220F" stroke-width="3" stroke-linejoin="round"/>
+          </g>
+          <g transform="translate(334 64)">
+            <rect x="-6" y="-26" width="186" height="44" rx="22" fill="#45220F"/>
+            <text x="87" y="4" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="20" fill="#FFD84D">온기 베이커리</text>
+            <path d="M-6 -4L-52 -4" stroke="#45220F" stroke-width="3" stroke-dasharray="3 6"/>
+          </g>
+          <g transform="translate(100 236) rotate(-6)">
+            <rect x="-62" y="-22" width="124" height="44" rx="22" fill="#FFD84D" stroke="#45220F" stroke-width="3"/>
+            <text y="7" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="19" fill="#45220F">걸어서 4분</text>
+          </g>
+        </svg>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="awning awning--butter" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="foot__top">
+      <p class="foot__logo">온기 베이커리</p>
+      <p class="foot__line">오늘 구운 빵은 오늘 다 팝니다.</p>
+    </div>
+    <div class="foot__cols">
+      <p>서울 OO구 가상로 12, 1층<br>화요일부터 일요일 07:30부터 20:00까지, 월요일 휴무</p>
+      <p>전화 <a href="tel:020000000">02-000-0000</a></p>
+      <p><a href="#top">맨 위로</a></p>
+    </div>
+    <p class="foot__copy">© 2026 온기 베이커리</p>
+    <p class="foot__disclaimer">이 사이트는 첫화면 스튜디오가 만든 가상의 브랜드 컨셉 시안입니다. 실제 업체, 가격, 후기가 아닙니다.</p>
+  </div>
+</footer>
+
+<script src="../../assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="../../assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="main.js" defer></script>
+<script src="../../assets/shared/concept-badge.js" defer></script>
+</body>
+</html>

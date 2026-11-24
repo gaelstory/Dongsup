@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>숲멍 스테이 | 컨셉 시안 · 첫화면 스튜디오</title>
+<meta name="description" content="강원 홍천 숲 한가운데, 하루 한 팀만 머무는 독채 스테이. 새벽 안개부터 별밤까지, 숲멍 스테이에서 보내는 하루를 미리 살아 보세요.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1B3A32">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231B3A32'/%3E%3Cpath d='M16 6 26 26H6Z' fill='none' stroke='%23F6F8F7' stroke-width='2.4' stroke-linejoin='round'/%3E%3Crect x='14' y='18' width='4' height='5' fill='%23F3C46B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Nanum+Myeongjo:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="style.css">
+<script>
+  document.documentElement.classList.add('js');
+  if (/[?&]shot=1/.test(location.search)) document.documentElement.classList.add('is-shot');
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">본문 바로가기</a>
+
+<!-- scene:start -->
+<div class="scene" aria-hidden="true">
+<svg class="layer layer--sky" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice" focusable="false">
+<defs>
+  <linearGradient id="g-sky" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="700">
+    <stop offset="0" stop-color="#9FB4B8"/><stop offset=".5" stop-color="#C4D2D0"/><stop offset=".82" stop-color="#DCE4E0"/><stop offset="1" stop-color="#F0DCC8"/>
+  </linearGradient>
+  <radialGradient id="g-sunglow"><stop offset="0" stop-color="#F7D9B4" stop-opacity=".9"/><stop offset=".35" stop-color="#F7D9B4" stop-opacity=".35"/><stop offset="1" stop-color="#F7D9B4" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-horizon" cx=".5" cy="1" r=".75"><stop offset="0" stop-color="#F6CFA8" stop-opacity="1"/><stop offset="1" stop-color="#F6CFA8" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-moonglow"><stop offset="0" stop-color="#E8ECF2" stop-opacity=".5"/><stop offset="1" stop-color="#E8ECF2" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-milky"><stop offset="0" stop-color="#C9D4E8" stop-opacity=".55"/><stop offset=".6" stop-color="#C9D4E8" stop-opacity=".16"/><stop offset="1" stop-color="#C9D4E8" stop-opacity="0"/></radialGradient>
+  <mask id="m-moon"><rect x="-60" y="-60" width="120" height="120" fill="#fff"/><circle cx="9" cy="-6" r="19" fill="#000"/></mask>
+</defs>
+<rect class="sky" x="-800" y="-1800" width="3200" height="3400" fill="url(#g-sky)"/>
+<g class="milky" opacity="0"><ellipse cx="0" cy="0" rx="900" ry="70" fill="url(#g-milky)"/></g>
+<g class="stars" opacity="0" fill="#F6F8F7"></g>
+<ellipse class="horizon" cx="800" cy="640" rx="1100" ry="300" fill="url(#g-horizon)" opacity=".55"/>
+<g class="sun" transform="translate(1380 600)"><circle r="260" fill="url(#g-sunglow)" class="sun-glow"/><circle r="26" class="sun-disc" fill="#FFF1DC"/></g>
+<g class="moon" transform="translate(1380 700)" opacity="0"><circle r="120" fill="url(#g-moonglow)"/><circle r="20" fill="#F2EEDC" mask="url(#m-moon)"/></g></svg>
+<svg class="layer layer--far" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice" focusable="false">
+<defs>
+  <linearGradient id="g-haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C3CFCB"/><stop offset=".4" stop-color="#D6DFDB"/></linearGradient>
+  <linearGradient id="g-far" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A3B6AF"/><stop offset=".36" stop-color="#C2CFCA"/></linearGradient>
+</defs>
+<path class="haze" fill="url(#g-haze)" d="M-460 1500L-460 560C-386.7 546.7 -313.3 522.6 -240 520C-173.3 517.6 -106.7 550.2 -40 545C30 539.5 100 490.5 170 488C240 485.5 310 533.2 380 530C440 527.2 500 472.8 560 470C626.7 466.8 693.3 509.1 760 512C816.7 514.5 873.3 484.7 930 486C993.3 487.4 1056.7 524.1 1120 520C1180 516.1 1240 464.5 1300 462C1360 459.5 1420 502.7 1480 505C1540 507.3 1600 473.6 1660 476C1726.7 478.6 1793.3 516 1860 520C1926.7 524 1993.3 506.7 2060 500L2060 1500Z"/>
+<path class="far" fill="url(#g-far)" d="M-460 1500L-460 640C-380 626.7 -300 613 -220 600C-160 590.3 -100 571.3 -40 572C13.3 572.6 66.7 606.5 120 604C180 601.2 240 557.7 300 556C356.7 554.4 413.3 593.3 470 594C526.7 594.7 583.3 559.3 640 560C693.3 560.6 746.7 595.6 800 598C850 600.3 900 583.7 950 574C1000 564.3 1050 537.7 1100 540C1150 542.3 1200 583.7 1250 588C1300 592.3 1350 563.4 1400 566C1453.3 568.8 1506.7 603 1560 604C1613.3 605 1666.7 572.6 1720 572C1780 571.3 1840 597.5 1900 600C1953.3 602.2 2006.7 590.7 2060 586L2060 1500ZM-462 646l2-5 2 5zM-454 643l3-8 2 8zM-446 641l2-7 2 7zM-437 642l2-5 2 5zM-430 640l2-8 2 8zM-423 638l2-6 1 6zM-415 636l2-7 2 7zM-406 636l1-5 2 5zM-401 635l2-8 3 8zM-393 634l3-8 3 8zM-386 633l3-7 2 7zM-379 631l3-10 2 10zM-371 631l2-5 2 5zM-362 626l2-5 1 5zM-358 626l3-8 2 8zM-351 627l2-7 2 7zM-344 626l2-5 2 5zM-340 623l3-9 3 9zM-331 622l3-9 2 9zM-324 623l2-8 3 8zM-316 622l3-10 3 10zM-307 621l3-10 3 10zM-301 618l2-6 1 6zM-293 618l2-7 2 7zM-289 614l3-9 3 9zM-281 616l3-7 2 7zM-275 615l2-5 1 5zM-268 612l2-7 3 7zM-261 612l3-9 2 9zM-253 611l3-9 3 9zM-246 608l1-5 2 5zM-240 607l1-5 2 5zM-235 607l1-6 2 6zM-227 606l2-7 1 7zM-218 605l2-5 1 5zM-212 605l1-7 2 7zM-203 603l1-5 2 5zM-197 600l1-5 1 5zM-189 597l1-6 2 6zM-183 597l1-4 1 4zM-178 596l1-5 2 5zM-172 594l2-5 1 5zM-165 593l2-5 1 5zM-159 593l2-5 1 5zM-153 590l1-3 1 3zM-146 591l1-5 2 5zM-140 590l1-5 2 5zM-132 589l1-5 2 5zM-126 586l2-5 1 5zM-118 585l1-4 2 4zM-110 584l2-5 1 5zM-101 583l1-3 1 3zM-93 583l2-7 2 7zM-86 580l1-3 2 3zM-79 577l2-6 2 6zM-72 577l1-5 2 5zM-64 577l2-6 2 6zM-58 578l2-6 2 6zM-51 578l2-6 1 6zM-44 577l1-6 2 6zM-40 578l3-8 2 8zM-33 577l1-6 2 6zM-27 576l2-7 2 7zM-19 579l3-9 2 9zM-12 582l3-7 2 7zM-7 582l3-9 2 9zM1 584l1-6 2 6zM7 584l3-9 3 9zM14 587l2-6 2 6zM20 590l2-9 3 9zM25 590l3-11 4 11zM34 593l3-10 3 10zM39 593l3-11 3 11zM48 596l3-9 3 9zM54 600l3-9 3 9zM63 600l3-8 2 8zM73 603l2-8 2 8zM79 608l4-13 4 13zM88 606l2-8 2 8zM94 606l4-12 4 12zM104 609l2-9 3 9zM110 611l3-10 2 10zM116 608l4-12 3 12zM124 608l3-10 3 10zM132 606l3-9 3 9zM139 605l4-12 3 12zM145 604l4-12 3 12zM152 604l3-12 3 12zM159 599l4-12 4 12zM169 600l2-8 2 8zM173 596l3-12 3 12zM181 592l3-11 4 11zM189 593l3-9 3 9zM197 589l3-11 4 11zM202 584l4-12 4 12zM209 584l4-12 4 12zM216 580l4-11 3 11zM223 579l3-9 3 9zM229 576l3-12 4 12zM236 573l2-6 1 6zM244 572l2-7 2 7zM250 570l2-7 2 7zM257 568l2-7 2 7zM265 566l3-8 2 8zM271 563l2-7 3 7zM277 562l2-9 2 9zM285 563l1-5 2 5zM293 563l2-7 2 7zM300 563l2-6 2 6zM306 561l2-8 3 8zM312 560l2-9 3 9zM319 561l3-9 3 9zM328 565l2-5 1 5zM336 563l2-6 2 6zM343 565l2-5 1 5zM349 568l2-7 1 7zM357 570l1-5 2 5zM364 572l1-5 1 5zM372 577l1-6 2 6zM379 579l2-7 2 7zM385 580l2-7 2 7zM393 582l2-6 2 6zM399 583l2-8 2 8zM407 589l2-7 2 7zM415 590l1-5 1 5zM420 593l1-5 1 5zM426 592l2-8 2 8zM432 593l2-8 3 8zM438 594l2-6 1 6zM446 599l2-8 2 8zM451 598l3-7 2 7zM459 598l2-7 2 7zM468 598l1-6 2 6zM476 601l2-7 2 7zM484 600l2-9 3 9zM491 596l2-6 1 6zM498 598l2-7 2 7zM505 596l3-9 2 9zM511 592l2-7 2 7zM519 592l2-7 2 7zM528 590l1-7 2 7zM535 587l2-7 2 7zM541 586l3-9 2 9zM549 582l2-5 2 5zM557 581l3-9 2 9zM565 580l3-9 2 9zM572 575l2-5 2 5zM578 576l2-8 3 8zM584 572l2-7 2 7zM591 571l2-7 1 7zM597 570l2-6 2 6zM602 571l2-10 3 10zM609 567l2-9 3 9zM616 568l1-5 2 5zM622 564l2-6 2 6zM631 563l2-7 2 7zM636 563l2-6 2 6zM643 565l2-8 2 8zM649 566l2-6 2 6zM657 567l1-5 2 5zM664 567l2-6 2 6zM673 571l2-6 3 6zM680 570l1-4 1 4zM688 573l1-5 2 5zM697 577l1-5 2 5zM702 577l2-5 1 5zM710 581l1-5 2 5zM717 584l1-5 2 5zM723 583l1-4 2 4zM729 588l1-3 0 3zM735 588l1-5 1 5zM742 592l2-4 1 4zM747 592l2-6 2 6zM755 597l2-6 1 6zM764 598l1-5 2 5zM771 600l1-5 1 5zM777 602l1-4 1 4zM782 603l1-7 2 7zM788 603l2-6 2 6zM793 604l2-7 2 7zM799 603l2-7 3 7zM807 603l2-7 1 7zM814 603l2-7 2 7zM821 602l1-5 2 5zM826 604l2-8 2 8zM832 602l3-6 2 6zM839 600l3-9 3 9zM846 602l2-7 2 7zM851 601l3-9 3 9zM859 600l2-8 2 8zM865 598l3-7 3 7zM870 596l3-10 3 10zM878 593l2-6 2 6zM884 591l4-11 4 11zM893 589l4-12 4 12zM901 588l3-11 3 11zM909 588l3-7 2 7zM915 587l3-9 3 9zM921 585l3-8 2 8zM929 584l2-8 3 8zM934 581l4-13 4 13zM943 578l3-9 3 9zM951 576l3-12 4 12zM956 578l4-11 3 11zM962 574l3-10 3 10zM968 574l3-9 3 9zM974 573l5-13 4 13zM982 571l3-10 2 10zM987 568l3-9 2 9zM992 566l5-14 4 14zM1000 565l4-11 3 11zM1005 564l4-14 3 14zM1012 562l4-13 4 13zM1022 557l3-9 2 9zM1027 556l3-9 2 9zM1035 555l4-10 3 10zM1042 552l3-9 3 9zM1048 550l3-11 3 11zM1055 550l2-9 3 9zM1061 549l4-13 3 13zM1067 545l3-9 3 9zM1073 548l4-12 3 12zM1081 545l2-8 3 8zM1089 544l2-7 3 7zM1097 544l2-9 2 9zM1105 548l2-9 3 9zM1111 545l2-7 2 7zM1117 546l2-8 3 8zM1125 549l2-7 2 7zM1129 553l3-10 3 10zM1139 555l2-9 3 9zM1146 557l2-5 1 5zM1153 560l2-6 2 6zM1160 564l2-6 2 6zM1168 567l2-8 2 8zM1173 569l2-6 2 6zM1180 571l2-6 2 6zM1188 573l1-6 2 6zM1195 579l2-7 2 7zM1203 582l2-5 2 5zM1212 585l2-8 2 8zM1220 586l1-5 2 5zM1227 587l2-7 3 7zM1234 589l2-4 1 4zM1242 594l2-6 2 6zM1251 591l2-6 2 6zM1256 595l2-8 3 8zM1263 593l2-6 2 6zM1272 592l1-5 2 5zM1280 592l2-6 1 6zM1287 591l2-6 2 6zM1295 590l3-8 3 8zM1304 587l3-8 2 8zM1310 588l2-6 2 6zM1318 584l2-7 2 7zM1326 581l3-9 2 9zM1335 580l1-7 2 7zM1341 578l3-8 2 8zM1347 578l3-9 3 9zM1355 576l2-6 2 6zM1363 574l1-6 2 6zM1370 570l3-9 2 9zM1379 571l2-6 3 6zM1385 571l3-8 2 8zM1391 570l2-7 2 7zM1397 570l2-6 2 6zM1406 571l2-6 2 6zM1413 572l3-10 3 10zM1420 575l2-7 1 7zM1424 573l3-9 3 9zM1431 575l2-6 2 6zM1438 579l3-8 3 8zM1444 581l3-9 2 9zM1452 581l2-5 1 5zM1457 582l3-8 2 8zM1463 586l2-7 3 7zM1472 588l2-6 1 6zM1480 593l3-9 2 9zM1488 594l1-5 2 5zM1495 595l1-6 2 6zM1503 599l2-6 2 6zM1509 600l2-5 1 5zM1517 601l2-7 2 7zM1525 606l2-6 2 6zM1532 605l1-6 2 6zM1539 608l2-5 2 5zM1548 608l2-6 2 6zM1557 610l2-6 2 6zM1564 610l1-3 1 3zM1571 609l1-4 1 4zM1576 609l1-5 2 5zM1583 608l2-6 2 6zM1589 607l1-6 2 6zM1597 603l1-4 2 4zM1605 603l2-6 2 6zM1611 603l2-5 2 5zM1617 599l1-3 1 3zM1622 597l2-6 1 6zM1628 598l1-5 2 5zM1636 595l2-4 1 4zM1644 591l1-4 2 4zM1652 588l1-4 1 4zM1657 590l2-7 2 7zM1664 587l2-6 2 6zM1669 585l2-5 1 5zM1677 581l2-6 1 6zM1685 581l2-7 2 7zM1692 578l2-6 1 6zM1699 578l1-5 1 5zM1705 577l2-7 2 7zM1711 578l3-9 2 9zM1717 576l2-7 2 7zM1722 577l3-8 2 8zM1730 576l2-8 3 8zM1737 577l3-9 3 9zM1744 580l4-10 3 10zM1750 578l4-11 3 11zM1759 580l3-11 4 11zM1766 581l2-9 3 9zM1774 583l3-12 3 12zM1782 585l3-9 3 9zM1791 587l3-8 3 8zM1797 588l4-10 3 10zM1804 589l2-8 2 8zM1809 589l3-10 3 10zM1815 593l3-9 3 9zM1820 593l3-11 4 11zM1828 592l2-10 3 10zM1832 594l4-10 3 10zM1838 598l4-13 4 13zM1846 597l2-8 2 8zM1853 602l3-11 3 11zM1859 601l3-11 4 11zM1866 602l2-7 2 7zM1871 603l3-11 3 11zM1880 604l3-8 2 8zM1886 606l3-10 4 10zM1892 603l5-13 4 13zM1900 605l2-10 3 10zM1908 605l3-10 3 10zM1916 603l3-10 4 10zM1922 607l3-13 3 13zM1930 607l2-7 2 7zM1935 606l3-8 2 8zM1942 605l2-10 3 10zM1947 603l2-9 3 9zM1953 604l3-9 3 9zM1959 601l3-8 2 8zM1967 601l2-7 2 7zM1972 600l3-9 3 9zM1982 599l2-7 2 7zM1989 597l3-9 2 9zM1996 598l3-8 3 8zM2004 597l2-5 2 5zM2008 598l3-9 3 9zM2015 597l3-8 2 8zM2023 594l2-8 2 8zM2029 593l2-8 2 8zM2034 595l2-8 3 8zM2041 592l2-6 2 6zM2047 593l2-6 2 6zM2055 592l2-5 2 5z"/></svg>
+<svg class="layer layer--mid" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice" focusable="false">
+<defs><linearGradient id="g-mid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7F978E"/><stop offset=".3" stop-color="#A5B6AF"/></linearGradient></defs>
+<path class="mid" fill="url(#g-mid)" fill-rule="nonzero" d="M-460 1500L-460 712C-393.3 702.7 -326.7 686.2 -260 684C-203.3 682.2 -146.7 703.7 -90 700C-33.3 696.3 23.3 663.7 80 662C136.7 660.3 193.3 691.3 250 690C306.7 688.7 363.3 654 420 654C480 654 540 686.8 600 690C653.3 692.8 706.7 669.5 760 672C806.7 674.2 853.3 701.7 900 704C946.7 706.3 993.3 684.7 1040 686C1090 687.4 1140 713.7 1190 712C1240 710.3 1290 678.3 1340 676C1393.3 673.6 1446.7 700 1500 698C1553.3 696 1606.7 665.3 1660 664C1720 662.6 1780 688.2 1840 690C1913.3 692.2 1986.7 680.7 2060 676L2060 1500ZM-463 717l2-5 -1 0 2-7 2 7 -1 0 2 5zM-454 717l2-7 -1 0 3-11 2 11 -1 0 3 7zM-445 719l2-5 -1 0 2-7 2 7 -1 0 2 5zM-436 719l3-8 -1 0 3-12 3 12 -2 0 3 8zM-424 718l2-5 -1 0 2-7 1 7 0 0 1 5zM-416 713l2-6 -1 0 2-9 2 9 -1 0 2 6zM-405 713l3-8 -1 0 2-11 2 11 -1 0 3 8zM-392 709l2-8 -1 0 2-10 2 10 0 0 2 8zM-383 708l3-10 -1 0 3-12 3 12 -1 0 3 10zM-375 703l4-9 -2 0 3-12 4 12 -2 0 4 9zM-366 703l3-9 -1 0 3-11 3 11 -1 0 3 9zM-355 701l3-8 -1 0 2-11 3 11 -1 0 3 8zM-344 698l3-7 -1 0 2-11 3 11 -1 0 2 7zM-332 700l3-10 -1 0 3-14 3 14 -1 0 3 10zM-323 697l3-9 -1 0 2-11 3 11 -1 0 3 9zM-310 694l3-7 -1 0 2-10 2 10 -1 0 2 7zM-299 694l3-9 -1 0 3-12 3 12 -1 0 3 9zM-288 695l2-7 0 0 2-10 2 10 -1 0 2 7zM-276 693l2-7 -1 0 2-9 2 9 -1 0 3 7zM-264 695l2-6 -1 0 2-8 2 8 -1 0 3 6zM-253 692l3-9 -1 0 3-12 3 12 -2 0 4 9zM-241 693l3-8 -1 0 2-11 2 11 -1 0 3 8zM-232 692l3-9 -1 0 3-12 3 12 -1 0 3 9zM-219 695l3-7 -1 0 2-9 3 9 -1 0 2 7zM-210 695l3-8 -1 0 2-12 3 12 -1 0 3 8zM-196 700l2-4 -1 0 2-7 2 7 -1 0 2 4zM-188 703l3-8 -1 0 2-11 3 11 -1 0 2 8zM-175 702l2-5 -1 0 2-7 1 7 0 0 1 5zM-165 706l2-7 -1 0 2-10 2 10 -1 0 3 7zM-156 701l3-6 -1 0 2-10 2 10 -1 0 2 6zM-146 706l2-6 -1 0 2-8 2 8 -1 0 3 6zM-132 708l1-4 -1 0 2-6 1 6 -1 0 1 4zM-121 712l2-5 -1 0 2-6 1 6 0 0 1 5zM-108 711l1-4 0 0 1-6 1 6 0 0 1 4zM-97 707l2-5 0 0 1-7 2 7 -1 0 2 5zM-87 707l1-5 0 0 1-6 2 6 -1 0 2 5zM-77 708l1-5 0 0 1-5 1 5 0 0 1 5zM-68 702l2-6 -1 0 2-8 2 8 -1 0 2 6zM-56 704l2-6 -1 0 2-8 2 8 -1 0 2 6zM-46 699l2-6 -1 0 2-9 2 9 -1 0 2 6zM-38 699l3-9 -1 0 3-11 3 11 -2 0 4 9zM-23 693l2-7 -1 0 2-9 2 9 -1 0 2 7zM-14 691l2-6 -1 0 2-10 2 10 -1 0 2 6zM-4 686l2-7 -1 0 2-8 2 8 0 0 2 7zM7 684l3-9 -1 0 3-13 3 13 -1 0 3 9zM15 681l3-9 -1 0 3-12 3 12 -1 0 3 9zM23 679l5-10 -2 0 4-15 3 15 -1 0 4 10zM36 675l3-9 -1 0 3-14 3 14 -1 0 3 9zM48 671l3-8 -1 0 3-10 3 10 -2 0 3 8zM56 675l3-9 -1 0 3-14 3 14 -1 0 3 9zM66 667l5-14 -2 0 5-19 4 19 -2 0 5 14zM77 673l4-9 -2 0 4-13 3 13 -2 0 4 9zM87 670l4-13 -2 0 5-17 4 17 -2 0 5 13zM97 671l5-15 -2 0 4-20 4 20 -1 0 4 15zM111 674l3-9 -1 0 2-11 2 11 -1 0 3 9zM119 676l4-12 -2 0 4-16 3 16 -2 0 4 12zM126 676l5-14 -2 0 4-19 4 19 -2 0 5 14zM136 678l4-11 -2 0 4-15 3 15 -2 0 4 11zM147 681l5-12 -2 0 4-18 4 18 -2 0 5 12zM161 683l4-12 -2 0 4-16 3 16 -1 0 4 12zM170 689l5-14 -2 0 4-19 4 19 -2 0 5 14zM181 692l4-13 -1 0 3-17 4 17 -1 0 4 13zM192 691l3-9 -1 0 3-12 3 12 -1 0 3 9zM199 692l4-13 -2 0 4-18 4 18 -2 0 4 13zM209 694l5-12 -2 0 4-18 4 18 -2 0 4 12zM224 697l3-9 -1 0 2-13 3 13 -1 0 2 9zM235 700l2-7 -1 0 2-10 2 10 -1 0 2 7zM241 699l4-12 -2 0 4-15 3 15 -2 0 4 12zM251 700l3-10 -1 0 3-13 3 13 -1 0 3 10zM263 698l3-9 -1 0 2-12 3 12 -1 0 2 9zM273 698l4-10 -2 0 4-15 4 15 -2 0 4 10zM283 693l3-10 -1 0 3-14 3 14 -1 0 3 10zM295 692l2-7 -1 0 2-9 3 9 -1 0 2 7zM307 684l2-5 0 0 1-7 2 7 -1 0 2 5zM316 685l2-6 0 0 1-7 2 7 -1 0 2 6zM326 681l3-9 -2 0 3-11 3 11 -1 0 3 9zM339 679l1-6 0 0 1-9 2 9 -1 0 2 6zM349 678l3-6 -1 0 2-9 2 9 -1 0 2 6zM361 673l2-6 -1 0 2-8 1 8 0 0 1 6zM371 669l3-8 -1 0 3-12 2 12 -1 0 3 8zM381 666l2-5 0 0 1-7 2 7 -1 0 2 5zM393 664l3-6 -1 0 2-9 2 9 -1 0 2 6zM406 666l2-7 0 0 2-10 2 10 -1 0 2 7zM415 659l2-6 0 0 1-8 2 8 -1 0 2 6zM425 661l2-7 -1 0 3-11 2 11 -1 0 2 7zM436 662l2-6 -1 0 2-9 2 9 -1 0 2 6zM447 665l3-8 -1 0 2-12 3 12 -1 0 3 8zM458 669l2-8 -1 0 3-10 2 10 -1 0 2 8zM470 667l3-8 -1 0 2-11 3 11 -1 0 3 8zM481 670l3-8 -2 0 3-11 3 11 -1 0 3 8zM491 674l3-10 -1 0 3-14 3 14 -2 0 4 10zM502 678l2-6 -1 0 3-10 2 10 -1 0 3 6zM510 681l4-11 -2 0 4-14 3 14 -1 0 3 11zM523 685l3-8 -1 0 2-10 3 10 -1 0 3 8zM533 690l2-7 -1 0 2-9 2 9 -1 0 2 7zM543 690l3-9 -1 0 3-13 3 13 -1 0 3 9zM553 691l4-11 -2 0 4-15 3 15 -1 0 4 11zM563 692l3-11 -1 0 3-14 4 14 -2 0 4 11zM578 695l2-7 -1 0 2-10 2 10 -1 0 3 7zM586 697l4-9 -2 0 3-13 3 13 -1 0 3 9zM598 700l3-8 -1 0 3-12 2 12 -1 0 3 8zM611 701l3-8 -1 0 2-10 3 10 -1 0 3 8zM619 695l4-9 -2 0 3-13 4 13 -2 0 4 9zM632 697l3-8 -1 0 3-11 3 11 -2 0 3 8zM643 697l2-5 -1 0 2-8 2 8 -1 0 2 5zM655 696l2-5 0 0 1-7 2 7 -1 0 2 5zM666 695l2-7 -1 0 3-9 2 9 -1 0 2 7zM676 687l2-6 -1 0 3-8 2 8 -1 0 2 6zM686 687l1-4 0 0 1-6 1 6 0 0 1 4zM694 686l3-8 -1 0 2-10 2 10 -1 0 3 8zM703 688l3-6 -1 0 2-8 2 8 -1 0 2 6zM717 684l2-5 -1 0 2-8 1 8 0 0 1 5zM727 683l3-5 -1 0 2-8 2 8 -1 0 2 5zM738 680l2-6 -1 0 2-9 2 9 0 0 2 6zM748 678l2-5 -1 0 2-8 2 8 -1 0 2 5zM759 681l3-6 -1 0 2-8 2 8 -1 0 2 6zM768 681l3-8 -1 0 2-9 2 9 -1 0 2 8zM780 685l1-5 0 0 1-7 2 7 -1 0 2 5zM791 684l2-7 -1 0 2-10 3 10 -1 0 2 7zM803 689l2-5 -1 0 2-7 1 7 0 0 1 5zM814 691l3-8 -1 0 3-12 2 12 -1 0 3 8zM824 696l4-9 -1 0 3-12 3 12 -1 0 3 9zM835 697l2-6 -1 0 2-7 2 7 -1 0 2 6zM844 705l3-6 -1 0 2-8 2 8 -1 0 2 6zM854 708l3-6 -1 0 2-9 2 9 -1 0 2 6zM861 706l5-11 -2 0 4-15 4 15 -2 0 4 11zM874 708l4-12 -1 0 4-16 4 16 -2 0 4 12zM885 709l4-11 -2 0 4-15 4 15 -2 0 5 11zM897 711l4-11 -2 0 3-15 4 15 -2 0 4 11zM907 710l5-13 -2 0 5-18 4 18 -2 0 5 13zM918 709l5-14 -2 0 4-19 5 19 -2 0 5 14zM931 710l4-11 -1 0 4-15 3 15 -1 0 4 11zM942 710l3-8 -1 0 2-12 3 12 -1 0 2 8zM952 707l3-11 -1 0 3-14 2 14 -1 0 3 11zM958 706l5-16 -2 0 5-21 6 21 -3 0 6 16zM972 700l3-10 -1 0 3-15 3 15 -1 0 3 10zM981 698l4-14 -2 0 4-19 4 19 -1 0 4 14zM990 699l5-15 -2 0 4-21 5 21 -2 0 5 15zM1003 697l4-12 -1 0 3-18 4 18 -1 0 4 12zM1013 697l5-13 -2 0 4-17 4 17 -2 0 5 13zM1022 694l4-14 -2 0 4-19 5 19 -2 0 4 14zM1034 696l4-12 -1 0 3-18 4 18 -1 0 4 12zM1046 695l3-8 -1 0 2-11 2 11 -1 0 3 8zM1053 695l4-9 -2 0 3-12 3 12 -1 0 3 9zM1066 697l3-8 -2 0 3-12 3 12 -1 0 2 8zM1077 698l2-7 -1 0 2-10 2 10 -1 0 2 7zM1087 701l3-8 -1 0 2-10 2 10 -1 0 3 8zM1097 704l3-10 -1 0 3-15 3 15 -1 0 3 10zM1110 711l3-9 -1 0 3-13 3 13 -1 0 3 9zM1119 708l4-10 -1 0 3-14 3 14 -1 0 3 10zM1130 712l3-10 -1 0 3-13 3 13 -1 0 3 10zM1143 718l3-8 -1 0 3-13 2 13 -1 0 3 8zM1156 719l2-7 -1 0 2-10 2 10 0 0 2 7zM1168 718l3-8 -1 0 2-10 2 10 -1 0 3 8zM1176 720l3-7 -1 0 2-10 3 10 -1 0 3 7zM1186 722l2-7 -1 0 3-9 2 9 -1 0 3 7zM1193 723l3-9 -1 0 3-11 3 11 -1 0 3 9zM1204 720l2-6 -1 0 2-9 2 9 -1 0 2 6zM1215 717l2-6 -1 0 2-9 2 9 -1 0 3 6zM1227 716l2-6 -1 0 2-8 2 8 -1 0 2 6zM1237 708l2-6 0 0 1-9 2 9 -1 0 3 6zM1249 706l2-6 -1 0 2-9 3 9 -1 0 2 6zM1262 701l2-6 -1 0 2-8 2 8 -1 0 2 6zM1270 700l3-8 -1 0 2-11 3 11 -1 0 2 8zM1279 697l3-8 -1 0 3-11 2 11 -1 0 3 8zM1292 693l3-8 -2 0 3-11 3 11 -1 0 3 8zM1303 692l3-8 -2 0 3-12 3 12 -1 0 3 8zM1314 688l4-9 -1 0 3-13 3 13 -1 0 3 9zM1327 686l2-6 -1 0 2-8 2 8 -1 0 2 6zM1338 687l2-6 -1 0 2-9 2 9 -1 0 2 6zM1348 684l2-6 -1 0 2-8 2 8 -1 0 3 6zM1359 688l3-8 -1 0 2-10 2 10 -1 0 3 8zM1373 689l2-7 -1 0 2-9 2 9 -1 0 2 7zM1384 689l2-6 -1 0 2-8 1 8 0 0 1 6zM1396 693l2-7 -1 0 2-9 3 9 -1 0 2 7zM1407 696l4-10 -2 0 3-14 3 14 -1 0 3 10zM1418 696l2-8 -1 0 3-10 2 10 -1 0 3 8zM1429 698l3-8 -1 0 2-10 3 10 -1 0 2 8zM1440 703l3-8 -1 0 2-10 3 10 -1 0 2 8zM1453 700l2-7 -1 0 3-11 2 11 -1 0 3 7zM1462 708l3-10 -1 0 3-12 3 12 -1 0 3 10zM1471 704l3-7 -1 0 3-10 2 10 -1 0 3 7zM1484 708l3-7 -2 0 3-11 3 11 -1 0 3 7zM1497 707l2-7 -1 0 2-9 3 9 -1 0 2 7zM1508 706l2-5 -1 0 2-7 1 7 0 0 1 5zM1518 703l2-5 -1 0 2-7 2 7 -1 0 2 5zM1526 700l3-7 -1 0 2-10 3 10 -1 0 2 7zM1536 701l1-5 0 0 1-6 2 6 -1 0 2 5zM1546 700l3-6 -1 0 2-9 2 9 -1 0 3 6zM1558 694l2-4 -1 0 2-6 1 6 -1 0 2 4zM1570 692l1-4 0 0 1-6 1 6 0 0 1 4zM1579 690l2-5 -1 0 2-6 1 6 0 0 1 5zM1589 684l2-6 -1 0 2-8 2 8 -1 0 3 6zM1601 685l3-7 -1 0 2-8 2 8 -1 0 2 7zM1611 679l2-5 -1 0 1-6 2 6 -1 0 2 5zM1620 679l2-4 -1 0 2-7 1 7 0 0 1 4zM1629 673l2-6 -1 0 2-8 2 8 -1 0 2 6zM1639 671l2-6 0 0 2-9 2 9 -1 0 2 6zM1651 675l2-4 -1 0 2-7 2 7 -1 0 2 4zM1659 675l2-6 -1 0 2-8 2 8 -1 0 3 6zM1669 675l2-7 -1 0 2-10 2 10 -1 0 3 7zM1678 671l3-9 -1 0 3-12 2 12 -1 0 3 9zM1688 678l3-10 -1 0 3-13 3 13 -1 0 3 10zM1699 679l2-6 0 0 2-7 1 7 0 0 2 6zM1708 679l3-8 -1 0 2-11 3 11 -1 0 2 8zM1717 679l3-9 -1 0 2-13 3 13 -1 0 3 9zM1726 681l4-11 -1 0 3-15 3 15 -1 0 4 11zM1739 686l4-10 -2 0 3-15 3 15 -1 0 3 10zM1748 682l4-12 -1 0 4-17 4 17 -2 0 4 12zM1757 684l4-13 -1 0 4-18 4 18 -2 0 4 13zM1767 688l4-11 -2 0 4-16 3 16 -1 0 4 11zM1779 692l2-9 -1 0 3-11 3 11 -2 0 3 9zM1786 691l5-14 -2 0 4-19 4 19 -2 0 5 14zM1796 693l4-13 -2 0 5-18 4 18 -2 0 5 13zM1805 698l4-14 -1 0 3-20 4 20 -1 0 4 14zM1811 695l6-14 -2 0 4-19 5 19 -2 0 6 14zM1821 697l5-13 -2 0 4-17 5 17 -2 0 5 13zM1831 698l6-14 -2 0 5-19 5 19 -2 0 5 14zM1847 696l3-10 -1 0 3-12 3 12 -2 0 3 10zM1855 696l5-15 -2 0 5-21 4 21 -2 0 5 15zM1870 700l3-9 -1 0 3-13 3 13 -1 0 4 9zM1883 701l3-8 -1 0 2-11 2 11 -1 0 3 8zM1893 701l4-12 -1 0 3-15 4 15 -1 0 3 12zM1901 697l5-13 -2 0 4-19 4 19 -2 0 4 13zM1912 696l4-10 -2 0 4-14 4 14 -2 0 5 10zM1922 698l4-10 -1 0 3-14 4 14 -2 0 4 10zM1932 693l4-12 -2 0 4-16 3 16 -1 0 4 12zM1945 696l3-9 -1 0 2-13 3 13 -1 0 3 9zM1958 690l2-7 -1 0 2-9 2 9 -1 0 3 7zM1968 692l3-9 -1 0 2-11 3 11 -1 0 2 9zM1981 690l2-6 -1 0 2-8 1 8 0 0 1 6zM1991 689l3-10 -1 0 3-14 3 14 -1 0 3 10zM2002 686l3-10 -1 0 3-14 3 14 -1 0 3 10zM2014 686l3-8 -1 0 2-10 3 10 -1 0 3 8zM2025 690l3-7 -1 0 2-11 2 11 -1 0 3 7zM2036 688l2-6 -1 0 2-9 3 9 -1 0 2 6zM2049 683l2-6 -1 0 2-9 2 9 -1 0 2 6zM-462 735l2-10 2 10zM-447 731l3-12 3 12zM-434 729l4-14 4 14zM-422 727l4-18 4 18zM-410 722l3-12 3 12zM-397 722l4-15 3 15zM-387 725l5-16 4 16zM-371 713l4-14 4 14zM-358 712l4-16 5 16zM-343 714l4-14 3 14zM-328 710l4-17 5 17zM-317 705l5-19 4 19zM-306 707l5-19 4 19zM-292 702l4-15 4 15zM-282 704l4-19 5 19zM-269 709l4-15 3 15zM-253 709l3-15 4 15zM-242 710l4-14 3 14zM-226 703l3-15 4 15zM-214 710l3-13 4 13zM-201 712l3-15 4 15zM-187 708l3-11 3 11zM-177 713l3-12 3 12zM-163 721l3-11 2 11zM-148 717l3-8 2 8zM-137 716l3-11 3 11zM-126 724l2-11 3 11zM-115 717l2-9 3 9zM-101 717l3-10 3 10zM-89 724l4-13 3 13zM-77 718l3-13 4 13zM-64 722l3-13 3 13zM-54 716l4-12 4 12zM-38 711l3-13 4 13zM-29 702l5-17 5 17zM-17 707l4-16 5 16zM-2 697l5-19 5 19zM12 691l5-20 5 20zM27 688l5-18 5 18zM36 692l6-21 6 21zM51 687l6-21 6 21zM67 683l5-23 5 23zM79 679l6-22 6 22zM91 678l5-21 5 21zM102 688l6-27 7 27zM114 688l6-25 6 25zM126 687l5-18 5 18zM135 688l7-26 6 26zM150 694l7-28 7 28zM162 698l6-27 6 27zM177 698l6-22 6 22zM190 701l5-21 5 21zM206 710l5-20 4 20zM216 707l7-23 6 23zM227 714l6-23 5 23zM242 712l3-14 4 14zM255 706l5-19 5 19zM267 711l5-19 4 19zM282 704l4-16 4 16zM296 704l4-14 4 14zM308 703l3-12 4 12zM320 695l3-14 4 14zM333 691l3-12 3 12zM343 693l4-12 3 12zM354 690l3-11 2 11zM365 684l3-10 3 10zM375 680l3-15 3 15zM386 674l4-16 4 16zM398 678l3-14 3 14zM413 675l3-11 2 11zM425 675l4-14 4 14zM439 672l4-16 3 16zM450 681l3-15 3 15zM460 679l3-12 3 12zM471 683l5-18 5 18zM485 681l4-18 5 18zM500 692l4-14 3 14zM511 690l4-19 5 19zM523 696l4-15 3 15zM535 697l5-17 4 17zM547 705l4-16 4 16zM560 709l5-17 5 17zM574 708l4-16 5 16zM589 708l4-16 4 16zM603 710l3-16 3 16zM618 710l3-17 4 17zM631 710l3-12 3 12zM647 710l3-12 4 12zM658 709l3-14 3 14zM669 702l2-10 2 10zM682 700l3-12 3 12zM693 703l2-10 2 10zM708 694l2-10 2 10zM721 697l3-13 4 13zM737 694l2-9 2 9zM750 691l3-11 4 11zM766 693l2-10 2 10zM780 696l3-10 3 10zM792 697l3-12 4 12zM808 699l2-11 2 11zM818 703l4-13 4 13zM829 706l5-17 4 17zM845 711l4-14 4 14zM859 721l3-13 3 13zM868 721l5-21 5 21zM880 724l4-18 4 18zM890 728l5-16 4 16zM901 724l6-23 6 23zM916 724l5-17 4 17zM929 719l4-19 5 19zM943 725l6-24 6 24zM958 714l6-23 6 23zM970 711l5-21 6 21zM981 710l7-27 6 27zM992 713l7-28 7 28zM1007 710l5-19 5 19zM1016 706l6-24 6 24zM1031 711l5-21 6 21zM1042 704l7-23 7 23zM1059 708l5-19 5 19zM1069 707l5-22 6 22zM1085 715l5-18 5 18zM1100 721l4-18 5 18zM1115 722l4-17 4 17zM1130 728l4-18 5 18zM1144 732l5-17 4 17zM1158 733l3-18 4 18zM1173 732l4-16 4 16zM1186 730l4-13 4 13zM1200 729l4-16 5 16zM1214 727l4-16 3 16zM1226 731l4-13 3 13zM1240 724l4-14 3 14zM1254 714l4-14 4 14zM1268 716l5-17 4 17zM1284 712l2-12 3 12zM1292 707l4-17 5 17zM1305 698l2-11 2 11zM1318 697l3-11 3 11zM1330 693l4-15 4 15zM1346 694l4-16 3 16zM1358 696l3-17 4 17zM1370 696l4-16 5 16zM1385 705l5-20 5 20zM1398 700l4-16 4 16zM1408 704l4-19 5 19zM1422 713l4-15 4 15zM1432 715l4-15 4 15zM1447 712l4-13 3 13zM1461 715l4-11 3 11zM1476 722l3-13 3 13zM1490 716l4-14 3 14zM1502 720l3-12 3 12zM1515 720l3-12 3 12zM1524 716l4-14 4 14zM1536 711l2-12 3 12zM1547 707l2-9 2 9zM1559 702l3-12 3 12zM1573 700l2-9 2 9zM1585 701l3-9 2 9zM1600 695l2-8 2 8zM1615 693l3-10 2 10zM1630 692l2-9 3 9zM1644 687l3-13 3 13zM1656 682l2-10 3 10zM1667 687l2-9 3 9zM1682 690l3-13 3 13zM1692 683l3-12 2 12zM1703 693l6-19 5 19zM1718 692l4-15 4 15zM1732 698l4-19 4 19zM1746 699l4-14 4 14zM1758 700l4-18 4 18zM1770 707l6-22 6 22zM1786 703l5-17 5 17zM1799 708l5-24 5 24zM1809 710l5-17 5 17zM1819 709l6-28 6 28zM1833 713l7-28 6 28zM1851 710l5-19 4 19zM1862 707l5-18 4 18zM1873 707l5-23 5 23zM1888 706l5-18 5 18zM1900 712l5-24 5 24zM1912 708l6-23 6 23zM1926 711l5-20 6 20zM1940 703l5-18 5 18zM1951 705l5-20 5 20zM1966 700l4-17 5 17zM1980 705l4-15 3 15zM1994 699l5-19 4 19zM2008 703l4-15 3 15zM2018 704l4-18 4 18zM2033 703l3-15 4 15zM2046 700l3-14 3 14z"/></svg>
+<svg class="layer layer--vfog" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice" focusable="false">
+<defs><filter id="f-fog" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="22"/></filter></defs>
+<g filter="url(#f-fog)" fill="#F6F8F7">
+  <ellipse cx="260" cy="742" rx="520" ry="34" opacity=".9"/>
+  <ellipse cx="980" cy="760" rx="620" ry="30" opacity=".85"/>
+  <ellipse cx="1620" cy="734" rx="560" ry="36" opacity=".9"/>
+  <ellipse cx="640" cy="700" rx="420" ry="18" opacity=".6"/>
+  <ellipse cx="1320" cy="694" rx="380" ry="16" opacity=".55"/>
+</g></svg>
+<svg class="layer layer--near" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice" focusable="false">
+<defs>
+  <linearGradient id="g-near" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5A7A6E"/><stop offset=".25" stop-color="#6E897F"/></linearGradient>
+  <path id="fa" d="M0 -100L0.9 -95.4Q3.6 -88.1 4.9 -88.1L1.7 -89.6L1.4 -85.1Q4.6 -78 6.3 -77.7L2.5 -79.2L1.7 -74.7Q6.2 -65.5 8.6 -66.9L3.1 -68.4L2.1 -64Q7.3 -56.7 10.1 -56.2L3.8 -57.7L2.4 -53.1Q7.7 -42.9 10.7 -45.2L4.3 -46.7L2.7 -41.9Q9.9 -33.6 13.8 -33.7L4.9 -35.2L3.3 -30.6Q11.6 -20.9 16.1 -20.1L5.9 -21.6L3.9 -19Q12.1 -8.1 16.7 -9.7L7 -11.2L3 -8L3 2L-3 2L-3 -8L-7 -11.5L-18.4 -10Q-13.3 -9.5 -3.9 -19L-5.9 -23.5L-15.5 -22Q-11.2 -20.9 -3.3 -30.6L-4.9 -35.3L-13.1 -33.8Q-9.4 -32.5 -2.7 -41.9L-4.3 -46.9L-11.4 -45.4Q-8.2 -45.1 -2.4 -53.1L-3.8 -58.3L-10 -56.8Q-7.2 -54.7 -2.1 -64L-3.1 -69.4L-8.1 -67.9Q-5.9 -65.4 -1.7 -74.7L-2.5 -80.3L-6.7 -78.8Q-4.8 -77.2 -1.4 -85.1L-1.7 -91L-4.5 -89.5Q-3.2 -86.7 -0.9 -95.4Z"/>
+  <path id="fb" d="M0 -100L1.5 -93.9Q5.2 -89.8 7.3 -86.8L2.7 -88.3L2.1 -82.2Q7.2 -75.8 10 -74.5L3.8 -76L2.6 -70.1Q8.9 -64.3 12.3 -61.9L4.7 -63.4L3 -57.8Q9.8 -50.1 13.6 -49.5L5.4 -51L3.8 -45.2Q13.3 -37.1 18.5 -36L6.9 -37.5L4.6 -32.2Q16.6 -24.6 23 -23.1L8.3 -24.6L4.6 -19Q16.5 -9.4 22.9 -8L8.3 -9.5L3 -8L3 2L-3 2L-3 -8L-8.3 -11.5L-21.9 -10Q-15.7 -8.4 -4.6 -19L-8.3 -25.2L-21.8 -23.7Q-15.7 -25.3 -4.6 -32.2L-6.9 -38.7L-18.1 -37.2Q-13.1 -35.9 -3.8 -45.2L-5.4 -51.8L-14.2 -50.3Q-10.2 -49.3 -3 -57.8L-4.7 -64.7L-12.5 -63.2Q-9 -64.9 -2.6 -70.1L-3.8 -77.3L-10 -75.8Q-7.2 -74.3 -2.1 -82.2L-2.7 -89.5L-7.1 -88Q-5.1 -88.5 -1.5 -93.9Z"/>
+  <path id="fc" d="M0 -100L1 -97.4Q3.7 -90.4 5.1 -91L1.9 -92.5L1.4 -89.3Q5.3 -80.8 7.4 -81.5L2.5 -83L1.9 -81Q6.1 -75.1 8.4 -72.5L3.5 -74L2.2 -72.6Q6.8 -65.7 9.5 -64.8L3.9 -66.3L2.8 -64Q10.2 -55.1 14.2 -56.3L5 -57.8L3 -55.3Q10.9 -47.2 15.1 -47L5.5 -48.5L3.5 -46.4Q12.9 -38.4 18 -36.7L6.3 -38.2L3.8 -37.4Q12.2 -28.6 16.9 -28.5L6.8 -30L4.2 -28.3Q15.2 -18.4 21.1 -18.4L7.5 -19.9L4.5 -19Q15.2 -8.2 21.2 -8.4L8.2 -9.9L3 -8L3 2L-3 2L-3 -8L-8.2 -11.5L-21.6 -10Q-15.6 -8.3 -4.5 -19L-7.5 -21.1L-19.9 -19.6Q-14.3 -20.7 -4.2 -28.3L-6.8 -30.7L-17.9 -29.2Q-12.9 -29.3 -3.8 -37.4L-6.3 -40L-16.7 -38.5Q-12 -38.9 -3.5 -46.4L-5.5 -49.2L-14.5 -47.7Q-10.4 -45.9 -3 -55.3L-5 -58.3L-13.3 -56.8Q-9.5 -55.2 -2.8 -64L-3.9 -67.2L-10.4 -65.7Q-7.5 -66 -2.2 -72.6L-3.5 -76L-9.2 -74.5Q-6.6 -72.9 -1.9 -81L-2.5 -84.7L-6.7 -83.2Q-4.9 -82.6 -1.4 -89.3L-1.9 -93.1L-5 -91.6Q-3.6 -89.5 -1 -97.4Z"/>
+  <radialGradient id="g-spill"><stop offset="0" stop-color="#F3C46B" stop-opacity=".55"/><stop offset="1" stop-color="#F3C46B" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-glow"><stop offset="0" stop-color="#F3C46B" stop-opacity=".62"/><stop offset=".4" stop-color="#F3C46B" stop-opacity=".2"/><stop offset="1" stop-color="#F3C46B" stop-opacity="0"/></radialGradient>
+  <linearGradient id="g-smoke" gradientUnits="userSpaceOnUse" x1="0" y1="664" x2="0" y2="394"><stop offset="0" stop-color="#F6F8F7" stop-opacity=".8"/><stop offset="1" stop-color="#F6F8F7" stop-opacity="0"/></linearGradient>
+</defs>
+<g class="trees-back" fill="#4D6B60"><use href="#fa" transform="translate(-460 842.3) scale(0.592 0.564)"/><use href="#fb" transform="translate(-442.9 834.6) scale(0.771 0.741)"/><use href="#fb" transform="translate(-424.9 827.6) scale(0.795 0.802)"/><use href="#fa" transform="translate(-411.4 833.4) scale(0.575 0.631)"/><use href="#fb" transform="translate(-397.9 828.1) scale(0.575 0.585)"/><use href="#fa" transform="translate(-384.5 820.1) scale(0.498 0.520)"/><use href="#fa" transform="translate(-365 816) scale(0.448 0.470)"/><use href="#fb" transform="translate(-344.1 810.9) scale(0.749 0.691)"/><use href="#fb" transform="translate(-328.1 809.5) scale(0.510 0.557)"/><use href="#fb" transform="translate(-312 805) scale(0.660 0.621)"/><use href="#fa" transform="translate(-297.9 810.7) scale(0.798 0.855)"/><use href="#fb" transform="translate(-279.4 810.4) scale(0.541 0.569)"/><use href="#fb" transform="translate(-258.9 804.4) scale(0.477 0.491)"/><use href="#fa" transform="translate(-238.8 807.8) scale(0.868 0.857)"/><use href="#fb" transform="translate(-225.2 803.4) scale(0.697 0.714)"/><use href="#fb" transform="translate(-205.9 812.1) scale(0.790 0.728)"/><use href="#fa" transform="translate(-185.2 813.1) scale(0.679 0.625)"/><use href="#fa" transform="translate(-171 817.6) scale(0.620 0.656)"/><use href="#fb" transform="translate(-154 823.1) scale(0.773 0.830)"/><use href="#fb" transform="translate(-134.5 821.7) scale(0.629 0.602)"/><use href="#fb" transform="translate(-116.6 830.2) scale(0.571 0.594)"/><use href="#fb" transform="translate(-99.3 828.8) scale(0.827 0.821)"/><use href="#fb" transform="translate(-81.2 830.3) scale(0.784 0.801)"/><use href="#fb" transform="translate(-61 827.4) scale(0.642 0.584)"/><use href="#fa" transform="translate(-45.2 816.4) scale(0.677 0.643)"/><use href="#fb" transform="translate(-31.4 812.9) scale(0.889 0.814)"/><use href="#fa" transform="translate(-10 809.4) scale(0.622 0.632)"/><use href="#fa" transform="translate(4.9 809.5) scale(0.769 0.760)"/><use href="#fb" transform="translate(23.6 804.1) scale(0.479 0.472)"/><use href="#fb" transform="translate(39.5 801.4) scale(0.473 0.487)"/><use href="#fb" transform="translate(56.5 796) scale(0.843 0.776)"/><use href="#fa" transform="translate(76 793.5) scale(0.745 0.779)"/><use href="#fa" transform="translate(89.5 792.2) scale(0.568 0.547)"/><use href="#fb" transform="translate(106.3 785) scale(0.891 0.820)"/><use href="#fa" transform="translate(125.5 788) scale(0.789 0.851)"/><use href="#fb" transform="translate(138.6 790.1) scale(0.814 0.773)"/><use href="#fb" transform="translate(156.5 792) scale(0.924 0.847)"/><use href="#fb" transform="translate(178.3 800.7) scale(0.628 0.591)"/><use href="#fa" transform="translate(194.9 806.6) scale(0.793 0.853)"/><use href="#fa" transform="translate(213.7 802.9) scale(0.525 0.535)"/><use href="#fb" transform="translate(231.2 807.2) scale(0.803 0.802)"/><use href="#fa" transform="translate(248.5 812.9) scale(0.749 0.809)"/><use href="#fb" transform="translate(261.9 815.9) scale(0.649 0.645)"/><use href="#fb" transform="translate(283.8 821.8) scale(0.730 0.777)"/><use href="#fb" transform="translate(304.7 814.6) scale(0.506 0.548)"/><use href="#fa" transform="translate(324 817.5) scale(0.517 0.560)"/><use href="#fa" transform="translate(339.2 810.1) scale(0.652 0.656)"/><use href="#fb" transform="translate(355.8 817.3) scale(0.629 0.590)"/><use href="#fb" transform="translate(370.4 807.2) scale(0.686 0.645)"/><use href="#fa" transform="translate(392.3 812.7) scale(0.566 0.527)"/><use href="#fa" transform="translate(414 811) scale(0.585 0.587)"/><use href="#fa" transform="translate(431.5 808.5) scale(0.557 0.540)"/><use href="#fb" transform="translate(451.7 800.5) scale(0.573 0.632)"/><use href="#fb" transform="translate(473 800.3) scale(0.578 0.540)"/><use href="#fa" transform="translate(493.8 803.3) scale(0.623 0.580)"/><use href="#fa" transform="translate(513.4 813.2) scale(0.446 0.460)"/><use href="#fa" transform="translate(527.1 817.6) scale(0.865 0.860)"/><use href="#fa" transform="translate(546.3 813.8) scale(0.567 0.547)"/><use href="#fb" transform="translate(565.8 817.9) scale(0.763 0.724)"/><use href="#fb" transform="translate(584.7 830.1) scale(0.641 0.601)"/><use href="#fb" transform="translate(605.4 827.6) scale(0.609 0.612)"/><use href="#fb" transform="translate(627.3 830.3) scale(0.656 0.616)"/><use href="#fa" transform="translate(649.1 835.5) scale(0.707 0.760)"/><use href="#fb" transform="translate(669.8 837.3) scale(0.594 0.594)"/><use href="#fb" transform="translate(689.5 844.7) scale(0.569 0.532)"/><use href="#fa" transform="translate(710.2 843.2) scale(0.571 0.600)"/><use href="#fa" transform="translate(726.7 839.5) scale(0.683 0.655)"/><use href="#fa" transform="translate(742.2 847.3) scale(0.473 0.462)"/><use href="#fa" transform="translate(764 841.4) scale(0.485 0.527)"/><use href="#fb" transform="translate(777.1 844.4) scale(0.613 0.613)"/><use href="#fa" transform="translate(795.7 842.2) scale(0.738 0.773)"/><use href="#fa" transform="translate(812.5 843.9) scale(0.356 0.352)"/><use href="#fa" transform="translate(832.6 843.9) scale(0.423 0.398)"/><use href="#fb" transform="translate(852.8 844) scale(0.515 0.469)"/><use href="#fa" transform="translate(871.8 839.7) scale(0.271 0.276)"/><use href="#fa" transform="translate(890.9 837.2) scale(0.278 0.264)"/><use href="#fa" transform="translate(911.7 837.8) scale(0.334 0.347)"/><use href="#fa" transform="translate(929.6 839.3) scale(0.465 0.432)"/><use href="#fb" transform="translate(946.5 837.5) scale(0.359 0.329)"/><use href="#fa" transform="translate(968.3 832) scale(0.443 0.469)"/><use href="#fb" transform="translate(989.7 832.7) scale(0.348 0.338)"/><use href="#fb" transform="translate(1007 833.4) scale(0.448 0.424)"/><use href="#fb" transform="translate(1027.2 838.6) scale(0.334 0.305)"/><use href="#fa" transform="translate(1047.2 840) scale(0.440 0.451)"/><use href="#fb" transform="translate(1063.7 848) scale(0.348 0.347)"/><use href="#fa" transform="translate(1079.4 841.9) scale(0.422 0.390)"/><use href="#fa" transform="translate(1095.1 851.6) scale(0.264 0.286)"/><use href="#fb" transform="translate(1116.2 846.9) scale(0.675 0.704)"/><use href="#fb" transform="translate(1131 848.1) scale(0.825 0.785)"/><use href="#fb" transform="translate(1144.7 843.3) scale(0.657 0.626)"/><use href="#fb" transform="translate(1161.7 843.7) scale(0.887 0.818)"/><use href="#fb" transform="translate(1178.8 839) scale(0.441 0.489)"/><use href="#fb" transform="translate(1194.5 835.4) scale(0.823 0.750)"/><use href="#fa" transform="translate(1213.5 830.1) scale(0.783 0.838)"/><use href="#fb" transform="translate(1228.8 826.8) scale(0.819 0.784)"/><use href="#fa" transform="translate(1246.1 828) scale(0.563 0.600)"/><use href="#fb" transform="translate(1267.7 821.3) scale(0.789 0.797)"/><use href="#fa" transform="translate(1287.8 814.1) scale(0.817 0.851)"/><use href="#fb" transform="translate(1301.1 814.2) scale(0.654 0.696)"/><use href="#fb" transform="translate(1321 811) scale(0.859 0.784)"/><use href="#fb" transform="translate(1341.9 806.1) scale(0.519 0.556)"/><use href="#fb" transform="translate(1363.3 803.3) scale(0.546 0.549)"/><use href="#fa" transform="translate(1379.3 794.3) scale(0.501 0.518)"/><use href="#fa" transform="translate(1393.5 796) scale(0.670 0.684)"/><use href="#fb" transform="translate(1407.2 794.9) scale(0.438 0.481)"/><use href="#fa" transform="translate(1427.8 794.9) scale(0.878 0.857)"/><use href="#fa" transform="translate(1447.6 798.9) scale(0.722 0.749)"/><use href="#fa" transform="translate(1466.5 802.4) scale(0.536 0.497)"/><use href="#fb" transform="translate(1482.3 797.5) scale(0.667 0.620)"/><use href="#fb" transform="translate(1499.1 800.1) scale(0.694 0.750)"/><use href="#fb" transform="translate(1517.7 803.5) scale(0.630 0.674)"/><use href="#fb" transform="translate(1533.7 807.9) scale(0.758 0.828)"/><use href="#fb" transform="translate(1547.7 807.6) scale(0.555 0.522)"/><use href="#fb" transform="translate(1564.4 808.7) scale(0.751 0.788)"/><use href="#fb" transform="translate(1582.1 818.7) scale(0.688 0.759)"/><use href="#fb" transform="translate(1598.9 818.7) scale(0.747 0.763)"/><use href="#fa" transform="translate(1613.9 817.9) scale(0.466 0.478)"/><use href="#fb" transform="translate(1629.4 808.4) scale(0.894 0.818)"/><use href="#fa" transform="translate(1650.6 808.8) scale(0.680 0.669)"/><use href="#fa" transform="translate(1671.6 800.9) scale(0.513 0.497)"/><use href="#fa" transform="translate(1689.3 801.5) scale(0.705 0.695)"/><use href="#fb" transform="translate(1706.9 802.4) scale(0.593 0.622)"/><use href="#fa" transform="translate(1722.3 797.2) scale(0.571 0.558)"/><use href="#fa" transform="translate(1737.8 797.3) scale(0.574 0.577)"/><use href="#fb" transform="translate(1757.5 790.5) scale(0.682 0.749)"/><use href="#fa" transform="translate(1772.7 790.4) scale(0.690 0.641)"/><use href="#fa" transform="translate(1794.6 789.4) scale(0.785 0.773)"/><use href="#fa" transform="translate(1813.2 782.4) scale(0.922 0.841)"/><use href="#fb" transform="translate(1826.2 783) scale(0.658 0.715)"/><use href="#fa" transform="translate(1847.2 781.1) scale(0.596 0.600)"/><use href="#fb" transform="translate(1866.6 790.3) scale(0.821 0.780)"/><use href="#fa" transform="translate(1882.3 787.4) scale(0.543 0.586)"/><use href="#fa" transform="translate(1897.1 784.8) scale(0.654 0.609)"/><use href="#fb" transform="translate(1910.6 793.5) scale(0.898 0.825)"/><use href="#fb" transform="translate(1925.9 791.2) scale(0.544 0.570)"/><use href="#fa" transform="translate(1943 791.7) scale(0.700 0.762)"/><use href="#fb" transform="translate(1959 793.2) scale(0.886 0.821)"/><use href="#fa" transform="translate(1977 797.5) scale(0.603 0.614)"/><use href="#fa" transform="translate(1996.1 793.3) scale(0.555 0.589)"/><use href="#fa" transform="translate(2015.5 800.2) scale(0.635 0.641)"/><use href="#fb" transform="translate(2036.7 800.7) scale(0.594 0.583)"/><use href="#fa" transform="translate(2057.3 803.9) scale(0.805 0.800)"/></g>
+<path class="near" fill="url(#g-near)" d="M-460 1500L-460 830C-393.3 818.7 -326.7 798.2 -260 796C-203.3 794.2 -146.7 820.6 -90 818C-30 815.3 30 781.6 90 780C153.3 778.3 216.7 805.3 280 808C343.3 810.7 406.7 792.6 470 796C530 799.2 590 821.1 650 828C706.7 834.5 763.3 836 820 836C850 836 880 830.1 910 828C926.7 826.8 943.3 826 960 826C976.7 826 993.3 826.7 1010 828C1043.3 830.7 1076.7 840.1 1110 838C1160 834.8 1210 820.4 1260 812C1313.3 803.1 1366.7 786.9 1420 786C1480 784.9 1540 807.6 1600 806C1666.7 804.2 1733.3 777.7 1800 776C1886.7 773.7 1973.3 788 2060 794L2060 1500Z"/>
+<ellipse class="c-glow" cx="960" cy="760" rx="210" ry="150" fill="url(#g-glow)" opacity="0"/>
+<path class="smoke" d="M999.5 664C993.5 634 1017.5 612 1009.5 578C1001.5 546 1039.5 524 1033.5 486C1029.5 454 1063.5 432 1069.5 396"/>
+
+<g class="cabin">
+  <ellipse class="c-spill" cx="960" cy="844" rx="190" ry="26" fill="url(#g-spill)"/>
+  <path class="c-roof" d="M862 832L960 634L1058 832L1044 832L960 660L876 832Z"/>
+  <path class="c-face" d="M878 830L960 664L1042 830Z"/>
+  <path class="c-glass" d="M922 768L960 690L998 768Z M930 776h60v54h-60Z"/>
+  <path class="c-frame" fill="none" stroke-width="2.4" d="M922 768L960 690L998 768Z M960 690V768 M941 729L941 768 M979 729L979 768 M930 776h60v54h-60Z M960 776V830"/>
+  <rect class="c-roof" x="994" y="670" width="11" height="40"/>
+  <rect class="c-roof" x="991" y="666" width="17" height="6" rx="1"/>
+  <path class="c-roof" d="M848 830h224v7h-224Z"/>
+  <path class="c-roof" d="M856 837h5v14h-5Z M1059 837h5v14h-5Z M956 837h5v12h-5Z"/>
+  <circle class="c-lamp" cx="900" cy="822" r="3.2"/>
+</g>
+<g class="cabin cabin--small">
+  <path class="c-roof" d="M1128 846L1154 818L1180 846Z"/>
+  <path class="c-face" d="M1132 846V830L1154 824L1176 830V846Z"/>
+  <rect class="c-glass c-glass--sky" x="1146" y="830" width="16" height="10"/>
+</g>
+<g class="trees-front" fill="#2E4B41"><use href="#fc" transform="translate(-460 861.3) scale(0.891 0.984)"/><use href="#fc" transform="translate(-429.2 855.6) scale(0.800 0.812)"/><use href="#fc" transform="translate(-401.1 842.7) scale(1.309 1.352)"/><use href="#fc" transform="translate(-376.9 837.6) scale(0.865 0.844)"/><use href="#fc" transform="translate(-347.3 841.9) scale(1.205 1.214)"/><use href="#fc" transform="translate(-320.6 828.8) scale(1.458 1.332)"/><use href="#fa" transform="translate(-291.9 823.2) scale(0.944 0.925)"/><use href="#fb" transform="translate(-264.7 832.3) scale(0.813 0.811)"/><use href="#fb" transform="translate(-234 835.4) scale(1.325 1.306)"/><use href="#fb" transform="translate(-203.3 824.2) scale(0.794 0.844)"/><use href="#fc" transform="translate(-179.1 838.4) scale(0.832 0.883)"/><use href="#fc" transform="translate(-144.8 839.8) scale(1.171 1.268)"/><use href="#fa" transform="translate(-124.1 859.1) scale(0.914 0.834)"/><use href="#fc" transform="translate(-102.8 857.3) scale(1.000 1.043)"/><use href="#fa" transform="translate(-78.5 846.3) scale(0.946 0.945)"/><use href="#fa" transform="translate(-45.8 843.4) scale(1.056 1.146)"/><use href="#fc" transform="translate(-13.8 846.3) scale(1.119 1.187)"/><use href="#fa" transform="translate(17 822.6) scale(0.882 0.970)"/><use href="#fa" transform="translate(50.1 812.3) scale(0.963 0.963)"/><use href="#fc" transform="translate(79.9 815.7) scale(1.432 1.374)"/><use href="#fa" transform="translate(102.1 820.4) scale(0.994 0.925)"/><use href="#fb" transform="translate(123.3 819.8) scale(1.159 1.116)"/><use href="#fb" transform="translate(146.4 819.6) scale(0.927 0.980)"/><use href="#fc" transform="translate(176.6 830.4) scale(1.196 1.160)"/><use href="#fa" transform="translate(200.2 834.2) scale(0.936 0.945)"/><use href="#fc" transform="translate(229.3 836.4) scale(0.838 0.782)"/><use href="#fa" transform="translate(264.9 847.8) scale(0.794 0.858)"/><use href="#fb" transform="translate(298.3 836.9) scale(0.832 0.828)"/><use href="#fb" transform="translate(319.8 844.7) scale(1.300 1.318)"/><use href="#fb" transform="translate(353.3 828.8) scale(1.368 1.374)"/><use href="#fb" transform="translate(381.8 827.2) scale(1.523 1.397)"/><use href="#fb" transform="translate(409.6 831.8) scale(1.235 1.254)"/><use href="#fc" transform="translate(434.3 824.2) scale(1.273 1.317)"/><use href="#fb" transform="translate(469.5 823.4) scale(0.787 0.846)"/><use href="#fa" transform="translate(503.6 835.1) scale(1.052 0.981)"/><use href="#fb" transform="translate(529.4 838.5) scale(1.002 1.074)"/><use href="#fc" transform="translate(560.5 850.9) scale(0.772 0.814)"/><use href="#fa" transform="translate(590.3 847.8) scale(1.245 1.299)"/><use href="#fc" transform="translate(619 851.5) scale(1.241 1.342)"/><use href="#fa" transform="translate(650.9 858.4) scale(1.184 1.087)"/><use href="#fa" transform="translate(678.9 870) scale(1.330 1.308)"/><use href="#fa" transform="translate(699.5 862.1) scale(1.392 1.351)"/><use href="#fc" transform="translate(722 865.8) scale(0.964 0.884)"/><use href="#fb" transform="translate(744 871.1) scale(0.888 0.919)"/><use href="#fb" transform="translate(768.1 869.2) scale(0.938 0.948)"/><use href="#fc" transform="translate(789.6 874.7) scale(0.824 0.783)"/><use href="#fc" transform="translate(824.9 861.1) scale(0.572 0.620)"/><use href="#fc" transform="translate(1082.9 877.4) scale(0.580 0.618)"/><use href="#fc" transform="translate(1199.5 848.7) scale(1.111 1.090)"/><use href="#fc" transform="translate(1221.7 849.2) scale(1.019 0.994)"/><use href="#fa" transform="translate(1243.9 839.8) scale(0.899 0.830)"/><use href="#fc" transform="translate(1269.7 851) scale(0.725 0.804)"/><use href="#fa" transform="translate(1295.8 842.4) scale(0.904 0.964)"/><use href="#fc" transform="translate(1327.1 836) scale(0.892 0.819)"/><use href="#fc" transform="translate(1360.5 825.1) scale(1.219 1.341)"/><use href="#fc" transform="translate(1381.8 817.7) scale(0.884 0.894)"/><use href="#fa" transform="translate(1404.8 811.1) scale(0.986 0.933)"/><use href="#fc" transform="translate(1428.3 823.4) scale(1.315 1.309)"/><use href="#fa" transform="translate(1456.6 811.5) scale(0.961 1.010)"/><use href="#fc" transform="translate(1492 825.3) scale(1.246 1.368)"/><use href="#fb" transform="translate(1514.2 835.7) scale(0.854 0.809)"/><use href="#fc" transform="translate(1538.3 839.6) scale(1.270 1.372)"/><use href="#fb" transform="translate(1561.9 844.8) scale(1.229 1.333)"/><use href="#fb" transform="translate(1591.2 849.3) scale(1.147 1.237)"/><use href="#fa" transform="translate(1619.3 837.7) scale(1.418 1.353)"/><use href="#fb" transform="translate(1653.2 838) scale(1.129 1.132)"/><use href="#fa" transform="translate(1679.4 819.2) scale(1.456 1.347)"/><use href="#fc" transform="translate(1700.2 827.1) scale(1.465 1.381)"/><use href="#fa" transform="translate(1730.4 825.9) scale(1.348 1.290)"/><use href="#fb" transform="translate(1759.2 820.3) scale(1.387 1.357)"/><use href="#fc" transform="translate(1785.5 815) scale(0.992 1.002)"/><use href="#fa" transform="translate(1816 802.7) scale(1.114 1.128)"/><use href="#fc" transform="translate(1844.1 814.8) scale(0.746 0.791)"/><use href="#fc" transform="translate(1869.4 813.4) scale(0.870 0.794)"/><use href="#fa" transform="translate(1901.9 805.9) scale(1.263 1.224)"/><use href="#fb" transform="translate(1935 805.8) scale(0.966 0.887)"/><use href="#fa" transform="translate(1963.1 821.6) scale(0.816 0.817)"/><use href="#fb" transform="translate(1990.1 828.8) scale(0.805 0.888)"/><use href="#fb" transform="translate(2021.7 819.8) scale(1.040 1.132)"/><use href="#fa" transform="translate(2052.1 831.4) scale(1.105 1.098)"/></g></svg>
+<svg class="layer layer--fog" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice" focusable="false">
+<defs>
+  <radialGradient id="g-band"><stop offset="0" stop-color="#F6F8F7" stop-opacity=".92"/><stop offset=".55" stop-color="#F6F8F7" stop-opacity=".55"/><stop offset="1" stop-color="#F6F8F7" stop-opacity="0"/></radialGradient>
+</defs>
+<g class="band band--l"><ellipse cx="420" cy="800" rx="600" ry="120" fill="url(#g-band)"/></g>
+<g class="band band--r"><ellipse cx="1520" cy="780" rx="600" ry="110" fill="url(#g-band)"/></g></svg>
+<svg class="layer layer--front" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice" focusable="false"><g class="ground" fill="#1B3A32"><path d="M-460 1500L-460 880C-373.3 890.7 -286.7 901.4 -200 912C-133.3 920.1 -66.7 928.3 0 936C66.7 943.7 133.3 952.3 200 958C273.3 964.3 346.7 968.3 420 972C493.3 975.7 566.7 977.7 640 980C713.3 982.3 786.7 985.3 860 986C933.3 986.7 1006.7 986 1080 984C1153.3 982 1226.7 979.1 1300 974C1360 969.8 1420 963.3 1480 956C1540 948.7 1600 937.9 1660 930C1726.7 921.2 1793.3 912.7 1860 906C1926.7 899.3 1993.3 895.3 2060 890L2060 1500ZM-462 886l-2-22l8 22zM-457 887l4-17l2 17zM-448 888l-4-8l8 8zM-444 888l1-11l5 11zM-436 889l4-9l2 9zM-429 890l1-16l3 16zM-421 891l-1-14l7 14zM-414 892l-3-8l9 8zM-407 893l0-16l4 16zM-401 893l-1-12l5 12zM-397 894l10-22l-4 22zM-390 895l3-23l1 23zM-385 896l0-13l6 13zM-380 896l0-14l6 14zM-374 897l-4-17l8 17zM-368 898l9-23l-3 23zM-359 899l7-21l-3 21zM-351 900l8-24l-2 24zM-345 901l7-17l-1 17zM-336 902l-1-29l5 29zM-329 902l-1-30l5 30zM-322 903l4-11l2 11zM-316 904l6-22l0 22zM-308 905l0-16l4 16zM-300 906l7-18l-1 18zM-292 907l6-26l0 26zM-288 908l3-30l3 30zM-282 908l1-13l5 13zM-275 909l7-35l-1 35zM-266 910l-2-26l8 26zM-258 911l9-15l-5 15zM-251 912l10-12l-4 12zM-246 913l0-28l6 28zM-237 914l1-24l5 24zM-229 915l1-28l5 28zM-224 915l4-28l2 28zM-216 916l-2-32l6 32zM-209 917l6-19l-2 19zM-203 918l-1-25l5 25zM-197 919l-4-20l8 20zM-192 919l-4-23l8 23zM-185 920l-4-23l10 23zM-177 921l-2-32l6 32zM-172 922l-2-16l8 16zM-163 923l8-14l-2 14zM-154 924l-1-18l7 18zM-148 925l5-21l1 21zM-139 926l0-12l4 12zM-133 926l6-15l-2 15zM-128 927l9-23l-3 23zM-119 928l4-25l0 25zM-111 929l8-17l-2 17zM-102 930l3-22l1 22zM-96 931l-4-11l10 11zM-90 932l8-16l-2 16zM-83 933l0-17l6 17zM-75 933l4-13l0 13zM-69 934l7-26l-3 26zM-62 935l9-10l-3 10zM-55 936l8-17l-4 17zM-50 936l-2-17l8 17zM-43 937l-3-13l9 13zM-37 938l6-17l-2 17zM-31 939l-2-18l6 18zM-24 939l-1-21l5 21zM-18 940l8-13l-2 13zM-10 941l3-9l3 9zM-1 942l0-10l6 10zM6 943l5-8l1 8zM12 944l2-18l2 18zM19 944l-1-22l5 22zM27 945l6-20l-2 20zM34 946l6-9l-2 9zM41 947l-2-10l8 10zM49 948l7-18l-1 18zM57 949l0-10l6 10zM67 950l-2-28l6 28zM75 951l-3-15l7 15zM80 952l0-26l6 26zM88 953l6-24l-2 24zM94 953l-2-29l8 29zM102 954l8-17l-2 17zM110 955l4-25l0 25zM117 956l-2-17l6 17zM123 957l4-24l2 24zM131 957l5-17l-1 17zM135 958l-2-20l8 20zM141 959l9-15l-3 15zM147 959l4-14l2 14zM154 960l6-15l-2 15zM159 960l-1-21l7 21zM165 961l-2-31l6 31zM171 962l3-16l3 16zM180 962l5-14l-1 14zM186 963l-5-26l9 26zM192 963l-2-29l6 29zM200 964l3-16l1 16zM208 965l10-29l-4 29zM215 965l10-31l-4 31zM224 966l8-33l-4 33zM229 967l9-20l-3 20zM237 967l4-22l2 22zM246 968l-2-25l6 25zM251 968l6-25l0 25zM257 969l8-25l-2 25zM264 969l-1-30l7 30zM271 970l10-31l-4 31zM278 970l4-16l2 16zM287 971l2-17l4 17zM295 971l5-32l-1 32zM302 972l4-21l0 21zM307 972l8-21l-4 21zM315 972l-3-18l7 18zM324 973l1-32l3 32zM332 973l8-15l-4 15zM339 974l-2-11l6 11zM345 974l5-21l-1 21zM351 974l-1-22l5 22zM357 975l7-17l-3 17zM364 975l5-28l-1 28zM369 976l6-28l0 28zM376 976l9-25l-3 25zM383 976l3-20l3 20zM390 977l8-24l-2 24zM398 977l4-16l0 16zM403 977l-2-22l8 22zM413 978l0-21l4 21zM420 978l-1-13l5 13zM427 978l5-18l-1 18zM436 979l-3-14l7 14zM441 979l-3-11l7 11zM447 979l7-18l-1 18zM455 980l-4-15l8 15zM460 980l7-9l-1 9zM466 980l1-16l5 16zM475 981l3-16l3 16zM485 981l-1-19l5 19zM492 981l-5-12l9 12zM500 982l7-17l-1 17zM509 982l1-11l5 11zM516 982l1-18l3 18zM520 982l-4-22l10 22zM528 983l-2-22l6 22zM537 983l8-19l-2 19zM546 983l-4-26l8 26zM555 983l2-12l2 12zM562 984l-1-28l5 28zM569 984l5-13l1 13zM577 984l7-17l-3 17zM585 984l3-14l1 14zM590 985l1-24l5 24zM597 985l8-25l-4 25zM601 985l2-20l4 20zM608 985l3-30l1 30zM614 985l-2-27l6 27zM622 986l0-29l6 29zM630 986l-5-30l9 30zM634 986l0-32l6 32zM640 986l0-19l4 19zM645 986l7-22l-1 22zM654 987l3-14l1 14zM659 987l7-23l-1 23zM667 987l0-33l4 33zM674 987l3-20l3 20zM681 987l-1-15l5 15zM687 988l4-29l0 29zM691 988l8-36l-2 36zM700 988l2-13l4 13zM706 988l5-17l1 17zM714 989l1-20l5 20zM721 989l-5-24l9 24zM730 989l3-27l1 27zM737 989l2-26l2 26zM741 989l9-22l-3 22zM747 990l9-27l-3 27zM755 990l8-27l-4 27zM761 990l1-15l5 15zM769 990l-3-14l7 14zM776 990l7-18l-1 18zM784 991l-4-17l8 17zM791 991l6-22l-2 22zM799 991l-2-27l6 27zM806 991l-3-23l7 23zM812 991l9-20l-3 20zM821 991l5-27l1 27zM826 992l-1-22l5 22zM834 992l3-10l1 10zM840 992l-2-22l6 22zM848 992l8-12l-4 12zM855 992l8-10l-4 10zM860 992l-3-18l7 18zM865 992l1-23l3 23zM870 992l8-19l-2 19zM878 992l9-8l-3 8zM886 992l6-14l0 14zM895 992l3-19l3 19zM903 992l0-8l4 8zM909 992l2-12l4 12zM918 992l7-15l-1 15zM924 992l9-19l-3 19zM929 992l9-24l-3 24zM935 992l10-20l-4 20zM943 992l-3-22l9 22zM952 992l-5-17l9 17zM959 992l2-18l2 18zM967 992l9-15l-3 15zM975 992l8-15l-2 15zM984 992l0-11l4 11zM989 992l1-28l5 28zM995 992l9-12l-3 12zM1002 992l1-29l5 29zM1009 991l5-18l-1 18zM1014 991l0-26l6 26zM1021 991l0-20l4 20zM1027 991l-1-17l5 17zM1034 991l0-15l6 15zM1043 991l-1-24l7 24zM1051 991l0-18l4 18zM1056 991l8-14l-2 14zM1064 990l7-29l-3 29zM1069 990l2-29l2 29zM1075 990l-1-12l5 12zM1084 990l-3-19l7 19zM1089 990l6-15l0 15zM1096 989l0-32l4 32zM1103 989l-4-36l8 36zM1110 989l9-18l-3 18zM1118 989l-4-31l10 31zM1126 989l-3-27l7 27zM1134 988l1-18l5 18zM1141 988l7-19l-1 19zM1149 988l0-22l6 22zM1157 987l4-35l0 35zM1164 987l5-14l1 14zM1170 987l1-31l5 31zM1176 987l-3-24l7 24zM1186 986l4-14l0 14zM1194 986l3-29l1 29zM1202 986l1-13l3 13zM1211 985l1-14l5 14zM1218 985l-1-26l5 26zM1224 984l-3-26l9 26zM1233 984l-4-23l8 23zM1238 984l-3-30l7 30zM1245 983l-2-15l8 15zM1253 983l-2-24l8 24zM1259 982l3-22l3 22zM1265 982l4-13l2 13zM1272 982l9-28l-5 28zM1277 981l-4-22l10 22zM1284 981l8-15l-2 15zM1291 981l-5-23l9 23zM1298 980l0-13l4 13zM1305 980l-1-24l5 24zM1309 979l2-14l4 14zM1314 979l7-17l-1 17zM1322 978l1-17l3 17zM1329 978l4-18l2 18zM1338 977l-3-19l7 19zM1345 976l-1-8l5 8zM1351 976l7-21l-3 21zM1357 975l7-22l-1 22zM1365 974l-2-9l6 9zM1373 974l4-20l0 20zM1380 973l8-23l-4 23zM1386 972l7-24l-1 24zM1393 972l3-16l3 16zM1399 971l9-22l-3 22zM1409 970l8-15l-4 15zM1416 969l4-12l0 12zM1423 968l10-23l-4 23zM1432 967l-2-26l8 26zM1440 967l2-13l2 13zM1445 966l1-29l3 29zM1452 965l-3-29l7 29zM1456 965l0-14l4 14zM1465 964l6-15l0 15zM1471 963l-3-32l7 32zM1477 962l2-29l2 29zM1483 961l5-26l-1 26zM1489 961l-1-13l5 13zM1495 960l-2-22l8 22zM1502 959l-1-15l7 15zM1511 958l7-21l-1 21zM1517 957l7-27l-1 27zM1523 956l6-18l0 18zM1532 955l4-20l0 20zM1539 954l-5-28l9 28zM1544 953l-4-31l8 31zM1549 952l8-17l-2 17zM1557 951l5-21l-1 21zM1566 950l5-14l-1 14zM1572 948l-1-27l7 27zM1582 947l-2-33l6 33zM1589 946l6-35l0 35zM1595 945l7-33l-1 33zM1602 944l7-17l-1 17zM1610 943l8-26l-2 26zM1617 942l6-32l-2 32zM1622 941l-4-15l10 15zM1629 940l2-15l2 15zM1635 939l9-15l-3 15zM1643 938l4-26l0 26zM1649 937l5-20l1 20zM1656 936l7-17l-3 17zM1662 936l0-27l4 27zM1668 935l-1-19l7 19zM1675 934l3-17l3 17zM1682 933l9-26l-3 26zM1689 932l0-13l6 13zM1697 931l6-28l-2 28zM1703 930l1-14l5 14zM1711 929l0-22l6 22zM1718 928l0-26l4 26zM1724 927l5-13l-1 13zM1729 927l2-26l4 26zM1738 926l-2-11l6 11zM1746 925l7-21l-3 21zM1755 924l-1-10l5 10zM1761 923l5-13l-1 13zM1766 922l-4-22l8 22zM1772 921l-2-21l6 21zM1777 921l-1-13l7 13zM1785 920l3-8l3 8zM1792 919l9-12l-5 12zM1800 918l6-22l0 22zM1807 917l0-22l6 22zM1815 916l9-12l-3 12zM1821 916l8-20l-2 20zM1826 915l-1-9l7 9zM1831 915l1-18l5 18zM1838 914l6-15l-2 15zM1843 914l2-20l4 20zM1849 913l4-13l2 13zM1855 912l2-9l4 9zM1863 912l7-26l-3 26zM1870 911l5-26l-1 26zM1875 910l-3-23l9 23zM1884 909l-5-11l9 11zM1890 909l-4-12l8 12zM1897 908l5-14l1 14zM1903 908l5-31l1 31zM1912 907l-2-17l8 17zM1920 906l7-20l-1 20zM1926 906l4-33l2 33zM1934 905l1-30l3 30zM1941 905l-3-30l7 30zM1949 904l6-13l-2 13zM1957 904l9-23l-5 23zM1965 903l7-31l-3 31zM1973 902l10-16l-4 16zM1979 902l1-31l5 31zM1986 901l5-25l1 25zM1995 901l8-35l-4 35zM1999 900l-3-28l9 28zM2007 900l7-18l-3 18zM2014 899l0-14l6 14zM2023 899l2-24l2 24zM2031 898l6-29l-2 29zM2038 898l5-19l-1 19zM2044 897l8-22l-4 22zM2049 897l-3-27l7 27zM2057 896l9-33l-5 33z"/><use href="#fc" transform="translate(1560 1010) scale(4.37 4.6)"/><use href="#fb" transform="translate(1660 1030) scale(5.32 5.6)"/><use href="#fa" transform="translate(1745 1000) scale(3.89 4.1)"/><use href="#fa" transform="translate(1470 1000) scale(2.47 2.6)"/><use href="#fb" transform="translate(-30 1000) scale(3.42 3.6)"/><use href="#fa" transform="translate(60 1020) scale(2.28 2.4)"/><use href="#fc" transform="translate(-110 1010) scale(3.99 4.2)"/></g></svg>
+</div>
+<!-- scene:end -->
+
+<header class="site-header" data-mode="scene">
+  <div class="site-header__inner">
+    <a class="brand" href="#top" aria-label="숲멍 스테이, 맨 위로">
+      <svg class="brand__mark" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M14 3 25 25H3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M11.5 25v-6h5v6" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="14" cy="13" r="1.8" fill="#F3C46B"/></svg>
+      <span class="brand__ko">숲멍 스테이</span>
+      <span class="brand__en" aria-hidden="true">Supmeong Stay</span>
+    </a>
+    <nav class="nav" aria-label="주요 메뉴">
+      <ul class="nav__list">
+        <li><a href="#day">하루</a></li>
+        <li><a href="#houses">독채</a></li>
+        <li><a href="#included">포함 사항</a></li>
+        <li><a href="#booking">예약</a></li>
+        <li><a href="#directions">오시는 길</a></li>
+      </ul>
+    </nav>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-sheet">
+      <span class="menu-btn__lines" aria-hidden="true"><span></span><span></span></span>
+      <span class="menu-btn__label">메뉴</span>
+    </button>
+  </div>
+</header>
+
+<div class="menu-sheet" id="menu-sheet" hidden>
+  <nav aria-label="모바일 메뉴">
+    <ul class="menu-sheet__list">
+      <li><a href="#day">하루</a></li>
+      <li><a href="#houses">독채</a></li>
+      <li><a href="#included">포함 사항</a></li>
+      <li><a href="#booking">예약</a></li>
+      <li><a href="#directions">오시는 길</a></li>
+    </ul>
+  </nav>
+  <p class="menu-sheet__contact">문의 <a href="tel:033-000-0000">033-000-0000</a></p>
+</div>
+
+<div class="clock" aria-hidden="true">
+  <svg class="clock__dial" viewBox="0 0 64 34" focusable="false"><path class="clock__track" d="M4 31A28 28 0 0 1 60 31"/><path class="clock__run" d="M4 31A28 28 0 0 1 60 31"/><circle class="clock__dot" cx="4" cy="31" r="3"/></svg>
+  <span class="clock__read"><span class="clock__ampm">오전</span><span class="clock__time">6:00</span></span>
+</div>
+
+<main id="main">
+  <section class="hero" id="top" data-hour="6" data-surface="scene" aria-labelledby="hero-title">
+    <div class="col col--left scrim hero__copy">
+      <h1 class="hero__title" id="hero-title"><span class="line">아무것도</span> <span class="line">하지 않는 하루</span></h1>
+      <p class="hero__lead">홍천 숲 한가운데, 하루 한 팀만 머무는 독채 스테이.</p>
+      <a class="btn btn--primary hero__cta" href="#booking">머물 날짜 고르기</a>
+    </div>
+    <p class="hero__cue" aria-hidden="true"><span class="hero__cue-line"></span>천천히 내려 보세요. 숲의 하루가 흘러갑니다.</p>
+  </section>
+
+  <section class="day" id="day" data-surface="scene" aria-labelledby="day-title">
+    <div class="col col--center scrim day__intro">
+      <h2 id="day-title" class="day__title">여기서의 하루는 이렇게 흐릅니다</h2>
+      <p>거실 벽에 걸린 시계 하나가 전부입니다. 머무는 동안에는 대부분 해가 어디쯤 있는지로 시간을 어림하게 됩니다.</p>
+    </div>
+    <ol class="moments">
+      <li class="moment moment--right" data-hour="6.25">
+        <div class="col col--right scrim">
+        <p class="moment__time"><time datetime="06:00">06:00</time></p>
+        <h3 class="moment__title">안개가 걷히는 걸 봅니다</h3>
+        <p>창을 열면 능선마다 안개가 걸려 있습니다. 데크에 앉아 보리차를 한 잔 마시는 동안, 건너편 전나무 숲이 한 겹씩 드러납니다.</p>
+      </div>
+      </li>
+      <li class="moment moment--left" data-hour="12">
+        <div class="col col--left scrim">
+        <p class="moment__time"><time datetime="12:00">12:00</time></p>
+        <h3 class="moment__title">계곡에 발을 담급니다</h3>
+        <p>숙소 뒤 오솔길로 칠 분을 걸으면 무릎 높이의 계곡이 나옵니다. 한여름에도 물이 차가워 오래 담그지는 못합니다. 그늘진 바위에서 아침 바구니에 남은 빵을 꺼내 먹습니다.</p>
+      </div>
+      </li>
+      <li class="moment moment--right" data-hour="18.5">
+        <div class="col col--right scrim">
+        <p class="moment__time"><time datetime="18:30">18:30</time></p>
+        <h3 class="moment__title">장작에 불을 붙입니다</h3>
+        <p>해가 서쪽 능선에 걸리면 화로에 장작을 올릴 시간입니다. 불쏘시개와 성냥은 현관 옆 나무 상자에 있습니다. 고기를 구워도 좋고, 고구마 몇 개면 충분한 저녁도 있습니다.</p>
+      </div>
+      </li>
+      <li class="moment moment--left" data-hour="22">
+        <div class="col col--left scrim">
+        <p class="moment__time"><time datetime="22:00">22:00</time></p>
+        <h3 class="moment__title">별을 셉니다</h3>
+        <p>마당 조명은 밤 열 시에 저절로 꺼집니다. 가장 가까운 가로등이 4킬로미터 밖이라, 눈이 어둠에 익으면 은하수까지 보이는 밤이 많습니다.</p>
+      </div>
+      </li>
+    </ol>
+  </section>
+
+  <div class="surfaces" data-hour="22.6">
+    <section class="surface surface--snow houses" id="houses" data-surface="light" aria-labelledby="houses-title">
+      <svg class="edge edge--top" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 90V58C90 40 170 26 260 34S420 70 520 62 690 18 800 14 980 44 1080 52 1280 30 1360 36 1440 52 1440 52V90Z"/></svg>
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="houses-title">숲동과 별동</h2>
+          <p>두 채를 한 팀이 씁니다. 숲동에서 먹고 씻고 쉬다가, 밤에는 스무 걸음 떨어진 별동으로 건너가 잠듭니다. 그림의 동그라미를 누르면 자세히 볼 수 있습니다.</p>
+        </div>
+
+        <article class="house" aria-labelledby="house-forest">
+          <figure class="house__plan" data-house="forest">
+            <svg class="plan" viewBox="0 0 800 560" aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="p-earth" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V12" stroke="#5A7A6E" stroke-width="1.2"/></pattern>
+                <linearGradient id="p-sky-day" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9D8D4"/><stop offset="1" stop-color="#EEF2F0"/></linearGradient>
+                <linearGradient id="p-beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3C46B" stop-opacity=".5"/><stop offset="1" stop-color="#F3C46B" stop-opacity="0"/></linearGradient>
+              </defs>
+              <rect width="800" height="560" fill="url(#p-sky-day)"/>
+              <g fill="#B4C6BF">
+                <path d="M40 470 62 380 52 380 70 320 60 320 76 262 92 320 82 320 100 380 90 380 112 470Z"/>
+                <path d="M690 470 708 396 700 396 716 344 708 344 722 296 736 344 728 344 744 396 736 396 754 470Z"/>
+                <path d="M748 470 762 410 756 410 768 370 762 370 774 330 786 370 780 370 792 410 786 410 800 470Z"/>
+              </g>
+              <path d="M0 470H800V560H0Z" fill="url(#p-earth)"/>
+              <path d="M0 470H800" stroke="#1B3A32" stroke-width="2"/>
+              <path class="plan__interior" d="M132 470 400 100 668 470Z" fill="#EEF1EF"/>
+              <path class="plan__warm" d="M132 470 400 100 668 470Z" fill="#F7EBD0"/>
+              <path class="plan__warm" d="M560 170 600 226 420 470 330 470Z" fill="url(#p-beam)"/>
+              <!-- loft -->
+              <path d="M262 290H474V300H262Z" fill="#1B3A32"/>
+              <path d="M470 300V262M490 300V262M510 300V262M462 262H520" stroke="#1B3A32" stroke-width="2.5" fill="none"/>
+              <rect x="292" y="266" width="150" height="24" rx="4" fill="#F6F8F7" stroke="#1B3A32" stroke-width="2"/>
+              <path d="M330 268c20-8 50-8 70 0s30 6 42 0V290H330Z" fill="#A9BFB6" stroke="#1B3A32" stroke-width="2"/>
+              <rect x="298" y="260" width="34" height="14" rx="6" fill="#F6F8F7" stroke="#1B3A32" stroke-width="2"/>
+              <!-- ladder -->
+              <path d="M478 470 500 300M514 470 536 300" stroke="#1B3A32" stroke-width="3"/>
+              <path d="M482 440H518M486 410H522M490 380H526M494 350H530M498 320H534" stroke="#1B3A32" stroke-width="2.5"/>
+              <!-- stove + flue -->
+              <path d="M299 402V231" stroke="#1B3A32" stroke-width="8"/>
+              <rect x="274" y="398" width="52" height="62" rx="5" fill="#1B3A32"/>
+              <rect class="plan__fire" x="284" y="414" width="32" height="26" rx="3" fill="#F3C46B"/>
+              <path d="M290 440c4-10 8-14 10-22 3 8 8 12 10 22Z" fill="#E08A3C" class="plan__fire"/>
+              <path d="M278 460v10M322 460v10" stroke="#1B3A32" stroke-width="4"/>
+              <g fill="#C9A577" stroke="#1B3A32" stroke-width="2"><circle cx="350" cy="461" r="9"/><circle cx="369" cy="461" r="9"/><circle cx="388" cy="461" r="9"/><circle cx="359" cy="445" r="9"/><circle cx="378" cy="445" r="9"/></g>
+              <!-- chair + rug -->
+              <path d="M392 470h120" stroke="#5A7A6E" stroke-width="6" stroke-linecap="round" opacity=".5"/>
+              <path d="M408 466v-38c0-10 8-16 18-16h18c10 0 16 6 16 16v38" fill="#5A7A6E" stroke="#1B3A32" stroke-width="2"/>
+              <!-- pendant -->
+              <path d="M590 248V352" stroke="#1B3A32" stroke-width="1.6"/>
+              <path d="M576 352h28l-6-14h-16Z" fill="#1B3A32"/>
+              <circle class="plan__fire" cx="590" cy="358" r="5" fill="#F3C46B"/>
+              <!-- hinoki tub -->
+              <rect x="540" y="428" width="104" height="40" rx="12" fill="#E2C391" stroke="#1B3A32" stroke-width="2.4"/>
+              <path d="M550 438h84" stroke="#9CC2CB" stroke-width="5" stroke-linecap="round"/>
+              <path d="M566 418c-6-8 6-12 0-22M590 418c-6-8 6-12 0-22M614 418c-6-8 6-12 0-22" stroke="#7E968D" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <!-- floor + roof poche -->
+              <path d="M120 470H680V484H120Z" fill="#1B3A32"/>
+              <path d="M150 484v14M400 484v14M650 484v14" stroke="#1B3A32" stroke-width="8"/>
+              <path fill="#1B3A32" fill-rule="evenodd" d="M92 474 400 52 708 474H668L400 100 132 474Z"/>
+              <!-- skylight cut in the roof -->
+              <path d="M556 150 584 188 604 174 576 136Z" fill="#CFE2E8" stroke="#1B3A32" stroke-width="2"/>
+            </svg>
+            <button class="spot" type="button" style="--x:37.4%;--y:76%" aria-describedby="tip-stove"><span class="sr-only">화목난로</span></button>
+            <span class="tip" role="tooltip" id="tip-stove"><strong>화목난로</strong>주물 난로 하나로 거실과 다락이 함께 데워집니다. 한겨울에도 자기 전에 장작 두 개면 아침까지 따뜻합니다.</span>
+            <button class="spot" type="button" style="--x:74%;--y:73%" aria-describedby="tip-tub"><span class="sr-only">편백 욕조</span></button>
+            <span class="tip" role="tooltip" id="tip-tub"><strong>편백 욕조</strong>낮은 지붕 아래 둔 편백 욕조입니다. 물을 받는 동안 창밖 전나무를 보게 됩니다.</span>
+            <button class="spot" type="button" style="--x:46%;--y:44%" aria-describedby="tip-loft"><span class="sr-only">다락 침대</span></button>
+            <span class="tip" role="tooltip" id="tip-loft"><strong>다락 침대</strong>사다리로 오르는 다락입니다. 누우면 지붕 경사를 따라 나무 꼭대기가 보이고, 비 오는 밤에는 빗소리가 바로 위에서 들립니다.</span>
+            <figcaption class="sr-only">숲동 단면 그림. 1층에 화목난로와 편백 욕조, 사다리로 오르는 다락에 침대가 있습니다.</figcaption>
+          </figure>
+          <div class="house__text">
+            <h3 id="house-forest" class="house__name">숲동<span class="house__en" aria-hidden="true">The Forest House</span></h3>
+            <p>전나무 숲 쪽으로 지붕이 땅까지 내려온 A자형 집입니다. 부엌과 거실, 욕실이 모두 여기 있고, 지붕 경사 아래 다락에 낮잠용 침대를 두었습니다.</p>
+            <dl class="specs">
+              <div><dt>쓰임</dt><dd>거실, 부엌, 욕실, 다락</dd></div>
+              <div><dt>넓이</dt><dd>49㎡, 다락 포함</dd></div>
+              <div><dt>난방</dt><dd>화목난로와 바닥 난방</dd></div>
+            </dl>
+          </div>
+        </article>
+
+        <article class="house house--flip" aria-labelledby="house-star">
+          <figure class="house__plan" data-house="star">
+            <svg class="plan" viewBox="0 0 800 560" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="p-sky-night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0D1828"/><stop offset="1" stop-color="#22385A"/></linearGradient>
+                <pattern id="p-earth-n" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V12" stroke="#5A7A6E" stroke-width="1.2"/></pattern>
+                <linearGradient id="p-star-beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DCE4F0" stop-opacity=".45"/><stop offset="1" stop-color="#DCE4F0" stop-opacity="0"/></linearGradient>
+                <radialGradient id="p-lantern"><stop offset="0" stop-color="#F3C46B" stop-opacity=".7"/><stop offset="1" stop-color="#F3C46B" stop-opacity="0"/></radialGradient>
+              </defs>
+              <rect width="800" height="560" fill="url(#p-sky-night)"/>
+              <g fill="#F6F8F7">
+                <circle cx="80" cy="60" r="1.6"/><circle cx="160" cy="110" r="1.1"/><circle cx="250" cy="48" r="1.8"/><circle cx="330" cy="96" r="1.2"/><circle cx="420" cy="40" r="1.5"/><circle cx="470" cy="104" r="1"/><circle cx="540" cy="70" r="2"/><circle cx="610" cy="34" r="1.2"/><circle cx="680" cy="92" r="1.6"/><circle cx="740" cy="52" r="1.1"/><circle cx="210" cy="150" r="1"/><circle cx="590" cy="128" r="1.3"/><circle cx="510" cy="22" r="1"/><circle cx="120" cy="190" r="1.2"/><circle cx="720" cy="160" r="1"/><circle cx="380" cy="140" r="1"/>
+              </g>
+              <g fill="#0B1420">
+                <path d="M20 470 40 390 30 390 48 330 38 330 56 270 74 330 64 330 82 390 72 390 92 470Z"/>
+                <path d="M80 470 96 410 88 410 102 366 94 366 108 322 122 366 114 366 128 410 120 410 136 470Z"/>
+              </g>
+              <path d="M0 470H800V560H0Z" fill="#E9EEEC"/>
+              <path d="M0 470H800V560H0Z" fill="url(#p-earth-n)"/>
+              <path d="M0 470H800" stroke="#1B3A32" stroke-width="2"/>
+              <path class="plan__interior" d="M186 470V262L400 196 614 262V470Z" fill="#2A3B4E"/>
+              <path class="plan__warm" d="M186 470V262L400 196 614 262V470Z" fill="#F2E3C4"/>
+              <path class="plan__warm" d="M430 196 590 246 600 470H420Z" fill="url(#p-star-beam)"/>
+              <!-- bookshelf -->
+              <g stroke="#1B3A32" stroke-width="2">
+                <path d="M200 300H262M200 350H262M200 400H262M200 450H262" />
+                <g stroke-width="1.6"><rect x="204" y="276" width="8" height="24" fill="#5A7A6E"/><rect x="214" y="280" width="7" height="20" fill="#F3C46B"/><rect x="223" y="274" width="9" height="26" fill="#1B3A32"/><rect x="236" y="282" width="7" height="18" fill="#DCE4E0"/><rect x="206" y="328" width="8" height="22" fill="#DCE4E0"/><rect x="216" y="324" width="9" height="26" fill="#5A7A6E"/><rect x="228" y="330" width="7" height="20" fill="#1B3A32"/><rect x="206" y="378" width="9" height="22" fill="#F3C46B"/><rect x="218" y="376" width="8" height="24" fill="#1B3A32"/></g>
+              </g>
+              <!-- reading chair + lamp -->
+              <path d="M300 468v-34c0-8 6-14 14-14h24c8 0 12 6 12 14v34" fill="#5A7A6E" stroke="#1B3A32" stroke-width="2"/>
+              <path d="M372 468V372M360 372h24l-4-16h-16Z" stroke="#1B3A32" stroke-width="2" fill="#1B3A32"/>
+              <circle class="plan__fire" cx="372" cy="378" r="5" fill="#F3C46B"/>
+              <!-- platform bed under skylight -->
+              <rect x="420" y="440" width="180" height="28" rx="3" fill="#C9A577" stroke="#1B3A32" stroke-width="2.4"/>
+              <rect x="430" y="424" width="162" height="18" rx="5" fill="#F6F8F7" stroke="#1B3A32" stroke-width="2"/>
+              <path d="M470 426c22-10 60-10 90 0s28 4 32 0v16H470Z" fill="#A9BFB6" stroke="#1B3A32" stroke-width="2"/>
+              <rect x="436" y="414" width="34" height="14" rx="6" fill="#F6F8F7" stroke="#1B3A32" stroke-width="2"/>
+              <!-- floor -->
+              <path d="M170 470H630V484H170Z" fill="#1B3A32"/>
+              <path d="M196 484v14M400 484v14M604 484v14" stroke="#1B3A32" stroke-width="8"/>
+              <!-- walls + window gap on the left -->
+              <path d="M170 474V270H186V474Z" fill="#1B3A32"/>
+              <path d="M614 474V270H630V474Z" fill="#1B3A32"/>
+              <path d="M172 330h12v60h-12Z" fill="#9CB6C7" stroke="#1B3A32" stroke-width="2"/>
+              <!-- roof with a wide skylight on the right slope -->
+              <path d="M146 276 400 186 430 196 430 214 400 204 172 284Z" fill="#1B3A32"/>
+              <path d="M592 250 654 272 650 288 590 268Z" fill="#1B3A32"/>
+              <path d="M430 196 592 250 590 268 430 214Z" fill="#B9D2DE" fill-opacity=".55" stroke="#1B3A32" stroke-width="2"/>
+              <path d="M484 214 482 232M538 232 536 250" stroke="#1B3A32" stroke-width="2"/>
+              <!-- deck + lantern -->
+              <path d="M630 458H770V468H630Z" fill="#C9A577" stroke="#1B3A32" stroke-width="2"/>
+              <path d="M650 468v12M700 468v12M750 468v12" stroke="#1B3A32" stroke-width="6"/>
+              <circle cx="730" cy="430" r="46" fill="url(#p-lantern)"/>
+              <path d="M722 456h16v-22h-16Z" fill="#1B3A32"/>
+              <rect class="plan__fire" x="725" y="438" width="10" height="14" fill="#F3C46B"/>
+              <path d="M660 456h22l2-6h-26Z" fill="#DCE4E0" stroke="#1B3A32" stroke-width="1.6"/>
+            </svg>
+            <button class="spot spot--light" type="button" style="--x:64%;--y:39%" aria-describedby="tip-sky"><span class="sr-only">천창</span></button>
+            <span class="tip" role="tooltip" id="tip-sky"><strong>천창</strong>지붕 한쪽을 통째로 유리로 냈습니다. 불을 끄고 누우면 천장이 곧 밤하늘입니다. 아침에는 전동 가림막을 내릴 수 있습니다.</span>
+            <button class="spot" type="button" style="--x:63.5%;--y:74%" aria-describedby="tip-bed"><span class="sr-only">평상 침대</span></button>
+            <span class="tip" role="tooltip" id="tip-bed"><strong>평상 침대</strong>천창 바로 아래 낮게 깐 평상 침대입니다. 퀸 사이즈 매트리스에 거위털 이불을 계절마다 바꿔 둡니다.</span>
+            <button class="spot" type="button" style="--x:88%;--y:79%" aria-describedby="tip-deck"><span class="sr-only">툇마루</span></button>
+            <span class="tip" role="tooltip" id="tip-deck"><strong>툇마루</strong>별동 앞 툇마루에 등불 하나를 걸어 두었습니다. 숲동에서 건너올 때 이 불빛을 보고 오시면 됩니다.</span>
+            <figcaption class="sr-only">별동 단면 그림. 지붕 한쪽에 넓은 천창이 있고 그 아래 평상 침대, 벽에 책장, 바깥에 등불을 건 툇마루가 있습니다.</figcaption>
+          </figure>
+          <div class="house__text">
+            <h3 id="house-star" class="house__name">별동<span class="house__en" aria-hidden="true">The Star House</span></h3>
+            <p>낮은 지붕 위로 넓은 천창을 낸 단층 침실입니다. 잠만 자는 집이라 텔레비전도 시계도 두지 않았습니다. 책장에는 지난 손님들이 두고 간 책이 조금씩 늘어갑니다.</p>
+            <dl class="specs">
+              <div><dt>쓰임</dt><dd>침실, 책장, 툇마루</dd></div>
+              <div><dt>넓이</dt><dd>23㎡</dd></div>
+              <div><dt>침대</dt><dd>퀸 하나, 요청하면 이불 한 채 더</dd></div>
+            </dl>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="surface surface--mist included" id="included" data-surface="light" aria-labelledby="included-title">
+      <div class="wrap">
+        <div class="sec-head sec-head--stack">
+          <h2 id="included-title">그냥 오시면 됩니다</h2>
+          <p>필요한 건 저희가 먼저 챙겨 둡니다. 가방에는 갈아입을 옷과 읽다 만 책 한 권이면 충분합니다.</p>
+        </div>
+        <ul class="gifts">
+          <li class="gift">
+            <svg class="gift__art" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+              <path d="M30 150h160" stroke="#1B3A32" stroke-width="2" stroke-linecap="round"/>
+              <path d="M58 70c0-44 104-44 104 0" fill="none" stroke="#1B3A32" stroke-width="5" stroke-linecap="round"/>
+              <path d="M76 52c10-10 20 4 34-6 12-8 22 6 30 0l6 22H70Z" fill="#E7CDA0" stroke="#1B3A32" stroke-width="2"/>
+              <ellipse cx="150" cy="66" rx="11" ry="13" fill="#F6F8F7" stroke="#1B3A32" stroke-width="2"/>
+              <circle cx="72" cy="66" r="12" fill="#D9714E" stroke="#1B3A32" stroke-width="2"/>
+              <path d="M72 54c2-6 6-8 10-8" stroke="#1B3A32" stroke-width="2" fill="none"/>
+              <path d="M40 72h140l-16 76H56Z" fill="#C9A577" stroke="#1B3A32" stroke-width="2.4" stroke-linejoin="round"/>
+              <path d="M46 92h128M50 112h120M53 132h114" stroke="#1B3A32" stroke-width="1.6" opacity=".7"/>
+              <path d="M70 74l6 72M100 74l2 72M128 74l-2 72M156 74l-6 72" stroke="#1B3A32" stroke-width="1.6" opacity=".7"/>
+              <path d="M40 72h140l-4 14c-30 8-102 8-132 0Z" fill="#F6F8F7" stroke="#1B3A32" stroke-width="2"/>
+              <path d="M58 76h10v8h-10ZM86 76h10v8h-10ZM114 76h10v8h-10ZM142 76h10v8h-10Z" fill="#5A7A6E"/>
+            </svg>
+            <h3 class="gift__name">아침 바구니</h3>
+            <p>아침 8시에 현관 앞에 놓아 둡니다. 홍천 잡곡으로 구운 빵, 마을 농가의 달걀, 제철 과일과 볶은 보리 한 봉지가 들어 있습니다.</p>
+          </li>
+          <li class="gift">
+            <svg class="gift__art" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+              <path d="M24 150h172" stroke="#1B3A32" stroke-width="2" stroke-linecap="round"/>
+              <g stroke="#1B3A32" stroke-width="2.2">
+                <path d="M40 140 176 112l8 22-136 28Z" fill="#B48A5A"/>
+                <path d="M34 112 172 92l6 24-138 22Z" fill="#C9A577"/>
+                <path d="M46 86l130-14 4 22-130 16Z" fill="#B48A5A"/>
+              </g>
+              <g stroke="#1B3A32" stroke-width="2.2" fill="#E7CDA0">
+                <ellipse cx="44" cy="151" rx="9" ry="12"/><ellipse cx="38" cy="125" rx="9" ry="12"/><ellipse cx="50" cy="98" rx="8" ry="11"/>
+              </g>
+              <g stroke="#B48A5A" stroke-width="1.4" fill="none"><ellipse cx="44" cy="151" rx="4" ry="6"/><ellipse cx="38" cy="125" rx="4" ry="6"/><ellipse cx="50" cy="98" rx="3.5" ry="5"/></g>
+              <path d="M96 80c-6 24-4 54 4 74M130 74c-6 26-4 56 4 74" stroke="#1B3A32" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M98 78c8-12 22-12 32-4" stroke="#1B3A32" stroke-width="3" fill="none"/>
+              <path d="M150 64c-4-12 6-18 2-30M166 66c-4-10 4-14 1-24" stroke="#D9714E" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>
+            <h3 class="gift__name">장작 한 묶음</h3>
+            <p>마른 참나무 장작과 불쏘시개입니다. 화로 한 번, 난로 한 번 피우기에 넉넉합니다. 더 필요하면 데크 옆 창고에서 꺼내 쓰세요.</p>
+          </li>
+          <li class="gift">
+            <svg class="gift__art" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+              <path d="M24 150h172" stroke="#1B3A32" stroke-width="2" stroke-linecap="round"/>
+              <path d="M36 40 84 28 136 40 184 28V136L136 148 84 136 36 148Z" fill="#F6F8F7" stroke="#1B3A32" stroke-width="2.4" stroke-linejoin="round"/>
+              <path d="M84 28V136M136 40V148" stroke="#1B3A32" stroke-width="1.6"/>
+              <path d="M84 28 136 40V148L84 136Z" fill="#DCE4E0"/>
+              <path d="M54 120c14-6 18-30 40-30s26 22 48-2 24-36 26-44" fill="none" stroke="#1B3A32" stroke-width="2.4" stroke-dasharray="2 6" stroke-linecap="round"/>
+              <path d="M58 70 64 56 70 70ZM70 84 76 70 82 84ZM150 98l6-14 6 14ZM112 112l6-14 6 14Z" fill="#5A7A6E"/>
+              <path d="M162 38l8 8M170 38l-8 8" stroke="#D9714E" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="54" cy="120" r="4" fill="#1B3A32"/>
+            </svg>
+            <h3 class="gift__name">숲 산책 지도</h3>
+            <p>주인이 직접 그린 산책 지도입니다. 계곡까지 7분, 전망 바위까지 25분. 길에서 만나는 나무 이름을 하나씩 적어 두었습니다.</p>
+          </li>
+        </ul>
+        <div class="notes">
+          <h3 class="notes__title">미리 알아 두시면 좋은 것</h3>
+          <dl class="notes__list">
+            <div><dt>입실과 퇴실</dt><dd>오후 3시에 들어오시고 오전 11시에 나가십니다.</dd></div>
+            <div><dt>와이파이</dt><dd>일부러 두지 않았습니다. 휴대폰은 숲동 거실에서만 잘 터집니다.</dd></div>
+            <div><dt>반려동물</dt><dd>숲에 사는 고라니와 너구리 때문에 함께 오기 어렵습니다.</dd></div>
+            <div><dt>가까운 가게</dt><dd>차로 12분 거리에 마을 슈퍼가 있고 밤 9시에 닫습니다.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="surface surface--fir booking" id="booking" data-surface="dark" aria-labelledby="booking-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="booking-title">머물 날짜</h2>
+          <p>달력에서 들어오는 날과 나가는 날을 차례로 누르세요. 흐린 날짜는 이미 다른 팀이 머무는 날입니다. 두 채 모두 쓰는 요금이 2명 기준 1박 280,000원입니다.</p>
+        </div>
+        <form class="book" id="booking-form" novalidate>
+          <div class="cal" id="cal">
+            <p class="cal__fallback">달력은 스크립트가 켜져 있어야 보입니다. 전화 033-000-0000으로도 예약할 수 있습니다.</p>
+          </div>
+          <div class="book__side">
+            <fieldset class="guests">
+              <legend class="guests__label">인원</legend>
+              <div class="guests__ctrl">
+                <button type="button" class="guests__btn" data-step="-1" aria-label="인원 한 명 줄이기">
+                  <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+                <output class="guests__value" id="guests-value" aria-live="polite">2명</output>
+                <button type="button" class="guests__btn" data-step="1" aria-label="인원 한 명 늘리기">
+                  <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h12M10 4v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+              <p class="guests__note">최대 4명. 3명부터 한 사람에 1박 30,000원이 더해집니다.</p>
+            </fieldset>
+            <dl class="sum">
+              <div><dt>들어오는 날</dt><dd id="sum-in">고르기 전</dd></div>
+              <div><dt>나가는 날</dt><dd id="sum-out">고르기 전</dd></div>
+            </dl>
+            <p class="sum__total"><span class="sum__nights" id="sum-nights">날짜를 고르면</span> <strong class="sum__price" id="sum-price">요금이 바로 나옵니다</strong></p>
+            <button class="btn btn--lamp book__submit" type="submit" aria-describedby="book-status">이 날짜로 예약하기</button>
+            <p class="book__status" id="book-status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="surface surface--snow directions" id="directions" data-surface="light" aria-labelledby="dir-title">
+      <div class="wrap dir">
+        <div class="dir__text">
+          <h2 id="dir-title">마지막 십 분은 흙길입니다</h2>
+          <p class="dir__lead">서울에서 차로 1시간 40분. 마을 끝 다리를 건너면 포장길이 끝나고, 숲길로 십 분을 더 들어옵니다. 승용차로 다닐 수 있게 매주 길을 고릅니다.</p>
+          <ol class="route">
+            <li><strong>홍천 나들목에서 25분</strong>나들목을 나와 국도를 따라 계곡 쪽으로 들어옵니다.</li>
+            <li><strong>가상리 마을회관 지나 다리 건너기</strong>회관 앞 느티나무를 지나면 작은 개울 다리가 나옵니다.</li>
+            <li><strong>나무 표지판에서 흙길로 10분</strong>다리 끝 표지판에서 오른쪽 숲길로 오르면 숲동 지붕이 보입니다.</li>
+          </ol>
+          <dl class="contact">
+            <div><dt>주소</dt><dd>강원 홍천군 가상면 숲멍길 12</dd></div>
+            <div><dt>전화</dt><dd><a href="tel:033-000-0000">033-000-0000</a></dd></div>
+            <div><dt>버스로 오시면</dt><dd>하루 전에 알려 주시면 홍천 터미널로 마중 갑니다.</dd></div>
+          </dl>
+        </div>
+        <figure class="dir__map">
+          <svg class="map" viewBox="0 0 640 560" role="img" aria-labelledby="map-title">
+            <title id="map-title">약도. 홍천 나들목에서 국도로 25분, 가상리 마을회관을 지나 개울 다리를 건넌 뒤 흙길로 10분 오르면 숲멍 스테이입니다.</title>
+            <defs>
+              <mask id="m-dirt"><path class="route-mask" d="M396 286C430 268 452 250 446 222S470 176 500 168 528 140 540 112" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/></mask>
+              <radialGradient id="m-glow"><stop offset="0" stop-color="#F3C46B" stop-opacity=".8"/><stop offset="1" stop-color="#F3C46B" stop-opacity="0"/></radialGradient>
+            </defs>
+            <rect width="640" height="560" rx="6" fill="#E4EAE7"/>
+            <g fill="none" stroke="#CBD6D1" stroke-width="1.4">
+              <path d="M380 40c90-10 200 20 230 90s-30 150-120 150-160-40-170-110 0-120 60-130Z"/>
+              <path d="M410 80c70-6 150 18 168 66s-26 100-90 100-118-30-124-80 2-80 46-86Z"/>
+              <path d="M444 116c44-2 92 12 102 40s-18 58-58 58-72-18-76-48 4-48 32-50Z"/>
+              <path d="M30 120c60-30 160-20 190 30s-20 110-90 110-120-30-120-70 0-50 20-70Z"/>
+              <path d="M60 150c40-16 100-10 118 22s-14 64-56 64-74-18-74-42 0-30 12-44Z"/>
+            </g>
+            <path d="M-10 410C80 380 150 420 230 380S330 300 400 270 520 250 650 280" fill="none" stroke="#B9CFD6" stroke-width="16" stroke-linecap="round"/>
+            <path d="M-10 410C80 380 150 420 230 380S330 300 400 270 520 250 650 280" fill="none" stroke="#DCEAEE" stroke-width="5" stroke-linecap="round"/>
+            <path d="M20 560C60 500 110 470 170 452S280 400 330 340 370 300 396 286" fill="none" stroke="#F6F8F7" stroke-width="14" stroke-linecap="round"/>
+            <path d="M20 560C60 500 110 470 170 452S280 400 330 340 370 300 396 286" fill="none" stroke="#9BB0A8" stroke-width="8" stroke-linecap="round"/>
+            <path d="M396 286C430 268 452 250 446 222S470 176 500 168 528 140 540 112" fill="none" stroke="#B7A07C" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 9"/>
+            <path d="M384 260 402 300M402 254 420 294" stroke="#5A7A6E" stroke-width="3" stroke-linecap="round"/>
+            <g fill="#5A7A6E">
+              <path d="M470 250l8-20 8 20ZM490 226l8-20 8 20ZM418 196l8-20 8 20ZM436 170l8-20 8 20ZM516 206l8-20 8 20ZM560 150l8-20 8 20ZM470 128l8-20 8 20ZM584 190l8-20 8 20ZM500 96l8-20 8 20ZM400 150l8-20 8 20ZM566 236l8-20 8 20Z"/>
+            </g>
+            <g fill="#9BB0A8"><rect x="300" y="352" width="12" height="10"/><rect x="318" y="342" width="10" height="9"/><rect x="292" y="368" width="10" height="9"/><rect x="324" y="360" width="12" height="10"/></g>
+            <circle cx="350" cy="322" r="9" fill="#5A7A6E"/>
+            <!-- drawn route -->
+            <path class="route-line" d="M20 560C60 500 110 470 170 452S280 400 330 340 370 300 396 286" fill="none" stroke="#1B3A32" stroke-width="4.5" stroke-linecap="round"/>
+            <path class="route-dirt" d="M396 286C430 268 452 250 446 222S470 176 500 168 528 140 540 112" fill="none" stroke="#1B3A32" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="9 8" mask="url(#m-dirt)"/>
+            <circle cx="545" cy="100" r="44" fill="url(#m-glow)"/>
+            <path d="M545 72 566 112H524Z" fill="#1B3A32"/>
+            <rect x="540" y="98" width="10" height="14" fill="#F3C46B"/>
+            <g font-family="'Nanum Myeongjo', serif" fill="#1B3A32">
+              <text x="584" y="92" font-size="17" font-weight="800" text-anchor="end" dx="40">숲멍 스테이</text>
+              <text x="220" y="330" font-size="14" text-anchor="end">가상리 마을회관</text>
+              <text x="428" y="318" font-size="14">개울 다리</text>
+              <text x="478" y="200" font-size="14" font-weight="700" fill="#4A675C">흙길 10분</text>
+              <text x="190" y="488" font-size="14" font-weight="700" fill="#4A675C">국도 25분</text>
+              <text x="36" y="536" font-size="13" fill="#4A675C">홍천 나들목 방면</text>
+            </g>
+          </svg>
+        </figure>
+      </div>
+      <svg class="edge edge--bottom" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0V40C110 54 210 70 330 62S520 22 640 26 820 74 960 78 1180 46 1290 40 1440 30 1440 30V0Z"/></svg>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer" data-surface="scene" data-hour="23">
+  <div class="wrap footer">
+    <p class="footer__line">오늘 밤에도 창에 불을 켜 두겠습니다.</p>
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <p class="footer__name">숲멍 스테이<span aria-hidden="true">Supmeong Stay</span></p>
+        <p>강원 홍천군 가상면 숲멍길 12</p>
+      </div>
+      <dl class="footer__contact">
+        <div><dt>전화</dt><dd><a href="tel:033-000-0000">033-000-0000</a></dd></div>
+        <div><dt>메일</dt><dd><a href="mailto:stay@supmeong.example">stay@supmeong.example</a></dd></div>
+        <div><dt>문의 시간</dt><dd>오전 10시부터 오후 6시</dd></div>
+      </dl>
+      <nav class="footer__nav" aria-label="바닥글 메뉴">
+        <ul>
+          <li><a href="#day">하루</a></li>
+          <li><a href="#houses">독채</a></li>
+          <li><a href="#booking">예약</a></li>
+          <li><a href="#directions">오시는 길</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="footer__note">이 사이트는 첫화면 스튜디오가 만든 가상의 브랜드 컨셉 시안입니다. 실제 업체, 가격, 후기가 아닙니다.</p>
+  </div>
+</footer>
+
+<div class="book-bar" id="book-bar">
+  <p class="book-bar__summary" aria-live="polite"><span class="book-bar__dates" id="bar-dates">날짜를 고르면</span> <span class="book-bar__price" id="bar-price">요금이 바로 계산됩니다</span></p>
+  <a class="btn btn--lamp book-bar__btn" href="#booking">머물 날짜 고르기</a>
+</div>
+
+<script src="../../assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="../../assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="../../assets/vendor/gsap/DrawSVGPlugin.min.js" defer></script>
+<script src="../../assets/vendor/lenis/lenis.min.js" defer></script>
+<script src="main.js" defer></script>
+<script src="../../assets/shared/concept-badge.js" defer></script>
+</body>
+</html>

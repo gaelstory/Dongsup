@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>첫화면 스튜디오</title>
+  <meta name="description" content="소상공인, 병원, 학원, 스타트업을 위한 맞춤 홈페이지 제작. 가격표 공개, 무료 상담, 소스와 도메인은 모두 고객 소유.">
+  <meta name="theme-color" content="#F4F5F0">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="첫화면 스튜디오 First Screen Studio">
+  <meta property="og:title" content="첫화면 스튜디오 | 홈페이지 제작">
+  <meta property="og:description" content="소상공인, 병원, 학원, 스타트업을 위한 맞춤 홈페이지 제작. 가격표 공개, 무료 상담, 소스와 도메인은 모두 고객 소유.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232746F5'/%3E%3Cpath d='M8.5 15V8.5H15M23.5 17v6.5H17' fill='none' stroke='%23fff' stroke-width='2.6'/%3E%3Ccircle cx='16' cy='16' r='2.6' fill='%23F4E84A'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@700;800&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="assets/css/studio.css">
+  <script>document.documentElement.classList.add('js');</script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/vendor/gsap/gsap.min.js" defer></script>
+  <script src="assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/gsap/SplitText.min.js" defer></script>
+  <script src="assets/vendor/gsap/ScrambleTextPlugin.min.js" defer></script>
+  <script src="assets/vendor/gsap/Flip.min.js" defer></script>
+  <script src="assets/vendor/gsap/Observer.min.js" defer></script>
+  <script src="assets/vendor/gsap/DrawSVGPlugin.min.js" defer></script>
+  <script src="assets/js/studio.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <span class="top-sentinel" data-top-sentinel aria-hidden="true"></span>
+
+  <header class="site-header" data-header>
+    <div class="site-header__inner wrap">
+      <a class="logo" href="#top" aria-label="첫화면 스튜디오, 맨 위로">
+        <svg class="logo__corner logo__corner--tl" viewBox="0 0 8 8" aria-hidden="true"><path d="M1.25 8V1.25H8"/></svg>
+        <span class="logo__word" aria-hidden="true">첫화면</span>
+        <svg class="logo__corner logo__corner--br" viewBox="0 0 8 8" aria-hidden="true"><path d="M6.75 0v6.75H0"/></svg>
+      </a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <ul>
+          <li><a href="#work">포트폴리오</a></li>
+          <li><a href="#process">진행 절차</a></li>
+          <li><a href="#pricing">가격</a></li>
+          <li><a href="#faq">자주 묻는 질문</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--primary btn--sm site-header__cta" href="#request">제작 의뢰</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-btn hidden>
+        <span class="visually-hidden">메뉴</span>
+        <span class="menu-btn__bars" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" data-menu>
+      <div class="mobile-menu__clip">
+        <nav class="wrap" aria-label="모바일 메뉴">
+          <ul>
+            <li><a href="#work">포트폴리오</a></li>
+            <li><a href="#process">진행 절차</a></li>
+            <li><a href="#pricing">가격</a></li>
+            <li><a href="#faq">자주 묻는 질문</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- 히어로: 블라인드 스테이지 -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="wrap hero__copy" data-hero-copy>
+        <h1 class="hero__title" id="hero-title" data-hero-title>첫 화면에서 결정됩니다</h1>
+        <p class="hero__lead">손님은 홈페이지를 열자마자 머물지 떠날지 정합니다. 그 첫 화면을 사장님 가게에 맞춰 새로 짓습니다.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg hero__cta" href="#request" data-hero-cta>무료 상담 신청하기</a>
+          <a class="link hero__link" href="#work">시안 16개 먼저 보기</a>
+        </div>
+        <p class="hero__micro"><span data-config="replyPromise">영업일 기준 24시간 안에</span> 답장드립니다.</p>
+      </div>
+
+      <div class="wrap hero__stage">
+        <div class="stage-unit" data-stage-unit>
+          <div class="stage" data-stage>
+            <div class="stage__bar">
+              <svg class="stage__mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7V1.5H7M14.5 9v5.5H9"/></svg>
+              <span class="stage__url"><span class="stage__hl" data-stage-hl aria-hidden="true"></span><span class="stage__url-text" data-stage-url>haeon-systems.kr</span></span>
+              <span class="stage__count"><span class="visually-hidden">시안 </span><span data-stage-index>01</span> / 16</span>
+              <button class="stage__toggle" type="button" aria-label="자동 넘김 멈춤" data-stage-toggle hidden>
+                <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 3.5v9M10.5 3.5v9"/></svg>
+                <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6L12.6 8z"/></svg>
+              </button>
+            </div>
+            <a class="stage__view" href="work/haeon-systems/index.html" data-stage-link aria-label="해온 시스템즈 컨셉 시안 열어 보기">
+              <span class="stage__base" data-stage-base>
+              <span class="poster" data-poster="haeon-systems" aria-hidden="true">
+                <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                <span class="poster__center"><span class="poster__name">해온 시스템즈</span><span class="poster__kind">AI 스마트 항만·공간</span><i class="poster__cta"></i></span>
+              </span>
+                <img class="thumb__img" src="assets/thumbs/haeon-systems.jpg" width="1440" height="900" alt="" fetchpriority="high" decoding="async" data-stage-img>
+              </span>
+            </a>
+          </div>
+          <div class="stage__caption">
+            <p class="stage__now" data-stage-caption>지금 보이는 화면: <strong>해온 시스템즈</strong>, AI 스마트 항만·공간</p>
+            <div class="stage__nav" data-stage-nav hidden>
+              <button class="round-btn" type="button" aria-label="이전 시안" data-stage-prev>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12 4.5 6.5 10l5.5 5.5"/></svg>
+              </button>
+              <button class="round-btn" type="button" aria-label="다음 시안" data-stage-next>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m8 4.5 5.5 5.5L8 15.5"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="stage__note">가상의 브랜드로 만든 컨셉 시안입니다. 눌러서 직접 움직여 보세요.</p>
+      </div>
+    </section>
+
+    <!-- 포트폴리오 -->
+    <section class="section work" id="work" aria-labelledby="work-title">
+      <div class="wrap">
+        <div class="work__head">
+          <h2 class="h2 has-mark" id="work-title" data-reveal-title>업종이 다르면 첫 화면도 달라야 합니다</h2>
+          <p class="work__intro">아래 16개는 가상의 브랜드로 만든 컨셉 시안입니다. 실제 고객사가 아닙니다. 이 정도 완성도로 사장님의 홈페이지를 만든다는 견본으로 봐 주세요. 하나씩 열어서 스크롤하고, 눌러 보세요.</p>
+        </div>
+
+        <div class="seg seg--filter" role="radiogroup" aria-label="업종별로 시안 보기" data-seg data-filter>
+          <div class="seg__scroller">
+            <div class="seg__track">
+              <label class="seg__item"><input type="radio" name="workFilter" value="all" checked><span class="seg__label">전체 <span class="seg__count">16</span></span></label>
+              <label class="seg__item"><input type="radio" name="workFilter" value="food"><span class="seg__label">매장·식음 <span class="seg__count">3</span></span></label>
+              <label class="seg__item"><input type="radio" name="workFilter" value="care"><span class="seg__label">병원·뷰티·운동 <span class="seg__count">4</span></span></label>
+              <label class="seg__item"><input type="radio" name="workFilter" value="pro"><span class="seg__label">전문직·기업·교육 <span class="seg__count">5</span></span></label>
+              <label class="seg__item"><input type="radio" name="workFilter" value="brand"><span class="seg__label">브랜드·문화·숙박 <span class="seg__count">4</span></span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="work-grid is-stagger" id="work-grid" data-grid>
+          <article class="card" data-slug="haeon-systems" data-category="pro" data-color="#0A1430" data-fg="#FFFFFF" data-package="맞춤 화면" data-name="해온 시스템즈" data-kind="AI 스마트 항만·공간">
+            <a class="card__thumb" href="work/haeon-systems/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="haeon-systems" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">해온 시스템즈</span><span class="poster__kind">AI 스마트 항만·공간</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/haeon-systems.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="해온 시스템즈 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">해온 시스템즈</h3>
+                <p class="card__kind">AI 스마트 항만·공간</p>
+                <p class="card__pkg">맞춤 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="haeon-systems">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="ieum-architects" data-category="pro" data-color="#1740B0" data-fg="#FFFFFF" data-package="열 화면" data-name="이음 건축사사무소" data-kind="건축·인테리어">
+            <a class="card__thumb" href="work/ieum-architects/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="ieum-architects" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">이음 건축사사무소</span><span class="poster__kind">건축·인테리어</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/ieum-architects.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="이음 건축사사무소 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">이음 건축사사무소</h3>
+                <p class="card__kind">건축·인테리어</p>
+                <p class="card__pkg">열 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="ieum-architects">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="ongi-bakery" data-category="food" data-color="#FFD84D" data-fg="#0F1A3A" data-package="첫 화면" data-name="온기 베이커리" data-kind="베이커리 카페">
+            <a class="card__thumb" href="work/ongi-bakery/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="ongi-bakery" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">온기 베이커리</span><span class="poster__kind">베이커리 카페</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/ongi-bakery.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="온기 베이커리 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">온기 베이커리</h3>
+                <p class="card__kind">베이커리 카페</p>
+                <p class="card__pkg">첫 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="ongi-bakery">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="teum-perfume" data-category="brand" data-color="#E8E6E2" data-fg="#0F1A3A" data-package="맞춤 화면" data-name="틈 TEUM" data-kind="향수 브랜드">
+            <a class="card__thumb" href="work/teum-perfume/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="teum-perfume" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">틈 TEUM</span><span class="poster__kind">향수 브랜드</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/teum-perfume.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="틈 TEUM 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">틈 TEUM</h3>
+                <p class="card__kind">향수 브랜드</p>
+                <p class="card__pkg">맞춤 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="teum-perfume">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="gyeol-clinic" data-category="care" data-color="#CFE5EE" data-fg="#0F1A3A" data-package="다섯 화면" data-name="결 피부과의원" data-kind="피부과">
+            <a class="card__thumb" href="work/gyeol-clinic/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="gyeol-clinic" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">결 피부과의원</span><span class="poster__kind">피부과</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/gyeol-clinic.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="결 피부과의원 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">결 피부과의원</h3>
+                <p class="card__kind">피부과</p>
+                <p class="card__pkg">다섯 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="gyeol-clinic">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="padosori-fest" data-category="brand" data-color="#2622E3" data-fg="#FFFFFF" data-package="첫 화면" data-name="파도소리 뮤직 페스티벌" data-kind="공연·행사">
+            <a class="card__thumb" href="work/padosori-fest/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="padosori-fest" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">파도소리 뮤직 페스티벌</span><span class="poster__kind">공연·행사</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/padosori-fest.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="파도소리 뮤직 페스티벌 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">파도소리 뮤직 페스티벌</h3>
+                <p class="card__kind">공연·행사</p>
+                <p class="card__pkg">첫 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="padosori-fest">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="dalmuri" data-category="food" data-color="#0C0C0E" data-fg="#FFFFFF" data-package="다섯 화면" data-name="달무리" data-kind="한식 다이닝 바">
+            <a class="card__thumb" href="work/dalmuri/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="dalmuri" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">달무리</span><span class="poster__kind">한식 다이닝 바</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/dalmuri.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="달무리 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">달무리</h3>
+                <p class="card__kind">한식 다이닝 바</p>
+                <p class="card__pkg">다섯 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="dalmuri">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="ddak-saas" data-category="pro" data-color="#F0EBFF" data-fg="#0F1A3A" data-package="열 화면" data-name="딱정산" data-kind="스타트업 SaaS">
+            <a class="card__thumb" href="work/ddak-saas/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="ddak-saas" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">딱정산</span><span class="poster__kind">스타트업 SaaS</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/ddak-saas.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="딱정산 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">딱정산</h3>
+                <p class="card__kind">스타트업 SaaS</p>
+                <p class="card__pkg">열 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="ddak-saas">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="salon-miru" data-category="care" data-color="#F2DAD3" data-fg="#0F1A3A" data-package="다섯 화면" data-name="살롱 미루" data-kind="헤어살롱">
+            <a class="card__thumb" href="work/salon-miru/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="salon-miru" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">살롱 미루</span><span class="poster__kind">헤어살롱</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/salon-miru.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="살롱 미루 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">살롱 미루</h3>
+                <p class="card__kind">헤어살롱</p>
+                <p class="card__pkg">다섯 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="salon-miru">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="sawol-flower" data-category="food" data-color="#DDEBFF" data-fg="#0F1A3A" data-package="첫 화면" data-name="꽃집 사월" data-kind="플라워숍">
+            <a class="card__thumb" href="work/sawol-flower/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="sawol-flower" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">꽃집 사월</span><span class="poster__kind">플라워숍</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/sawol-flower.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="꽃집 사월 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">꽃집 사월</h3>
+                <p class="card__kind">플라워숍</p>
+                <p class="card__pkg">첫 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="sawol-flower">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="sem-tax" data-category="pro" data-color="#F3F5EE" data-fg="#0F1A3A" data-package="다섯 화면" data-name="셈 세무회계" data-kind="세무·회계">
+            <a class="card__thumb" href="work/sem-tax/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="sem-tax" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">셈 세무회계</span><span class="poster__kind">세무·회계</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/sem-tax.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="셈 세무회계 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">셈 세무회계</h3>
+                <p class="card__kind">세무·회계</p>
+                <p class="card__pkg">다섯 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="sem-tax">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="supmeong-stay" data-category="brand" data-color="#DCE4E0" data-fg="#0F1A3A" data-package="열 화면" data-name="숲멍 스테이" data-kind="독채 숙소">
+            <a class="card__thumb" href="work/supmeong-stay/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="supmeong-stay" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">숲멍 스테이</span><span class="poster__kind">독채 숙소</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/supmeong-stay.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="숲멍 스테이 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">숲멍 스테이</h3>
+                <p class="card__kind">독채 숙소</p>
+                <p class="card__pkg">열 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="supmeong-stay">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="kkoribyeol" data-category="care" data-color="#2DB36A" data-fg="#0F1A3A" data-package="다섯 화면" data-name="꼬리별 강아지 유치원" data-kind="반려동물">
+            <a class="card__thumb" href="work/kkoribyeol/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="kkoribyeol" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">꼬리별 강아지 유치원</span><span class="poster__kind">반려동물</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/kkoribyeol.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="꼬리별 강아지 유치원 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">꼬리별 강아지 유치원</h3>
+                <p class="card__kind">반려동물</p>
+                <p class="card__pkg">다섯 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="kkoribyeol">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="film36" data-category="brand" data-color="#070707" data-fg="#FFFFFF" data-package="다섯 화면" data-name="서른여섯 사진관" data-kind="사진관">
+            <a class="card__thumb" href="work/film36/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="film36" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">서른여섯 사진관</span><span class="poster__kind">사진관</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/film36.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="서른여섯 사진관 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">서른여섯 사진관</h3>
+                <p class="card__kind">사진관</p>
+                <p class="card__pkg">다섯 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="film36">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="heavy-club" data-category="care" data-color="#E4E3DE" data-fg="#0F1A3A" data-package="첫 화면" data-name="헤비클럽" data-kind="PT·크로스핏">
+            <a class="card__thumb" href="work/heavy-club/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="heavy-club" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">헤비클럽</span><span class="poster__kind">PT·크로스핏</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/heavy-club.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="헤비클럽 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">헤비클럽</h3>
+                <p class="card__kind">PT·크로스핏</p>
+                <p class="card__pkg">첫 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="heavy-club">이 느낌으로 문의</a>
+            </div>
+          </article>
+          <article class="card" data-slug="mitjul-academy" data-category="pro" data-color="#FAFAF4" data-fg="#0F1A3A" data-package="다섯 화면" data-name="밑줄 국어논술학원" data-kind="학원">
+            <a class="card__thumb" href="work/mitjul-academy/index.html">
+              <span class="thumb">
+                <span class="poster" data-poster="mitjul-academy" aria-hidden="true">
+                  <span class="poster__bar"><i class="poster__logo"></i><span class="poster__links"><i></i><i></i><i></i></span><i class="poster__pill"></i></span>
+                  <span class="poster__center"><span class="poster__name">밑줄 국어논술학원</span><span class="poster__kind">학원</span><i class="poster__cta"></i></span>
+                </span>
+                <img class="thumb__img" src="assets/thumbs/mitjul-academy.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="밑줄 국어논술학원 컨셉 시안 첫 화면">
+              </span>
+              <span class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="card__meta">
+              <div class="card__text">
+                <h3 class="card__name">밑줄 국어논술학원</h3>
+                <p class="card__kind">학원</p>
+                <p class="card__pkg">다섯 화면 견본</p>
+              </div>
+              <a class="card__ask textbtn" href="#request" data-ask="mitjul-academy">이 느낌으로 문의</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="work__more" data-more hidden>
+          <button class="btn btn--outline" type="button" data-more-btn aria-controls="work-grid">나머지 시안 10개 더 보기</button>
+        </div>
+
+        <div class="work__end">
+          <p class="work__end-text">마음에 드는 느낌이 있다면 그대로 말씀해 주세요.</p>
+          <a class="btn btn--primary" href="#request">이 느낌으로 상담 신청하기</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 차별점 -->
+    <section class="section why" id="why" aria-labelledby="why-title">
+      <div class="wrap layout-12">
+        <div class="layout-12__side">
+          <h2 class="h2 has-mark is-sticky" id="why-title">만들기 전에 약속부터 드립니다</h2>
+        </div>
+        <ul class="promises layout-12__main" role="list">
+          <li class="promise" data-promise>
+            <span class="promise__rule" aria-hidden="true"></span>
+            <h3 class="promise__title">틀에 끼워 넣지 않습니다.</h3>
+            <p class="promise__text">정해진 템플릿에 사진만 바꾸는 방식으로 만들지 않습니다. 업종, 손님, 가게 분위기를 듣고 첫 화면부터 새로 디자인합니다. 위의 시안 16개가 모두 다르게 생긴 이유입니다.</p>
+          </li>
+          <li class="promise" data-promise>
+            <span class="promise__rule" aria-hidden="true"></span>
+            <h3 class="promise__title">휴대폰 화면부터 만듭니다.</h3>
+            <p class="promise__text">손님 대부분은 휴대폰으로 들어옵니다. 작은 화면에서 먼저 완성하고 큰 화면으로 넓힙니다. 오픈 전에 휴대폰, 태블릿, PC에서 직접 확인하실 수 있습니다.</p>
+          </li>
+          <li class="promise" data-promise>
+            <span class="promise__rule" aria-hidden="true"></span>
+            <h3 class="promise__title">가격표에 적힌 대로 받습니다.</h3>
+            <p class="promise__text">패키지 가격, 포함 내용, 수정 횟수를 이 페이지에 모두 공개합니다. 추가 비용이 생기는 일은 작업 전에 먼저 말씀드리고, 동의하신 경우에만 진행합니다.</p>
+          </li>
+          <li class="promise" data-promise>
+            <span class="promise__rule" aria-hidden="true"></span>
+            <h3 class="promise__title">다 만든 뒤에는 전부 사장님 것입니다.</h3>
+            <p class="promise__text">도메인과 호스팅은 사장님 명의로 가입합니다. 완성된 소스 파일도 모두 넘겨드립니다. 나중에 다른 곳에 관리를 맡기셔도 아무 제약이 없습니다.</p>
+            <a class="link promise__link" href="#pricing">가격표 바로 보기</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 진행 절차 -->
+    <section class="section process" id="process" aria-labelledby="process-title">
+      <div class="wrap">
+        <div class="process__head">
+          <h2 class="h2 has-mark" id="process-title">문의부터 오픈까지, 여섯 걸음입니다</h2>
+          <p class="process__intro">처음 맡기시는 분도 헷갈리지 않도록 순서와 기간을 미리 정해 두었습니다. 사장님이 하실 일은 단계마다 한 줄씩 적어 두었습니다.</p>
+        </div>
+        <div class="process__body">
+          <div class="process__visual">
+            <div class="pframe is-open" data-pframe>
+              <svg class="pframe__svg" viewBox="0 0 560 420" aria-hidden="true" focusable="false">
+                <!-- 1. 빈 프레임 -->
+                <g data-layer="1">
+                  <rect class="pf-occ pf-frame" x="50" y="46" width="460" height="287.5" rx="12"/>
+                  <line class="pf-soft" x1="50" y1="74" x2="510" y2="74"/>
+                  <path class="pf-ink" d="M62 66V54h12M80 54v12H68" />
+                  <rect class="pf-soft pf-url" x="88" y="53" width="140" height="14" rx="7"/>
+                  <path class="pf-ink pf-mark" d="M36 74V32h42M524 305.5v42h-42"/>
+                </g>
+                <!-- 4. 첫 화면 와이어프레임 -->
+                <g data-layer="4">
+                  <line class="pf-ink pf-heavy pf-tint" x1="176" y1="106" x2="384" y2="106"/>
+                  <line class="pf-ink pf-heavy pf-tint" x1="208" y1="128" x2="352" y2="128"/>
+                  <rect class="pf-ink pf-btn" x="248" y="144" width="64" height="18" rx="9"/>
+                </g>
+                <!-- 5. 아래쪽 섹션 블록 -->
+                <g data-layer="5">
+                  <rect class="pf-ink pf-thin pf-tint" x="90" y="186" width="88" height="54" rx="6"/>
+                  <rect class="pf-ink pf-thin pf-tint" x="190" y="186" width="88" height="54" rx="6"/>
+                  <rect class="pf-ink pf-thin pf-tint" x="290" y="186" width="88" height="54" rx="6"/>
+                  <line class="pf-ink pf-mid" x1="90" y1="262" x2="378" y2="262"/>
+                  <line class="pf-ink pf-mid" x1="90" y1="280" x2="320" y2="280"/>
+                  <line class="pf-ink pf-mid" x1="90" y1="298" x2="270" y2="298"/>
+                </g>
+                <!-- 1. 말풍선 -->
+                <g data-layer="1">
+                  <path class="pf-occ pf-ink" d="M26 290h118q16 0 16 16v34q0 16-16 16H52l-24 18 4-18h-6q-16 0-16-16v-34q0-16 16-16z"/>
+                  <line class="pf-ink pf-mid" x1="32" y1="314" x2="132" y2="314"/>
+                  <line class="pf-ink pf-mid" x1="32" y1="332" x2="102" y2="332"/>
+                </g>
+                <!-- 2. 견적서 -->
+                <g data-layer="2">
+                  <rect class="pf-occ pf-ink" x="398" y="12" width="148" height="152" rx="8"/>
+                  <line class="pf-ink pf-heavy-s" x1="414" y1="34" x2="462" y2="34"/>
+                  <line class="pf-ink pf-mid" x1="414" y1="56" x2="530" y2="56"/>
+                  <line class="pf-ink pf-mid" x1="414" y1="70" x2="514" y2="70"/>
+                  <line class="pf-ink pf-mid" x1="414" y1="84" x2="498" y2="84"/>
+                  <rect class="pf-ink" x="414" y="98" width="116" height="26" rx="5"/>
+                  <line class="pf-ink pf-heavy-s pf-tint" x1="470" y1="111" x2="518" y2="111"/>
+                </g>
+                <!-- 3. 서명선과 폴더 -->
+                <g data-layer="3">
+                  <path class="pf-ink pf-mid" d="M418 146c5-9 9-10 11-3s5 7 9-1 8-8 11 0 7 6 13-3"/>
+                  <line class="pf-ink" x1="414" y1="152" x2="502" y2="152"/>
+                  <path class="pf-occ pf-ink" d="M16 150h26l8 10h38q6 0 6 6v40q0 6-6 6H22q-6 0-6-6z"/>
+                  <line class="pf-ink pf-mid" x1="16" y1="172" x2="94" y2="172"/>
+                </g>
+                <!-- 5. 휴대폰 프레임 -->
+                <g data-layer="5">
+                  <rect class="pf-occ pf-ink" x="424" y="204" width="80" height="152" rx="13"/>
+                  <line class="pf-ink pf-mid" x1="452" y1="216" x2="476" y2="216"/>
+                  <line class="pf-ink pf-heavy-s pf-tint" x1="438" y1="238" x2="490" y2="238"/>
+                  <line class="pf-ink pf-mid" x1="438" y1="256" x2="484" y2="256"/>
+                  <line class="pf-ink pf-mid" x1="438" y1="268" x2="474" y2="268"/>
+                  <rect class="pf-ink pf-btn" x="438" y="282" width="40" height="12" rx="6"/>
+                  <rect class="pf-ink pf-thin pf-tint" x="438" y="306" width="52" height="34" rx="4"/>
+                </g>
+                <!-- 6. 오픈 -->
+                <g data-layer="6" class="pf-open">
+                  <circle class="pf-dot" cx="244" cy="60" r="5"/>
+                  <text class="pf-label" x="256" y="64.5">오픈</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <div class="process__steps">
+            <ol class="steps" role="list">
+              <li class="step is-done" data-step="1">
+                <span class="step__num" aria-hidden="true">1</span>
+                <div class="step__body">
+                  <div class="step__head"><h3 class="step__title">문의 접수</h3><span class="step__time">1분</span></div>
+                  <p class="step__desc">아래 의뢰서를 채우거나 카카오톡으로 편하게 말씀해 주세요. <span data-config="replyPromise">영업일 기준 24시간 안에</span> 먼저 연락드립니다.</p>
+                  <p class="step__todo">사장님이 하실 일: 의뢰서 작성</p>
+                </div>
+              </li>
+              <li class="step is-done" data-step="2">
+                <span class="step__num" aria-hidden="true">2</span>
+                <div class="step__body">
+                  <div class="step__head"><h3 class="step__title">무료 상담과 견적</h3><span class="step__time">1~2일</span></div>
+                  <p class="step__desc">전화나 메신저로 20분 정도 이야기를 나눕니다. 업종과 목적에 맞는 구성을 제안하고, 금액과 일정이 적힌 견적서를 보내드립니다. 여기까지는 비용이 없습니다.</p>
+                  <p class="step__todo">사장님이 하실 일: 원하는 느낌과 필요한 기능 말씀해 주기</p>
+                </div>
+              </li>
+              <li class="step is-done" data-step="3">
+                <span class="step__num" aria-hidden="true">3</span>
+                <div class="step__body">
+                  <div class="step__head"><h3 class="step__title">계약과 자료 전달</h3><span class="step__time">1~3일</span></div>
+                  <p class="step__desc">견적에 동의하시면 계약서를 쓰고 계약금을 받습니다. 로고, 사진, 소개 글 등 가지고 계신 자료를 보내 주세요. 부족한 자료는 어떻게 채울지 함께 정합니다.</p>
+                  <p class="step__todo">사장님이 하실 일: 계약금 입금, 자료 보내기</p>
+                </div>
+              </li>
+              <li class="step is-done" data-step="4">
+                <span class="step__num" aria-hidden="true">4</span>
+                <div class="step__body">
+                  <div class="step__head"><h3 class="step__title">첫 화면 시안</h3><span class="step__time">영업일 3~5일</span></div>
+                  <p class="step__desc">가장 중요한 첫 화면부터 실제로 움직이는 시안으로 보여드립니다. 방향이 맞는지 여기서 확인하고, 수정 의견을 받습니다.</p>
+                  <p class="step__todo">사장님이 하실 일: 시안 확인과 의견 전달</p>
+                </div>
+              </li>
+              <li class="step is-done" data-step="5">
+                <span class="step__num" aria-hidden="true">5</span>
+                <div class="step__body">
+                  <div class="step__head"><h3 class="step__title">전체 제작과 수정</h3><span class="step__time">패키지에 따라 영업일 3~18일</span></div>
+                  <p class="step__desc">확정된 방향으로 나머지 화면을 만듭니다. 작업 중인 화면을 링크로 공유드리니 진행 상황을 언제든 보실 수 있습니다. 패키지에 포함된 횟수만큼 수정합니다.</p>
+                  <p class="step__todo">사장님이 하실 일: 중간 확인, 수정 요청</p>
+                </div>
+              </li>
+              <li class="step is-done" data-step="6">
+                <span class="step__num" aria-hidden="true">6</span>
+                <div class="step__body">
+                  <div class="step__head"><h3 class="step__title">검수와 오픈</h3><span class="step__time">1~2일</span></div>
+                  <p class="step__desc">휴대폰, 태블릿, PC에서 함께 점검합니다. 최종 확인 후 잔금을 받고 도메인을 연결해 오픈합니다. 오픈 후 30일 동안 발견되는 오류는 무상으로 고칩니다.</p>
+                  <p class="step__todo">사장님이 하실 일: 최종 확인, 잔금 입금</p>
+                </div>
+              </li>
+            </ol>
+            <div class="process__end">
+              <p class="process__summary">전체 기간은 첫 화면 약 1주, 다섯 화면 약 3주, 열 화면 약 5주입니다.</p>
+              <a class="btn btn--primary" href="#request">첫 걸음, 무료 상담 신청하기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ★ 가격 수정은 이 섹션에서만 합니다 -->
+    <section class="section pricing band" id="pricing" aria-labelledby="pricing-title">
+      <div class="wrap">
+        <div class="pricing__head">
+          <h2 class="h2 has-mark" id="pricing-title">가격은 숨기지 않습니다</h2>
+          <p class="pricing__intro">필요한 화면 수에 따라 고르시면 됩니다. 모든 금액은 부가세 별도이며, 정확한 금액은 무료 상담 후 견적서로 확정합니다.</p>
+        </div>
+
+        <div class="seg seg--ink pkg-tabs" role="radiogroup" aria-label="패키지 선택" data-seg data-pkg-tabs hidden>
+          <div class="seg__scroller">
+            <div class="seg__track">
+              <label class="seg__item"><input type="radio" name="pkgTab" value="first"><span class="seg__label">첫 화면</span></label>
+              <label class="seg__item"><input type="radio" name="pkgTab" value="five" checked><span class="seg__label">다섯</span></label>
+              <label class="seg__item"><input type="radio" name="pkgTab" value="ten"><span class="seg__label">열</span></label>
+              <label class="seg__item"><input type="radio" name="pkgTab" value="custom"><span class="seg__label">맞춤</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="pkg-wrap" data-pkg-wrap>
+          <table class="pkg-table" role="table" data-pkg-table>
+            <caption class="visually-hidden">패키지별 가격과 포함 내용 (부가세 별도)</caption>
+            <thead role="rowgroup">
+              <tr role="row">
+                <td class="pkg-corner" role="cell"></td>
+                <th scope="col" role="columnheader" data-col="first"><span class="pkg-name">첫 화면</span></th>
+                <th scope="col" role="columnheader" data-col="five" class="is-pick"><span class="pkg-name">다섯 화면</span><span class="pkg-pick">처음이시라면 여기부터 권합니다</span></th>
+                <th scope="col" role="columnheader" data-col="ten"><span class="pkg-name">열 화면</span></th>
+                <th scope="col" role="columnheader" data-col="custom"><span class="pkg-name">맞춤 화면</span></th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              <tr role="row" class="row-lede">
+                <th scope="row" role="rowheader">한 줄 설명</th>
+                <td role="cell" data-col="first" data-label="한 줄 설명">한 페이지에 다 담는 소개·행사용</td>
+                <td role="cell" data-col="five" data-label="한 줄 설명" class="is-pick">가게와 병원, 학원의 기본 구성</td>
+                <td role="cell" data-col="ten" data-label="한 줄 설명">브랜드와 회사를 깊이 보여줄 때</td>
+                <td role="cell" data-col="custom" data-label="한 줄 설명">예약, 결제, 3D 연출이 필요할 때</td>
+              </tr>
+              <tr role="row" class="row-price">
+                <th scope="row" role="rowheader">가격</th>
+                <td role="cell" data-col="first" data-label="가격"><data class="price" value="790000" data-price="first">790,000<span class="price__won">원</span></data></td>
+                <td role="cell" data-col="five" data-label="가격" class="is-pick"><data class="price" value="1690000" data-price="five">1,690,000<span class="price__won">원</span></data></td>
+                <td role="cell" data-col="ten" data-label="가격"><data class="price" value="3290000" data-price="ten">3,290,000<span class="price__won">원</span></data></td>
+                <td role="cell" data-col="custom" data-label="가격"><data class="price price--quote" value="quote" data-price="custom">상담 후 견적</data></td>
+              </tr>
+              <tr role="row">
+                <th scope="row" role="rowheader">화면 구성</th>
+                <td role="cell" data-col="first" data-label="화면 구성">1페이지 (구역 6개 안팎)</td>
+                <td role="cell" data-col="five" data-label="화면 구성" class="is-pick">5페이지 안팎</td>
+                <td role="cell" data-col="ten" data-label="화면 구성">10페이지 안팎</td>
+                <td role="cell" data-col="custom" data-label="화면 구성">제한 없음</td>
+              </tr>
+              <tr role="row">
+                <th scope="row" role="rowheader">디자인</th>
+                <td role="cell" data-col="first" data-label="디자인">맞춤 디자인, 기본 스크롤 모션</td>
+                <td role="cell" data-col="five" data-label="디자인" class="is-pick">맞춤 디자인, 첫 화면 전용 연출 1개</td>
+                <td role="cell" data-col="ten" data-label="디자인">맞춤 디자인, 전용 연출과 페이지별 인터랙션</td>
+                <td role="cell" data-col="custom" data-label="디자인">기획부터 함께 설계</td>
+              </tr>
+              <tr role="row">
+                <th scope="row" role="rowheader">수정 횟수</th>
+                <td role="cell" data-col="first" data-label="수정 횟수">2회</td>
+                <td role="cell" data-col="five" data-label="수정 횟수" class="is-pick">3회</td>
+                <td role="cell" data-col="ten" data-label="수정 횟수">4회</td>
+                <td role="cell" data-col="custom" data-label="수정 횟수">협의</td>
+              </tr>
+              <tr role="row">
+                <th scope="row" role="rowheader">제작 기간</th>
+                <td role="cell" data-col="first" data-label="제작 기간">영업일 7일</td>
+                <td role="cell" data-col="five" data-label="제작 기간" class="is-pick">영업일 15일</td>
+                <td role="cell" data-col="ten" data-label="제작 기간">영업일 25일</td>
+                <td role="cell" data-col="custom" data-label="제작 기간">협의</td>
+              </tr>
+              <tr role="row">
+                <th scope="row" role="rowheader">이런 분께</th>
+                <td role="cell" data-col="first" data-label="이런 분께">개업, 행사, 1인 사업</td>
+                <td role="cell" data-col="five" data-label="이런 분께" class="is-pick">매장, 병원, 학원, 사무소</td>
+                <td role="cell" data-col="ten" data-label="이런 분께">브랜드, 법인, 스타트업</td>
+                <td role="cell" data-col="custom" data-label="이런 분께">쇼핑몰, 예약 서비스</td>
+              </tr>
+              <tr role="row" class="row-samples">
+                <th scope="row" role="rowheader">견본 시안</th>
+                <td role="cell" data-col="first" data-label="견본 시안"><a href="work/ongi-bakery/index.html">온기 베이커리</a>, <a href="work/heavy-club/index.html">헤비클럽</a> 외</td>
+                <td role="cell" data-col="five" data-label="견본 시안" class="is-pick"><a href="work/gyeol-clinic/index.html">결 피부과의원</a>, <a href="work/dalmuri/index.html">달무리</a> 외</td>
+                <td role="cell" data-col="ten" data-label="견본 시안"><a href="work/ieum-architects/index.html">이음 건축사사무소</a>, <a href="work/ddak-saas/index.html">딱정산</a> 외</td>
+                <td role="cell" data-col="custom" data-label="견본 시안"><a href="work/haeon-systems/index.html">해온 시스템즈</a>, <a href="work/teum-perfume/index.html">틈 TEUM</a></td>
+              </tr>
+              <tr role="row" class="row-cta">
+                <th scope="row" role="rowheader"><span class="visually-hidden">문의하기</span></th>
+                <td role="cell" data-col="first" data-label=""><a class="textbtn textbtn--ink" href="#request" data-pick-package="first">첫 화면으로 문의</a></td>
+                <td role="cell" data-col="five" data-label="" class="is-pick"><a class="btn btn--light" href="#request" data-pick-package="five">다섯 화면으로 문의</a></td>
+                <td role="cell" data-col="ten" data-label=""><a class="textbtn textbtn--ink" href="#request" data-pick-package="ten">열 화면으로 문의</a></td>
+                <td role="cell" data-col="custom" data-label=""><a class="textbtn textbtn--ink" href="#request" data-pick-package="custom">맞춤 견적 문의</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pricing__more">
+          <section class="pricing__block" aria-labelledby="incl-title">
+            <h3 class="title" id="incl-title">어떤 패키지든 기본으로 들어갑니다</h3>
+            <ul class="checklist" role="list">
+              <li>휴대폰, 태블릿, PC 화면 모두 대응</li>
+              <li>전화, 카카오톡, 문의 폼 연결</li>
+              <li>네이버와 구글 검색 등록, 기본 검색 설정</li>
+              <li>보안 접속(https) 적용</li>
+              <li>도메인 연결과 오픈 작업</li>
+              <li>오픈 후 30일 무상 오류 수정</li>
+              <li>완성 소스 파일 전체 전달</li>
+              <li>사장님 명의의 도메인, 호스팅 가입 안내</li>
+            </ul>
+            <p class="small pricing__fine">도메인과 호스팅 이용료는 각 업체에 직접 결제하시는 실비이며, 제작비에 포함되지 않습니다.</p>
+          </section>
+          <section class="pricing__block" aria-labelledby="opts-title">
+            <h3 class="title" id="opts-title">필요할 때만 더하는 옵션</h3>
+            <dl class="opts">
+              <div><dt>페이지 추가</dt><dd>1페이지당 150,000원</dd></div>
+              <div><dt>문구 작성 대행</dt><dd>200,000원부터</dd></div>
+              <div><dt>로고와 기본 색상 가이드</dt><dd>400,000원부터</dd></div>
+              <div><dt>전용 인터랙션, 3D 연출 추가</dt><dd>300,000원부터</dd></div>
+              <div><dt>게시판, 갤러리 직접 수정 기능</dt><dd>300,000원부터</dd></div>
+              <div><dt>예약, 결제 연동</dt><dd>400,000원부터</dd></div>
+              <div><dt>영문 등 다국어 페이지</dt><dd>해당 페이지 금액의 50%</dd></div>
+              <div><dt>네이버 플레이스, 카카오맵 등록 대행</dt><dd>50,000원</dd></div>
+              <div><dt>급행 제작 (기간 30% 단축)</dt><dd>총액의 30% 가산</dd></div>
+            </dl>
+          </section>
+        </div>
+
+        <div class="pricing__more">
+          <section class="pricing__block" aria-labelledby="care-title">
+            <h3 class="title" id="care-title">오픈 후 관리</h3>
+            <p class="pricing__text">관리가 꼭 필요하지는 않습니다. 필요한 만큼만 고르세요.</p>
+            <table class="care-table">
+              <caption class="visually-hidden">오픈 후 관리 상품</caption>
+              <thead class="visually-hidden"><tr><th scope="col">상품</th><th scope="col">금액</th><th scope="col">내용</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">필요할 때만</th><td class="care-price">건당 30,000원부터</td><td>글자, 사진 교체 등 간단한 수정을 요청하실 때마다</td></tr>
+                <tr><th scope="row">월 관리 라이트</th><td class="care-price">월 30,000원</td><td>월 2건 수정, 도메인·호스팅 만료 관리, 오류 대응</td></tr>
+                <tr><th scope="row">월 관리 플러스</th><td class="care-price">월 90,000원</td><td>월 6건 수정, 이벤트 배너 월 1건 제작, 분기별 점검 보고</td></tr>
+              </tbody>
+            </table>
+          </section>
+          <section class="pricing__block" aria-labelledby="pay-title">
+            <h3 class="title" id="pay-title">결제는 이렇게 나눕니다</h3>
+            <ul class="paylist" role="list">
+              <li>첫 화면, 다섯 화면: 계약금 50% (착수 시), 잔금 50% (오픈 전 최종 확인 후)</li>
+              <li>열 화면, 맞춤 화면: 계약금 40%, 시안 확정 시 30%, 오픈 전 30%</li>
+              <li>세금계산서와 현금영수증을 발행합니다. 계좌 이체로 결제합니다.</li>
+            </ul>
+            <p class="small pricing__fine">표시 금액은 모두 부가세(10%) 별도입니다. 착수 전 취소는 전액 환불됩니다.</p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- 자주 묻는 질문 -->
+    <section class="section faq" id="faq" aria-labelledby="faq-title">
+      <div class="wrap layout-12">
+        <div class="layout-12__side">
+          <h2 class="h2 has-mark is-sticky" id="faq-title">자주 묻는 질문</h2>
+        </div>
+        <div class="faq__list layout-12__main" data-faq>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">제작 기간은 얼마나 걸리나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>첫 화면은 영업일 7일, 다섯 화면은 15일, 열 화면은 25일이 기준입니다. 자료를 받은 날부터 세며, 시안 확인이 늦어지면 그만큼 뒤로 밀립니다. 급하시면 급행 제작 옵션으로 기간을 30% 정도 줄일 수 있습니다.</p></div>
+          </details>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">가격표 말고 추가로 드는 비용이 있나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>도메인과 호스팅 이용료는 업체에 직접 내시는 실비라서 제작비와 별도입니다. 그 밖에는 추가 옵션을 고르시거나 계약한 범위를 넘는 작업을 요청하실 때만 비용이 생기며, 반드시 작업 전에 금액을 먼저 안내드립니다.</p></div>
+          </details>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">수정 횟수는 어떻게 세나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>수정 의견을 한 번에 모아서 주시면 그것이 1회입니다. 오탈자나 저희 실수로 생긴 오류는 횟수에 넣지 않습니다. 확정된 디자인 방향을 처음부터 다시 잡는 경우는 수정이 아니라 재작업으로 보고 따로 협의합니다.</p></div>
+          </details>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">사진이나 소개 글이 준비되어 있지 않아도 되나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>괜찮습니다. 가지고 계신 만큼만 보내 주세요. 글은 문구 작성 대행 옵션으로 저희가 써 드릴 수 있고, 사진이 부족하면 일러스트나 그래픽으로 채우는 방향을 제안드립니다. 위 시안 16개는 사진 한 장 없이 만들었습니다.</p></div>
+          </details>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">도메인과 호스팅은 어떻게 하나요? 누구 소유인가요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>사장님 명의로 직접 가입하시도록 화면을 보며 안내해 드립니다. 계정과 도메인, 완성된 소스는 모두 사장님 소유입니다. 이미 쓰는 도메인이 있으면 그대로 연결합니다.</p></div>
+          </details>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">오픈한 뒤에 내용을 바꾸고 싶으면요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>오픈 후 30일 동안 오류는 무상으로 고칩니다. 그 뒤 글이나 사진을 바꾸실 때는 건당 요청하시거나 월 관리 상품을 이용하시면 됩니다. 공지나 갤러리를 직접 올리고 싶으시면 직접 수정 기능 옵션을 추가하세요.</p></div>
+          </details>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">시안처럼 움직이는 효과도 넣을 수 있나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>네. 첫 화면 패키지는 기본 스크롤 모션, 다섯 화면은 첫 화면 전용 연출 1개, 열 화면부터는 페이지별 인터랙션이 포함됩니다. 3D나 소리처럼 더 큰 연출은 옵션이나 맞춤 화면으로 진행합니다. 마음에 든 시안을 알려 주시면 가능한 범위를 바로 말씀드립니다.</p></div>
+          </details>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">네이버나 구글에서 검색되나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>네이버 서치어드바이저와 구글 서치 콘솔에 사이트를 등록하고, 검색에 필요한 기본 설정을 해 드립니다. 다만 검색 순위는 저희가 약속드릴 수 없습니다. 순위를 보장한다는 말은 하지 않습니다.</p></div>
+          </details>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">계약과 결제, 환불은 어떻게 되나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>견적에 동의하시면 전자 계약서를 쓰고 계약금을 받은 뒤 시작합니다. 작업을 시작하기 전에는 전액 환불됩니다. 시안을 전달한 뒤에는 그때까지 진행한 만큼을 정산하고 나머지를 돌려드립니다. 세금계산서와 현금영수증 발행이 가능합니다.</p></div>
+          </details>
+          <details class="qa">
+            <summary class="qa__q"><span class="qa__text">직접 만나지 않고도 진행할 수 있나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__a"><p>네. 상담부터 오픈까지 전화, 메신저, 화상 통화로 진행합니다. 지역과 상관없이 맡기실 수 있습니다.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제작 의뢰 폼 -->
+    <section class="section request" id="request" aria-labelledby="request-title" data-request>
+      <div class="wrap layout-12">
+        <div class="layout-12__side">
+          <div class="request__aside is-sticky">
+            <h2 class="h2 has-mark" id="request-title">제작 의뢰서</h2>
+            <p class="request__intro">아는 만큼만 적어 주셔도 됩니다. 표시된 네 가지만 필수입니다. 보내 주시면 <span data-config="replyPromise">영업일 기준 24시간 안에</span> 연락드립니다.</p>
+            <div class="contact">
+              <p class="contact__lead">글로 적기 번거로우시면 바로 연락 주세요.</p>
+              <a class="btn btn--outline contact__kakao" href="#request" data-kakao hidden>
+                <svg class="i-bubble" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.5c-4.1 0-7.25 2.55-7.25 5.75 0 2 1.25 3.7 3.15 4.75L5.3 16.5l3.25-1.95c.47.06.95.1 1.45.1 4.1 0 7.25-2.55 7.25-5.4S14.1 3.5 10 3.5Z"/></svg>
+                카카오톡으로 상담하기
+              </a>
+              <dl class="contact__list">
+                <div><dt>이메일</dt><dd><span class="selectable" data-config="email">hello@example.com</span></dd></div>
+                <div><dt>전화</dt><dd><a class="link" href="tel:01000000000" data-config="phone" data-config-tel>010-0000-0000</a></dd></div>
+                <div><dt>상담 시간</dt><dd data-config="hours">평일 10:00~19:00</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="layout-12__main request__main">
+          <p class="form-alert" role="alert" data-send-alert hidden></p>
+          <div class="surface" data-surface>
+            <form class="form" method="post" action="#request" data-form>
+              <div class="form-summary" role="alert" tabindex="-1" data-summary hidden></div>
+              <p class="form-picked" tabindex="-1" data-picked hidden></p>
+
+              <fieldset class="fs">
+                <legend class="fs__legend">연락받으실 분</legend>
+
+                <div class="field" data-field="name">
+                  <label class="field__label" for="f-name">성함 또는 상호<span class="req" aria-hidden="true">필수</span></label>
+                  <span class="control"><input class="input" id="f-name" name="name" type="text" required maxlength="40" autocomplete="name" placeholder="예: 김온기 / 온기 베이커리"></span>
+                  <p class="field__error" id="f-name-err" hidden></p>
+                </div>
+
+                <div class="field" data-field="phone">
+                  <label class="field__label" for="f-phone">연락처<span class="req" aria-hidden="true">필수</span></label>
+                  <span class="control"><input class="input" id="f-phone" name="phone" type="tel" required inputmode="tel" autocomplete="tel" maxlength="13" placeholder="010-1234-5678"></span>
+                  <p class="field__error" id="f-phone-err" hidden></p>
+                </div>
+
+                <div class="field" data-field="email">
+                  <label class="field__label" for="f-email">이메일<span class="req" aria-hidden="true" data-email-req hidden>필수</span></label>
+                  <span class="control"><input class="input" id="f-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="견적서를 받을 주소"></span>
+                  <p class="field__error" id="f-email-err" hidden></p>
+                </div>
+
+                <div class="field" data-field="replyBy">
+                  <span class="field__label" id="l-replyBy">답변 받을 방법<span class="req" aria-hidden="true">필수</span></span>
+                  <div class="seg seg--form" role="radiogroup" aria-labelledby="l-replyBy" aria-required="true" data-seg>
+                    <div class="seg__scroller">
+                      <div class="seg__track">
+                        <label class="seg__item"><input type="radio" name="replyBy" value="전화" checked><span class="seg__label">전화</span></label>
+                        <label class="seg__item"><input type="radio" name="replyBy" value="문자"><span class="seg__label">문자</span></label>
+                        <label class="seg__item"><input type="radio" name="replyBy" value="카카오톡"><span class="seg__label">카카오톡</span></label>
+                        <label class="seg__item"><input type="radio" name="replyBy" value="이메일"><span class="seg__label">이메일</span></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="fs">
+                <legend class="fs__legend">어떤 홈페이지가 필요하세요?</legend>
+
+                <div class="field" data-field="industry">
+                  <label class="field__label" for="f-industry">업종<span class="req" aria-hidden="true">필수</span></label>
+                  <span class="control control--select"><select class="input select" id="f-industry" name="industry" required>
+                    <option value="" disabled selected>선택해 주세요</option>
+                    <option>카페·음식점</option>
+                    <option>병원·의원</option>
+                    <option>뷰티·헬스</option>
+                    <option>학원·교육</option>
+                    <option>전문직 (세무·법률 등)</option>
+                    <option>숙박·여행</option>
+                    <option>쇼핑·브랜드</option>
+                    <option>기업·스타트업</option>
+                    <option>기타</option>
+                  </select></span>
+                  <p class="field__error" id="f-industry-err" hidden></p>
+                </div>
+
+                <div class="field" data-field="package">
+                  <span class="field__label" id="l-package">필요한 구성</span>
+                  <div class="opts-list" role="radiogroup" aria-labelledby="l-package">
+                    <label class="opt"><input type="radio" name="package" value="첫 화면 (1페이지)" data-key="first"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">첫 화면 (1페이지)</span><span class="opt__hint" data-price-ref="first"></span></span></label>
+                    <label class="opt"><input type="radio" name="package" value="다섯 화면" data-key="five"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">다섯 화면</span><span class="opt__hint" data-price-ref="five"></span></span></label>
+                    <label class="opt"><input type="radio" name="package" value="열 화면" data-key="ten"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">열 화면</span><span class="opt__hint" data-price-ref="ten"></span></span></label>
+                    <label class="opt"><input type="radio" name="package" value="맞춤 화면" data-key="custom"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">맞춤 화면</span><span class="opt__hint" data-price-ref="custom"></span></span></label>
+                    <label class="opt"><input type="radio" name="package" value="아직 모르겠어요, 상담하고 정할게요" data-key="unsure" checked><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">아직 모르겠어요, 상담하고 정할게요</span></span></label>
+                  </div>
+                </div>
+
+                <div class="field-row">
+                  <div class="field" data-field="budget">
+                    <label class="field__label" for="f-budget">예산</label>
+                    <span class="control control--select"><select class="input select" id="f-budget" name="budget">
+                      <option selected>정하지 않았어요</option>
+                      <option>100만 원 이하</option>
+                      <option>100만~200만 원</option>
+                      <option>200만~400만 원</option>
+                      <option>400만 원 이상</option>
+                    </select></span>
+                  </div>
+                  <div class="field" data-field="timeline">
+                    <label class="field__label" for="f-timeline">희망 오픈 시기</label>
+                    <span class="control control--select"><select class="input select" id="f-timeline" name="timeline">
+                      <option selected>정하지 않았어요</option>
+                      <option>최대한 빨리</option>
+                      <option>한 달 안에</option>
+                      <option>두세 달 안에</option>
+                      <option>여유 있어요</option>
+                    </select></span>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="fs">
+                <legend class="fs__legend">더 알려주시면 상담이 빨라집니다 (선택)</legend>
+
+                <div class="field" data-field="likedWorks">
+                  <span class="field__label" id="l-liked">마음에 든 시안</span>
+                  <details class="pick" data-liked>
+                    <summary class="pick__summary"><span>시안에서 고르기</span><span class="pick__count" data-liked-count></span><span class="pick__icon" aria-hidden="true"></span></summary>
+                    <div class="chips chips--2" role="group" aria-labelledby="l-liked">
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="해온 시스템즈" data-slug="haeon-systems"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">해온 시스템즈</span><i class="chip__swatch" data-poster="haeon-systems" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="이음 건축사사무소" data-slug="ieum-architects"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">이음 건축사사무소</span><i class="chip__swatch" data-poster="ieum-architects" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="온기 베이커리" data-slug="ongi-bakery"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">온기 베이커리</span><i class="chip__swatch" data-poster="ongi-bakery" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="틈 TEUM" data-slug="teum-perfume"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">틈 TEUM</span><i class="chip__swatch" data-poster="teum-perfume" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="결 피부과의원" data-slug="gyeol-clinic"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">결 피부과의원</span><i class="chip__swatch" data-poster="gyeol-clinic" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="파도소리 뮤직 페스티벌" data-slug="padosori-fest"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">파도소리 뮤직 페스티벌</span><i class="chip__swatch" data-poster="padosori-fest" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="달무리" data-slug="dalmuri"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">달무리</span><i class="chip__swatch" data-poster="dalmuri" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="딱정산" data-slug="ddak-saas"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">딱정산</span><i class="chip__swatch" data-poster="ddak-saas" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="살롱 미루" data-slug="salon-miru"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">살롱 미루</span><i class="chip__swatch" data-poster="salon-miru" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="꽃집 사월" data-slug="sawol-flower"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">꽃집 사월</span><i class="chip__swatch" data-poster="sawol-flower" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="셈 세무회계" data-slug="sem-tax"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">셈 세무회계</span><i class="chip__swatch" data-poster="sem-tax" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="숲멍 스테이" data-slug="supmeong-stay"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">숲멍 스테이</span><i class="chip__swatch" data-poster="supmeong-stay" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="꼬리별 강아지 유치원" data-slug="kkoribyeol"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">꼬리별 강아지 유치원</span><i class="chip__swatch" data-poster="kkoribyeol" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="서른여섯 사진관" data-slug="film36"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">서른여섯 사진관</span><i class="chip__swatch" data-poster="film36" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="헤비클럽" data-slug="heavy-club"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">헤비클럽</span><i class="chip__swatch" data-poster="heavy-club" aria-hidden="true"></i></span></label>
+                    <label class="chip"><input type="checkbox" name="likedWorks" value="밑줄 국어논술학원" data-slug="mitjul-academy"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">밑줄 국어논술학원</span><i class="chip__swatch" data-poster="mitjul-academy" aria-hidden="true"></i></span></label>
+                    </div>
+                  </details>
+                </div>
+
+                <div class="field" data-field="reference">
+                  <label class="field__label" for="f-reference">지금 쓰는 홈페이지나 참고 사이트</label>
+                  <span class="control"><input class="input" id="f-reference" name="reference" type="text" maxlength="300" inputmode="url" autocomplete="off" placeholder="주소를 적어 주세요. 여러 개면 쉼표로 구분"></span>
+                </div>
+
+                <div class="field" data-field="features">
+                  <span class="field__label" id="l-features">필요한 기능</span>
+                  <div class="chips chips--2" role="group" aria-labelledby="l-features">
+                    <label class="chip"><input type="checkbox" name="features" value="예약·문의 폼"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">예약·문의 폼</span></span></label>
+                    <label class="chip"><input type="checkbox" name="features" value="카카오톡 상담 버튼"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">카카오톡 상담 버튼</span></span></label>
+                    <label class="chip"><input type="checkbox" name="features" value="지도·오시는 길"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">지도·오시는 길</span></span></label>
+                    <label class="chip"><input type="checkbox" name="features" value="공지·게시판"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">공지·게시판</span></span></label>
+                    <label class="chip"><input type="checkbox" name="features" value="사진 갤러리"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">사진 갤러리</span></span></label>
+                    <label class="chip"><input type="checkbox" name="features" value="결제·쇼핑"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">결제·쇼핑</span></span></label>
+                    <label class="chip"><input type="checkbox" name="features" value="다국어"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">다국어</span></span></label>
+                    <label class="chip"><input type="checkbox" name="features" value="잘 모르겠어요"><span class="chip__box"><i class="chip__tick" aria-hidden="true"></i><span class="chip__text">잘 모르겠어요</span></span></label>
+                  </div>
+                </div>
+
+                <div class="field" data-field="materials">
+                  <span class="field__label" id="l-materials">준비된 자료</span>
+                  <div class="opts-list" role="radiogroup" aria-labelledby="l-materials">
+                    <label class="opt"><input type="radio" name="materials" value="로고, 사진, 글 모두 있어요"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">로고, 사진, 글 모두 있어요</span></span></label>
+                    <label class="opt"><input type="radio" name="materials" value="일부만 있어요"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">일부만 있어요</span></span></label>
+                    <label class="opt"><input type="radio" name="materials" value="아직 없어요"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">아직 없어요</span></span></label>
+                  </div>
+                </div>
+
+                <div class="field" data-field="message">
+                  <label class="field__label" for="f-message">하고 싶은 이야기</label>
+                  <span class="control"><textarea class="input textarea" id="f-message" name="message" rows="5" maxlength="1000" placeholder="어떤 가게인지, 홈페이지로 무엇을 하고 싶은지 편하게 적어 주세요." aria-describedby="f-message-count"></textarea></span>
+                  <p class="field__count small" id="f-message-count"><span data-msg-count>0</span> / 1000</p>
+                </div>
+
+                <div class="hp" aria-hidden="true">
+                  <label for="f-company-site">회사 웹사이트</label>
+                  <input id="f-company-site" name="company_site" type="text" tabindex="-1" autocomplete="off">
+                </div>
+              </fieldset>
+
+              <div class="consent">
+                <div class="notice">
+                  <p class="notice__title">개인정보 수집·이용 안내</p>
+                  <dl class="notice__table">
+                    <div><dt>수집 항목</dt><dd>성함(상호), 연락처, 이메일(입력하신 경우), 문의 내용</dd></div>
+                    <div><dt>수집 목적</dt><dd>홈페이지 제작 상담과 견적 안내</dd></div>
+                    <div><dt>보유 기간</dt><dd>상담 종료 후 1년간 보관한 뒤 파기합니다. 계약을 맺으시면 관련 법령이 정한 기간 동안 보관합니다.</dd></div>
+                  </dl>
+                  <p class="notice__foot">동의하지 않으실 수 있으며, 그 경우 상담 신청이 어렵습니다.</p>
+                </div>
+                <div class="field field--consent" data-field="consent">
+                  <label class="check" for="f-consent">
+                    <input id="f-consent" name="consent" type="checkbox" required>
+                    <span class="check__box" aria-hidden="true"></span>
+                    <span class="check__text">[필수] 개인정보 수집·이용에 동의합니다.</span>
+                  </label>
+                  <p class="field__error" id="f-consent-err" hidden></p>
+                </div>
+              </div>
+
+              <button class="btn btn--primary btn--block btn--xl form__submit" type="submit" data-submit>의뢰서 보내기</button>
+              <p class="small form__foot">보내신 내용은 상담 목적으로만 사용합니다.</p>
+            </form>
+            <div class="result" data-result aria-live="polite" hidden></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer band" data-footer>
+    <div class="wrap">
+      <div class="footer__cta">
+        <p class="footer__big">사장님 가게의 첫 화면, 같이 만들어 보시겠어요?</p>
+        <a class="btn btn--light btn--lg" href="#request">무료 상담 신청하기</a>
+      </div>
+      <div class="footer__mid">
+        <a class="logo logo--light" href="#top" aria-label="첫화면 스튜디오, 맨 위로">
+          <svg class="logo__corner logo__corner--tl" viewBox="0 0 8 8" aria-hidden="true"><path d="M1.25 8V1.25H8"/></svg>
+          <span class="logo__word" aria-hidden="true">첫화면</span>
+          <svg class="logo__corner logo__corner--br" viewBox="0 0 8 8" aria-hidden="true"><path d="M6.75 0v6.75H0"/></svg>
+          <span class="logo__suffix" aria-hidden="true">스튜디오</span>
+        </a>
+        <nav class="footer__nav" aria-label="바닥글 메뉴">
+          <ul role="list">
+            <li><a href="#work">포트폴리오</a></li>
+            <li><a href="#process">진행 절차</a></li>
+            <li><a href="#pricing">가격</a></li>
+            <li><a href="#faq">자주 묻는 질문</a></li>
+            <li><a href="#request">제작 의뢰</a></li>
+          </ul>
+        </nav>
+        <dl class="footer__contact">
+          <div><dt>이메일</dt><dd><span class="selectable" data-config="email">hello@example.com</span></dd></div>
+          <div><dt>전화</dt><dd><a href="tel:01000000000" data-config="phone" data-config-tel>010-0000-0000</a></dd></div>
+          <div data-kakao-row hidden><dt>카카오톡</dt><dd><a href="#request" data-kakao hidden>카카오톡 채널에서 상담하기</a></dd></div>
+        </dl>
+      </div>
+      <!-- ★ 사업자 정보: config.js의 business 값을 채우세요 -->
+      <div class="footer__biz">
+        <p class="footer__line">상호 <span data-config="business.company">첫화면 스튜디오</span> | 대표 <span data-config="business.owner">[대표자명]</span> | 사업자등록번호 <span data-config="business.regNo">[000-00-00000]</span> | 주소 <span data-config="business.address">[사업장 주소]</span> | 이메일 <span data-config="email">hello@example.com</span> | 전화 <span data-config="phone">010-0000-0000</span><span data-mailorder hidden> | 통신판매업 신고번호 <span data-config="business.mailOrderNo"></span></span></p>
+        <p class="footer__line">포트폴리오의 시안은 모두 가상의 브랜드로 제작한 컨셉 작업이며 실제 업체와 관련이 없습니다.</p>
+        <p class="footer__line footer__legal"><span>© 2026 <span data-config="name">첫화면 스튜디오</span></span> <button class="textbtn textbtn--ink" type="button" data-privacy-open>개인정보 처리방침</button></p>
+      </div>
+    </div>
+  </footer>
+
+  <dialog class="dialog" aria-labelledby="privacy-title" data-privacy>
+    <div class="dialog__inner">
+      <h2 class="dialog__title" id="privacy-title">개인정보 처리방침</h2>
+      <dl class="notice__table dialog__table">
+        <div><dt>수집 항목</dt><dd>성함(상호), 연락처, 이메일(입력하신 경우), 문의 내용</dd></div>
+        <div><dt>수집 목적</dt><dd>홈페이지 제작 상담과 견적 안내</dd></div>
+        <div><dt>보유 기간</dt><dd>상담 종료 후 1년간 보관한 뒤 파기합니다. 계약을 맺으시면 관련 법령이 정한 기간 동안 보관합니다.</dd></div>
+      </dl>
+      <p>개인정보 보호 책임자: <span data-config="business.owner">[대표자명]</span>, <span class="selectable" data-config="email">hello@example.com</span></p>
+      <p>파기 요청은 위 이메일로 주시면 지체 없이 처리합니다.</p>
+      <form method="dialog" class="dialog__actions">
+        <button class="btn btn--primary" type="submit" data-privacy-close>닫기</button>
+      </form>
+    </div>
+  </dialog>
+
+  <nav class="float-cta" aria-label="빠른 상담" data-float>
+    <a class="float-cta__kakao" href="#request" data-kakao hidden>
+      <svg class="i-bubble" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.5c-4.1 0-7.25 2.55-7.25 5.75 0 2 1.25 3.7 3.15 4.75L5.3 16.5l3.25-1.95c.47.06.95.1 1.45.1 4.1 0 7.25-2.55 7.25-5.4S14.1 3.5 10 3.5Z"/></svg>
+      <span class="float-cta__m">카톡 상담</span>
+      <span class="float-cta__d visually-hidden">카카오톡 상담</span>
+      <span class="float-cta__tip" aria-hidden="true">카카오톡 상담</span>
+    </a>
+    <a class="float-cta__main" href="#request"><span class="float-cta__m">제작 의뢰하기</span><span class="float-cta__d">제작 의뢰</span></a>
+  </nav>
+
+  <div class="cursor-label" aria-hidden="true" data-cursor><span>열어 보기</span></div>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>틈 TEUM | 컨셉 시안 · 첫화면 스튜디오</title>
+<meta name="description" content="서울의 작은 조향실에서 한 번에 300병씩만 만드는 니치 향수 틈 TEUM. 무화과, 유자, 이끼, 비 네 가지 향.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#E8E6E2">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23171717'/%3E%3Crect x='27' y='14' width='10' height='36' rx='2' fill='%23E8E6E2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400&family=Noto+Serif+KR:wght@200;400;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <linearGradient id="g-glass" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity=".62"/>
+      <stop offset=".18" stop-color="#fff" stop-opacity=".12"/>
+      <stop offset=".55" stop-color="#fff" stop-opacity=".04"/>
+      <stop offset=".86" stop-color="#fff" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".66"/>
+    </linearGradient>
+    <linearGradient id="g-liquid" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#000" stop-opacity=".34"/>
+      <stop offset=".3" stop-color="#fff" stop-opacity=".18"/>
+      <stop offset=".62" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".4"/>
+    </linearGradient>
+    <linearGradient id="g-cap" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#3a3a3a"/>
+      <stop offset=".3" stop-color="#1c1c1c"/>
+      <stop offset=".7" stop-color="#121212"/>
+      <stop offset="1" stop-color="#2b2b2b"/>
+    </linearGradient>
+    <radialGradient id="g-shadow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#171717" stop-opacity=".32"/>
+      <stop offset="1" stop-color="#171717" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="c-body"><path d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z"/></clipPath>
+    <symbol id="bottle" viewBox="0 0 140 240">
+      <ellipse cx="70" cy="234" rx="78" ry="6" fill="url(#g-shadow)"/>
+      <path d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z" fill="var(--glass, rgba(250,250,248,.34))"/>
+      <g clip-path="url(#c-body)">
+        <path d="M15 116H125V220C125 224 122 226 118 226H22C18 226 15 224 15 220Z" fill="var(--liquid, #7A4868)" opacity=".9"/>
+        <path d="M15 116H125V220C125 224 122 226 118 226H22C18 226 15 224 15 220Z" fill="url(#g-liquid)"/>
+        <rect x="15" y="114" width="110" height="4" fill="#fff" opacity=".32"/>
+      </g>
+      <path d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z" fill="url(#g-glass)" stroke="#171717" stroke-opacity=".16" stroke-width="1"/>
+      <rect x="19" y="92" width="5" height="128" rx="2.5" fill="#fff" opacity=".7"/>
+      <rect x="114" y="98" width="3" height="116" rx="1.5" fill="#fff" opacity=".45"/>
+      <rect x="44" y="150" width="52" height="44" rx="1" fill="#FAFAF8" opacity=".92"/>
+      <rect x="62" y="159" width="16" height="2" fill="#171717" opacity=".7"/>
+      <rect x="54" y="171" width="32" height="1.5" fill="#171717" opacity=".45"/>
+      <rect x="58" y="179" width="24" height="1.5" fill="#171717" opacity=".45"/>
+      <rect x="46" y="55" width="48" height="9" rx="1" fill="#8f8c86"/>
+      <rect x="40" y="2" width="60" height="55" rx="5" fill="url(#g-cap)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="top" id="top">
+  <div class="top__inner">
+    <a class="wordmark" href="#main" aria-label="틈 TEUM 처음으로">TEUM</a>
+    <nav class="nav" aria-label="주요 메뉴">
+      <ul class="nav__list" id="nav-list">
+        <li><a href="#scents">네 가지 향</a></li>
+        <li><a href="#story">조향 이야기</a></li>
+        <li><a href="#finder">시향 추천</a></li>
+        <li><a href="#shop">구매</a></li>
+      </ul>
+    </nav>
+    <div class="top__actions">
+      <button class="cart-btn" type="button" id="cart-open" aria-haspopup="dialog" aria-controls="cart">
+        <span class="cart-btn__label">장바구니</span>
+        <span class="cart-btn__count" id="cart-count" aria-label="담긴 병 0개">0</span>
+      </button>
+      <button class="menu-btn" type="button" id="menu-btn" aria-expanded="false" aria-controls="nav-list">
+        <span class="menu-btn__bars" aria-hidden="true"></span>
+        <span class="visually-hidden">메뉴</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="stage" id="stage">
+    <div class="stage__sticky">
+      <div class="stage__poster" aria-hidden="true">
+        <svg class="poster" viewBox="0 0 600 420" preserveAspectRatio="xMidYMax meet">
+          <defs>
+            <clipPath id="c-poster-body"><path transform="translate(230 118) scale(1)" d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z"/></clipPath>
+          </defs>
+          <line class="poster__line" id="poster-line" x1="-1600" x2="2200" y1="337" y2="337"/>
+          <text class="poster__glyph" x="300" y="330" text-anchor="middle">틈</text>
+          <g clip-path="url(#c-poster-body)">
+            <rect x="230" y="150" width="140" height="240" fill="var(--stage-bg, #E8E6E2)"/>
+            <line class="poster__line" x1="200" x2="400" y1="341" y2="341"/>
+            <text class="poster__glyph poster__glyph--bent" x="300" y="330" text-anchor="middle" transform="translate(300 0) scale(-1.38 1) translate(-300 0)">틈</text>
+          </g>
+          <use href="#bottle" x="230" y="118" width="140" height="240" style="--liquid: var(--scent-hero, #7A4868); --glass: rgba(250,250,248,.22)"/>
+        </svg>
+      </div>
+      <canvas class="stage__canvas" id="glass" aria-hidden="true"></canvas>
+      <div class="stage__fade" aria-hidden="true"></div>
+    </div>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__base">
+        <div class="hero__copy">
+          <h1 class="hero__title" id="hero-title">틈, 살결과 공기 사이의 향</h1>
+          <p class="hero__lede">서울의 작은 조향실에서 한 번에 300병씩만 만듭니다.</p>
+        </div>
+        <div class="hero__pick">
+          <p class="hero__now" id="hero-now" aria-live="polite"><span class="num">No.1</span> 무화과 <span class="num">50 ml</span></p>
+          <div class="swatches" role="group" aria-label="병에 담을 향 바꾸기">
+            <button type="button" class="swatch" data-scent="0" aria-pressed="true" style="--c:#7A4868"><span class="visually-hidden">No.1 무화과</span></button>
+            <button type="button" class="swatch" data-scent="1" aria-pressed="false" style="--c:#E8C23A"><span class="visually-hidden">No.2 유자</span></button>
+            <button type="button" class="swatch" data-scent="2" aria-pressed="false" style="--c:#5C7A4A"><span class="visually-hidden">No.3 이끼</span></button>
+            <button type="button" class="swatch" data-scent="3" aria-pressed="false" style="--c:#6C8EB4"><span class="visually-hidden">No.4 비</span></button>
+            <button type="button" class="spin-toggle" id="spin-toggle" aria-pressed="false">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><rect class="i-pause" x="6" y="5" width="2.4" height="10" rx="1"/><rect class="i-pause" x="11.6" y="5" width="2.4" height="10" rx="1"/><path class="i-play" d="M7 5.2v9.6c0 .5.5.8.9.5l7-4.8a.6.6 0 0 0 0-1L7.9 4.7c-.4-.3-.9 0-.9.5Z"/></svg>
+              <span class="visually-hidden" id="spin-label">병 회전 멈추기</span>
+            </button>
+          </div>
+        </div>
+        <a class="cta-orb" href="#scents"><span>향 고르기</span></a>
+      </div>
+    </section>
+
+    <section class="scents" id="scents" aria-labelledby="scents-title">
+      <h2 class="visually-hidden" id="scents-title">네 가지 향</h2>
+      <article class="scent" data-index="0" style="--accent:#7A4868" aria-labelledby="s1">
+        <div class="scent__text">
+          <p class="scent__no"><span class="num">No.1</span></p>
+          <h3 class="scent__name" id="s1">무화과</h3>
+          <p class="scent__line">한낮, 반으로 가른 무화과</p>
+          <p class="scent__body">햇볕에 데워진 무화과를 반으로 가르면 초록 잎 냄새와 달큰한 과육 냄새가 동시에 올라옵니다. 그 첫 숨을 피부 가까이 오래 붙잡아 두었습니다.</p>
+          <dl class="notes">
+            <div><dt>처음</dt><dd>무화과 잎, 베르가못</dd></div>
+            <div><dt>한 시간 뒤</dt><dd>무화과 과육, 코코넛 밀크</dd></div>
+            <div><dt>잔향</dt><dd>시더우드, 머스크</dd></div>
+          </dl>
+          <p class="scent__price"><span class="num">50 ml</span> <span class="num">128,000</span>원</p>
+          <svg class="scent__drawing" viewBox="0 0 160 120" aria-hidden="true">
+            <path d="M80 12c-6 0-9 5-9 9 0 3-3 5-8 7C40 36 24 56 24 76c0 22 25 36 56 36s56-14 56-36c0-20-16-40-39-48-5-2-8-4-8-7 0-4-3-9-9-9Z"/>
+            <path d="M80 30c-19 6-38 24-38 46 0 15 17 26 38 26s38-11 38-26c0-22-19-40-38-46Z" opacity=".55"/>
+            <path d="M80 44c-8 10-14 21-14 32m14-32c8 10 14 21 14 32M80 44v46M66 62c-6 6-9 12-9 18m37-18c6 6 9 12 9 18" opacity=".55"/>
+            <path d="M80 12c4-6 10-9 17-9" />
+          </svg>
+        </div>
+      </article>
+      <article class="scent" data-index="1" style="--accent:#8A6A07" aria-labelledby="s2">
+        <div class="scent__text">
+          <p class="scent__no"><span class="num">No.2</span></p>
+          <h3 class="scent__name" id="s2">유자</h3>
+          <p class="scent__line">겨울 부엌, 유자를 써는 손</p>
+          <p class="scent__body">칼날이 껍질을 지날 때 터지는 쌉싸름한 기름, 김이 서린 창, 설탕에 재워 두는 저녁. 겨울 부엌의 온도를 그대로 병에 옮겼습니다.</p>
+          <dl class="notes">
+            <div><dt>처음</dt><dd>유자 껍질, 생강</dd></div>
+            <div><dt>한 시간 뒤</dt><dd>유자 꽃, 덖은 녹차</dd></div>
+            <div><dt>잔향</dt><dd>편백, 화이트 앰버</dd></div>
+          </dl>
+          <p class="scent__price"><span class="num">50 ml</span> <span class="num">128,000</span>원</p>
+          <svg class="scent__drawing" viewBox="0 0 160 120" aria-hidden="true">
+            <circle cx="72" cy="66" r="40"/>
+            <circle cx="72" cy="66" r="31" opacity=".55"/>
+            <path d="M72 35v62M41 66h62M50 44l44 44M94 44 50 88" opacity=".4"/>
+            <circle cx="72" cy="66" r="4"/>
+            <path d="M104 30c10-8 22-10 34-6-6 10-18 15-31 12" />
+            <path d="M104 30c8 0 18-3 27-6" opacity=".55"/>
+          </svg>
+        </div>
+      </article>
+      <article class="scent" data-index="2" style="--accent:#46603A" aria-labelledby="s3">
+        <div class="scent__text">
+          <p class="scent__no"><span class="num">No.3</span></p>
+          <h3 class="scent__name" id="s3">이끼</h3>
+          <p class="scent__line">비 갠 숲의 돌담</p>
+          <p class="scent__body">비가 그친 뒤 돌담 틈에서 올라오는 서늘한 초록. 손바닥을 대면 아직 축축한 그 온도가 손목에 오래 남도록 만들었습니다.</p>
+          <dl class="notes">
+            <div><dt>처음</dt><dd>젖은 흙, 갈바넘</dd></div>
+            <div><dt>한 시간 뒤</dt><dd>이끼, 제비꽃 잎</dd></div>
+            <div><dt>잔향</dt><dd>베티버, 참나무 이끼</dd></div>
+          </dl>
+          <p class="scent__price"><span class="num">50 ml</span> <span class="num">128,000</span>원</p>
+          <svg class="scent__drawing" viewBox="0 0 160 120" aria-hidden="true">
+            <path d="M14 104h132"/>
+            <path d="M22 104c-2-18 6-30 24-32 14-2 24 6 26 20 1 6 0 9-2 12"/>
+            <path d="M70 104c0-24 14-40 36-40 20 0 32 16 30 40"/>
+            <path d="M40 70c4-8 12-12 20-10m38-4c6-8 16-12 26-8" opacity=".55"/>
+            <path d="M30 80c4 2 6 6 6 10m20-16c2 4 2 8 0 12m40-18c2 6 2 12-2 16m22-14c3 5 3 10 0 14" opacity=".5"/>
+          </svg>
+        </div>
+      </article>
+      <article class="scent" data-index="3" style="--accent:#3E5F85" aria-labelledby="s4">
+        <div class="scent__text">
+          <p class="scent__no"><span class="num">No.4</span></p>
+          <h3 class="scent__name" id="s4">비</h3>
+          <p class="scent__line">창을 열어 둔 장마 첫날</p>
+          <p class="scent__body">창문을 반쯤 열어 두고 듣는 첫 장맛비. 젖은 아스팔트와 덜 마른 빨래 사이로 서늘한 공기가 방 안까지 밀려 들어옵니다.</p>
+          <dl class="notes">
+            <div><dt>처음</dt><dd>빗방울, 배 껍질</dd></div>
+            <div><dt>한 시간 뒤</dt><dd>젖은 면, 은방울꽃</dd></div>
+            <div><dt>잔향</dt><dd>화이트 머스크, 마른 나무</dd></div>
+          </dl>
+          <p class="scent__price"><span class="num">50 ml</span> <span class="num">128,000</span>원</p>
+          <svg class="scent__drawing" viewBox="0 0 160 120" aria-hidden="true">
+            <path d="M30 10 18 46M62 6 46 54M94 12 80 50M126 8 110 52M146 30 136 58M44 62 34 92M78 60 66 96M112 64 100 100" />
+            <path d="M20 108c10-6 20-6 30 0s20 6 30 0 20-6 30 0 20 6 30 0" opacity=".55"/>
+          </svg>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <section class="story" id="story" aria-labelledby="story-title">
+    <div class="wrap story__grid">
+      <div class="story__lead">
+        <h2 class="h2" id="story-title">한 번에 300병, 그 이상은 만들지 않습니다</h2>
+        <p>틈은 서울 OO구의 열두 평짜리 조향실에서 시작했습니다. 원료를 섞고 여섯 주 동안 재운 뒤, 거름종이로 걸러 한 병씩 손으로 채웁니다. 기계로 서두르면 향이 덜 익습니다. 그래서 한 번에 300병, 그 이상은 만들지 않습니다.</p>
+        <p>병 바닥에는 배치 번호와 순번을 손으로 적어 둡니다. 같은 이름의 향이라도 계절마다 조금씩 다르게 익는다는 것을, 숨기지 않고 기록해 두고 싶었습니다.</p>
+      </div>
+      <figure class="batch" aria-labelledby="batch-cap">
+        <div class="batch__grid" id="batch-grid" role="img" aria-label="이번 배치 300병 가운데 214병이 이미 주인을 찾았고 86병이 남아 있습니다."></div>
+        <figcaption class="batch__cap" id="batch-cap">
+          <span>이번 배치 <span class="num">26-11</span>, No.1 무화과</span>
+          <span><span class="num">300</span>병 중 <strong class="num">86</strong>병 남음</span>
+        </figcaption>
+      </figure>
+      <ol class="steps" aria-label="한 병이 만들어지는 순서">
+        <li><span class="steps__n num">1</span><span class="steps__t">배합</span><span class="steps__d">원료 열네 가지를 그램 단위로 섞습니다.</span></li>
+        <li><span class="steps__n num">2</span><span class="steps__t">숙성 6주</span><span class="steps__d">빛이 들지 않는 선반에서 향이 서로 익습니다.</span></li>
+        <li><span class="steps__n num">3</span><span class="steps__t">여과</span><span class="steps__d">영하 4도로 식힌 뒤 거름종이로 두 번 거릅니다.</span></li>
+        <li><span class="steps__n num">4</span><span class="steps__t">손 병입</span><span class="steps__d">한 병씩 채우고 바닥에 순번을 적습니다.</span></li>
+      </ol>
+    </div>
+
+    <div class="wrap time" aria-labelledby="time-title">
+      <div class="time__head">
+        <h3 class="h3" id="time-title">시간이 지나면</h3>
+        <p>향은 피부 위에서 세 번 바뀝니다. 손잡이를 아래로 내려 여섯 시간을 지나 보세요.</p>
+        <div class="time__pick" role="group" aria-label="노트를 볼 향 고르기">
+          <button type="button" class="chip" data-time-scent="0" aria-pressed="true"><i style="--c:#7A4868" aria-hidden="true"></i>무화과</button>
+          <button type="button" class="chip" data-time-scent="1" aria-pressed="false"><i style="--c:#E8C23A" aria-hidden="true"></i>유자</button>
+          <button type="button" class="chip" data-time-scent="2" aria-pressed="false"><i style="--c:#5C7A4A" aria-hidden="true"></i>이끼</button>
+          <button type="button" class="chip" data-time-scent="3" aria-pressed="false"><i style="--c:#6C8EB4" aria-hidden="true"></i>비</button>
+        </div>
+      </div>
+      <div class="time__body">
+        <div class="tslider" id="tslider">
+          <div class="tslider__ticks" aria-hidden="true">
+            <span style="--p:0">0분</span><span style="--p:.0833">30분</span><span style="--p:.3333">2시간</span><span style="--p:.6667">4시간</span><span style="--p:1">6시간</span>
+          </div>
+          <div class="tslider__track" id="tslider-track">
+            <div class="tslider__fill" id="tslider-fill"></div>
+            <div class="tslider__thumb" id="tslider-thumb" role="slider" tabindex="0" aria-orientation="vertical" aria-label="뿌린 뒤 지난 시간" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0" aria-valuetext="0분, 처음 향"></div>
+          </div>
+        </div>
+        <div class="tnotes" aria-live="polite">
+          <p class="tnotes__clock"><span class="num" id="tclock">0분</span> 뒤</p>
+          <div class="tnotes__stack">
+            <div class="tnote" data-phase="0">
+              <p class="tnote__label">처음 향</p>
+              <p class="tnote__text" data-note="top">무화과 잎, 베르가못</p>
+              <p class="tnote__desc">뿌리자마자 초록 잎과 시트러스가 먼저 날아오릅니다.</p>
+            </div>
+            <div class="tnote" data-phase="1">
+              <p class="tnote__label">한 시간 뒤</p>
+              <p class="tnote__text" data-note="mid">무화과 과육, 코코넛 밀크</p>
+              <p class="tnote__desc">가벼운 향이 물러나고 향의 얼굴이 드러납니다.</p>
+            </div>
+            <div class="tnote" data-phase="2">
+              <p class="tnote__label">잔향</p>
+              <p class="tnote__text" data-note="base">시더우드, 머스크</p>
+              <p class="tnote__desc">살결의 온도와 섞여 저녁까지 가까이 남습니다.</p>
+            </div>
+          </div>
+          <svg class="tnotes__rings" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="ring ring--0" cx="100" cy="100" r="30"/>
+            <circle class="ring ring--1" cx="100" cy="100" r="54"/>
+            <circle class="ring ring--2" cx="100" cy="100" r="80"/>
+            <circle class="ring__core" cx="100" cy="100" r="6"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="finder" id="finder" aria-labelledby="finder-title">
+    <div class="wrap finder__grid">
+      <div class="finder__side">
+        <h2 class="h2" id="finder-title">어떤 향이 어울릴까요</h2>
+        <p>세 가지 질문에 답하면 네 병 가운데 하나를 골라 드립니다. 고른 향은 맨 위의 병에도 담깁니다.</p>
+        <div class="finder__bottle" aria-hidden="true">
+          <svg viewBox="0 0 140 240"><use href="#bottle" class="finder__use" style="--liquid: var(--finder-liquid, #B9B5AE)"/></svg>
+        </div>
+      </div>
+      <form class="quiz" id="quiz" novalidate>
+        <p class="quiz__step" id="quiz-step" aria-live="polite"><span class="num">1</span> / <span class="num">3</span></p>
+        <fieldset class="q" data-q="0">
+          <legend class="q__title">하루 중 가장 좋아하는 시간은 언제인가요?</legend>
+          <div class="q__opts">
+            <label class="opt"><input type="radio" name="q0" value="0"><span>볕이 가장 높은 오후 두 시</span></label>
+            <label class="opt"><input type="radio" name="q0" value="1"><span>해가 일찍 지는 겨울 저녁</span></label>
+            <label class="opt"><input type="radio" name="q0" value="2"><span>비가 막 그친 이른 아침</span></label>
+            <label class="opt"><input type="radio" name="q0" value="3"><span>빗소리가 들리는 밤</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="q" data-q="1">
+          <legend class="q__title">손끝에 닿았을 때 좋은 것은 무엇인가요?</legend>
+          <div class="q__opts">
+            <label class="opt"><input type="radio" name="q1" value="0"><span>잘 익은 과일의 얇은 껍질</span></label>
+            <label class="opt"><input type="radio" name="q1" value="1"><span>막 꺼낸 두꺼운 니트</span></label>
+            <label class="opt"><input type="radio" name="q1" value="2"><span>그늘에 놓인 차가운 돌</span></label>
+            <label class="opt"><input type="radio" name="q1" value="3"><span>갓 걷은 면 셔츠</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="q" data-q="2">
+          <legend class="q__title">향을 뿌리고 어디로 가고 싶나요?</legend>
+          <div class="q__opts">
+            <label class="opt"><input type="radio" name="q2" value="0"><span>사람이 북적이는 여름 시장</span></label>
+            <label class="opt"><input type="radio" name="q2" value="1"><span>친구를 부른 저녁 식탁</span></label>
+            <label class="opt"><input type="radio" name="q2" value="2"><span>혼자 걷는 숲길</span></label>
+            <label class="opt"><input type="radio" name="q2" value="3"><span>창가 자리가 있는 도서관</span></label>
+          </div>
+        </fieldset>
+        <div class="quiz__nav">
+          <button type="button" class="btn btn--ghost" id="quiz-prev">이전 질문</button>
+          <button type="submit" class="btn" id="quiz-next">다음 질문</button>
+        </div>
+        <p class="quiz__error" id="quiz-error" role="alert"></p>
+        <div class="result" id="quiz-result" tabindex="-1">
+          <p class="result__kicker">어울리는 향</p>
+          <p class="result__name" id="result-name"><span class="num">No.3</span> 이끼</p>
+          <p class="result__line" id="result-line">비 갠 숲의 돌담</p>
+          <div class="result__actions">
+            <button type="button" class="btn" id="result-add" data-add="2">이 향 담기</button>
+            <button type="button" class="btn btn--ghost" id="quiz-reset">다시 답하기</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="shop" id="shop" aria-labelledby="shop-title">
+    <div class="wrap">
+      <div class="shop__head">
+        <h2 class="h2" id="shop-title">네 개의 병</h2>
+        <p>모두 오 드 퍼퓸, <span class="num">50 ml</span>. 바닥에 배치 번호를 적어 무료로 포장해 보내 드립니다.</p>
+      </div>
+      <ul class="shelf">
+        <li class="shelf__item" style="--liquid:#7A4868">
+          <svg class="shelf__bottle" viewBox="0 0 140 240" aria-hidden="true"><use href="#bottle"/></svg>
+          <p class="shelf__name"><span class="num">No.1</span> 무화과</p>
+          <p class="shelf__price"><span class="num">128,000</span>원</p>
+          <button type="button" class="add" data-add="0"><span class="add__t">담기</span></button>
+        </li>
+        <li class="shelf__item" style="--liquid:#E8C23A">
+          <svg class="shelf__bottle" viewBox="0 0 140 240" aria-hidden="true"><use href="#bottle"/></svg>
+          <p class="shelf__name"><span class="num">No.2</span> 유자</p>
+          <p class="shelf__price"><span class="num">128,000</span>원</p>
+          <button type="button" class="add" data-add="1"><span class="add__t">담기</span></button>
+        </li>
+        <li class="shelf__item" style="--liquid:#5C7A4A">
+          <svg class="shelf__bottle" viewBox="0 0 140 240" aria-hidden="true"><use href="#bottle"/></svg>
+          <p class="shelf__name"><span class="num">No.3</span> 이끼</p>
+          <p class="shelf__price"><span class="num">128,000</span>원</p>
+          <button type="button" class="add" data-add="2"><span class="add__t">담기</span></button>
+        </li>
+        <li class="shelf__item" style="--liquid:#6C8EB4">
+          <svg class="shelf__bottle" viewBox="0 0 140 240" aria-hidden="true"><use href="#bottle"/></svg>
+          <p class="shelf__name"><span class="num">No.4</span> 비</p>
+          <p class="shelf__price"><span class="num">128,000</span>원</p>
+          <button type="button" class="add" data-add="3"><span class="add__t">담기</span></button>
+        </li>
+      </ul>
+      <p class="shop__note">처음이라면 네 가지 향을 <span class="num">2 ml</span>씩 담은 시향 상자(<span class="num">24,000</span>원)를 먼저 받아 보셔도 좋습니다. 상자 값은 첫 병을 살 때 빼 드립니다.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__grid">
+    <p class="foot__mark">TEUM</p>
+    <div class="foot__col">
+      <p>틈 조향실</p>
+      <p>서울 OO구 가상로 12, 2층</p>
+      <p>화요일부터 토요일, 낮 12시부터 저녁 7시</p>
+    </div>
+    <div class="foot__col">
+      <p>전화 <a href="tel:02-000-0000">02-000-0000</a></p>
+      <p>메일 <a href="mailto:hello@teum.example">hello@teum.example</a></p>
+      <p>시향은 예약 없이 들르셔도 됩니다.</p>
+    </div>
+  </div>
+  <p class="wrap foot__legal">이 사이트는 첫화면 스튜디오가 만든 가상의 브랜드 컨셉 시안입니다. 실제 업체, 가격, 후기가 아닙니다.</p>
+</footer>
+
+<div class="sheet" id="cart" role="dialog" aria-modal="true" aria-labelledby="cart-title" hidden>
+  <div class="sheet__scrim" data-close></div>
+  <div class="sheet__panel" tabindex="-1">
+    <div class="sheet__head">
+      <h2 class="sheet__title" id="cart-title">장바구니</h2>
+      <button type="button" class="sheet__close" data-close aria-label="장바구니 닫기">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"/></svg>
+      </button>
+    </div>
+    <ul class="sheet__list" id="cart-list"></ul>
+    <p class="sheet__empty" id="cart-empty">아직 담은 병이 없습니다. 네 개의 병에서 마음에 드는 향을 담아 보세요.</p>
+    <div class="sheet__foot">
+      <p class="sheet__total"><span>합계</span><span><span class="num" id="cart-total">0</span>원</span></p>
+      <button type="button" class="btn btn--block" id="cart-order">주문하기</button>
+      <p class="sheet__msg" id="cart-msg" role="status"></p>
+    </div>
+  </div>
+</div>
+<p class="visually-hidden" id="announcer" aria-live="polite"></p>
+
+<script src="../../assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="../../assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="../../assets/vendor/lenis/lenis.min.js" defer></script>
+<script src="main.js" defer></script>
+<script type="module" src="scene.js"></script>
+<script src="../../assets/shared/concept-badge.js" defer></script>
+</body>
+</html>

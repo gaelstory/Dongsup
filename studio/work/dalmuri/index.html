@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>달무리 | 컨셉 시안 · 첫화면 스튜디오</title>
+<meta name="description" content="먹물이 번져 달무리가 되는 밤. 제철 재료로 짓는 아홉 접시, 하루 두 번 열두 분만 모시는 예약제 한식 다이닝 바 달무리의 컨셉 시안입니다.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0C0C0E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230C0C0E'/%3E%3Ccircle cx='16' cy='16' r='8.6' fill='none' stroke='%23F4F1E8' stroke-width='2.2'/%3E%3Ccircle cx='16' cy='16' r='5.4' fill='%23B9975B' opacity='.35'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Song+Myung&display=swap">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="bar" id="bar">
+  <div class="bar__inner wrap">
+    <a class="logo" href="#top" aria-label="달무리, 처음으로">
+      <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="1" opacity=".45"/>
+        <circle cx="20" cy="20" r="10" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <circle cx="20" cy="20" r="6.5" fill="currentColor" opacity=".16"/>
+      </svg>
+      <span class="logo__word">달무리</span>
+    </a>
+    <nav class="bar__nav" aria-label="주 메뉴">
+      <a class="bar__reserve" href="#reserve">예약</a>
+      <button class="bar__menu" type="button" aria-expanded="false" aria-controls="toc">
+        <span class="bar__menu-label">차례</span>
+        <span class="bar__menu-icon" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<div class="toc" id="toc" role="dialog" aria-modal="true" aria-label="차례" hidden>
+  <div class="toc__inner wrap">
+    <p class="toc__note">달무리의 한 상은 이렇게 흐릅니다.</p>
+    <nav aria-label="차례">
+      <ol class="toc__list">
+        <li><a href="#top"><span class="toc__ord">처음</span>달이 번지는 밤</a></li>
+        <li><a href="#philosophy"><span class="toc__ord">철학</span>덜어내는 맛</a></li>
+        <li><a href="#course"><span class="toc__ord">코스</span>가을, 아홉 접시</a></li>
+        <li><a href="#sool"><span class="toc__ord">전통주</span>잔에 따르는 계절</a></li>
+        <li><a href="#space"><span class="toc__ord">공간</span>열두 자리의 바</a></li>
+        <li><a href="#reserve"><span class="toc__ord">예약</span>자리 맡기</a></li>
+        <li><a href="#visit"><span class="toc__ord">오시는 길</span>가상로 열두 번지</a></li>
+      </ol>
+    </nav>
+    <button class="toc__close" type="button">닫기</button>
+  </div>
+</div>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="hero__fallback" aria-hidden="true"></div>
+    <canvas class="hero__ink" aria-hidden="true"></canvas>
+    <div class="hero__inner wrap">
+      <div class="hero__copy">
+      <h1 class="hero__title" id="hero-title">
+        <span class="hero__col">달이 번지는 밤<span class="punct">,</span></span>
+        <span class="hero__col">한 상의 여백</span>
+      </h1>
+      <div class="hero__aside">
+        <p class="hero__lead">제철 재료로 짓는 아홉 접시. 하루 두 번, 열두 분만 모십니다.</p>
+        <a class="btn" href="#reserve"><span>자리 예약하기</span></a>
+        <p class="hero__note">가을 차림은 12월 20일까지 냅니다.</p>
+      </div>
+      </div>
+    </div>
+    <a class="hero__cue" href="#philosophy"><span>천천히 내려 보기</span></a>
+  </section>
+
+  <section class="sec philo" id="philosophy" aria-labelledby="philosophy-title">
+    <div class="sec__inner wrap">
+      <div class="sec__head">
+        <h2 class="sec__title" id="philosophy-title"><span>덜어낼수록</span> <span>선명해지는 맛</span></h2>
+      </div>
+      <div class="sec__body philo__body">
+        <div class="philo__text">
+          <p class="philo__lead">달무리의 상에는 소스가 많지 않습니다.</p>
+          <p>간장은 직접 담가 세 해를 묵히고, 불은 참숯 하나만 씁니다. 재료가 가장 맛있는 날을 기다렸다가, 손을 덜 대는 쪽을 고릅니다.</p>
+          <p>아홉 접시는 한 호흡으로 이어집니다. 차가운 것에서 따뜻한 것으로, 맑은 것에서 깊은 것으로. 접시와 접시 사이의 빈 시간까지 코스의 일부라고 생각합니다.</p>
+          <p class="philo__sign"><span class="philo__seal" aria-hidden="true">月</span>주방장 서윤재</p>
+        </div>
+        <dl class="philo__rules">
+          <div>
+            <dt>간은 한 번</dt>
+            <dd>접시에 오르기 직전, 마지막에 한 번만 맞춥니다.</dd>
+          </div>
+          <div>
+            <dt>불은 참숯</dt>
+            <dd>굽고 데우는 일은 모두 카운터 앞 화로에서 합니다.</dd>
+          </div>
+          <div>
+            <dt>그릇은 놋</dt>
+            <dd>음식이 식지 않도록 놋그릇을 미리 데워 둡니다.</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec course" id="course" aria-labelledby="course-title">
+    <div class="course__pin">
+      <div class="sec__inner wrap course__inner">
+        <div class="sec__head">
+          <h2 class="sec__title" id="course-title"><span>가을,</span> <span>아홉 접시</span></h2>
+          <p class="sec__intro">시월부터 동짓달까지 내는 가을 차림입니다. 그날 들어온 재료에 따라 접시가 조금씩 바뀝니다.</p>
+        </div>
+
+        <div class="course__stage">
+          <figure class="plate" aria-hidden="true">
+            <svg class="plate__svg" viewBox="0 0 400 400">
+              <defs>
+                <radialGradient id="plateFill" cx="44%" cy="40%" r="70%">
+                  <stop offset="0" stop-color="#2A2A2F"/>
+                  <stop offset=".62" stop-color="#1E1E22"/>
+                  <stop offset="1" stop-color="#141417"/>
+                </radialGradient>
+                <radialGradient id="plateShadow" cx="50%" cy="50%" r="50%">
+                  <stop offset=".6" stop-color="#000" stop-opacity=".55"/>
+                  <stop offset="1" stop-color="#000" stop-opacity="0"/>
+                </radialGradient>
+                <filter id="brush" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+                  <feTurbulence type="fractalNoise" baseFrequency=".032" numOctaves="3" seed="11" result="warp"/>
+                  <feDisplacementMap in="SourceGraphic" in2="warp" scale="16" xChannelSelector="R" yChannelSelector="G" result="shape"/>
+                  <feTurbulence type="fractalNoise" baseFrequency=".008 .19" numOctaves="2" seed="4" result="streak"/>
+                  <feColorMatrix in="streak" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3.2 0 0 0 2.75" result="dry"/>
+                  <feComposite in="shape" in2="dry" operator="in" result="brushed"/>
+                  <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="1" seed="2" result="fine"/>
+                  <feColorMatrix in="fine" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 1.25" result="pores"/>
+                  <feComposite in="brushed" in2="pores" operator="in"/>
+                </filter>
+              </defs>
+              <ellipse cx="206" cy="214" rx="186" ry="182" fill="url(#plateShadow)"/>
+              <circle cx="200" cy="200" r="178" fill="url(#plateFill)"/>
+              <circle cx="200" cy="200" r="178" fill="none" stroke="#B9975B" stroke-opacity=".55" stroke-width="1.4"/>
+              <circle cx="200" cy="200" r="132" fill="none" stroke="#E9E3D5" stroke-opacity=".07" stroke-width="1"/>
+              <path d="M70 128 A150 150 0 0 1 150 58" fill="none" stroke="#F4F1E8" stroke-opacity=".16" stroke-width="5" stroke-linecap="round"/>
+              <g class="plate__food" filter="url(#brush)">
+                <path class="plate__a" d="M200 140 C236 140 262 166 262 200 C262 236 236 262 200 262 C164 262 138 236 138 200 C138 166 164 140 200 140Z" fill="#E9E3D5"/>
+                <path class="plate__b" d="M262 132 C270 132 276 138 276 146 C276 154 270 160 262 160 C254 160 248 154 248 146 C248 138 254 132 262 132Z" fill="#B9975B"/>
+                <path class="plate__c" d="M140 262 C146 262 150 266 150 272 C150 278 146 282 140 282 C134 282 130 278 130 272 C130 266 134 262 140 262Z" fill="#B9975B"/>
+              </g>
+            </svg>
+          </figure>
+          <div class="course__caption" aria-hidden="true">
+            <p class="course__cap-ord">첫째 접시</p>
+            <p class="course__cap-name">배 물김치</p>
+            <p class="course__cap-desc">얼음 없이 차게 식힌 햇배 물김치에 볶은 잣을 띄웁니다. 입을 여는 첫 모금입니다.</p>
+            <p class="course__cap-sool">함께 내는 술 <span>햅쌀 탁주</span></p>
+          </div>
+        </div>
+
+        <div class="course__menu">
+          <ol class="course__list">
+            <li class="course__item" data-form="dot" data-sool="햅쌀 탁주">
+              <button class="course__pick" type="button" aria-pressed="true"><span class="course__ord">첫째</span><span class="course__name">배 물김치</span></button>
+              <p class="course__desc">얼음 없이 차게 식힌 햇배 물김치에 볶은 잣을 띄웁니다. 입을 여는 첫 모금입니다.</p>
+            </li>
+            <li class="course__item" data-form="crescent" data-sool="햅쌀 탁주">
+              <button class="course__pick" type="button" aria-pressed="false"><span class="course__ord">둘째</span><span class="course__name">전어 유자초회</span></button>
+              <p class="course__desc">가을 전어를 소금에 잠깐 재웠다가 유자 초와 냅니다. 뼈째 얇게 썰어 고소합니다.</p>
+            </li>
+            <li class="course__item" data-form="three" data-sool="감국 약주">
+              <button class="course__pick" type="button" aria-pressed="false"><span class="course__ord">셋째</span><span class="course__name">송이 숯불구이</span></button>
+              <p class="course__desc">참숯에 송이를 통째로 굽고 결대로 찢습니다. 들기름 한 방울과 소금만 곁들입니다.</p>
+            </li>
+            <li class="course__item" data-form="curl" data-sool="감국 약주">
+              <button class="course__pick" type="button" aria-pressed="false"><span class="course__ord">넷째</span><span class="course__name">대하 잣즙채</span></button>
+              <p class="course__desc">대하를 살짝 데쳐 곱게 간 잣즙에 버무립니다. 배와 오이를 가늘게 채 쳐 더합니다.</p>
+            </li>
+            <li class="course__item" data-form="ring" data-sool="솔잎 청주">
+              <button class="course__pick" type="button" aria-pressed="false"><span class="course__ord">다섯째</span><span class="course__name">무 맑은 장국</span></button>
+              <p class="course__desc">가을 무와 홍합으로 맑게 낸 국물입니다. 집 간장 한 숟가락으로 간을 마칩니다.</p>
+            </li>
+            <li class="course__item" data-form="stroke" data-sool="솔잎 청주">
+              <button class="course__pick" type="button" aria-pressed="false"><span class="course__ord">여섯째</span><span class="course__name">한우 채끝 구이</span></button>
+              <p class="course__desc">채끝을 화로에서 두 번 나눠 굽습니다. 묵은지 장아찌와 구운 마늘을 곁들입니다.</p>
+            </li>
+            <li class="course__item" data-form="mound" data-sool="오미자 과하주">
+              <button class="course__pick" type="button" aria-pressed="false"><span class="course__ord">일곱째</span><span class="course__name">햅쌀 은행 솥밥</span></button>
+              <p class="course__desc">햅쌀에 은행과 밤을 얹어 무쇠솥에 짓습니다. 누룽지는 마지막에 숭늉으로 냅니다.</p>
+            </li>
+            <li class="course__item" data-form="drop" data-sool="오미자 과하주">
+              <button class="course__pick" type="button" aria-pressed="false"><span class="course__ord">여덟째</span><span class="course__name">홍시 셔벗</span></button>
+              <p class="course__desc">잘 익은 홍시를 얼려 곱게 긁어 냅니다. 계피 향을 아주 조금 입힙니다.</p>
+            </li>
+            <li class="course__item" data-form="cup" data-sool="대추 증류주">
+              <button class="course__pick" type="button" aria-pressed="false"><span class="course__ord">아홉째</span><span class="course__name">우엉차와 약과</span></button>
+              <p class="course__desc">볶은 우엉으로 우린 차와 조청에 재운 작은 약과로 상을 닫습니다.</p>
+            </li>
+          </ol>
+          <dl class="course__price">
+            <div>
+              <dt>가을 코스</dt>
+              <dd class="course__won">148,000원</dd>
+              <dd class="course__per">한 분, 아홉 접시</dd>
+            </div>
+            <div>
+              <dt>전통주 페어링</dt>
+              <dd class="course__won">68,000원</dd>
+              <dd class="course__per">다섯 잔</dd>
+            </div>
+          </dl>
+          <p class="course__fine">예약금은 한 분에 50,000원이며 오신 날 코스 값에서 뺍니다. 못 드시는 재료는 예약할 때 알려 주세요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sool" id="sool" aria-labelledby="sool-title">
+    <div class="sec__inner wrap">
+      <div class="sec__head">
+        <h2 class="sec__title" id="sool-title"><span>잔에 따르는</span> <span>계절</span></h2>
+        <p class="sec__intro">페어링은 다섯 잔입니다. 마음에 드는 술은 한 잔씩 따로 청하셔도 됩니다.</p>
+      </div>
+      <div class="sec__body">
+        <ul class="sool__list">
+          <li class="sool__item" tabindex="0">
+            <h3 class="sool__name">햅쌀 탁주</h3>
+            <p class="sool__meta"><span>탁주, 8도</span><span class="sool__won">한 잔 12,000원</span></p>
+            <p class="sool__desc">올해 거둔 햅쌀로 빚은 첫 술. 단맛이 둥글고 끝이 가볍습니다. 첫 두 접시와 냅니다.</p>
+          </li>
+          <li class="sool__item" tabindex="0">
+            <h3 class="sool__name">감국 약주</h3>
+            <p class="sool__meta"><span>약주, 13도</span><span class="sool__won">한 잔 15,000원</span></p>
+            <p class="sool__desc">말린 감국을 띄워 거른 맑은 술. 국화 향이 송이의 숯 향을 받쳐 줍니다.</p>
+          </li>
+          <li class="sool__item" tabindex="0">
+            <h3 class="sool__name">솔잎 청주</h3>
+            <p class="sool__meta"><span>청주, 15도</span><span class="sool__won">한 잔 16,000원</span></p>
+            <p class="sool__desc">솔잎을 넣고 낮은 온도에서 백 일을 묵혔습니다. 구운 고기의 기름을 개운하게 씻어 줍니다.</p>
+          </li>
+          <li class="sool__item" tabindex="0">
+            <h3 class="sool__name">오미자 과하주</h3>
+            <p class="sool__meta"><span>과하주, 18도</span><span class="sool__won">한 잔 17,000원</span></p>
+            <p class="sool__desc">약주에 소주를 더해 여름을 넘긴 술. 단맛과 신맛, 쓴맛이 차례로 옵니다.</p>
+          </li>
+          <li class="sool__item" tabindex="0">
+            <h3 class="sool__name">대추 증류주</h3>
+            <p class="sool__meta"><span>증류주, 25도</span><span class="sool__won">한 잔 18,000원</span></p>
+            <p class="sool__desc">대추를 넣고 두 번 내린 소주. 마지막 차 곁에 한 모금이면 충분합니다.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec space" id="space" aria-labelledby="space-title">
+    <div class="sec__inner wrap">
+      <div class="sec__head">
+        <h2 class="sec__title" id="space-title"><span>열두 자리의</span> <span>바</span></h2>
+        <p class="sec__intro">주방을 둘러싼 ㄱ자 카운터에 열두 자리가 있습니다. 어느 자리에 앉아도 화로가 보입니다.</p>
+      </div>
+      <div class="sec__body space__body">
+        <figure class="space__plan">
+          <svg class="space__svg" viewBox="0 0 800 560" role="img" aria-labelledby="plan-title">
+            <title id="plan-title">달무리 평면도. 주방을 ㄱ자 카운터가 감싸고, 카운터 바깥에 의자 열두 개가 놓여 있습니다. 창가 쪽 두 자리가 따로 표시되어 있습니다.</title>
+            <g class="plan__walls" fill="none" stroke="#B9975B" stroke-width="2.4" stroke-linecap="square">
+              <path class="plan__line" d="M40 40 H760 V520 H330"/>
+              <path class="plan__line" d="M230 520 H40 V40"/>
+              <path class="plan__line" d="M330 520 A100 100 0 0 0 230 420" stroke-width="1.2" stroke-opacity=".6"/>
+              <path class="plan__line" d="M230 520 V420" stroke-width="1.2" stroke-opacity=".6"/>
+            </g>
+            <g class="plan__win" fill="none" stroke="#E9E3D5" stroke-opacity=".55" stroke-width="1.2">
+              <path class="plan__line" d="M34 120 V300"/>
+              <path class="plan__line" d="M46 120 V300"/>
+            </g>
+            <g class="plan__kitchen" fill="none" stroke="#B9975B" stroke-opacity=".75" stroke-width="1.6">
+              <path class="plan__line" d="M300 40 V250 H760"/>
+              <path class="plan__line" d="M330 40 V220 H760" stroke-opacity=".35"/>
+              <path class="plan__line" d="M380 100 H700" stroke-opacity=".25" stroke-dasharray="6 8"/>
+              <path class="plan__line" d="M380 160 H700" stroke-opacity=".25" stroke-dasharray="6 8"/>
+            </g>
+            <g class="plan__counter" fill="none" stroke="#F4F1E8" stroke-width="2">
+              <path class="plan__line" d="M240 40 V310 H760"/>
+            </g>
+            <g class="plan__fire">
+              <circle class="plan__line" cx="330" cy="280" r="18" fill="none" stroke="#B9975B" stroke-width="1.6"/>
+              <circle cx="330" cy="280" r="7" fill="#B9975B" fill-opacity=".55"/>
+            </g>
+            <g class="plan__seats" fill="#0C0C0E" stroke="#E9E3D5" stroke-width="1.6">
+              <circle class="plan__seat is-window" cx="200" cy="110" r="15"/>
+              <circle class="plan__seat is-window" cx="200" cy="170" r="15"/>
+              <circle class="plan__seat" cx="200" cy="230" r="15"/>
+              <circle class="plan__seat" cx="200" cy="290" r="15"/>
+              <circle class="plan__seat" cx="300" cy="350" r="15"/>
+              <circle class="plan__seat" cx="360" cy="350" r="15"/>
+              <circle class="plan__seat" cx="420" cy="350" r="15"/>
+              <circle class="plan__seat" cx="480" cy="350" r="15"/>
+              <circle class="plan__seat" cx="540" cy="350" r="15"/>
+              <circle class="plan__seat" cx="600" cy="350" r="15"/>
+              <circle class="plan__seat" cx="660" cy="350" r="15"/>
+              <circle class="plan__seat" cx="720" cy="350" r="15"/>
+            </g>
+            <g class="plan__labels" fill="#E9E3D5" font-size="26">
+              <text x="530" y="140" text-anchor="middle">주방</text>
+              <text x="372" y="289" fill="#B9975B" font-size="22">화로</text>
+              <text x="92" y="216" text-anchor="middle" fill="#B9975B" font-size="22" writing-mode="tb">창가</text>
+              <text x="280" y="500" text-anchor="middle" font-size="22">입구</text>
+              <text x="520" y="450" text-anchor="middle" fill-opacity=".7" font-size="22">대기 자리와 옷걸이</text>
+            </g>
+          </svg>
+        </figure>
+        <ul class="space__notes">
+          <li><strong>카운터 열두 자리</strong>한 번에 열두 분만 모시고, 모든 접시를 눈앞에서 마무리합니다.</li>
+          <li><strong>창가 두 자리</strong>기념일로 예약하신 분께 먼저 드립니다.</li>
+          <li><strong>대관</strong>일요일 저녁, 여덟 분부터 받습니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reserve" id="reserve" aria-labelledby="reserve-title">
+    <div class="sec__inner wrap">
+      <div class="sec__head">
+        <h2 class="sec__title" id="reserve-title"><span>자리를</span> <span>맡아 두겠습니다</span></h2>
+        <p class="sec__intro">밝은 달이 뜬 날이 예약할 수 있는 날입니다. 보름 무렵은 일찍 찹니다.</p>
+      </div>
+      <div class="sec__body reserve__body">
+        <div class="cal" id="cal">
+          <div class="cal__head">
+            <button class="cal__nav" type="button" data-dir="-1" aria-label="이전 달" disabled><span aria-hidden="true">‹</span></button>
+            <p class="cal__month" id="cal-month" aria-live="polite">달력을 불러오는 중입니다</p>
+            <button class="cal__nav" type="button" data-dir="1" aria-label="다음 달"><span aria-hidden="true">›</span></button>
+          </div>
+          <div class="cal__grid-wrap"></div>
+          <ul class="cal__legend">
+            <li><span class="cal__key is-open" aria-hidden="true"></span>예약할 수 있는 날</li>
+            <li><span class="cal__key is-off" aria-hidden="true"></span>쉬는 날, 지난 날</li>
+            <li><span class="cal__key is-full" aria-hidden="true"></span>마감</li>
+          </ul>
+          <p class="cal__hint">방향키로 날짜를 옮기고 Enter로 고릅니다. 전화 예약도 받습니다. 02-000-0000</p>
+        </div>
+
+        <form class="book" id="book" novalidate>
+          <div class="book__step" data-step="date">
+            <p class="book__label"><span class="book__num">1</span>날짜</p>
+            <p class="book__date" id="book-date">달력에서 날짜를 골라 주세요.</p>
+          </div>
+          <fieldset class="book__step" data-step="time" disabled>
+            <legend class="book__label"><span class="book__num">2</span>시간</legend>
+            <div class="book__opts">
+              <label class="opt"><input type="radio" name="time" value="18:00"><span class="opt__face"><span class="opt__main">18:00</span><span class="opt__sub" data-seat="18:00">첫 상</span></span></label>
+              <label class="opt"><input type="radio" name="time" value="20:30"><span class="opt__face"><span class="opt__main">20:30</span><span class="opt__sub" data-seat="20:30">둘째 상</span></span></label>
+            </div>
+          </fieldset>
+          <fieldset class="book__step" data-step="party" disabled>
+            <legend class="book__label"><span class="book__num">3</span>인원</legend>
+            <div class="book__opts book__opts--party">
+              <label class="opt opt--sm"><input type="radio" name="party" value="1"><span class="opt__face"><span class="opt__main">한 분</span></span></label>
+              <label class="opt opt--sm"><input type="radio" name="party" value="2"><span class="opt__face"><span class="opt__main">두 분</span></span></label>
+              <label class="opt opt--sm"><input type="radio" name="party" value="3"><span class="opt__face"><span class="opt__main">세 분</span></span></label>
+              <label class="opt opt--sm"><input type="radio" name="party" value="4"><span class="opt__face"><span class="opt__main">네 분</span></span></label>
+            </div>
+            <p class="book__help">한 팀은 네 분까지 모십니다.</p>
+          </fieldset>
+          <fieldset class="book__step" data-step="confirm" disabled>
+            <legend class="book__label"><span class="book__num">4</span>확인</legend>
+            <div class="field">
+              <label for="b-name">예약하시는 분</label>
+              <input id="b-name" name="name" type="text" autocomplete="name" aria-describedby="b-name-err" required>
+              <p class="field__err" id="b-name-err"></p>
+            </div>
+            <div class="field">
+              <label for="b-tel">연락처</label>
+              <input id="b-tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" aria-describedby="b-tel-err" required>
+              <p class="field__err" id="b-tel-err"></p>
+            </div>
+            <div class="field">
+              <label for="b-memo">기념일이나 못 드시는 재료 <span class="field__opt">(선택)</span></label>
+              <textarea id="b-memo" name="memo" rows="2"></textarea>
+            </div>
+          </fieldset>
+          <button class="btn btn--solid book__submit" type="submit"><span>자리 예약하기</span></button>
+          <p class="book__msg" id="book-msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec visit" id="visit" aria-labelledby="visit-title">
+    <div class="sec__inner wrap">
+      <div class="sec__head">
+        <h2 class="sec__title" id="visit-title"><span>오시는 길</span></h2>
+      </div>
+      <div class="sec__body visit__body">
+        <figure class="visit__map" aria-hidden="true">
+          <svg viewBox="0 0 520 400">
+            <g fill="none" stroke="#E9E3D5" stroke-opacity=".16" stroke-width="10" stroke-linecap="round">
+              <path d="M-10 300 C120 282 240 300 530 250"/>
+              <path d="M150 -10 C160 120 140 260 170 410"/>
+            </g>
+            <g fill="none" stroke="#E9E3D5" stroke-opacity=".1" stroke-width="4" stroke-linecap="round">
+              <path d="M-10 120 H530"/>
+              <path d="M330 -10 V410"/>
+              <path d="M170 200 H330"/>
+              <path d="M330 170 C380 170 420 150 470 120"/>
+            </g>
+            <path d="M-10 360 C140 340 300 380 530 330" fill="none" stroke="#B9975B" stroke-opacity=".22" stroke-width="22"/>
+            <g>
+              <rect x="134" y="284" width="44" height="24" rx="12" fill="#1E1E22" stroke="#E9E3D5" stroke-opacity=".5"/>
+              <text x="156" y="301" text-anchor="middle" fill="#E9E3D5" font-size="13">역</text>
+            </g>
+            <path d="M178 290 C230 250 300 215 386 188" fill="none" stroke="#B9975B" stroke-width="1.6" stroke-dasharray="3 7" stroke-linecap="round"/>
+            <circle cx="400" cy="182" r="34" fill="none" stroke="#F4F1E8" stroke-opacity=".25" stroke-width="1"/>
+            <circle cx="400" cy="182" r="17" fill="none" stroke="#F4F1E8" stroke-width="2.4"/>
+            <circle cx="400" cy="182" r="11" fill="#F4F1E8" fill-opacity=".14"/>
+          </svg>
+        </figure>
+        <dl class="visit__info">
+          <div><dt>주소</dt><dd>서울 OO구 가상로 12, 지하 1층</dd></div>
+          <div><dt>찾아오기</dt><dd>가상역 2번 출구에서 걸어서 5분. 골목 끝, 놋쇠 등이 걸린 문입니다.</dd></div>
+          <div><dt>여는 시간</dt><dd>화요일부터 일요일까지, 저녁 18:00와 20:30 두 차례 모십니다. 월요일은 쉽니다.</dd></div>
+          <div><dt>전화</dt><dd><a href="tel:020000000">02-000-0000</a></dd></div>
+          <div><dt>주차</dt><dd>건물 뒤 공영주차장, 두 시간을 대신 내 드립니다.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot__inner wrap">
+    <p class="foot__brand"><span class="foot__word">달무리</span> 예약제 한식 다이닝 바</p>
+    <p class="foot__line">서울 OO구 가상로 12, 지하 1층. 전화 02-000-0000</p>
+    <p class="foot__notice">이 사이트는 첫화면 스튜디오가 만든 가상의 브랜드 컨셉 시안입니다. 실제 업체, 가격, 후기가 아닙니다.</p>
+  </div>
+</footer>
+
+<script src="../../assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="../../assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="../../assets/vendor/gsap/SplitText.min.js" defer></script>
+<script src="../../assets/vendor/gsap/MorphSVGPlugin.min.js" defer></script>
+<script src="../../assets/vendor/gsap/DrawSVGPlugin.min.js" defer></script>
+<script src="../../assets/vendor/lenis/lenis.min.js" defer></script>
+<script src="ink.js" defer></script>
+<script src="main.js" defer></script>
+<script src="../../assets/shared/concept-badge.js" defer></script>
+</body>
+</html>
