@@ -20,3 +20,6 @@ shots/*
 *.log
 .env
 .test/
+
+# studio screenshots made by studio/tools/shoot.mjs
+studio/.shots/

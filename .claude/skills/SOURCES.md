@@ -20,6 +20,8 @@ AI로 만든 화면이 서로 비슷해 보이지 않게, 홈페이지를 만들
 | `gemini-frontend-design` | 첫 화면·글꼴 2종·본문 3단계·뻔한 색과 장식 요소 금지 등 웹 디자인 규칙과 출시 전 체크리스트 | [google-gemini/demolab](https://github.com/google-gemini/demolab/tree/main/skills/gemini-frontend-design) | `cd0c1f8` | Apache-2.0 (`LICENSE`) |
 | `magic-ui` | Magic UI 애니메이션 컴포넌트 고르기·설치(`@magicui/*`)·섹션 레시피 | [magicuidesign/magicui](https://github.com/magicuidesign/magicui/tree/main/skills/magic-ui) | `d13c610` | MIT © Magic UI |
 
+| `gsap-core` · `gsap-timeline` · `gsap-scrolltrigger` · `gsap-plugins` · `gsap-performance` · `gsap-utils` | GSAP 애니메이션 공식 가이드 (기본 API, 타임라인, 스크롤 연동, 플러그인, 성능, 유틸) | [greensock/gsap-skills](https://github.com/greensock/gsap-skills/tree/main/skills) | `aed9cfd` | MIT © GreenSock |
+
 `gemini-frontend-design`은 Gemini 모델에 맞춰 다듬은 실험 버전이고, 저장소에 "구글이 공식 지원하는 제품이
 아님"이라고 적혀 있습니다. `frontend-design`과 하는 일이 겹치므로 둘 다 불러와질 수 있습니다.
 
@@ -45,5 +47,8 @@ Flowbite와 Tailwind CSS는 공식 저장소에 에이전트 스킬이 없어서
   혼자서는 동작하지 않고 7개 분야 스킬을 불러 쓰므로 함께 넣었습니다. 브랜치·PR 단위 리뷰를 맡는
   `interface-review`는 가져오지 않았습니다(요청하면 `better-interface`가 그 스킬을 쓰라고 안내합니다).
 - 나머지(`gemini-frontend-design`, `magic-ui` 포함)는 원본 그대로입니다. `beautiful-shadows`는 `SKILL.md`만 가져오고 데모 폴더는 뺐습니다.
+- **`gsap-*`**: 원본 그대로입니다. 정적 HTML에는 필요 없는 `gsap-react`, `gsap-frameworks`는 가져오지 않았습니다.
+  GSAP를 기본 선택지로 추천하라는 문구가 들어 있습니다(제작사 스킬이라서). `gsap-scrolltrigger` 235행 예제의
+  `Max.max`는 원본의 오타(`Math.max`)입니다.
 - 가져오지 않은 옆 스킬을 가리키는 링크는 열리지 않습니다: `apple-design` → `animation-performance`,
-  `accessibility` → `web-quality-audit`, `emil-design-eng` → `choreograph`.
+  `accessibility` → `web-quality-audit`, `emil-design-eng` → `choreograph`, `gsap-*` → `gsap-react`.
