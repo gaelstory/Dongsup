@@ -14,16 +14,16 @@
   #veil p { margin:0; font-size:14px; letter-spacing:.2em; opacity:.65; }
   #bar { width:180px; height:2px; background:rgba(60,45,30,.15); border-radius:2px; overflow:hidden; }
   #bar i { display:block; height:100%; width:0%; background:#9b6b43; transition:width .3s; }
-  #title { position:fixed; left:clamp(16px,3vw,36px); bottom:clamp(16px,3vh,32px); pointer-events:none; z-index:2;
+  #title { position:fixed; left:calc(clamp(16px,3vw,36px) + env(safe-area-inset-left,0px)); bottom:calc(clamp(16px,3vh,32px) + env(safe-area-inset-bottom,0px)); pointer-events:none; z-index:2;
            text-shadow:0 1px 12px rgba(255,248,235,.7); }
   #title b { display:block; font-weight:400; font-size:clamp(26px,3.2vw,40px); letter-spacing:.16em; }
   #title span { display:block; margin-top:4px; font-size:clamp(11px,1vw,13px); letter-spacing:.22em; opacity:.72; }
-  #ui { position:fixed; right:clamp(16px,2.4vw,30px); bottom:clamp(16px,3vh,30px); display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; z-index:2; }
+  #ui { position:fixed; right:calc(clamp(16px,2.4vw,30px) + env(safe-area-inset-right,0px)); bottom:calc(clamp(16px,3vh,30px) + env(safe-area-inset-bottom,0px)); display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; z-index:2; }
   #ui button { font:inherit; font-size:13px; letter-spacing:.08em; color:var(--ink); background:var(--paper); border:1px solid var(--line);
                padding:8px 14px; border-radius:999px; cursor:pointer; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); transition:background .2s; }
   #ui button:hover { background:rgba(255,251,242,.95); }
   #ui button.on { background:#8a5a36; color:#fbf3e4; border-color:#8a5a36; }
-  #hint { position:fixed; right:clamp(16px,2.4vw,30px); bottom:calc(clamp(16px,3vh,30px) + 44px); font-size:12px; letter-spacing:.08em; opacity:.6;
+  #hint { position:fixed; right:calc(clamp(16px,2.4vw,30px) + env(safe-area-inset-right,0px)); bottom:calc(clamp(16px,3vh,30px) + 44px + env(safe-area-inset-bottom,0px)); font-size:12px; letter-spacing:.08em; opacity:.6;
           text-shadow:0 1px 8px rgba(255,248,235,.9); pointer-events:none; z-index:2; transition:opacity 1s; }
   .hide #title, .hide #ui, .hide #hint { opacity:0; pointer-events:none; }
   @media (max-width:600px){ #hint{display:none} #ui button{padding:7px 11px;font-size:12px} }
@@ -2532,7 +2532,7 @@ function animateCamera(dt) {
 function setupUI() {
   document.getElementById('bHome').onclick = goHome;
   document.getElementById('bTour').onclick = (e) => { tour = !tour; tween = null; tourT = 0; e.currentTarget.classList.toggle('on', tour); };
-  const fs = () => { if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); };
+  const fs = () => { try { const r = !document.fullscreenElement ? document.documentElement.requestFullscreen?.() : document.exitFullscreen?.(); r?.catch?.(() => {}); } catch (e) {} };
   document.getElementById('bFull').onclick = fs;
   addEventListener('keydown', (e) => { if (e.key === 'r' || e.key === 'R') goHome(); if (e.key === 'f' || e.key === 'F') fs(); if (e.key === 'c' || e.key === 'C') document.getElementById('bTour').click(); if (e.key === 'h' || e.key === 'H') document.body.classList.toggle('hide'); });
   renderer.domElement.addEventListener('pointerdown', () => { if (tour) { tour = false; document.getElementById('bTour').classList.remove('on'); } tween = null; });
