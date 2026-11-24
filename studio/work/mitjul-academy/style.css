@@ -521,3 +521,4 @@ select.q__input { appearance: none; -webkit-appearance: none; padding-right: 32p
 .try__ink path, .try__ink circle.ring { fill: none; stroke: var(--red); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
 .try__ink .dot { fill: var(--red); }
 .try__ink text { font-family: var(--hand); font-weight: 700; font-size: 20px; fill: var(--red); }
+.praise__more { display: block; margin-top: 4px; font-size: 20px; line-height: 1.4; }
