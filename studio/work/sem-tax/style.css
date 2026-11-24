@@ -280,6 +280,8 @@ svg { display: block; }
 .won--total { position: absolute; right: calc(var(--cell) - 2px); top: 50%; transform: translateY(-40%); margin: 0; }
 .lrow--total .lc--label { font-family: var(--serif); font-weight: 900 !important; font-size: 18px !important; color: var(--pine); }
 .lrow--total .lc--amt { position: relative; }
+/* the shake leaves a transform on this row (its own stacking layer); keep it above the note so the seal is never clipped */
+.lrow--total { z-index: 3; }
 .dbl {
   /* the red double underline under the total */
   position: absolute; right: var(--cell); bottom: 9px; height: 5px; width: 9.5em;
