@@ -12,6 +12,8 @@ execSync(`node "${path.join(here, 'node_modules/vite/bin/vite.js')}" build --con
 const put = (from, to) => fs.cpSync(path.join(here, from), path.join(dist, to), { recursive: true });
 put('LICENSE', 'LICENSE.txt');
 put('LICENCE-NOTES.md', 'LICENCE-NOTES.md');
+// Windvale (풍眠정): a standalone page, copied as it is
+put('windvale', 'windvale');
 
 // The recordings that are here, so the demo asks for no others: the footsteps always, and the five ambiences
 // only where someone has put them back (MISSING_ASSETS.md).
