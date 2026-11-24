@@ -12,7 +12,7 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
   function safe(fn) {
-    try { fn(); } catch (err) { root.classList.add('no-motion'); unhide(); }
+    try { fn(); } catch (err) { window.__dalmuriErr = (window.__dalmuriErr || []).concat(String(err && err.stack || err)); root.classList.add("no-motion"); unhide(); }
   }
   // 무엇이든 실패하면 숨겨진 채 남은 글이 없도록 되돌린다
   function unhide() {
@@ -24,11 +24,6 @@
     } catch (e) { /* 정적 상태로 둔다 */ }
   }
 
-  safe(initToc);
-  safe(initCourse);
-  safe(initCalendar);
-  safe(initAnchors);
-  if (G) safe(initMotion); else root.classList.add('no-motion');
 
   /* ---------------- 모션 ---------------- */
   function initMotion() {
@@ -156,7 +151,7 @@
 
   var FORMS = {
     dot: { rot: 0, a: [blob(200, 202, 78, 72, 0.2, 0.08, 3), '#D9D1BE'], b: [blob(244, 176, 13, 10, 0.6, 0.2, 9), '#B9975B'], c: [blob(172, 230, 9, 8, 0, 0.2, 5), '#B9975B'] },
-    crescent: { rot: -8, a: [band(200, 206, 80, 30, 150, 390, taper, 7), '#E9E3D5'], b: [blob(206, 204, 12, 11, 0, 0.2, 12), '#C9A85E'], c: [blob(232, 228, 7, 7, 0, 0.2, 4), '#C9A85E'] },
+    crescent: { rot: -8, a: [band(200, 208, 86, 24, 140, 400, taper, 7), '#E9E3D5'], b: [blob(206, 204, 12, 11, 0, 0.2, 12), '#C9A85E'], c: [blob(232, 228, 7, 7, 0, 0.2, 4), '#C9A85E'] },
     three: { rot: 6, a: [blob(158, 184, 60, 28, -0.55, 0.16, 21), '#9C7A4A'], b: [blob(252, 172, 46, 25, 0.45, 0.16, 22), '#8A6A3E'], c: [blob(214, 258, 54, 22, -0.08, 0.16, 23), '#A88654'] },
     curl: { rot: 18, a: [band(204, 200, 58, 30, -70, 205, shrimp, 31), '#D8B48C'], b: [blob(252, 252, 18, 9, 0.5, 0.2, 32), '#E9E3D5'], c: [blob(150, 146, 14, 7, -0.6, 0.2, 33), '#E9E3D5'] },
     ring: { rot: -30, a: [band(200, 200, 90, 15, -80, 255, rim, 41), '#CFC6B0'], b: [blob(200, 200, 34, 32, 0, 0.12, 42), '#E9E3D5'], c: [blob(222, 186, 8, 6, 0.3, 0.2, 43), '#8A9A6A'] },
@@ -366,6 +361,15 @@
     var minMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     var maxMonth = new Date(today.getFullYear(), today.getMonth() + 2, 1);
     var view = new Date(minMonth);
+    // 이번 달에 남은 날이 적으면 다음 달부터 보여 준다
+    (function () {
+      var left = 0, last = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      for (var d = today.getDate() + 1; d <= last; d++) {
+        var t = new Date(today.getFullYear(), today.getMonth(), d);
+        if (t.getDay() !== 1) left++;
+      }
+      if (left < 6) view = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    })();
     var selected = null;
     var focusDate = null;
 
@@ -598,4 +602,10 @@
 
     render(false);
   }
+  /* ---------------- 시작 ---------------- */
+  safe(initToc);
+  safe(initCourse);
+  safe(initCalendar);
+  safe(initAnchors);
+  if (G) safe(initMotion); else root.classList.add('no-motion');
 })();

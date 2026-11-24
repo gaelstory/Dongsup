@@ -47,7 +47,7 @@
     bg: PEARL.slice(), ink: GRAPHITE.slice(), liquid: SCENTS[0].rgb.slice(),
     x: 0, turns: 0, heroW: 1, labelIdx: 0, glyph: 1, spin: 0, sp: -1
   };
-  var heroLiquid = SCENTS[0].rgb.slice();
+  var heroLiquid = SCENTS[0].rgb.slice(), heroLiquidShown = heroLiquid;
   var heroLabel = 0;
   var spinFrom = 0;
 
@@ -97,13 +97,13 @@
   }
 
   function stateOf(k) {
-    if (k < 0) return { bg: PEARL, ink: GRAPHITE, liquid: heroLiquid, x: 0, glyph: 1, label: heroLabel };
+    if (k < 0) return { bg: PEARL, ink: GRAPHITE, liquid: heroLiquidShown, x: 0, glyph: 1, label: heroLabel };
     return { bg: SCENTS[k].bg, ink: SCENTS[k].ink, liquid: SCENTS[k].rgb, x: k % 2 === 0 ? 1 : -1, glyph: 0, label: k };
   }
 
   var last = 0, running = false, settleFrames = 0;
   function frame(now) {
-    var dt = Math.min(0.05, last ? (now - last) / 1000 : 0.016);
+    var dt = Math.min(0.25, last ? (now - last) / 1000 : 0.016);
     last = now;
     var reduce = mqReduce.matches;
     smSp += (rawSp - smSp) * (reduce || isShot ? 1 : 1 - Math.exp(-dt * 7));
@@ -117,6 +117,8 @@
       heroLiquid[c] += reduce ? d : d * k;
     }
     heroLabel = st.spin - spinFrom < 0.5 && spinPending ? spinOld : TEUM.selected;
+    var sc = spinPending ? Math.sin(Math.PI * clamp(st.spin - spinFrom, 0, 1)) * 0.62 : 0;
+    heroLiquidShown = sc > 0 ? mixc(heroLiquid, [0.97, 0.96, 0.94], sc) : heroLiquid;
 
     var s = clamp(smSp, -1, 3);
     var i = Math.min(Math.floor(s), 2), f = s - i;
@@ -126,6 +128,9 @@
     st.bg = mixc(A.bg, B.bg, e);
     st.ink = mixc(A.ink, B.ink, e);
     st.liquid = mixc(A.liquid, B.liquid, e);
+    // mid-turn the liquid clears toward light, so one scent hands over to the next without passing through mud
+    var clear = Math.sin(Math.PI * e) * (A.label === B.label ? 0 : 0.62);
+    if (clear > 0) st.liquid = mixc(st.liquid, [0.97, 0.96, 0.94], clear);
     st.x = mqWide.matches && !reduce ? A.x + (B.x - A.x) * e : 0;
     st.glyph = A.glyph + (B.glyph - A.glyph) * e;
     st.turns = reduce ? 0 : (i + 1) + e;
@@ -426,12 +431,13 @@
     $('#result-name').innerHTML = '<span class="num">' + SCENTS[best].no + '</span>' + SCENTS[best].name;
     $('#result-line').textContent = SCENTS[best].line;
     $('#result-add').dataset.add = String(best);
-    finderBottle.style.setProperty('--finder-liquid', SCENTS[best].hex);
+    finderBottle.style.setProperty('--liquid', SCENTS[best].hex);
+    finderBottle.classList.add('is-filled');
+    $('#finder-cap').textContent = SCENTS[best].no + ' ' + SCENTS[best].name + '을 채웠습니다';
     quiz.classList.add('is-done');
     result.focus();
     if (window.gsap && !mqReduce.matches) {
       gsap.from(result.children, { opacity: 0, y: 14, filter: 'blur(4px)', duration: 0.5, stagger: 0.08, ease: 'power3.out' });
-      gsap.fromTo(finderBottle, { y: 0 }, { keyframes: [{ y: -10, duration: 0.3, ease: 'power2.out' }, { y: 0, duration: 0.5, ease: 'power3.inOut' }] });
     }
     select(best);
     announce('어울리는 향은 ' + SCENTS[best].no + ' ' + SCENTS[best].name + '입니다. 맨 위의 병에도 이 향을 담았습니다.');
@@ -440,7 +446,9 @@
   $('#quiz-reset').addEventListener('click', function () {
     quiz.reset();
     quiz.classList.remove('is-done');
-    finderBottle.style.removeProperty('--finder-liquid');
+    finderBottle.style.removeProperty('--liquid');
+    finderBottle.classList.remove('is-filled');
+    $('#finder-cap').textContent = '아직 비어 있는 병';
     showQ(0);
     $('input', qs[0]).focus();
   });
@@ -510,7 +518,7 @@
           scrollTrigger: { trigger: t, start: 'top 82%', once: true } });
       });
       // the ledger fills in sale order, so 214 of 300 reads as something that happened
-      gsap.from('#batch-grid i:not(.is-left)', { opacity: 0.08, duration: 0.3, stagger: { each: 0.0035 }, ease: 'none',
+      gsap.from('#batch-grid i.is-left', { opacity: 0, scale: 0.9, duration: 0.4, stagger: { each: 0.012, from: 'end' }, ease: 'power2.out',
         scrollTrigger: { trigger: '#batch-grid', start: 'top 80%', once: true } });
       // bottles set down on the shelf line
       gsap.from('.shelf__bottle', { y: -28, opacity: 0, duration: 0.7, stagger: 0.09, ease: 'power3.out',

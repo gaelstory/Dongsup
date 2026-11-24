@@ -395,6 +395,8 @@
         gsap.from('.done-mark path', { drawSVG: '0%', duration: 0.5, delay: 0.1, ease: 'power2.out' });
       }
       done.focus({ preventScroll: true });
+      var ft = form.getBoundingClientRect().top;
+      if (ft < 80) window.scrollTo({ top: window.scrollY + ft - 96, behavior: REDUCED ? 'auto' : 'smooth' });
     });
     $('#book-reset').addEventListener('click', function () {
       form.reset();

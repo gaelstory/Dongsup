@@ -266,9 +266,9 @@ function init() {
     const toY = (frac) => CAMY + ((yTop - frac * Vh) - CAMY) * kz;
     line.position.y = toY(hz);
     line.scale.set(Vw * kz * 1.4, Vh * kz / H, 1);
-    const gh = W > H ? 0.6 : 0.56;
+    const gh = W > H ? 0.6 : 0.5;
     let inkH = gh * Vh;
-    const maxW = Vw * 0.92;
+    const maxW = Vw * (W > H ? 0.92 : 0.84);
     if (inkH * 0.9 > maxW) inkH = maxW / 0.9;
     frameInfo.inkH = inkH * kz;
     frameInfo.centerY = toY(hz - (inkH / Vh) / 2);
@@ -299,7 +299,7 @@ function init() {
   function tick(now) {
     raf = requestAnimationFrame(tick);
     if (!visible) return;
-    const dt = Math.min(0.05, last ? (now - last) / 1000 : 0.016);
+    const dt = Math.min(0.25, last ? (now - last) / 1000 : 0.016);
     last = now;
     const st = TEUM.state;
     const still = reduced() || TEUM.isShot;
@@ -340,7 +340,7 @@ function init() {
     const target = bx * 0.82 - px * 0.32 - (still ? 0 : Math.max(-1.2, Math.min(1.2, vel * 0.12)));
     glyphX += (target - glyphX) * (still ? 1 : 1 - Math.exp(-dt * 5));
     glyph.position.x = glyphX;
-    const gscale = 0.82 + 0.18 * st.glyph;
+    const gscale = W > H ? 0.82 + 0.18 * st.glyph : 1;
     const plane = (frameInfo.inkH / inkFrac) * gscale;
     glyph.scale.set(plane, plane, 1);
     // shrink toward the horizon so the glyph keeps standing on the same line

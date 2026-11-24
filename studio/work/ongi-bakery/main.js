@@ -368,6 +368,9 @@
       var n = bodies.length;
       for (var i = 0; i < n; i++) {
         var b = bodies[i];
+        // Keep the still pile clear of the headline column: most bread settles on the right.
+        if (tier !== 's') b.x = rand() < 0.82 ? W * (0.5 + rand() * 0.47) : W * (0.03 + rand() * 0.4);
+        b.x = Math.min(W - b.r, Math.max(b.r, b.x));
         b.active = true; b.sleep = false; b.spawnAt = 0;
         b.y = H * 0.5 - i * (tier === 's' ? 46 : 64) - b.r;
         b.vx = (rand() - 0.5) * 60; b.vy = 200; b.w = (rand() - 0.5) * 4;
@@ -630,10 +633,10 @@
     function burst() {
       if (!motionOK() || !hasGsap) return;
       confetti.textContent = '';
-      for (var i = 0; i < 44; i++) {
+      for (var i = 0; i < 56; i++) {
         var piece = document.createElement('i');
         piece.style.background = COLORS[i % COLORS.length];
-        if (i % 3 === 0) { piece.style.width = '8px'; piece.style.height = '8px'; piece.style.borderRadius = '50%'; }
+        if (i % 3 === 0) { piece.style.width = '11px'; piece.style.height = '11px'; piece.style.borderRadius = '50%'; }
         confetti.appendChild(piece);
         var ang = Math.random() * Math.PI * 2, dist = 120 + Math.random() * 220;
         var tl = gsap.timeline({ onComplete: (function (p) { return function () { p.remove(); }; })(piece) });

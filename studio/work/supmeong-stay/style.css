@@ -202,13 +202,8 @@ html.is-dusk .btn--primary { background: var(--lamp); color: var(--night); }
 .hero__title .line { display: inline-block; }
 .hero__lead { margin-top: 18px; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.75; color: var(--ink-2); max-width: 26em; }
 .hero__cta { margin-top: 28px; }
-.hero__cue {
-  display: flex; align-items: center; gap: 12px; margin-top: 22px;
-  font: italic 500 17px/1.4 var(--italic); color: var(--ink-2);
-}
-.hero__cue { font-family: var(--serif); font-style: normal; font-size: 14px; }
+.hero__cue { display: flex; align-items: center; gap: 12px; margin-top: 26px; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
 .hero__cue-line { width: 1px; height: 34px; background: currentColor; opacity: .6; flex: none; }
-.hero__copy .hero__cue { margin-top: 26px; }
 
 /* ---------- A day ---------- */
 .day { padding: 14svh var(--gx-r) 0 var(--gx); }

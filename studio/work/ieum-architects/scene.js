@@ -2,7 +2,7 @@
 // six chapters scroll past. main.js publishes chapter progress on window.IEUM; this module turns it
 // into one timeline value t (0..1 load sequence, 1..7 the six chapters) and draws that state.
 import * as THREE from '../../assets/vendor/three/three.module.min.js';
-import { buildModel, ghostSegments, PAL } from './model.js';
+import { buildModel, ghostSegments, sunAt, PAL } from './model.js';
 
 const root = document.documentElement;
 const stage = document.getElementById('stage');
@@ -350,7 +350,6 @@ function init() {
     camera.updateProjectionMatrix();
   }
 
-  const SUN_R = 10.5, SUN_ALT = 56 * DEG;
   let curZoom = 1;
   function apply(t) {
     setPart('gridMinor', tr('gridMinor', t));
@@ -369,8 +368,7 @@ function init() {
     setPart('sunRing', sa > 0.001 ? 1 : 0, sa);
     sunMat.opacity = sa;
     sun.visible = sa > 0.001;
-    const th = Math.PI * tr('sunPos', t);
-    nodes.sunBody.position.set(SUN_R * Math.cos(th), SUN_R * Math.sin(th) * Math.sin(SUN_ALT), SUN_R * Math.sin(th) * Math.cos(SUN_ALT));
+    nodes.sunBody.position.fromArray(sunAt(tr('sunPos', t)));
     setPart('plan', tr('plan', t));
     setPart('frames1', tr('frames1', t));
     setPart('stairs', tr('stairs', t));

@@ -246,7 +246,7 @@
         list.unshift(grp);
       }
       for (j = 0; j < list.length; j++) parts = parts.concat(list[j]);
-      return { parts: parts, tilt: 1, front: false, petal: ['lobe', hue] };
+      return { parts: parts, tilt: 1, front: false, petal: ['lobe', hue], dir: dir };
     },
     ranunculus: function (r, hue, rnd) {
       var parts = rosette(r, hue, rnd, [[12, 1, 'shell', '', 1], [10, 0.84, 'shell', '', 0.96], [9, 0.67, 'round', 'S', 0.92], [7, 0.5, 'round', 'S', 0.86], [5, 0.33, 'round', 'S', 0.8]],
@@ -367,7 +367,7 @@
         if (j < n - 1) parts.push(P('bell', hue, bx, by, Math.PI + dir * 0.1, sz * 0.9, sz, a + 0.1, a + 0.5, { k0: 0.35, st: 'edgeW', lw: 0.5 }));
         else parts.push(P('disc', 'cCream', bx, by, 0, sz * 0.22, sz * 0.26, a + 0.1, a + 0.4, { k0: 0.4 }));
       }
-      return { parts: parts, tilt: 1, front: false, petal: ['bell', hue] };
+      return { parts: parts, tilt: 1, front: false, petal: ['bell', hue], dir: dir };
     }
   };
   var DEFAULT_HUE = { tulip: 'pink', freesia: 'yellow', ranunculus: 'coral', peony: 'blush', dahlia: 'coral', zinnia: 'pink', daisy: 'white', cosmos: 'blush', sunflower: 'yellow', chrysanthemum: 'yellow', anemone: 'white', poppy: 'coral', hydrangea: 'sky', gyp: 'white', lily: 'white' };

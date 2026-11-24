@@ -130,7 +130,7 @@
       var g = grow * (1 - lift * 0.92);
       var t = time;
       var breath = 1 + 0.12 * Math.sin(t * 0.42);
-      var A1 = (mobile ? 15 : 30) * breath, A2 = mobile ? 5 : 10;
+      var A1 = (mobile ? 21 : 30) * breath, A2 = mobile ? 7 : 10;
       var K1 = 4.3, K2 = 9.4;
       var w1 = t * 0.3, w2 = t * 0.19;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

@@ -42,23 +42,32 @@
       <stop offset="1" stop-color="#171717" stop-opacity="0"/>
     </radialGradient>
     <clipPath id="c-body"><path d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z"/></clipPath>
+    <linearGradient id="g-collar" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#9c978f"/><stop offset=".35" stop-color="#e9e4da"/><stop offset=".6" stop-color="#b4aea4"/><stop offset="1" stop-color="#857f77"/>
+    </linearGradient>
     <symbol id="bottle" viewBox="0 0 140 240">
-      <ellipse cx="70" cy="234" rx="78" ry="6" fill="url(#g-shadow)"/>
-      <path d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z" fill="var(--glass, rgba(250,250,248,.34))"/>
+      <ellipse cx="70" cy="233" rx="74" ry="5.5" fill="url(#g-shadow)"/>
+      <path d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z" fill="var(--liquid, #7A4868)" fill-opacity=".1"/>
       <g clip-path="url(#c-body)">
-        <path d="M15 116H125V220C125 224 122 226 118 226H22C18 226 15 224 15 220Z" fill="var(--liquid, #7A4868)" opacity=".9"/>
-        <path d="M15 116H125V220C125 224 122 226 118 226H22C18 226 15 224 15 220Z" fill="url(#g-liquid)"/>
-        <rect x="15" y="114" width="110" height="4" fill="#fff" opacity=".32"/>
+        <g style="transform: scaleY(var(--fill, 1)); transform-origin: 70px 226px; transition: transform 1.1s cubic-bezier(.22,1,.36,1)">
+          <path d="M15 112H125V219C125 223.5 122 226 117.5 226H22.5C18 226 15 223.5 15 219Z" fill="var(--liquid, #7A4868)" fill-opacity=".88"/>
+          <path d="M15 112H125V219C125 223.5 122 226 117.5 226H22.5C18 226 15 223.5 15 219Z" fill="url(#g-liquid)"/>
+          <ellipse cx="70" cy="112" rx="55" ry="2.6" fill="#fff" fill-opacity=".38"/>
+        </g>
+        <rect x="8" y="226" width="124" height="7" fill="#fff" fill-opacity=".35"/>
       </g>
-      <path d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z" fill="url(#g-glass)" stroke="#171717" stroke-opacity=".16" stroke-width="1"/>
-      <rect x="19" y="92" width="5" height="128" rx="2.5" fill="#fff" opacity=".7"/>
-      <rect x="114" y="98" width="3" height="116" rx="1.5" fill="#fff" opacity=".45"/>
-      <rect x="44" y="150" width="52" height="44" rx="1" fill="#FAFAF8" opacity=".92"/>
-      <rect x="62" y="159" width="16" height="2" fill="#171717" opacity=".7"/>
-      <rect x="54" y="171" width="32" height="1.5" fill="#171717" opacity=".45"/>
-      <rect x="58" y="179" width="24" height="1.5" fill="#171717" opacity=".45"/>
-      <rect x="46" y="55" width="48" height="9" rx="1" fill="#8f8c86"/>
+      <path d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z" fill="url(#g-glass)" stroke="#171717" stroke-opacity=".22" stroke-width=".8"/>
+      <path d="M17 98C18 86 26 76 38 71" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2.2" stroke-linecap="round"/>
+      <rect x="18" y="104" width="4.5" height="114" rx="2.25" fill="#fff" fill-opacity=".72"/>
+      <rect x="117" y="106" width="2.4" height="106" rx="1.2" fill="#fff" fill-opacity=".5"/>
+      <rect x="45" y="150" width="50" height="40" rx=".8" fill="#FAFAF8" fill-opacity=".95"/>
+      <rect x="45.5" y="150.5" width="49" height="39" rx=".8" fill="none" stroke="#171717" stroke-opacity=".14"/>
+      <text x="70" y="168" text-anchor="middle" font-family="Noto Serif KR, serif" font-weight="600" font-size="13" fill="#171717">틈</text>
+      <rect x="62" y="173" width="16" height="1" fill="var(--liquid, #7A4868)"/>
+      <rect x="56" y="179" width="28" height="1.2" fill="#171717" fill-opacity=".4"/>
+      <rect x="46" y="55" width="48" height="9" rx="1" fill="url(#g-collar)"/>
       <rect x="40" y="2" width="60" height="55" rx="5" fill="url(#g-cap)"/>
+      <rect x="44" y="5" width="3" height="49" rx="1.5" fill="#fff" fill-opacity=".12"/>
     </symbol>
   </defs>
 </svg>
@@ -96,11 +105,11 @@
             <clipPath id="c-poster-body"><path transform="translate(230 118) scale(1)" d="M8 100C8 78 26 63 50 63H90C114 63 132 78 132 100V223C132 229 128 233 122 233H18C12 233 8 229 8 223Z"/></clipPath>
           </defs>
           <line class="poster__line" id="poster-line" x1="-1600" x2="2200" y1="337" y2="337"/>
-          <text class="poster__glyph" x="300" y="330" text-anchor="middle">틈</text>
+          <text class="poster__glyph" x="300" y="318" text-anchor="middle">틈</text>
           <g clip-path="url(#c-poster-body)">
             <rect x="230" y="150" width="140" height="240" fill="var(--stage-bg, #E8E6E2)"/>
             <line class="poster__line" x1="200" x2="400" y1="341" y2="341"/>
-            <text class="poster__glyph poster__glyph--bent" x="300" y="330" text-anchor="middle" transform="translate(300 0) scale(-1.38 1) translate(-300 0)">틈</text>
+            <text class="poster__glyph poster__glyph--bent" x="300" y="318" text-anchor="middle" transform="translate(300 0) scale(-1.38 1) translate(-300 0)">틈</text>
           </g>
           <use href="#bottle" x="230" y="118" width="140" height="240" style="--liquid: var(--scent-hero, #7A4868); --glass: rgba(250,250,248,.22)"/>
         </svg>
@@ -221,12 +230,12 @@
   <section class="story" id="story" aria-labelledby="story-title">
     <div class="wrap story__grid">
       <div class="story__lead">
-        <h2 class="h2" id="story-title">한 번에 300병, 그 이상은 만들지 않습니다</h2>
+        <h2 class="h2" id="story-title">한 번에 300병, <span class="nowrap">그 이상은</span> 만들지 않습니다</h2>
         <p>틈은 서울 OO구의 열두 평짜리 조향실에서 시작했습니다. 원료를 섞고 여섯 주 동안 재운 뒤, 거름종이로 걸러 한 병씩 손으로 채웁니다. 기계로 서두르면 향이 덜 익습니다. 그래서 한 번에 300병, 그 이상은 만들지 않습니다.</p>
         <p>병 바닥에는 배치 번호와 순번을 손으로 적어 둡니다. 같은 이름의 향이라도 계절마다 조금씩 다르게 익는다는 것을, 숨기지 않고 기록해 두고 싶었습니다.</p>
       </div>
       <figure class="batch" aria-labelledby="batch-cap">
-        <div class="batch__grid" id="batch-grid" role="img" aria-label="이번 배치 300병 가운데 214병이 이미 주인을 찾았고 86병이 남아 있습니다."></div>
+        <div class="batch__grid" id="batch-grid" role="img" aria-label="이번 배치 300병 가운데 214병은 이미 주인을 찾았고 86병이 남아 있습니다."></div>
         <figcaption class="batch__cap" id="batch-cap">
           <span>이번 배치 <span class="num">26-11</span>, No.1 무화과</span>
           <span><span class="num">300</span>병 중 <strong class="num">86</strong>병 남음</span>
@@ -250,11 +259,17 @@
           <button type="button" class="chip" data-time-scent="2" aria-pressed="false"><i style="--c:#5C7A4A" aria-hidden="true"></i>이끼</button>
           <button type="button" class="chip" data-time-scent="3" aria-pressed="false"><i style="--c:#6C8EB4" aria-hidden="true"></i>비</button>
         </div>
+        <svg class="tnotes__rings" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="ring ring--0" cx="100" cy="100" r="30"/>
+            <circle class="ring ring--1" cx="100" cy="100" r="54"/>
+            <circle class="ring ring--2" cx="100" cy="100" r="80"/>
+            <circle class="ring__core" cx="100" cy="100" r="6"/>
+          </svg>
       </div>
       <div class="time__body">
         <div class="tslider" id="tslider">
           <div class="tslider__ticks" aria-hidden="true">
-            <span style="--p:0">0분</span><span style="--p:.0833">30분</span><span style="--p:.3333">2시간</span><span style="--p:.6667">4시간</span><span style="--p:1">6시간</span>
+            <span style="--p:0">0분</span><span style="--p:.2887">30분</span><span style="--p:.5774">2시간</span><span style="--p:.8165">4시간</span><span style="--p:1">6시간</span>
           </div>
           <div class="tslider__track" id="tslider-track">
             <div class="tslider__fill" id="tslider-fill"></div>
@@ -280,12 +295,7 @@
               <p class="tnote__desc">살결의 온도와 섞여 저녁까지 가까이 남습니다.</p>
             </div>
           </div>
-          <svg class="tnotes__rings" viewBox="0 0 200 200" aria-hidden="true">
-            <circle class="ring ring--0" cx="100" cy="100" r="30"/>
-            <circle class="ring ring--1" cx="100" cy="100" r="54"/>
-            <circle class="ring ring--2" cx="100" cy="100" r="80"/>
-            <circle class="ring__core" cx="100" cy="100" r="6"/>
-          </svg>
+
         </div>
       </div>
     </div>
@@ -296,9 +306,10 @@
       <div class="finder__side">
         <h2 class="h2" id="finder-title">어떤 향이 어울릴까요</h2>
         <p>세 가지 질문에 답하면 네 병 가운데 하나를 골라 드립니다. 고른 향은 맨 위의 병에도 담깁니다.</p>
-        <div class="finder__bottle" aria-hidden="true">
-          <svg viewBox="0 0 140 240"><use href="#bottle" class="finder__use" style="--liquid: var(--finder-liquid, #B9B5AE)"/></svg>
-        </div>
+        <figure class="finder__bottle">
+          <svg viewBox="0 0 140 240" aria-hidden="true"><use href="#bottle"/></svg>
+          <figcaption class="finder__cap" id="finder-cap">아직 비어 있는 병</figcaption>
+        </figure>
       </div>
       <form class="quiz" id="quiz" novalidate>
         <p class="quiz__step" id="quiz-step" aria-live="polite"><span class="num">1</span> / <span class="num">3</span></p>

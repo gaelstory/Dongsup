@@ -234,7 +234,8 @@
     setInterval(placeNow, 60000);
 
     function scrollToMinute(m, smooth) {
-      var x = px('--label') + m * (hourW() / 60) - vp.clientWidth * 0.32;
+      var label = px('--label');
+      var x = label + m * (hourW() / 60) - (label + (vp.clientWidth - label) * 0.4);
       vp.scrollTo({ left: Math.max(0, x), behavior: smooth && !calm() ? 'smooth' : 'auto' });
     }
     scrollToMinute(nowMins, false);

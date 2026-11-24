@@ -109,7 +109,7 @@
     <div class="course__pin">
       <div class="sec__inner wrap course__inner">
         <div class="sec__head">
-          <h2 class="sec__title" id="course-title"><span>가을,</span> <span>아홉 접시</span></h2>
+          <h2 class="sec__title" id="course-title"><span>가을<span class="punct">,</span></span> <span>아홉 접시</span></h2>
           <p class="sec__intro">시월부터 동짓달까지 내는 가을 차림입니다. 그날 들어온 재료에 따라 접시가 조금씩 바뀝니다.</p>
         </div>
 
@@ -127,14 +127,15 @@
                   <stop offset="1" stop-color="#000" stop-opacity="0"/>
                 </radialGradient>
                 <filter id="brush" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
-                  <feTurbulence type="fractalNoise" baseFrequency=".032" numOctaves="3" seed="11" result="warp"/>
-                  <feDisplacementMap in="SourceGraphic" in2="warp" scale="16" xChannelSelector="R" yChannelSelector="G" result="shape"/>
-                  <feTurbulence type="fractalNoise" baseFrequency=".008 .19" numOctaves="2" seed="4" result="streak"/>
-                  <feColorMatrix in="streak" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3.2 0 0 0 2.75" result="dry"/>
+                  <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="3" seed="11" result="warp"/>
+                  <feDisplacementMap in="SourceGraphic" in2="warp" scale="11" xChannelSelector="R" yChannelSelector="G" result="shape"/>
+                  <feTurbulence type="fractalNoise" baseFrequency=".006 .16" numOctaves="2" seed="4" result="streak"/>
+                  <feColorMatrix in="streak" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.4 0 0 0 2.3" result="dry"/>
                   <feComposite in="shape" in2="dry" operator="in" result="brushed"/>
-                  <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="1" seed="2" result="fine"/>
-                  <feColorMatrix in="fine" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 1.25" result="pores"/>
-                  <feComposite in="brushed" in2="pores" operator="in"/>
+                  <feGaussianBlur in="shape" stdDeviation="7" result="soft"/>
+                  <feOffset in="soft" dx="3" dy="8" result="drop"/>
+                  <feColorMatrix in="drop" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .6 0" result="shadow"/>
+                  <feMerge><feMergeNode in="shadow"/><feMergeNode in="brushed"/></feMerge>
                 </filter>
               </defs>
               <ellipse cx="206" cy="214" rx="186" ry="182" fill="url(#plateShadow)"/>
@@ -275,8 +276,6 @@
             <g class="plan__kitchen" fill="none" stroke="#B9975B" stroke-opacity=".75" stroke-width="1.6">
               <path class="plan__line" d="M300 40 V250 H760"/>
               <path class="plan__line" d="M330 40 V220 H760" stroke-opacity=".35"/>
-              <path class="plan__line" d="M380 100 H700" stroke-opacity=".25" stroke-dasharray="6 8"/>
-              <path class="plan__line" d="M380 160 H700" stroke-opacity=".25" stroke-dasharray="6 8"/>
             </g>
             <g class="plan__counter" fill="none" stroke="#F4F1E8" stroke-width="2">
               <path class="plan__line" d="M240 40 V310 H760"/>
@@ -342,7 +341,7 @@
         <form class="book" id="book" novalidate>
           <div class="book__step" data-step="date">
             <p class="book__label"><span class="book__num">1</span>날짜</p>
-            <p class="book__date" id="book-date">달력에서 날짜를 골라 주세요.</p>
+            <p class="book__date is-empty" id="book-date">달력에서 날짜를 골라 주세요.</p>
           </div>
           <fieldset class="book__step" data-step="time" disabled>
             <legend class="book__label"><span class="book__num">2</span>시간</legend>
@@ -405,9 +404,11 @@
             </g>
             <path d="M-10 360 C140 340 300 380 530 330" fill="none" stroke="#B9975B" stroke-opacity=".22" stroke-width="22"/>
             <g>
-              <rect x="134" y="284" width="44" height="24" rx="12" fill="#1E1E22" stroke="#E9E3D5" stroke-opacity=".5"/>
-              <text x="156" y="301" text-anchor="middle" fill="#E9E3D5" font-size="13">역</text>
+              <rect x="120" y="282" width="72" height="28" rx="14" fill="#1E1E22" stroke="#E9E3D5" stroke-opacity=".5"/>
+              <text x="156" y="301" text-anchor="middle" fill="#E9E3D5" font-size="14">가상역</text>
             </g>
+            <text x="470" y="236" text-anchor="end" fill="#E9E3D5" fill-opacity=".45" font-size="13">가상로</text>
+            <text x="446" y="160" fill="#F4F1E8" font-size="20" class="map__name">달무리</text>
             <path d="M178 290 C230 250 300 215 386 188" fill="none" stroke="#B9975B" stroke-width="1.6" stroke-dasharray="3 7" stroke-linecap="round"/>
             <circle cx="400" cy="182" r="34" fill="none" stroke="#F4F1E8" stroke-opacity=".25" stroke-width="1"/>
             <circle cx="400" cy="182" r="17" fill="none" stroke="#F4F1E8" stroke-width="2.4"/>

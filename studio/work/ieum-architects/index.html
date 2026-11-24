@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>이음 건축사사무소 | 컨셉 시안 · 첫화면 스튜디오</title>
+<meta name="description" content="단독주택과 작은 상가를 설계하는 이음 건축사사무소. 땅을 읽는 일부터 준공까지 한 팀이 끝까지 함께합니다.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1740B0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231740B0'/%3E%3Cpath d='M8 23V9h9M24 9v14h-9' fill='none' stroke='%23F2F5FC' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='2.6' fill='%23FF7A1F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;600&family=Orbit&display=swap">
+<link rel="stylesheet" href="style.css">
+<script>
+  // Start-hidden states are only allowed once we know scripts run (see style.css "html.js").
+  document.documentElement.classList.add('js');
+  if (/[?&]shot=1/.test(location.search)) document.documentElement.classList.add('is-shot');
+</script>
+</head>
+<body>
+<a class="skip" href="#main">본문 바로가기</a>
+
+<header class="site-header">
+  <div class="site-header__in">
+    <a class="logo" href="#top" aria-label="이음 건축사사무소, 맨 위로">
+      <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 25V7h10M25 7v18H15"/><circle cx="16" cy="16" r="2.4"/></svg>
+      <span class="logo__name">이음</span>
+      <span class="logo__sub">건축사사무소</span>
+    </a>
+    <nav class="nav" aria-label="주요 메뉴">
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-panel">
+        <span class="nav__icon" aria-hidden="true"><i></i><i></i></span>
+        <span class="sr-only" data-label>메뉴 열기</span>
+      </button>
+      <div class="nav__panel" id="nav-panel">
+        <ul class="nav__list">
+          <li><a href="#story">짓는 과정</a></li>
+          <li><a href="#projects">지은 집들</a></li>
+          <li><a href="#process">설계 과정</a></li>
+          <li><a href="#estimate">설계비</a></li>
+          <li class="nav__cta"><a class="btn btn--primary" href="#contact">설계 상담 신청</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="story" id="story" aria-labelledby="hero-title">
+    <div class="hero" id="top">
+      <div class="hero__in">
+        <h1 class="hero__title" id="hero-title"><span class="hl"><span>선 하나에서</span></span> <span class="hl"><span>집 한 채까지</span></span></h1>
+        <svg class="hero__rule" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true">
+          <path class="hero__rule-line" d="M1 9H399"/>
+          <path class="hero__rule-tick" d="M1 1v16M399 1v16"/>
+        </svg>
+        <p class="hero__lead">주택과 작은 상가를 설계합니다. 땅을 읽는 일부터 준공까지 한 팀이 끝까지 함께합니다.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#contact">설계 상담 신청</a>
+          <a class="text-link" href="#projects">지은 집 보기</a>
+        </div>
+        <p class="hero__hint"><span class="hero__hint-line" aria-hidden="true"></span>스크롤하면 집이 한 단계씩 지어집니다</p>
+      </div>
+    </div>
+
+    <figure class="stage" id="stage" role="img" aria-label="청사진 위에 선으로 그린 2층 박공지붕 주택의 등각 투상도. 대지, 해의 길, 1층과 2층, 지붕, 가구 배치가 차례로 그려집니다.">
+      <div class="sheet" aria-hidden="true">
+        <span class="sheet__frame"></span>
+        <span class="sheet__zones sheet__zones--x"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i></span>
+        <span class="sheet__zones sheet__zones--y"><i>A</i><i>B</i><i>C</i><i>D</i></span>
+      </div>
+      <img class="stage__fallback" src="fallback.svg" alt="" width="844" height="639" decoding="async">
+      <canvas class="stage__canvas" aria-hidden="true"></canvas>
+      <div class="stage__labels" aria-hidden="true">
+        <span class="tag tag--dim" data-tag="w9"><span>9,000</span></span>
+        <span class="tag tag--dim" data-tag="d7"><span>7,000</span></span>
+        <span class="tag tag--room" data-tag="living"><span>1층 거실</span></span>
+        <span class="tag tag--room" data-tag="bedroom"><span>2층 침실</span></span>
+        <span class="tag tag--dim tag--desk" data-tag="person"><span>1,700</span></span>
+        <span class="tag tag--note tag--desk" data-tag="sunApex"><span>남쪽 하늘의 해 길</span></span>
+        <span class="tag tag--note tag--desk" data-tag="route"><span>현관에서 부엌까지 3.5m</span></span>
+        <span class="tag tag--note tag--desk" data-tag="roof"><span>지붕 경사 35°</span></span>
+      </div>
+      <div class="stage__hud" aria-hidden="true">
+        <div class="scalebar">
+          <span class="scalebar__bar"></span>
+          <span class="scalebar__mark" data-m="0">0</span>
+          <span class="scalebar__mark" data-m="1">1</span>
+          <span class="scalebar__mark" data-m="2">2</span>
+          <span class="scalebar__mark" data-m="5">5m</span>
+        </div>
+        <div class="titleblock">
+          <p class="titleblock__firm">이음 건축사사무소</p>
+          <div class="titleblock__row"><span>도면명</span><b data-sheet-name>계획 개요</b></div>
+          <div class="titleblock__row"><span>도면번호</span><b data-sheet-no>A-00</b></div>
+          <div class="titleblock__row titleblock__row--scale"><span>축척</span><b>1:100</b></div>
+          <div class="titleblock__ticks"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+    </figure>
+
+    <div class="chapters">
+      <h2 class="sr-only">집 한 채가 지어지는 여섯 단계</h2>
+      <article class="chapter" data-ch="1">
+        <div class="chapter__in">
+          <p class="chapter__sheet"><span>A-01</span>대지 분석도</p>
+          <h3 class="chapter__title">땅을 읽습니다</h3>
+          <p class="chapter__body">설계는 땅에서 시작합니다. 해가 어디서 떠서 어디로 지는지, 바람이 어느 쪽에서 오는지, 옆집 창이 어디를 보는지부터 확인합니다.</p>
+          <p class="chapter__note">현장 답사, 측량, 일조 분석까지 2주</p>
+        </div>
+      </article>
+      <article class="chapter" data-ch="2">
+        <div class="chapter__in">
+          <p class="chapter__sheet"><span>A-02</span>1층 평면도</p>
+          <h3 class="chapter__title">선을 긋습니다</h3>
+          <p class="chapter__body">가족이 하루를 보내는 순서대로 평면을 그립니다. 현관에서 부엌까지 몇 걸음인지, 마당 쪽 큰 창이 남쪽을 보는지, 선 하나마다 이유를 적어 둡니다.</p>
+          <p class="chapter__note">평면 스케치 세 가지 안을 놓고 함께 고릅니다</p>
+        </div>
+      </article>
+      <article class="chapter" data-ch="3">
+        <div class="chapter__in">
+          <p class="chapter__sheet"><span>A-03</span>단면도</p>
+          <h3 class="chapter__title">층을 올립니다</h3>
+          <p class="chapter__body">아이 방과 부부 침실은 2층에 올리고, 계단은 식탁에서 보이는 자리에 둡니다. 구조와 단열은 이 단계에서 시공사와 함께 검토합니다.</p>
+          <p class="chapter__note">구조 검토와 에너지 계획 포함</p>
+        </div>
+      </article>
+      <article class="chapter" data-ch="4">
+        <div class="chapter__in">
+          <p class="chapter__sheet"><span>A-04</span>지붕 평면도</p>
+          <h3 class="chapter__title">지붕을 덮습니다</h3>
+          <p class="chapter__body">박공지붕의 기울기는 눈과 비, 그리고 다락의 높이로 정합니다. 마당에는 여름 그늘이 될 나무 자리를 미리 비워 둡니다.</p>
+          <p class="chapter__note">지붕 경사 35도, 처마 550mm</p>
+        </div>
+      </article>
+      <article class="chapter" data-ch="5">
+        <div class="chapter__in">
+          <p class="chapter__sheet"><span>A-05</span>분해 조감도</p>
+          <h3 class="chapter__title">안을 채웁니다</h3>
+          <p class="chapter__body">식탁과 소파, 침대를 실제 크기로 놓아 보고 동선을 확인합니다. 장 본 짐을 들고 현관에서 부엌까지 가는 길은 짧을수록 좋습니다.</p>
+          <p class="chapter__note">가구 배치도와 동선도를 함께 드립니다</p>
+        </div>
+      </article>
+      <article class="chapter" data-ch="6">
+        <div class="chapter__in">
+          <p class="chapter__sheet"><span>A-06</span>완성 조감도</p>
+          <h3 class="chapter__title">삶이 들어옵니다</h3>
+          <p class="chapter__body">준공 날 창에 불이 켜지는 순간까지 함께합니다. 입주한 뒤 1년 동안은 계절이 바뀔 때마다 집을 다시 살펴봅니다.</p>
+          <p class="chapter__note">입주 후 1년, 계절마다 하자 점검</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="projects" id="projects" aria-labelledby="projects-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title" id="projects-title">지은 집들</h2>
+        <p class="sec-lead">단독주택 다섯 채와 작은 가게 두 곳입니다. 행에 마우스를 올리면 평면도가 그려지고, 이름을 누르면 설명이 펼쳐집니다.</p>
+      </div>
+      <table class="ptable">
+        <caption class="sr-only">이음 건축사사무소가 설계한 프로젝트 7건의 연도, 이름, 위치, 용도, 면적</caption>
+        <thead>
+          <tr><th scope="col" class="c-year">연도</th><th scope="col" class="c-name">이름</th><th scope="col" class="c-loc">위치</th><th scope="col" class="c-use">용도</th><th scope="col" class="c-area">면적</th></tr>
+        </thead>
+        <tbody>
+<!--rows-->
+        </tbody>
+      </table>
+    </div>
+    <div class="plan-float" aria-hidden="true">
+      <div class="plan-float__head"><b data-float-name></b><span>1층 평면도</span></div>
+      <div class="plan-float__svg"></div>
+    </div>
+  </section>
+
+  <section class="process" id="process" aria-labelledby="process-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title" id="process-title">도면이 집이 되기까지</h2>
+        <p class="sec-lead">첫 상담부터 준공까지 보통 열 달에서 열두 달이 걸립니다. 단계마다 무엇을 정하는지 미리 알려 드리고, 정한 것은 다시 묻지 않습니다.</p>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <div class="step__dim"><span class="step__line" aria-hidden="true"></span><span class="step__dur">1~2주</span></div>
+          <p class="step__no" aria-hidden="true">1</p>
+          <h3 class="step__title">상담</h3>
+          <p class="step__body">땅과 예산, 가족의 하루를 듣습니다. 대지 주소가 있으면 지을 수 있는 규모를 먼저 짚어 드립니다.</p>
+        </li>
+        <li class="step">
+          <div class="step__dim"><span class="step__line" aria-hidden="true"></span><span class="step__dur">6~8주</span></div>
+          <p class="step__no" aria-hidden="true">2</p>
+          <h3 class="step__title">기획 설계</h3>
+          <p class="step__body">평면과 모형으로 집의 큰 틀을 정합니다. 세 가지 안을 펼쳐 놓고 함께 고릅니다.</p>
+        </li>
+        <li class="step">
+          <div class="step__dim"><span class="step__line" aria-hidden="true"></span><span class="step__dur">8~10주</span></div>
+          <p class="step__no" aria-hidden="true">3</p>
+          <h3 class="step__title">실시 설계</h3>
+          <p class="step__body">현장에서 쓰는 도면 120여 장을 그립니다. 창호와 단열, 마감 재료를 이때 확정합니다.</p>
+        </li>
+        <li class="step">
+          <div class="step__dim"><span class="step__line" aria-hidden="true"></span><span class="step__dur">5~7개월</span></div>
+          <p class="step__no" aria-hidden="true">4</p>
+          <h3 class="step__title">시공</h3>
+          <p class="step__body">매주 현장에 나가 도면대로 지어지는지 확인합니다. 감리 일지는 건축주와 같이 봅니다.</p>
+        </li>
+        <li class="step">
+          <div class="step__dim"><span class="step__line" aria-hidden="true"></span><span class="step__dur">입주 후 1년</span></div>
+          <p class="step__no" aria-hidden="true">5</p>
+          <h3 class="step__title">준공</h3>
+          <p class="step__body">사용승인과 입주를 돕고, 1년 동안 계절마다 하자를 점검합니다.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="estimate" id="estimate" aria-labelledby="estimate-title">
+    <div class="wrap estimate__grid">
+      <div class="estimate__copy">
+        <h2 class="sec-title" id="estimate-title">우리 집은 어느 정도일까요</h2>
+        <p class="sec-lead">평수를 옮기면 평면 예시와 설계비 범위가 함께 바뀝니다. 대지와 용도에 따라 달라지니 대략의 감으로 봐 주세요.</p>
+        <div class="range">
+          <div class="range__head">
+            <label class="range__label" for="pyeong">연면적</label>
+            <output class="range__out" id="pyeong-out" for="pyeong"><b data-py>32</b>평 <span data-m2>105.8㎡</span></output>
+          </div>
+          <input class="range__input" type="range" id="pyeong" name="pyeong" min="20" max="60" step="1" value="32" aria-valuetext="32평, 약 105.8제곱미터">
+          <div class="range__scale" aria-hidden="true"><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span></div>
+        </div>
+        <dl class="estimate__result">
+          <div><dt>설계비 예시</dt><dd data-fee>1,270만~1,590만 원</dd></div>
+          <div><dt>설계 기간</dt><dd data-period>약 4개월</dd></div>
+          <div><dt>방 구성</dt><dd data-rooms>방 3개, 욕실 2개</dd></div>
+        </dl>
+        <p class="estimate__note">예시 금액이며 부가세는 별도입니다. 구조 설계와 인테리어 설계는 따로 견적을 드립니다.</p>
+        <a class="btn btn--ink" href="#contact" data-prefill>설계 상담 신청</a>
+      </div>
+      <figure class="estimate__plan">
+        <svg class="eplan" viewBox="0 0 400 300" role="img" aria-labelledby="eplan-cap">
+          <g class="eplan__dims" aria-hidden="true">
+            <path class="eplan__dim" data-dim="w" d=""/>
+            <path class="eplan__dim" data-dim="h" d=""/>
+            <text class="eplan__dimtext" data-dimtext="w" x="0" y="0"></text>
+            <text class="eplan__dimtext" data-dimtext="h" x="0" y="0"></text>
+          </g>
+          <g class="eplan__rooms" aria-hidden="true"></g>
+          <rect class="eplan__outer" x="0" y="0" width="0" height="0"/>
+        </svg>
+        <figcaption id="eplan-cap" class="eplan__cap" data-cap>32평 단층 기준 평면 예시. 거실, 주방, 방 3개, 욕실 2개</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap contact__grid">
+      <div class="contact__copy">
+        <h2 class="sec-title" id="contact-title">땅이 있다면, 이야기부터 시작합니다</h2>
+        <p class="sec-lead">대지 주소나 지번만 알려 주셔도 첫 상담에서 일조와 지을 수 있는 면적을 대략 짚어 드립니다. 상담은 무료이고 한 시간쯤 걸립니다.</p>
+        <ul class="contact__info">
+          <li><span>전화</span><a href="tel:020000000">02-000-0000</a></li>
+          <li><span>이메일</span><a href="mailto:hello@ieum-arch.example">hello@ieum-arch.example</a></li>
+          <li><span>사무소</span>서울 OO구 가상로 12, 3층</li>
+          <li><span>상담 시간</span>평일 오전 10시부터 오후 6시</li>
+        </ul>
+        <figure class="quote">
+          <blockquote><p>땅 사진 몇 장만 들고 갔는데, 첫 미팅에서 해가 드는 방향부터 그려 주셨어요. 그 그림이 지금 우리 집 거실 창이 됐습니다.</p></blockquote>
+          <figcaption>연희동 세 식구 집 건축주</figcaption>
+        </figure>
+      </div>
+      <form class="form" id="consult" novalidate>
+        <div class="field">
+          <label for="f-name">이름</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
+          <p class="field__err" id="f-name-err"></p>
+        </div>
+        <div class="field">
+          <label for="f-tel">연락처</label>
+          <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000" required aria-describedby="f-tel-err">
+          <p class="field__err" id="f-tel-err"></p>
+        </div>
+        <fieldset class="field field--choice">
+          <legend>어떤 설계가 필요하세요</legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="kind" value="단독주택 신축" checked><span>단독주택 신축</span></label>
+            <label class="choice"><input type="radio" name="kind" value="상가와 카페"><span>상가와 카페</span></label>
+            <label class="choice"><input type="radio" name="kind" value="리모델링"><span>리모델링</span></label>
+            <label class="choice"><input type="radio" name="kind" value="아직 모르겠어요"><span>아직 모르겠어요</span></label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="f-site">대지 위치 <span class="field__opt">(선택)</span></label>
+          <input id="f-site" name="site" type="text" placeholder="예: 경기 양평군 OO리">
+        </div>
+        <div class="field">
+          <label for="f-msg">하고 싶은 이야기 <span class="field__opt">(선택)</span></label>
+          <textarea id="f-msg" name="msg" rows="4" placeholder="가족 구성, 원하는 평수, 예산처럼 떠오르는 것을 적어 주세요."></textarea>
+        </div>
+        <button class="btn btn--primary btn--wide" type="submit">설계 상담 신청</button>
+        <div class="form__result" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <a class="logo logo--footer" href="#top" aria-label="이음 건축사사무소, 맨 위로">
+        <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 25V7h10M25 7v18H15"/><circle cx="16" cy="16" r="2.4"/></svg>
+        <span class="logo__name">이음</span>
+        <span class="logo__sub">건축사사무소</span>
+      </a>
+      <p class="footer__line">주택과 작은 상가를 설계합니다.</p>
+    </div>
+    <div class="footer__info">
+      <p>서울 OO구 가상로 12, 3층</p>
+      <p>전화 02-000-0000</p>
+      <p>hello@ieum-arch.example</p>
+      <p>건축사사무소 신고번호 제0000-000호 (가상)</p>
+    </div>
+    <p class="footer__copy">© 2026 이음 건축사사무소</p>
+    <p class="footer__note">이 사이트는 첫화면 스튜디오가 만든 가상의 브랜드 컨셉 시안입니다. 실제 업체, 가격, 후기가 아닙니다.</p>
+  </div>
+</footer>
+
+<script src="../../assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="../../assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="../../assets/vendor/gsap/DrawSVGPlugin.min.js" defer></script>
+<script src="main.js" defer></script>
+<script type="module" src="scene.js"></script>
+<script src="../../assets/shared/concept-badge.js" defer></script>
+</body>
+</html>

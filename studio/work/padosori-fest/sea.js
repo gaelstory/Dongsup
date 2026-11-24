@@ -171,7 +171,7 @@
         var depth = 0.28 + 0.72 * t;
         var base = H * (0.1 + 0.84 * Math.pow(t, 1.35));
         base += (H * 0.985 - base) * sink;
-        var A = H * 0.36 * depth * calm;
+        var A = H * 0.44 * depth * calm;
         var band = 0;
         if (bins) {
           var b = bins[2 + Math.round((i / (N - 1)) * 40)] / 255;

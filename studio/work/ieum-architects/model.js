@@ -19,6 +19,13 @@ const SLOPE = Math.atan(RISE / 3.1);
 
 export const LEVELS = { F0, F1, H1, H2, RISE, SLOPE };
 
+// Sun position along its day arc, s = 0 sunrise .. 1 sunset.
+export const SUN = { R: 13, ALT: (58 * Math.PI) / 180 };
+export function sunAt(s) {
+  const th = s * Math.PI, r = SUN.R * Math.sin(th);
+  return [r * Math.cos(SUN.ALT), r * Math.sin(SUN.ALT), -SUN.R * Math.cos(th)];
+}
+
 export function buildModel(THREE, opts = {}) {
   const small = !!opts.small;
   const parts = [];
@@ -37,8 +44,8 @@ export function buildModel(THREE, opts = {}) {
     roof: { parent: null },
     roofL: { parent: 'roof' },
     roofR: { parent: 'roof' },
-    treeA: { parent: null, x: 7.4, z: 4.6 },
-    treeB: { parent: null, x: -7.0, z: -1.2 },
+    treeA: { parent: null, x: 5.4, z: -5.0 },
+    treeB: { parent: null, x: -8.0, z: 2.8 },
     ghost: { parent: null },
   };
 
@@ -158,42 +165,33 @@ export function buildModel(THREE, opts = {}) {
     const lot = [], road = [], north = [];
     poly(lot, [[-10, 0, -7], [10, 0, -7], [10, 0, 7.6], [-10, 0, 7.6]], true);
     road.push(-14, 0, 8.6, 14, 0, 8.6, -14, 0, 12.6, 14, 0, 12.6);
-    const nx = -7.8, nz = 5.0;
-    ring(north, nx, 0.01, nz, 0.85, 36);
-    seg(north, [nx, 0.01, nz + 0.85], [nx, 0.01, nz - 1.35]);
-    seg(north, [nx, 0.01, nz - 1.35], [nx - 0.32, 0.01, nz - 0.55]);
-    seg(north, [nx, 0.01, nz - 1.35], [nx + 0.32, 0.01, nz - 0.55]);
-    // the letter N, drawn on the ground north of the arrow
-    const lz = nz - 1.75;
-    poly(north, [[nx - 0.22, 0.01, lz + 0.0], [nx - 0.22, 0.01, lz - 0.5], [nx + 0.22, 0.01, lz + 0.0], [nx + 0.22, 0.01, lz - 0.5]], false);
+    // north points to -x, so the court and the big glass face south (+x)
+    const nx = 8.8, nz = 1.6, N = (u, v) => [nx - v, 0.01, nz - u];
+    ring(north, nx, 0.01, nz, 0.72, 36);
+    seg(north, N(0, -0.72), N(0, 1.15));
+    seg(north, N(0, 1.15), N(-0.28, 0.45));
+    seg(north, N(0, 1.15), N(0.28, 0.45));
+    poly(north, [N(-0.2, 1.4), N(-0.2, 1.85), N(0.2, 1.4), N(0.2, 1.85)], false);
     parts.push({ id: 'lot', group: 'site', segs: lot, color: 'tracing', alpha: 0.75, width: 1.2, order: 'seq', spread: 0.6, tip: true, dash: 2, depth: true });
     parts.push({ id: 'road', group: 'site', segs: road, color: 'tracing', alpha: 0.5, width: 1, order: 'seq', spread: 0.5, tip: false, fade: [10, 15], depth: true });
     parts.push({ id: 'north', group: 'site', segs: north, color: 'chalk', alpha: 0.9, width: 1.3, order: 'seq', spread: 1.5, tip: true, depth: true });
     anchors.north = { group: 'site', p: [nx, 0, nz] };
   }
 
-  // ---------- sun path ----------
+  // ---------- sun path: rises in the east (-z), peaks over the south (+x), sets in the west (+z) ----------
   {
-    const arc = [], R = 10.5, alt = (56 * Math.PI) / 180, pts = [];
-    for (let i = 0; i <= 64; i++) {
-      const th = (i / 64) * Math.PI;
-      pts.push([R * Math.cos(th), R * Math.sin(th) * Math.sin(alt), R * Math.sin(th) * Math.cos(alt)]);
-    }
+    const arc = [], pts = [];
+    for (let i = 0; i <= 72; i++) pts.push(sunAt(i / 72));
     poly(arc, pts, false);
-    // short hour ticks along the arc
-    for (let k = 1; k < 8; k++) {
-      const th = (k / 8) * Math.PI;
-      const p = [R * Math.cos(th), R * Math.sin(th) * Math.sin(alt), R * Math.sin(th) * Math.cos(alt)];
-      const q = [p[0] * 0.95, p[1] * 0.95, p[2] * 0.95];
-      seg(arc, p, q);
-    }
+    for (let k = 1; k < 8; k++) { const p = sunAt(k / 8); seg(arc, p, [p[0] * 0.95, p[1] * 0.95, p[2] * 0.95]); }
     parts.push({ id: 'sunArc', group: 'sun', segs: arc, color: 'marker', alpha: 0.95, width: 1.4, order: 'seq', spread: 0.2, tip: false, dash: 1, depth: true });
     const disc = [];
-    ring(disc, 0, 0, 0, 0.62, 28, 'xy');
-    ring(disc, 0, 0, 0, 0.62, 28, 'yz');
+    ring(disc, 0, 0, 0, 0.72, 28, 'xy');
+    ring(disc, 0, 0, 0, 0.72, 28, 'yz');
     parts.push({ id: 'sunRing', group: 'sunBody', segs: disc, color: 'marker', alpha: 1, width: 1.2, order: 'seq', spread: 0, tip: false, depth: false });
     groups.sunBody = { parent: 'sun' };
-    anchors.sunApex = { group: 'sun', p: [0, R * Math.sin(alt) + 0.9, R * Math.cos(alt)] };
+    const top = sunAt(0.5);
+    anchors.sunApex = { group: 'sun', p: [top[0], top[1] + 1.4, top[2]] };
   }
 
   // ---------- foundation ----------
@@ -305,7 +303,7 @@ export function buildModel(THREE, opts = {}) {
   }
 
   // ---------- trees: wire crown + trunk ----------
-  for (const [id, r, cy, trunk] of [['treeA', 1.55, 3.7, 2.3], ['treeB', 1.15, 2.9, 1.8]]) {
+  for (const [id, r, cy, trunk] of [['treeA', 1.35, 3.5, 2.2], ['treeB', 1.15, 2.9, 1.8]]) {
     const s = [];
     const lat = 5, lon = 8;
     for (let i = 1; i < lat; i++) {

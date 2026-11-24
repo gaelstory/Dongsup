@@ -262,7 +262,7 @@ button, input, textarea { font: inherit; color: inherit; }
 }
 .hero__col { display: block; }
 .hero__col + .hero__col { margin-top: 1.6em; }
-.punct { display: inline-block; text-orientation: upright; transform: translate(.42em, -.52em); }
+.punct { display: inline-block; text-orientation: upright; transform: translate(.3em, -.78em); }
 .hero__aside {
   max-width: 15em;
   padding-top: .4em;
@@ -303,7 +303,7 @@ button, input, textarea { font: inherit; color: inherit; }
   position: relative;
   z-index: 1;
   background: var(--black);
-  padding-block: clamp(96px, 14vh, 180px);
+  padding-block: clamp(80px, 11vh, 150px);
 }
 .sec__inner { position: relative; }
 .sec__head {
@@ -356,7 +356,7 @@ button, input, textarea { font: inherit; color: inherit; }
 /* ---------- 철학 ---------- */
 .philo { padding-top: clamp(120px, 22vh, 260px); }
 .philo__body { display: grid; gap: 64px; }
-.philo__text { max-width: 30em; display: grid; gap: 1.4em; }
+.philo__text { max-width: 30em; display: grid; gap: 1.4em; align-content: start; }
 .philo__text p { text-wrap: pretty; }
 .philo__lead { font-family: var(--f-title); font-size: var(--t-h3); line-height: 1.5; color: var(--moon); }
 .philo__sign { display: flex; align-items: center; gap: 12px; margin-top: .6em; color: var(--dim); font-size: var(--t-small); }
@@ -583,7 +583,8 @@ button, input, textarea { font: inherit; color: inherit; }
 }
 .cal__day:not([aria-disabled="true"]):active { transform: scale(.96); }
 .cal__moon { width: 26px; height: 26px; overflow: visible; }
-.cal__moon .m-base { fill: #26262B; }
+.cal__moon .m-base { fill: #222226; }
+.cal__day.is-open .m-base { fill: #34322D; stroke: var(--brass); stroke-opacity: .55; stroke-width: 1; }
 .cal__moon .m-lit { fill: var(--moon); }
 .cal__moon .m-halo { fill: none; stroke: var(--brass); stroke-width: 1.4; opacity: 0; transform-origin: 13px 13px; transform: scale(.8); transition: opacity 260ms ease, transform 420ms var(--ease-out); }
 .cal__num { font-size: var(--t-cap); line-height: 1; font-variant-numeric: tabular-nums; }
@@ -681,6 +682,7 @@ td[aria-selected="true"] .cal__moon .m-halo { opacity: 1; transform: scale(1); }
 .visit__body { display: grid; gap: 40px; }
 .visit__map svg { width: 100%; height: auto; display: block; }
 .visit__map text { font-family: var(--f-body); }
+.visit__map .map__name { font-family: var(--f-title); letter-spacing: .08em; }
 .visit__info { display: grid; max-width: 32em; }
 .visit__info > div { display: grid; grid-template-columns: 6.5em 1fr; gap: 12px; padding: 16px 0; border-top: 1px solid var(--line-soft); }
 .visit__info dt { color: var(--brass); font-size: var(--t-small); padding-top: .15em; }

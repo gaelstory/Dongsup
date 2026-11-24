@@ -161,8 +161,8 @@
   <defs>
     <filter id="f-ink" x="-10%" y="-10%" width="120%" height="120%">
       <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="d"/>
-      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -7 5.3" result="holes"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -8 6.3" result="holes"/>
       <feComposite in="d" in2="holes" operator="in"/>
     </filter>
   </defs>
@@ -170,8 +170,8 @@
     <g filter="url(#f-ink)" fill="none" stroke="#E3002B" opacity=".92">
       <circle cx="50" cy="50" r="43" stroke-width="5"/>
       <circle cx="50" cy="50" r="35" stroke-width="2"/>
-      <text x="50" y="58" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="25" fill="#E3002B" stroke="none">온기</text>
-      <path d="M33 70h34" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="50" y="60" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="29" fill="#E3002B" stroke="none">온기</text>
+      <path d="M34 72h32" stroke-width="3" stroke-linecap="round"/>
       <path d="M38 28c4-5 20-5 24 0" stroke-width="2.5" stroke-linecap="round"/>
     </g>
   </symbol>
@@ -348,7 +348,7 @@
   <section class="story" id="story" aria-labelledby="story-title">
     <div class="awning awning--milk" aria-hidden="true"></div>
     <div class="wrap">
-      <h2 id="story-title" class="story__title">밀가루, 버터, 시간. 세 가지는 아끼지 않습니다</h2>
+      <h2 id="story-title" class="story__title"><span class="ln">밀가루, 버터, 시간.</span> <span class="ln"><span class="nw">세 가지는</span> 아끼지 않습니다</span></h2>
       <div class="story__grid">
         <div class="story__text">
           <p>온기 베이커리는 골목 끝 열두 평 가게에서 둘이 굽습니다. 새벽 다섯 시에 오븐을 켜고, 첫 판이 나오는 일곱 시 반에 문을 엽니다.</p>
@@ -426,28 +426,28 @@
             <rect x="290" y="236" width="120" height="72" rx="18"/>
             <rect x="434" y="236" width="102" height="72" rx="18"/>
           </g>
-          <rect x="290" y="140" width="98" height="72" rx="18" fill="#BDE8D3" stroke="#45220F" stroke-width="3"/>
-          <g fill="#45220F" font-family="'Gowun Dodum', sans-serif" font-size="17">
-            <text x="339" y="182" text-anchor="middle">작은 공원</text>
+          <rect x="290" y="140" width="128" height="72" rx="18" fill="#BDE8D3" stroke="#45220F" stroke-width="3"/>
+          <rect x="442" y="140" width="94" height="72" rx="18" fill="#FFEFB0" stroke="#45220F" stroke-width="3"/>
+          <g fill="#45220F" font-family="'Gowun Dodum', sans-serif" font-size="22">
+            <text x="354" y="184" text-anchor="middle">작은 공원</text>
           </g>
           <path d="M0 332H560V404H0Z" fill="#FFFFFF" stroke="#45220F" stroke-width="3"/>
           <path d="M20 368H540" stroke="#45220F" stroke-width="2" stroke-dasharray="14 12" opacity=".35"/>
-          <text x="488" y="396" font-family="'Gowun Dodum', sans-serif" font-size="18" fill="#45220F" text-anchor="middle">가상로</text>
+          <text x="490" y="397" font-family="'Gowun Dodum', sans-serif" font-size="22" fill="#45220F" text-anchor="middle">가상로</text>
           <path d="M232 332V40" stroke="#FFFFFF" stroke-width="40" stroke-linecap="round"/>
           <path d="M212 332V44M252 332V44" stroke="#45220F" stroke-width="3" stroke-linecap="round"/>
-          <text x="0" y="0" transform="translate(232 288) rotate(-90)" font-family="'Gowun Dodum', sans-serif" font-size="16" fill="#45220F">꽃집 골목</text>
           <path class="map__route" d="M78 386H232V84" fill="none" stroke="#E3002B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 13"/>
           <g transform="translate(64 386)">
             <circle r="20" fill="#E3002B" stroke="#45220F" stroke-width="3"/>
             <text y="7" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="20" fill="#FFF9EA">2</text>
           </g>
-          <text x="96" y="430" font-family="'Gowun Dodum', sans-serif" font-size="17" fill="#45220F">가상역 2번 출구</text>
+          <text x="96" y="432" font-family="'Gowun Dodum', sans-serif" font-size="22" fill="#45220F">가상역 2번 출구</text>
           <g transform="translate(270 300)">
             <circle r="16" fill="#BDE8D3" stroke="#45220F" stroke-width="3"/>
             <path d="M0-7a4 4 0 1 1 0 8a4 4 0 1 1 0-8M-7 0a4 4 0 1 1 8 0a4 4 0 1 1-8 0M0 7a4 4 0 1 1 0-8M7 0a4 4 0 1 1-8 0" fill="#E3002B" stroke="none"/>
             <circle r="2.6" fill="#FFD84D"/>
           </g>
-          <text x="294" y="292" font-family="'Gowun Dodum', sans-serif" font-size="17" fill="#45220F">꽃집</text>
+          <text x="294" y="294" font-family="'Gowun Dodum', sans-serif" font-size="22" fill="#45220F">꽃집</text>
           <g class="map__shop" transform="translate(164 22)">
             <rect x="20" y="22" width="96" height="58" rx="6" fill="#FFF9EA" stroke="#45220F" stroke-width="3"/>
             <rect x="30" y="44" width="34" height="28" rx="4" fill="#BDE8D3" stroke="#45220F" stroke-width="2.5"/>
@@ -458,13 +458,13 @@
             <path d="M12 8H124V24H12Z" fill="none" stroke="#45220F" stroke-width="3" stroke-linejoin="round"/>
           </g>
           <g transform="translate(334 64)">
-            <rect x="-6" y="-26" width="186" height="44" rx="22" fill="#45220F"/>
-            <text x="87" y="4" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="20" fill="#FFD84D">온기 베이커리</text>
+            <rect x="-6" y="-28" width="196" height="50" rx="25" fill="#45220F"/>
+            <text x="92" y="5" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="23" fill="#FFD84D">온기 베이커리</text>
             <path d="M-6 -4L-52 -4" stroke="#45220F" stroke-width="3" stroke-dasharray="3 6"/>
           </g>
           <g transform="translate(100 236) rotate(-6)">
-            <rect x="-62" y="-22" width="124" height="44" rx="22" fill="#FFD84D" stroke="#45220F" stroke-width="3"/>
-            <text y="7" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="19" fill="#45220F">걸어서 4분</text>
+            <rect x="-72" y="-25" width="144" height="50" rx="25" fill="#FFD84D" stroke="#45220F" stroke-width="3"/>
+            <text y="8" text-anchor="middle" font-family="'Bagel Fat One', sans-serif" font-size="22" fill="#45220F">걸어서 4분</text>
           </g>
         </svg>
       </figure>

@@ -185,7 +185,7 @@ svg { display: block; }
   transform: translateX(-50%);
 }
 .poster { overflow: visible; }
-.poster__glyph { font-family: var(--serif); font-weight: 600; font-size: 282px; fill: var(--poster-ink, #171717); }
+.poster__glyph { font-family: var(--serif); font-weight: 600; font-size: 262px; fill: var(--poster-ink, #171717); }
 .poster__line { stroke: #171717; stroke-opacity: 0.42; stroke-width: 1; vector-effect: non-scaling-stroke; }
 .poster__glyph--bent { fill: #171717; opacity: 0.82; }
 .stage__canvas { display: block; opacity: 0; transition: opacity 360ms ease; }
@@ -307,7 +307,7 @@ svg { display: block; }
     align-items: center; max-width: 1440px; margin-inline: auto;
   }
   .scent__text { width: min(36vw, 32rem); }
-  .scent:nth-child(odd of .scent) { justify-content: flex-end; }
+  .scent[data-index="1"], .scent[data-index="3"] { justify-content: flex-end; }
   .scent__drawing { right: -12px; top: 0; width: 120px; height: 90px; }
   .scent__name { font-size: clamp(80px, 8.4vw, 132px); }
 }
@@ -341,20 +341,19 @@ svg { display: block; }
 .story__lead p { margin-top: 20px; color: var(--ink-2); max-width: 34em; }
 .batch { margin: 0; }
 .batch__grid {
-  display: grid; grid-template-columns: repeat(20, 1fr); gap: 7px 5px;
-  max-width: 520px;
+  display: grid; grid-template-columns: repeat(25, 1fr); gap: 6px 4px;
+  max-width: 440px;
 }
 .batch__grid i {
-  display: block; aspect-ratio: 1 / 2.3; border-radius: 2px 2px 1.5px 1.5px;
-  background: var(--graphite);
-  position: relative;
+  display: block; aspect-ratio: 1 / 2.1; border-radius: 3px 3px 1.5px 1.5px;
+  background: rgba(23, 23, 23, 0.16);
+  position: relative; margin-top: 3px;
 }
-.batch__grid i.is-left { background: transparent; box-shadow: inset 0 0 0 1px rgba(122, 72, 104, 0.75); }
 .batch__grid i::before {
-  content: ""; position: absolute; left: 30%; right: 30%; top: -3px; height: 3px; background: inherit; border-radius: 1px 1px 0 0;
+  content: ""; position: absolute; left: 28%; right: 28%; top: -3px; height: 3px; background: inherit; border-radius: 1px 1px 0 0;
 }
-.batch__grid i.is-left::before { background: rgba(122, 72, 104, 0.75); }
-.batch__cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; margin-top: 18px; font-size: 15px; color: var(--ink-2); max-width: 520px; }
+.batch__grid i.is-left { background: var(--fig); }
+.batch__cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; margin-top: 20px; font-size: 15px; color: var(--ink-2); max-width: 440px; }
 .batch__cap strong { font-weight: 400; color: var(--fig); font-size: 17px; }
 .steps { display: grid; gap: 0; border-top: 1px solid var(--line); counter-reset: none; }
 .steps li {
@@ -369,14 +368,15 @@ svg { display: block; }
   .story { padding: 152px 0 160px; }
   .story__grid { grid-template-columns: 1.05fr 1fr; gap: 72px 96px; align-items: start; }
   .story__lead { grid-column: 1; }
-  .batch { grid-column: 2; grid-row: 1 / span 2; align-self: center; justify-self: end; width: 100%; max-width: 520px; }
+  .batch { grid-column: 2; grid-row: 1 / span 2; align-self: center; justify-self: end; width: 100%; max-width: 440px; }
   .steps { grid-column: 1; }
 }
 @media (max-width: 480px) {
   .steps li { grid-template-columns: 1.6em 1fr; }
   .steps__d { grid-column: 2; }
-  .batch__grid { gap: 5px 4px; }
+  .batch__grid { gap: 5px 3px; }
 }
+.nowrap { white-space: nowrap; }
 
 /* time slider */
 .time { margin-top: 112px; display: grid; gap: 40px; }
@@ -395,7 +395,7 @@ svg { display: block; }
 }
 .time__body {
   display: grid; grid-template-columns: auto 1fr; gap: 20px 28px; align-items: stretch;
-  min-height: 420px;
+  min-height: 400px;
 }
 .tslider { position: relative; display: grid; grid-template-columns: auto 44px; gap: 10px; height: 100%; min-height: 380px; }
 .tslider__ticks { position: relative; width: 3.6em; }
@@ -430,7 +430,7 @@ svg { display: block; }
 .tnote__label { font-size: 15px; color: var(--ink-2); }
 .tnote__text { font-size: clamp(28px, 7vw, 46px); line-height: 1.25; letter-spacing: -0.03em; font-weight: 200; margin-top: 4px; }
 .tnote__desc { margin-top: 12px; color: var(--ink-2); font-size: 16px; max-width: 24em; }
-.tnotes__rings { position: absolute; right: -60px; bottom: -40px; width: 260px; height: 260px; z-index: 0; }
+.tnotes__rings { display: block; width: 200px; height: 200px; margin-top: 28px; overflow: visible; }
 .ring { fill: none; stroke: var(--tc, var(--fig)); stroke-width: 1; transform-origin: 100px 100px; }
 .ring__core { fill: var(--tc, var(--fig)); }
 /* without JS every phase stacks readably */
@@ -439,19 +439,20 @@ html:not(.js) .tnote { grid-area: auto; }
 
 @media (min-width: 900px) {
   .time { grid-template-columns: 1fr 1.35fr; gap: 96px; align-items: start; margin-top: 160px; }
-  .time__body { min-height: 460px; gap: 48px; }
+  .time__body { min-height: 440px; gap: 48px; }
   .tslider { min-height: 440px; }
   .tnotes { padding-top: 40px; }
-  .tnotes__rings { right: 0; bottom: 0; width: 320px; height: 320px; }
+  .tnotes__rings { width: 300px; height: 300px; margin-top: 48px; margin-left: -12px; }
 }
 
 /* ---------- finder (quiz) ---------- */
 .finder { position: relative; z-index: 4; background: var(--pearl); padding: 96px 0 104px; }
 .finder__grid { display: grid; gap: 40px; }
 .finder__side p { margin-top: 18px; color: var(--ink-2); max-width: 28em; }
-.finder__bottle { width: 112px; margin-top: 32px; }
+.finder__bottle { width: 120px; margin: 36px 0 0; --fill: 0.04; --liquid: #B9B5AE; }
+.finder__bottle.is-filled { --fill: 1; }
 .finder__bottle svg { width: 100%; height: auto; overflow: visible; }
-.finder__use { transition: --finder-liquid 600ms ease; }
+.finder__cap { margin-top: 14px; font-size: 14px; color: var(--ink-2); white-space: nowrap; }
 .quiz { position: relative; min-height: 420px; }
 .quiz__step { font-size: 15px; color: var(--ink-2); margin-bottom: 14px; }
 .quiz__step .num { font-size: 17px; color: var(--ink); }
@@ -498,6 +499,7 @@ html:not(.js) .quiz__nav { display: none; }
   .finder { padding: 152px 0 160px; }
   .finder__grid { grid-template-columns: 1fr 1.25fr; gap: 96px; }
   .finder__bottle { width: 150px; margin-top: 56px; }
+  .finder__cap { font-size: 15px; }
   .q__opts { grid-template-columns: 1fr 1fr; }
 }
 
