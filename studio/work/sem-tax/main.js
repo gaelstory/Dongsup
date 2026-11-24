@@ -333,7 +333,7 @@
     for (var d = 1; d <= dim; d++) {
       var left = ((d - 1) / (dim - 1)) * 100;
       var wd = new Date(tY, m, d).getDay();
-      if (d === 1 || d % 5 === 0 || d === dim) ruler += '<span class="ruler__lab" style="left:' + left + '%">' + d + '</span>';
+      if (d === 1 || (d % 5 === 0 && dim - d > 2) || d === dim) ruler += '<span class="ruler__lab' + (d === 1 ? ' is-first' : d === dim ? ' is-last' : '') + '" style="left:' + left + '%">' + d + '</span>';
       ruler += '<span class="ruler__tick' + (wd === 0 || wd === 6 ? ' ruler__tick--w' : '') + '" style="left:' + left + '%"></span>';
     }
     items.forEach(function (x) { if (!x.firm) ruler += '<span class="ruler__due" style="left:' + ((x.d - 1) / (dim - 1)) * 100 + '%"></span>'; });

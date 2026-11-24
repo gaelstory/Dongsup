@@ -56,15 +56,16 @@
     });
     root.classList.add('pen-ready');
     var t = 0;
-    window.addEventListener('resize', function () {
-      clearTimeout(t);
-      t = setTimeout(function () {
-        inks.forEach(function (k) {
-          k.paths = drawKeyInk(k.ann);
-          if (hasGsap && window.DrawSVGPlugin) gsap.set(k.paths, { drawSVG: k.done || !k.armed ? '100%' : '0%' });
-        });
-      }, 150);
-    });
+    function remeasure() {
+      inks.forEach(function (k) {
+        k.paths = drawKeyInk(k.ann);
+        if (hasGsap && window.DrawSVGPlugin) gsap.set(k.paths, { drawSVG: k.done || !k.armed ? '100%' : '0%' });
+      });
+    }
+    window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(remeasure, 150); });
+    // web fonts can land after the first measurement and move every line break
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', function () { clearTimeout(t); t = setTimeout(remeasure, 60); });
+    window.addEventListener('load', remeasure);
   }
 
   /* ---------------- correction toggle ---------------- */
@@ -296,10 +297,14 @@
         var text = note ? note.getAttribute('data-text') : '';
         k.armed = true;
         gsap.set(k.paths, { drawSVG: '0%' });
-        if (note && window.TextPlugin) note.textContent = '';
+        if (note && window.TextPlugin) { note.textContent = ''; note.parentElement.classList.add('is-empty'); }
         ScrollTrigger.create({
           trigger: k.ann, start: 'top 78%', once: true,
           onEnter: function () {
+            // measure again right before drawing: line breaks may have changed since load
+            k.paths = drawKeyInk(k.ann);
+            gsap.set(k.paths, { drawSVG: '0%' });
+            if (note) note.parentElement.classList.remove('is-empty');
             var t2 = gsap.timeline({ onComplete: function () { k.done = true; } });
             t2.to(k.paths, { drawSVG: '100%', duration: 0.5, ease: 'power2.inOut', stagger: 0.32 });
             if (note && window.TextPlugin) t2.to(note, { text: { value: text }, duration: Math.min(0.9, 0.06 * text.length + 0.2), ease: 'none' }, '-=0.1');
@@ -324,7 +329,7 @@
       }
       return function () {
         inks.forEach(function (k) { k.armed = false; k.done = true; });
-        $$('.note__ink').forEach(function (n) { if (n.getAttribute('data-text')) n.textContent = n.getAttribute('data-text'); });
+        $$('.note__ink').forEach(function (n) { if (n.getAttribute('data-text')) n.textContent = n.getAttribute('data-text'); n.parentElement.classList.remove('is-empty'); });
       };
     });
   }

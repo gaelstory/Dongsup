@@ -256,6 +256,9 @@ const CAMS = {
   mob: { pos: [-70, 90, 100], tgt: [12, 21, -12], fov: 50, hfov: 25 },
 };
 
+// Layout is shared with the build-time generator of the illustrated (no-WebGL) fallback.
+export const LAYOUT = { LAND_Y, LAND, PIERS, TOWERS, OFFICES, WAREHOUSES, TERMINAL, CONTROL, PARKS, ROAD_PTS, BRIDGE_PTS, MAINLAND, CAMS };
+
 // ---------------------------------------------------------------------------------------------
 
 export function createHarbor(canvasEl, opts = {}) {

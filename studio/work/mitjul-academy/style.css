@@ -106,6 +106,7 @@ html.menu-open body { overflow: hidden; }
 .sheet__head > span { display: flex; align-items: center; gap: 6px; padding: 12px 12px 10px; border-left: 1px solid var(--rule); }
 .sheet__head > span:first-child { padding-left: 0; border-left: 0; margin-right: auto; color: var(--pencil); font-weight: 800; }
 .sheet__head b { color: var(--pencil); font-weight: 800; }
+.sheet__field--name { display: none !important; }
 .sheet__head i { display: inline-block; width: 64px; height: 1px; background: rgba(38, 38, 38, 0.45); margin-top: 8px; }
 
 /* ---------- hero: the headline copied onto 원고지 ---------- */
@@ -128,7 +129,7 @@ html.menu-open body { overflow: hidden; }
 .ms__ch {
   position: absolute; left: calc((var(--c) - 1) * var(--u)); top: calc((var(--r) - 1) * (var(--u) + var(--g)));
   width: var(--u); height: var(--u); display: grid; place-items: center;
-  font-size: calc(var(--u) * 0.66); font-weight: 800; line-height: 1;
+  font-size: calc(var(--u) * 0.72); font-weight: 800; line-height: 1;
 }
 html.intro .ms__ch, html.intro .marks .pen, html.intro .ms-memo__ink { opacity: 0; }
 .marks { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
@@ -137,7 +138,7 @@ html.intro .ms__ch, html.intro .marks .pen, html.intro .ms-memo__ink { opacity: 
 .pen--wave { stroke-width: 8; }
 .ms-memo {
   position: absolute; left: 31%; top: 64.5%;
-  font: 700 7.4cqw/1 var(--hand); color: var(--red);
+  font: 700 8.2cqw/1 var(--hand); color: var(--red);
   transform: rotate(-4deg); transform-origin: left center; white-space: nowrap;
 }
 .hero__foot { margin-top: 34px; display: grid; gap: 22px; justify-items: start; }
@@ -173,6 +174,7 @@ html.pen-ready .key { text-decoration: none; }
   background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 21C12 20 6 15 5 4M2 8l3-5 4 4' fill='none' stroke='%23DE3327' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 .note--blue { color: var(--blue); }
+.note.is-empty::before { opacity: 0; }
 .note--blue::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 21C12 20 6 15 5 4M2 8l3-5 4 4' fill='none' stroke='%231D4ED8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 .hl {
   background-image: linear-gradient(var(--lime), var(--lime)); background-repeat: no-repeat;
@@ -291,7 +293,7 @@ html.tabs-ready .panel__title { display: none; }
 .fee__foot { margin-top: 14px; font-size: 15px; color: var(--muted); }
 
 /* teacher */
-.teacher__body { display: grid; gap: 28px; }
+.teacher__body { display: grid; gap: 28px; margin-top: 8px; }
 .facts { margin-top: 24px; display: grid; border-top: 1px solid var(--rule); }
 .facts div { display: grid; grid-template-columns: 6.5em 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--rule); }
 .facts dt { font-weight: 800; font-size: 15px; }
@@ -389,6 +391,7 @@ select.q__input { appearance: none; -webkit-appearance: none; padding-right: 32p
   .sheet__clip { left: 92px; }
   .sheet__head { font-size: 14px; }
   .sheet__head i { width: 110px; }
+  .sheet__field--name { display: flex !important; }
   .hero { padding-top: 34px; }
   .hero__q { font-size: 16px; }
   .ms { grid-template-columns: repeat(20, minmax(0, 1fr)); row-gap: 2.5cqw; --u: 5cqw; --g: 2.5cqw; }
@@ -397,7 +400,7 @@ select.q__input { appearance: none; -webkit-appearance: none; padding-right: 32p
   .ms__cell:nth-of-type(n + 51) { display: block; }
   .marks--d { display: block; }
   .marks--m { display: none; }
-  .ms-memo { left: 51%; top: 52%; font-size: 3.9cqw; }
+  .ms-memo { left: 51%; top: 51%; font-size: 4.5cqw; }
   .hero__foot { grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 28px; margin-top: 40px; }
   .hero__lead { font-size: 18px; }
   .part { padding-top: 72px; margin-top: 64px; }
@@ -422,13 +425,14 @@ select.q__input { appearance: none; -webkit-appearance: none; padding-right: 32p
     background: var(--red); color: #fff; font-size: 15px; font-weight: 800; text-decoration: none;
     transition: background-color 160ms ease, transform 160ms var(--ease);
   }
-  .topbar__cta { font-size: 19px; padding: 0 18px; }
+  .topbar__cta { background: #C42B20; }
   .topbar__cta:active { transform: scale(0.97); }
   .menu-btn { display: none; }
 }
 @media (hover: hover) and (pointer: fine) {
   .nav__list a:hover::after { clip-path: inset(0 0 0 0); }
-  .btn--red:hover, .topbar__cta:hover { background: #C92C21; }
+  .btn--red:hover { background: #C92C21; }
+  .topbar__cta:hover { background: #A82015; }
   .switch:hover { background: #fff; }
   .footer__info a:hover { color: var(--pencil); }
 }
