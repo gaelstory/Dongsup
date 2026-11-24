@@ -252,7 +252,7 @@ const BRIDGE_PTS = [[30, LAND_Y, -29.6], [28.6, 1.8, -36], [28, 4.0, -44], [31, 
 const MAINLAND = [[24, -70], [34, -66], [56, -66], [90, -70], [140, -76], [230, -86], [420, -110], [1400, -300], [1400, -1600], [700, -1600], [230, -360], [120, -210], [62, -118], [36, -92], [26, -80]];
 
 const CAMS = {
-  desk: { pos: [-59, 29, 65.5], tgt: [-3, 5, -16.6], fov: 32 },
+  desk: { pos: [-70, 34, 78], tgt: [-3.5, 7.5, -15], fov: 35 },
   mob: { pos: [-70, 90, 100], tgt: [12, 21, -12], fov: 50, hfov: 25 },
 };
 
@@ -415,6 +415,17 @@ export function createHarbor(canvasEl, opts = {}) {
     lights.add(x, 0.6, z, warm ? 0xffd2a0 : 0xa9d8ff, 0.2 + r() * 0.25, 0.45 + r() * 0.45);
   }
   for (let x = 27; x < 300; x += 2.2 + r() * 2) lights.add(x, 0.7, coastZ(x) - 1.2, 0xffd9ae, 0.26, 0.8);
+  // far shore at the foot of the distant ridge: small towns as clusters of warm points (kept out of the fog)
+  {
+    const fr = rng(515);
+    for (let c = 0; c < (mobile ? 9 : 14); c++) {
+      const az0 = -96 + c * (112 / 14) + fr() * 5, n = 4 + Math.floor(fr() * 8);
+      for (let i = 0; i < n; i++) {
+        const az = THREE.MathUtils.degToRad(az0 + (fr() - 0.5) * 3.2), R = 930 + fr() * 30;
+        lights.add(-46 + Math.cos(az) * R, 1.2 + fr() * 3, 58 + Math.sin(az) * R, fr() < 0.8 ? 0xffd7a6 : 0xbfe4ff, 0.8 + fr() * 0.5, 0.45 + fr() * 0.35, 1);
+      }
+    }
+  }
 
   // high-mast floodlights over the yard
   for (let z = -10; z < 19; z += 7) {
@@ -939,14 +950,15 @@ export function createHarbor(canvasEl, opts = {}) {
   const lightMat = keep(new THREE.ShaderMaterial({
     uniforms: { uScale: U.scale, uFog: U.fogD, uDim: U.dim, uTex: { value: glowTex } },
     vertexShader: `
-      attribute vec3 aColor; attribute float aSize; attribute float aAlpha;
+      attribute vec3 aColor; attribute float aSize; attribute float aAlpha; attribute float aKind;
       uniform float uScale, uFog, uDim; varying vec3 vC; varying float vA;
       void main(){
         vec4 mv = modelViewMatrix * vec4(position,1.0);
         gl_Position = projectionMatrix * mv;
         float d = -mv.z;
         float s = aSize * uScale / d;
-        vA = aAlpha * exp(-pow(uFog * 0.55 * d, 2.0)) * uDim * clamp(s / 1.4, 0.35, 1.0);
+        float fog = aKind > 0.5 ? 1.0 : exp(-pow(uFog * 0.55 * d, 2.0));
+        vA = aAlpha * fog * uDim * clamp(s / 1.4, 0.35, 1.0);
         gl_PointSize = clamp(s, 1.4, 7.0) * 4.0;
         vC = aColor;
       }`,
@@ -1341,7 +1353,7 @@ export function createHarbor(canvasEl, opts = {}) {
 
   // ---------------------------------------------------------------- sky, stars, mountains
   const skyU = {
-    uZenith: { value: C(HEX.deep) }, uBand: { value: C(HEX.dusk) }, uWarm: { value: C(0xd98a7a) },
+    uZenith: { value: C(HEX.deep) }, uBand: { value: C(HEX.dusk) }, uWarm: { value: C(0xe0908a) },
     uSeaFar: { value: C(HEX.night).lerp(C(HEX.dusk), 0.28) }, uGlow: { value: new THREE.Vector2(0.9, -0.43).normalize() },
   };
   const skyMat = keep(new THREE.ShaderMaterial({
@@ -1353,9 +1365,23 @@ export function createHarbor(canvasEl, opts = {}) {
       void main(){
         vec3 d = normalize(vD); float el = degrees(asin(clamp(d.y, -1.0, 1.0)));
         vec2 dh = normalize(d.xz + 1e-5); float side = clamp(dot(dh, uGlow) * 0.5 + 0.5, 0.0, 1.0);
-        float band = exp(-max(el, 0.0) / mix(1.7, 3.8, side * side));
-        vec3 col = mix(uZenith, uBand * 1.12, band * mix(0.7, 1.0, side));
-        col += uWarm * 0.16 * exp(-max(el, 0.0) / 0.7) * pow(side, 2.5);
+        float band = exp(-max(el, 0.0) / mix(2.0, 4.4, side * side));
+        vec3 col = mix(uZenith, uBand * 1.5, band * mix(0.72, 1.0, side));
+        float warm = exp(-max(el, 0.0) / 1.6) * pow(side, 2.2);
+        col += uWarm * 0.38 * warm;
+        // long thin cloud strata, dark against the glow with a faint lit underside
+        float az = atan(d.z, d.x);
+        float n1 = sin(az * 23.0 + sin(az * 7.0) * 1.7) * 0.5 + sin(az * 51.0 + 1.3) * 0.3 + sin(az * 97.0 + 0.4) * 0.2;
+        float n2 = sin(az * 17.0 + 2.1 + sin(az * 5.0) * 2.0) * 0.6 + sin(az * 61.0) * 0.4;
+        float n3 = sin(az * 31.0 + 4.0 + sin(az * 11.0) * 1.2) * 0.6 + sin(az * 83.0 + 2.0) * 0.4;
+        float s1 = smoothstep(1.1, 1.9, el) * (1.0 - smoothstep(2.8, 3.9, el));
+        float s2 = smoothstep(3.4, 4.3, el) * (1.0 - smoothstep(5.4, 6.8, el));
+        float s3 = smoothstep(6.4, 7.4, el) * (1.0 - smoothstep(8.4, 9.8, el));
+        float cl = s1 * smoothstep(-0.15, 0.45, n1 + (el - 2.4) * 0.2) + s2 * 0.85 * smoothstep(-0.05, 0.55, n2) + s3 * 0.6 * smoothstep(0.1, 0.6, n3);
+        cl = clamp(cl, 0.0, 1.0);
+        vec3 cloudC = mix(uZenith * 1.05, uBand * 0.62, 0.35) + uWarm * 0.08 * warm;
+        col = mix(col, cloudC, cl * 0.72);
+        col += uWarm * 0.12 * warm * s1 * smoothstep(0.35, 0.0, abs(n1 - 0.1)) ;
         col = mix(uSeaFar, col, smoothstep(-0.25, 0.12, el));
         col += (hash(gl_FragCoord.xy) - 0.5) / 200.0;
         gl_FragColor = vec4(col, 1.0);
@@ -1403,7 +1429,7 @@ export function createHarbor(canvasEl, opts = {}) {
     const back = ridge(5, 56, 16, 1), front = ridge(9, 38, 6, 1.4);
     const env = (t, lo, hi) => smooth(lo, hi, t);
     // azimuth -100..20 degrees covers the view; left part (-100..-72) stays low so the open sea shows
-    layer(1250, (t) => back(t) * (0.3 + 0.7 * env(t, 0.1, 0.45)) + 10, C(0x2a2a5e), C(0x3b3272), -100, 20, 360);
+    layer(1250, (t) => back(t) * (0.3 + 0.7 * env(t, 0.1, 0.45)) + 10, C(0x3a3474), C(0x4a3c80), -100, 20, 360);
     layer(980, (t) => front(t) * (0.15 + 0.85 * env(t, 0.22, 0.55)) + 4, C(0x161b42), C(0x2b2864), -100, 20, 400);
     const mg = keep(mb.build());
     const mtn = new THREE.Mesh(mg, keep(new THREE.MeshBasicMaterial({ vertexColors: true, fog: false })));

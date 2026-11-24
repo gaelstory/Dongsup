@@ -1433,11 +1433,11 @@
       corners.setAttribute('aria-hidden', 'true');
       corners.innerHTML = '<i></i><i></i><i></i><i></i>';
       box.append(pre, corners);
-      result.append(title, body, box);
+      result.append(title, body);
 
       var copyBtn = el('button', type === 'A' ? 'btn btn--primary' : 'btn btn--outline', type === 'A' ? '접수 내용 복사하기' : '의뢰서 복사하기');
       copyBtn.type = 'button';
-      var hint = el('p', 'result__hint', '길게 눌러 복사해 주세요');
+      var hint = el('p', 'result__hint', '의뢰서가 선택되었습니다. 길게 눌러 복사해 주세요');
       hint.hidden = true;
       copyBtn.addEventListener('click', function () {
         copyText(text, pre).then(function (ok) {
@@ -1479,12 +1479,13 @@
           k.href = kakao;
           send.appendChild(k);
         }
-        result.appendChild(send);
+        result.append(send, box);
         var edit = el('button', 'textbtn result__edit', '내용 고치기');
         edit.type = 'button';
         edit.addEventListener('click', function () { backToForm(); });
         result.appendChild(edit);
       } else {
+        result.appendChild(box);
         var actionsA = el('div', 'result__actions');
         actionsA.append(copyBtn, hint);
         result.appendChild(actionsA);

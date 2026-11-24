@@ -162,8 +162,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* the developing tray the print floats in */
 .bath {
   position: absolute; left: 50%; top: 50%; z-index: -1;
-  width: min(calc(var(--pw) * 1.36), calc(100vw - 12px));
-  height: calc(var(--pw) * 1.0);
+  width: min(calc(var(--pw) * 1.32), calc(100vw - 12px));
+  /* wider than the print, but only a lip above and below so it never reaches the headline */
+  height: calc(var(--pw) * .76 + 40px);
   transform: translate(-50%, -50%);
   border-radius: 18px; overflow: hidden;
   background: radial-gradient(ellipse 90% 80% at 64% 22%, #3A1416 0%, #1E0B0C 46%, #110607 100%);
@@ -231,7 +232,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 @media (max-width: 899px) {
   /* phones: a shallower tray, so it never reaches the headline */
-  .bath { width: min(calc(var(--pw) * 1.2), calc(100vw - 12px)); height: calc(var(--pw) * .86); border-width: 7px; }
+  .bath { width: min(calc(var(--pw) * 1.16), calc(100vw - 12px)); height: calc(var(--pw) * .76 + 30px); border-width: 7px; }
   .hero__stage { padding-bottom: 14px; }
 }
 @media (max-width: 359px), (max-width: 899px) and (max-height: 680px) {

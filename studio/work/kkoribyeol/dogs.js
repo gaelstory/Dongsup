@@ -295,9 +295,13 @@
         if (dist < bd) { bd = dist; best = o; }
       });
       if (!best || REDUCED) return;
+      // stop short of the carrier so the two never overlap
+      var room = bd - (d.el.offsetWidth + best.el.offsetWidth) / 2 - 18;
+      var move = Math.min(60, room);
+      if (move < 10) return;
       follower = best; best.busy = true;
       var step = cxOf(d) > cxOf(best) ? 1 : -1;
-      run(best, cxOf(best) + step * Math.min(60, bd * 0.3), function () { best.busy = false; });
+      run(best, cxOf(best) + step * move, function () { best.busy = false; });
     }
     function goHome(d) {
       unsit(d);
