@@ -253,6 +253,9 @@ svg { display: block; }
   .cta-orb:hover { background: #2a2826; }
 }
 
+@media (max-width: 899px) and (max-height: 700px) {
+  :root { --stage-h: 44svh; }
+}
 @media (max-width: 899px) and (max-height: 760px) {
   .cta-orb { justify-self: end; padding: 0 20px; min-height: 48px; font-size: 15px; }
   .hero__base { gap: 14px; padding-bottom: 64px; }

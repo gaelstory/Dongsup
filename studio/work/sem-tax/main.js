@@ -20,7 +20,7 @@
   function announce(t) { announcer.textContent = ''; setTimeout(function () { announcer.textContent = t; }, 40); }
 
   /* ---------- keep every block on the 56px rows ---------- */
-  var SNAP = '.grid > .sec__head, .grid > .hero__copy, .grid > .people__text, .grid > .people__seal, .svc__desc, .lrow--svc > .lc, .lrow--svc, .calc__inputs .field, .calc__inputs, .calc__note, .calc__out, .consult .field, .consult__done, .consult, .contact, .faq__btn, .faq__in > p, .month__body, .ledger__note, .cal__foot, .foot__main';
+  var SNAP = '.grid > .sec__head, .grid > .hero__copy, .grid > .people__text, .grid > .people__seal, .svc__desc, .lrow--svc > .lc, .lrow--svc, .calc__inputs .field, .calc__inputs, .crow, .calc__note, .calc__out, .consult .field, .consult__done, .consult, .contact, .faq__btn, .faq__in > p, .month__body, .ledger__note, .cal__foot, .foot__main';
   function snap() {
     $$(SNAP).forEach(function (el) { el.style.minHeight = ''; });
     // innermost first, so a container is measured after its children have been rounded up
@@ -398,10 +398,10 @@
       // in the open month, a deadline already behind us this year reads 지남
       var past = isNow && shift(new Date(tY, m, x.d)) < today;
       var dd = dday(nd);
-      var shiftNote = moved ? '<span class="due__shift">주말이라 ' + (nd.getMonth() + 1) + '월 ' + nd.getDate() + '일(' + WD[nd.getDay()] + ')까지</span>' : '';
-      return '<li class="due"><span class="due__d' + (past ? ' is-past' : '') + '">' + tabStr(x.d) + '일' + shiftNote + '</span>' +
+      var shiftNote = moved ? '<span class="due__shift">주말이라 ' + (nd.getMonth() + 1) + '월 ' + nd.getDate() + '일(' + WD[nd.getDay()] + ')까지. </span>' : '';
+      return '<li class="due"><span class="due__d' + (past ? ' is-past' : '') + '">' + tabStr(x.d) + '일</span>' +
         '<span class="due__t">' + x.t + '</span><span class="due__who">' + x.who + '</span>' +
-        '<span class="due__fine">' + x.fine + '</span><span class="due__dd">' + (past ? '지남' : tabStr(ddText(dd))) + '</span></li>';
+        '<span class="due__fine">' + shiftNote + x.fine + '</span><span class="due__dd">' + (past ? '지남' : tabStr(ddText(dd))) + '</span></li>';
     }).join('') + '</ul>' + (NOTES[m] ? '<p class="month__note">' + NOTES[m] + '</p>' : '');
     html += '<div class="month' + (isNow ? ' is-now is-open' : '') + '" role="listitem">' +
       '<button type="button" class="month__btn" aria-expanded="' + isNow + '" aria-controls="mp-' + m + '">' +

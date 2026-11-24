@@ -288,9 +288,11 @@ svg { display: block; }
 }
 .ledger__note {
   grid-column: 1 / -1; padding: 0 var(--cell); font-size: 13px; color: var(--ink-2); text-align: left; line-height: var(--half);
-  max-width: 63%;
+  margin-inline: 1px; background: var(--paper) var(--hrules); background-size: 100% var(--row); position: relative; z-index: 1;
 }
-@media (min-width: 900px) { .ledger__note { grid-column: -2 / -1; text-align: right; max-width: none; } .ledger__hint { display: none; } }
+.ledger__long { display: none; }
+@media (max-width: 899px) { .ledger__note { padding-right: 84px; } }
+@media (min-width: 900px) { .ledger__note { grid-column: -2 / -1; text-align: right; background: none; margin: 0; } .ledger__hint, .ledger__short { display: none; } .ledger__long { display: inline; } }
 
 /* seals: inked, multiplied into the paper */
 .seal { color: var(--seal); mix-blend-mode: multiply; overflow: visible; }
@@ -298,7 +300,7 @@ svg { display: block; }
 .seal__arc { font-family: var(--sans); font-weight: 700; fill: currentColor; letter-spacing: 0.18em; }
 .seal--ok {
   position: absolute; z-index: 2; width: 72px; height: 72px;
-  right: 30px; top: 40px; margin-top: 0;
+  right: 6px; top: 30px; margin-top: 0;
   transform: rotate(-12deg);
   pointer-events: none;
 }
@@ -513,7 +515,7 @@ select.field__control {
 .due + .due { margin-top: 0; }
 .cal__foot { grid-column: 1 / -1; padding: 0 var(--cell); font-size: 14px; color: var(--ink-2); line-height: var(--half); }
 .month__note { grid-column: 1 / -1; padding: 0 var(--cell); font-size: 14px; color: var(--pine); line-height: var(--row); }
-.due__shift { display: block; font-size: 13px; color: var(--seal); }
+.due__shift { color: #A3281B; font-weight: 500; }
 @media (min-width: 900px) {
   .month__name { flex-direction: row; align-items: center; justify-content: flex-start; gap: 14px; }
   .month__m { font-size: 20px; line-height: var(--row); min-width: 3.4em; }
@@ -536,7 +538,7 @@ select.field__control {
 .people__role strong { font-family: var(--serif); font-weight: 900; font-size: 22px; color: var(--pine); margin-left: 6px; line-height: 1; vertical-align: -1px; }
 .people__sign { font-size: 14px; }
 .people__seal { grid-column: 2; display: grid; justify-items: center; align-content: start; padding-top: calc(var(--row) * 2); }
-.seal--name { width: min(104px, 100%); height: auto; transform: rotate(3deg); }
+.seal--name { width: min(104px, calc(100% - 20px)); height: auto; transform: rotate(3deg); }
 .people__cap { margin-top: var(--half); font-size: 13px; color: var(--ink-2); text-align: center; line-height: var(--half); white-space: nowrap; }
 @media (min-width: 900px) {
   .people__seal { grid-column: 3 / span 2; padding-top: var(--row); }
@@ -625,7 +627,20 @@ html:not(.js) .faq__a { grid-template-rows: 1fr; }
   .contact dd { white-space: nowrap; }
   .hero__lede { max-width: none; }
 }
+@media (max-width: 899px) {
+  .sec { padding-top: var(--row); padding-bottom: var(--row); }
+  .hero { padding-top: 0; }
+}
+@media (max-width: 899px) {
+  /* figures scale with the screen so 9 digits always fit the amount column */
+  .amt { font-size: min(19px, 4.6vw); }
+  .amt--total { font-size: min(23px, 5.6vw); }
+  .fee__n { font-size: min(19px, 4.8vw); }
+  /* on phones the struck figure alone carries the correction; the words stay for screen readers */
+  .was__l { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
 @media (max-width: 359px) {
+  :root { --cols: minmax(0, 1.45fr) minmax(0, 1fr); --cell: 8px; }
   .contact dd { font-size: 14px; }
   .contact dd a { font-size: 16px; }
 }

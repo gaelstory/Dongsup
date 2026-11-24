@@ -45,11 +45,11 @@
     var d = rects.map(function (r, i) {
       // starts a little early, wobbles, tilts, and overshoots the last letter like a quick pen stroke
       var last = i === rects.length - 1;
-      var x1 = r.left - a.left - 4, x2 = r.right - a.left + 8 + (i * 3) % 5, y = r.bottom - a.top - 1;
+      var x1 = r.left - a.left - 4, x2 = r.right - a.left + 8 + (i * 3) % 5, y = r.bottom - a.top + 2;
       var tilt = i % 2 ? 2.2 : -1.8, pts = [[x1, y + 1]];
       for (var x = x1 + 22; x < x2 - 10; x += 22 + rnd() * 14) {
         var t = (x - x1) / (x2 - x1);
-        pts.push([x, y + tilt * t + (rnd() - 0.5) * 6.8]);
+        pts.push([x, y + tilt * t + (rnd() - 0.35) * 6.8]);
       }
       pts.push([x2, y + tilt]);
       var path = smoothPath(pts);
@@ -173,7 +173,7 @@
       while (L >= 0 && !lastOut[L]) L--;
       if (L < 0) return drawn;
       var b = box(L), cx = b.x + b.w / 2, cy = b.y + b.h / 2, rx = b.w * 0.62, ry = b.h * 0.6;
-      drawn.push(el('path', { d: 'M' + (cx + rx * 0.7) + ' ' + (cy - ry * 0.8) + 'C' + (cx + rx * 1.2) + ' ' + (cy + ry * 0.4) + ' ' + (cx + rx * 0.2) + ' ' + (cy + ry * 1.15) + ' ' + (cx - rx * 0.6) + ' ' + (cy + ry * 0.7) + 'S' + (cx - rx * 1.1) + ' ' + (cy - ry * 0.9) + ' ' + (cx + rx * 0.1) + ' ' + (cy - ry * 1.05) + ' ' + (cx + rx * 0.9) + ' ' + (cy - ry * 0.4) }));
+      drawn.push(el('path', { d: 'M' + (cx + rx * 0.7) + ' ' + (cy - ry * 0.8) + 'C' + (cx + rx * 1.2) + ' ' + (cy + ry * 0.4) + ' ' + (cx + rx * 0.2) + ' ' + (cy + ry * 1.15) + ' ' + (cx - rx * 0.6) + ' ' + (cy + ry * 0.7) + 'C' + (cx - rx * 1.1) + ' ' + (cy - ry * 0.9) + ' ' + (cx + rx * 0.1) + ' ' + (cy - ry * 1.05) + ' ' + (cx + rx * 0.9) + ' ' + (cy - ry * 0.4) }));
       if (!/[.?!…]$/.test(v) && L + 1 < cells.length) {
         var nb = box(L + 1);
         el('circle', { class: 'dot', cx: nb.x + nb.w * 0.32, cy: nb.y + nb.h * 0.74, r: 3.2 });
@@ -394,10 +394,10 @@
 
       // a running score in the sheet header: the hero earned 40, every underlined section adds 10
       var tally = $('#tally'), marked = 0;
-      root.classList.add('tally-on');
       function addScore() {
         marked++;
         if (!tally) return;
+        root.classList.add('tally-on');
         tally.textContent = String(Math.min(100, 40 + marked * 10));
         gsap.fromTo(tally, { opacity: 0, y: -6, rotation: -8 }, { opacity: 1, y: 0, rotation: -4, duration: 0.3, ease: 'power3.out' });
       }
