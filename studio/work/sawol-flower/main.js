@@ -95,14 +95,14 @@
     if (!ctx || typeof Path2D === 'undefined') return;
     var seed = SHOT ? 20260424 : (Math.random() * 1e9) | 0, rnd = F.rng(seed ^ 0x5a5a5a);
     var OVER = 30, W = 0, H = 0, heroH = 0, dpr = 1, groundY = 0, band = 0, unit = 26, mobile = null, fade = null;
-    var flowers = [], grass = [[], []], clock = 0, wind = !REDUCED, visible = true, rect = null;
+    var planted = null, flowers = [], grass = [[], []], clock = 0, wind = !REDUCED && !SHOT, visible = true, copy = [], chosen = null;
     var geo = { b: [0, 0], c: [0, 0], t: [0, 0] }, pt = [0, 0];
-    var pointer = { cx: 0, cy: 0, x: 0, y: 0, px: 0, vx: 0, t: -1e9 };
+    var pointer = { px: 0, t: -1e9 };
     var GRASS = [['#2D6B45', '#3B7F53', '#4F9465'], ['#1F5C3A', '#3F8B57', '#6AAE76']];
 
     function makeLive(spec, o) {
       return {
-        spec: spec, fx: spec.fx, z: spec.z, hrel: o.hrel, init: !!o.init, born: o.born, dur: o.dur, g: o.g || 0,
+        spec: spec, fx: spec.fx, z: spec.z, hrel: o.hrel, want: o.want || 0, init: !!o.init, born: o.born, dur: o.dur, g: o.g || 0,
         bend: 0, bv: 0, alpha: 1, dying: false, hx: 0, hy: 0,
         head: F.build(spec.kind, { r: unit * spec.size, hue: spec.hue, seed: spec.seed, calyx: true })
       };
@@ -110,6 +110,10 @@
     function seedGarden() {
       var now = performance.now(), plan = F.gardenPlan(seed, mobile ? 7 : 14, !mobile), keep = flowers.filter(function (f) { return !f.init; });
       var r = F.rng(seed + 99);
+      if (mobile) {
+        // on phones two heads reach right up under the hint, so the garden meets the copy
+        plan.filter(function (f) { return f.kind !== 'gyp'; }).sort(function (a, b) { return b.fh - a.fh; }).slice(0, 2).forEach(function (f) { f.fh = F.rr(r, 0.95, 1); });
+      }
       flowers = plan.map(function (spec) {
         // five flowers arrive already 60% grown; the rest start within 0.35s so all finish by 2s
         var dur = F.rr(r, 1.45, 1.65), delay = spec.early ? 0 : F.rr(r, 0, 0.35);
@@ -135,16 +139,34 @@
       cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
       groundY = H - 4;
       unit = mobile ? 20 : Math.max(24, Math.min(36, W * 0.0235));
-      band = (mobile ? 0.38 : 0.6) * heroH - unit * 1.3;
+      band = mobile ? 0.38 * heroH + 26 - unit * 1.5 : 0.6 * heroH - unit * 1.3;
       fade = ctx.createLinearGradient(0, H - 16, 0, H);
       fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)');
       if (wasMobile !== mobile) seedGarden();
+      measureCopy();
       flowers.forEach(function (f) {
-        if (f.init) f.hrel = f.spec.fh * band / heroH;
         f.head = F.build(f.spec.kind, { r: unit * f.spec.size, hue: f.spec.hue, seed: f.spec.seed, calyx: true });
+        f.hrel = fit(f.fx * W, f.init ? f.spec.fh * band : f.want * heroH, f.head.r) / heroH;
       });
       buildGrass();
       buildFar();
+    }
+    // The text block (title, lead, button, hint, picker) in canvas coordinates. Heads never land on it.
+    function measureCopy() {
+      var cr = cv.getBoundingClientRect();
+      copy = Array.prototype.map.call(hero.querySelectorAll('.hero__title, .hero__lead, .hero__cta, .hero__hint, .picker'), function (el) {
+        var b = el.getBoundingClientRect();
+        return { l: b.left - cr.left, r: b.right - cr.left, b: b.bottom - cr.top };
+      });
+    }
+    // The tallest stem a flower at x may have so its head (radius hr) stays below the copy.
+    function fit(x, want, hr) {
+      var lim = want, m = hr * 1.6;
+      for (var i = 0; i < copy.length; i++) {
+        var c = copy[i];
+        if (x > c.l - m && x < c.r + m) lim = Math.min(lim, groundY - c.b - 12 - hr * 1.45);
+      }
+      return Math.max(36, lim);
     }
     // A distant row of small flowers, painted once per resize, gives the meadow depth for free.
     var far = null;
@@ -257,18 +279,10 @@
       ctx.globalCompositeOperation = 'source-over';
     }
     function update(dt, now) {
-      var busy = false, i, f, push = now - pointer.t < 90 && Math.abs(pointer.vx) > 0.2;
-      if (push) {
-        rect = cv.getBoundingClientRect();
-        pointer.x = pointer.cx - rect.left; pointer.y = pointer.cy - rect.top;
-      }
+      var busy = false, i, f;
       for (i = flowers.length - 1; i >= 0; i--) {
         f = flowers[i];
         if (f.g < 1) { f.g = clamp01((now - f.born) / f.dur); busy = true; }
-        if (push) {
-          var dx = Math.abs(pointer.x - f.fx * W), top = groundY - f.hrel * heroH - unit * 1.5;
-          if (dx < 110 && pointer.y > top && pointer.y < groundY) f.bv += Math.max(-3, Math.min(3, pointer.vx)) * 0.12 * (1 - dx / 110);
-        }
         if (f.bend || f.bv) {
           f.bv += (-55 * f.bend - 6.5 * f.bv) * dt;
           f.bend += f.bv * dt;
@@ -278,7 +292,7 @@
         }
         if (f.dying) { f.alpha -= dt / 0.7; busy = true; if (f.alpha <= 0) flowers.splice(i, 1); }
       }
-      return busy || push;
+      return busy;
     }
     tasks.push(function (dt, now) {
       if (!visible || document.hidden) return false;
@@ -289,9 +303,11 @@
     });
 
     function plantAt(x, y) {
-      var kind = F.GARDEN[(rnd() * 5) | 0], spec = F.plant(kind, rnd, { fx: x / W, fh: 1, z: F.rr(rnd, 0.4, 1) });
-      var h = Math.max(64, Math.min(heroH * 0.7, groundY - y - unit * 0.5));
-      var f = makeLive(spec, { hrel: h / heroH, born: performance.now(), dur: F.rr(rnd, 0.9, 1.6) / 0.62 * 1000, g: REDUCED ? 1 : 0 });
+      var kind = chosen || F.GARDEN[(rnd() * 5) | 0], spec = F.plant(kind, rnd, { fx: x / W, fh: 1, z: F.rr(rnd, 0.4, 1) });
+      var want = Math.max(64, Math.min(heroH * (mobile ? 0.46 : 0.7), groundY - y - unit * 0.5));
+      var f = makeLive(spec, { want: want / heroH, hrel: 0, born: performance.now(), dur: F.rr(rnd, 0.9, 1.6) / 0.62 * 1000, g: REDUCED ? 1 : 0 });
+      f.hrel = fit(x, want, f.head.r) / heroH;
+      if (planted) planted(kind);
       flowers.push(f);
       sortFlowers();
       var alive = flowers.filter(function (o) { return !o.dying && o.spec.kind !== 'gyp'; });
@@ -315,13 +331,19 @@
       touch = null;
     });
     hero.addEventListener('pointercancel', function () { touch = null; });
-    if (!REDUCED) {
+    if (!REDUCED && !SHOT) {
+      // A quick pass pushes the stems it crosses, in proportion to the distance travelled,
+      // so a fast sweep lays the row over (up to 12°) and a slow one barely stirs it.
       hero.addEventListener('pointermove', function (e) {
-        var now = performance.now(), dt = Math.max(8, now - pointer.t);
-        var v = (e.clientX - pointer.px) / dt;
-        pointer.vx = now - pointer.t > 120 ? 0 : pointer.vx * 0.5 + v * 0.5;
-        pointer.px = e.clientX; pointer.cx = e.clientX; pointer.cy = e.clientY; pointer.t = now;
-        if (Math.abs(pointer.vx) > 0.2) kick();
+        var now = e.timeStamp, dx = e.clientX - pointer.px, dt = Math.max(1, now - pointer.t), fresh = now - pointer.t < 100;
+        pointer.px = e.clientX; pointer.t = now;
+        if (!fresh || Math.abs(dx / dt) < 0.35) return;
+        var r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, push = (dx > 0 ? 1 : -1) * Math.min(Math.abs(dx), 80) / 80 * 2.2, hit = false;
+        for (var i = 0; i < flowers.length; i++) {
+          var f = flowers[i], d = Math.abs(x - f.fx * W);
+          if (d < 130 && y > f.hy - unit * 1.6 && y < groundY) { f.bv += push * (1 - d / 130); hit = true; }
+        }
+        if (hit) kick();
       }, { passive: true });
     }
     document.getElementById('plant-hint').addEventListener('click', function () {
@@ -338,6 +360,10 @@
     measure();
     draw();
     hero.classList.add('is-live');
+    // the copy moves once the web fonts arrive and the entrance settles; re-fit the heads then
+    function refit() { measure(); draw(); if (!SHOT) kick(); }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit);
+    setTimeout(refit, 1300);
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible) kick(); }).observe(hero);
     }
@@ -346,9 +372,11 @@
       clearTimeout(rt);
       rt = setTimeout(function () { var w = W, hh = heroH; measure(); if (w !== W || hh !== heroH) { draw(); kick(); } }, 150);
     });
-    if (!REDUCED) kick();
+    if (!REDUCED && !SHOT) kick();
 
     garden = {
+      choose: function (kind, cursor) { chosen = kind; hero.style.cursor = cursor || ''; },
+      onPlant: function (fn) { planted = fn; },
       inView: function () { return visible; },
       bottom: function () { return cv.getBoundingClientRect().bottom; },
       // A bloomed head somewhere on screen, in viewport coordinates, to shed a petal from.
