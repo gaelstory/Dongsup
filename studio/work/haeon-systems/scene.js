@@ -293,14 +293,15 @@ export function createHarbor(canvasEl, opts = {}) {
   const glowTex = tex(glowSpriteTexture());
 
   const counts = {
-    trees: mobile ? 100 : 220, containers: mobile ? 80 : 160, perCurve: mobile ? [3, 4, 5] : [6, 8, 10], seaLayers: mobile ? 1 : 2,
+    trees: mobile ? 100 : 220, containers: mobile ? 80 : 160, ell: mobile ? [2, 2, 1] : [3, 3, 2], arc: mobile ? 1 : 1, seaLayers: mobile ? 1 : 2,
+    trails: mobile ? 28 : 56,
   };
 
   // ---- lights in the scene graph (moonlight + sky hemisphere)
   scene.add(new THREE.HemisphereLight(0x2a3a7a, HEX.deep, 2.4));
   const moon = new THREE.DirectionalLight(0x8fa8ff, 1.5); moon.position.set(-30, 40, 20); scene.add(moon);
   const moonFill = new THREE.DirectionalLight(0x6a5aa8, 0.5); moonFill.position.set(40, 20, -60); scene.add(moonFill);
-  const flood = [[0, 7, 4, 0xffcf9a, 90, 26], [-15, 7, 5, 0xffd6a8, 60, 22], [14, 5, -9, 0x8fc8ff, 45, 18], [16, 5, 22, 0xffc58a, 60, 22]];
+  const flood = [[0, 7, 4, 0xffcf9a, 90, 26], [-15, 7, 5, 0xffd6a8, 110, 22], [14, 5, -9, 0x8fc8ff, 45, 18], [16, 5, 22, 0xffc58a, 60, 22]];
   for (const [x, y, z, c, i, d] of flood) { const pl = new THREE.PointLight(c, i, d, 2); pl.position.set(x, y, z); scene.add(pl); }
 
   // ---- shared materials
@@ -444,9 +445,12 @@ export function createHarbor(canvasEl, opts = {}) {
     const len = -6 - p.x1, cx = (-6 + p.x1) / 2;
     props.box(cx, -0.4, p.z, len, LAND_Y + 0.4 - 0.05, p.w, pierCol, { top: pierTop });
     edges.box(cx, 0, p.z, len, LAND_Y, p.w);
-    for (let x = -7; x > p.x1; x -= 1.6) {
-      lights.add(x, LAND_Y + 0.25, p.z - p.w / 2 + 0.12, 0xffd8a8, 0.13, 0.75);
-      lights.add(x, LAND_Y + 0.25, p.z + p.w / 2 - 0.12, 0xffd8a8, 0.13, 0.75);
+    // lamps on short posts along the outer edge, evenly spaced
+    const side = p.z > 5 ? 1 : -1;
+    for (let x = -8; x > p.x1 + 0.5; x -= 3) {
+      const lz = p.z + side * (p.w / 2 - 0.15);
+      props.box(x, LAND_Y, lz, 0.07, 0.75, 0.07, C(0x6a7aa8));
+      lights.add(x, LAND_Y + 0.8, lz, 0xffd9a8, 0.15, 0.95);
     }
     // a lit lamp at the pier head
     halos.add(p.x1 + 0.4, 1.8, p.z, HEX.warm, 2.4, 0.22);
@@ -490,6 +494,8 @@ export function createHarbor(canvasEl, opts = {}) {
     lights.add(k.x, LAND_Y + 5.2, k.z + 8 * sgn, 0xffe4c4, 0.16, 0.9);
     lights.add(k.x - 0.4, LAND_Y + 4.7, k.z + 4.2 * sgn, 0xfff2e0, 0.2, 1);
     halos.add(k.x, LAND_Y + 4.6, k.z + 4.2 * sgn, 0xffe2b8, 3.2, 0.16);
+    halos.add(k.x, LAND_Y + 5.2, k.z + 8 * sgn, 0xffe2b8, 2.2, 0.8);
+    halos.add(k.x, LAND_Y + 5.2, k.z + 8 * sgn, 0xffe2b8, 5.5, 0.14);
     const v = new V3();
     for (let i = 0; i < craneE.p.length; i += 3) { v.set(craneE.p[i], craneE.p[i + 1], craneE.p[i + 2]).applyMatrix4(m); edges.p.push(v.x, v.y, v.z); }
   }
@@ -784,6 +790,10 @@ export function createHarbor(canvasEl, opts = {}) {
     // canopy columns at the forecourt
     for (let x = x0 + 1; x < x1; x += 3) props.box(x, b, z + rad + 0.2, 0.14, 2.1, 0.14, C(0x2a3866));
     TERMINAL_NODE = new V3(cx, b + 2.1 + rad * 0.36 + 0.05, z);
+    for (let x = x0 + 1.5; x < x1; x += 3) {
+      const zEdge = x < 12 ? 26 + (x - 2) * 0.25 : 28.5 + (x - 12) * 0.054;
+      reflections.push([x, zEdge + 0.8, C(HEX.warm), 9, 1.2, 0.55]);
+    }
   }
 
   // ---------------------------------------------------------------- roads, bridge, street lights
@@ -794,7 +804,7 @@ export function createHarbor(canvasEl, opts = {}) {
   {
     const [rcv2, rg2] = canvas(64, 64);
     rg2.fillStyle = '#111c3c'; rg2.fillRect(0, 0, 64, 64);
-    rg2.fillStyle = 'rgba(190,205,240,0.35)'; rg2.fillRect(0, 2, 64, 2); rg2.fillRect(0, 60, 64, 2);
+    rg2.fillStyle = 'rgba(95,212,255,0.85)'; rg2.fillRect(0, 1, 64, 3); rg2.fillRect(0, 60, 64, 3);
     rg2.fillStyle = 'rgba(255,214,160,0.45)'; rg2.fillRect(0, 31, 26, 2);
     const rtex = tex(rcv2, { wrap: true });
     const P = [], UV = [], idx = [];
@@ -818,7 +828,7 @@ export function createHarbor(canvasEl, opts = {}) {
     site.add(roads);
     // street lights both sides
     roadLUT.forEach((L, k) => {
-      const step = k === 2 ? 2.4 : 2.6; const n = Math.floor(L.length / step);
+      const step = k === 2 ? 1.2 : 2.6; const n = Math.floor(L.length / step);
       const v = [0, 0, 0], t = [0, 0, 0];
       for (let i = 0; i <= n; i++) {
         lutAt(L, i / n, v, t);
@@ -1012,6 +1022,7 @@ export function createHarbor(canvasEl, opts = {}) {
     lights.add(nd.x, nd.y, nd.z, 0xe8fbff, 0.3, 1);
   }
   reflections.push([NODES[3].x - 0.6, NODES[3].z, C(HEX.cyan), 9, 0.7, 0.6]);
+  for (const [x, z] of [[-7.2, 0.8], [-7.4, 3.6], [-7.2, 6.4], [-7.6, -4], [-7.4, -9], [-7.2, 15]]) reflections.push([x, z, C(HEX.cool), 12, 2, 0.35]);
 
   const ellipse = (cx, cy, cz, a, b, tiltDeg, yawDeg, n = 320) => {
     const pts = []; const tilt = THREE.MathUtils.degToRad(tiltDeg), yaw = THREE.MathUtils.degToRad(yawDeg);
@@ -1048,7 +1059,7 @@ export function createHarbor(canvasEl, opts = {}) {
       for (const layer of [0, 1]) {
         const closed = !!cv.c.closed;
         const seg = closed ? 360 : 140;
-        const g = new THREE.TubeGeometry(cv.c, seg, layer ? 0.16 : 0.035, layer ? 8 : 5, closed);
+        const g = new THREE.TubeGeometry(cv.c, seg, layer ? 0.3 : 0.055, layer ? 8 : 6, closed);
         const p = g.attributes.position.array, nn = g.attributes.normal.array, uv = g.attributes.uv.array, id = g.index.array;
         for (let i = 0; i < p.length; i++) { P.push(p[i]); N.push(nn[i]); }
         for (let i = 0; i < uv.length; i += 2) { UVs.push(uv[i], uv[i + 1]); INFO.push(k, layer); }
@@ -1080,14 +1091,14 @@ export function createHarbor(canvasEl, opts = {}) {
         varying float vU, vLayer, vFog; varying float vCurve; varying vec3 vN, vV;
         void main(){
           int ci = int(vCurve + 0.5);
-          float rv = clamp(uReveal * 1.18 - vCurve * 0.025, 0.0, 1.0);
+          float rv = clamp(uReveal * 1.5 - min(vCurve, 3.0) * 0.12, 0.0, 1.0);
           if (vU > rv) discard;
           float ph = vCurve * 1.7;
           float wave = 0.5 + 0.5 * sin(vU * 6.2831 * (vCurve < 2.5 ? 2.0 : 1.0) + ph + uTime * 0.07);
-          float vary = 0.25 + 0.75 * smoothstep(0.05, 0.95, wave);
+          float vary = 0.4 + 0.6 * smoothstep(0.05, 0.95, wave);
           float facing = abs(dot(vN, vV));
-          float a = vLayer < 0.5 ? 0.9 * (0.45 + 0.55 * facing) : 0.10 * facing * facing;
-          a *= vary * uCurveI[ci] * vFog * (1.0 + uTwin * 0.25);
+          float a = vLayer < 0.5 ? 0.9 * (0.45 + 0.55 * facing) : 0.2 * facing * facing;
+          a *= vary * uCurveI[ci] * vFog * (1.0 + uTwin * 0.25) * (vCurve > 2.5 ? 0.7 : 1.0);
           float head = (1.0 - step(0.999, uReveal)) * smoothstep(0.05, 0.0, rv - vU);
           vec3 c = mix(uColor, vec3(1.0), head * 0.7 + (vLayer < 0.5 ? 0.12 : 0.0));
           gl_FragColor = vec4(c * (a + head * 0.6), 1.0);
@@ -1098,10 +1109,12 @@ export function createHarbor(canvasEl, opts = {}) {
   }
 
   // particles on curves: bright head + 4 trailing points
-  const TAIL = [[0, 0.5, 1], [0.004, 0.34, 0.55], [0.008, 0.26, 0.36], [0.012, 0.2, 0.22], [0.016, 0.15, 0.12]];
+  // bright head and an 8-point comet tail fading exponentially
+  const TAIL = [[0, 0.8, 1]];
+  for (let j = 1; j <= 8; j++) TAIL.push([j * 0.0035, 0.8 * (1 - j * 0.085), Math.pow(0.06, j / 8)]);
   const parts = [];
   CURVES.forEach((cv, k) => {
-    const n = k < 3 ? counts.perCurve[2 - k] : counts.perCurve[0];
+    const n = k < 3 ? counts.ell[k] : counts.arc;
     for (let i = 0; i < n; i++) parts.push({ k, off: (i + r() * 0.35) / n, spd: cv.speed * (0.9 + r() * 0.2) });
   });
   const PN = parts.length * TAIL.length;
@@ -1183,7 +1196,7 @@ export function createHarbor(canvasEl, opts = {}) {
   }
 
   // ---------------------------------------------------------------- road light trails (CPU ribbons)
-  const TRAILS = 30, TSEG = 6;
+  const TRAILS = counts.trails, TSEG = 6;
   const trails = [];
   for (let i = 0; i < TRAILS; i++) {
     const road = i % 3; const dir = i % 2 ? 1 : -1;
@@ -1217,10 +1230,11 @@ export function createHarbor(canvasEl, opts = {}) {
     gr.addColorStop(0, `rgba(${rgb},${a})`); gr.addColorStop(1, `rgba(${rgb},0)`);
     pg.fillStyle = gr; pg.fillRect(0, 0, 256, 256);
   };
-  blob(-8, 0, 22, '255,190,120', 0.16); blob(-10, 12, 14, '255,190,120', 0.14); blob(-9, -6, 12, '95,212,255', 0.13);
-  blob(16, 34, 26, '255,190,120', 0.2); blob(-24, -1, 8, '95,212,255', 0.16); blob(12, -38, 18, '200,230,255', 0.1);
-  blob(24, -60, 16, '200,230,255', 0.08); blob(60, -72, 40, '255,200,150', 0.08);
-  for (const p of PIERS) blob(p.x1 + 2, p.z, 6, '255,200,150', 0.12);
+  blob(-8, 0, 22, '255,190,120', 0.32); blob(-10, 12, 14, '255,190,120', 0.28); blob(-9, -6, 12, '95,212,255', 0.26);
+  blob(16, 34, 34, '255,190,120', 0.4); blob(-24, -1, 8, '95,212,255', 0.32); blob(12, -38, 18, '200,230,255', 0.2);
+  blob(24, -60, 16, '200,230,255', 0.16); blob(60, -72, 40, '255,200,150', 0.16); blob(-9, 5, 10, '159,212,255', 0.2);
+  for (const p of PIERS) blob(p.x1 + 2, p.z, 6, '255,200,150', 0.24);
+  for (const k of [[-11, 4.5], [-18.5, 4.5], [-13.5, 5.5], [-20.5, 5.5]]) blob(k[0], k[1], 5, '255,214,170', 0.3);
   const poolTex = tex(pcv);
   const seaMat = keep(new THREE.ShaderMaterial({
     uniforms: {
@@ -1246,13 +1260,13 @@ export function createHarbor(canvasEl, opts = {}) {
           float s3 = sin(dot(p, vec2(0.45, -0.89)) * 3.1 - n1 * 1.4 - uTime * 0.37) * (0.5 + 0.5 * sin(dot(p, vec2(0.89, 0.45)) * 0.33 + uTime * 0.17));
           streak += 0.6 * smoothstep(0.7, 0.98, s3) * (1.0 - clamp(fwidth(s3) * 2.0, 0.0, 1.0));
         }
-        float sFade = smoothstep(40.0, 85.0, dist) * (1.0 - smoothstep(150.0, 320.0, dist));
-        vec3 col = uBase + uCyan * 0.08 * streak * sFade * (1.0 - uLand);
+        float sFade = smoothstep(20.0, 60.0, dist) * (1.0 - smoothstep(150.0, 320.0, dist));
+        vec3 col = uBase + uCyan * 0.14 * streak * sFade * (1.0 - uLand);
         float fres = pow(1.0 - clamp(v.y, 0.0, 1.0), 5.0);
         col = mix(col, uHorizon * 0.75, fres * 0.32 * (1.0 - uLand));
         vec2 puv = (p - uPoolRect.xy) / uPoolRect.zw;
         vec3 pool = texture2D(uPool, puv).rgb * step(0.0, puv.x) * step(puv.x, 1.0) * step(0.0, puv.y) * step(puv.y, 1.0);
-        col += pool * (0.7 + 0.3 * sin(n1 * 2.6 + uTime * 0.6) + streak * 0.8) * (1.0 - uLand);
+        col += pool * (1.1 + 0.3 * sin(n1 * 2.6 + uTime * 0.6) + streak * 1.2) * (1.0 - uLand);
         // digital twin: measured grid on the water
         vec2 gp = abs(fract(p / 4.0) - 0.5); float gl = smoothstep(0.03 + fwidth(p.x)*0.25, 0.0, min(gp.x, gp.y));
         col += uCyan * gl * 0.12 * uTwin * (1.0 - smoothstep(30.0, 140.0, dist));
@@ -1278,8 +1292,8 @@ export function createHarbor(canvasEl, opts = {}) {
     g.setAttribute('position', quad.attributes.position); g.setAttribute('uv', quad.attributes.uv);
     const a1 = new Float32Array(n * 4), a2 = new Float32Array(n * 4);
     reflections.forEach((rf, i) => {
-      a1.set([rf[0], rf[1], rf[3], rf[4]], i * 4);
-      a2.set([rf[2].r, rf[2].g, rf[2].b, rf[5] || 0.25], i * 4);
+      a1.set([rf[0], rf[1], rf[3] * 1.6, rf[4]], i * 4);
+      a2.set([rf[2].r, rf[2].g, rf[2].b, rf[5] || 0.6], i * 4);
     });
     g.setAttribute('aA', new THREE.InstancedBufferAttribute(a1, 4)); g.setAttribute('aB', new THREE.InstancedBufferAttribute(a2, 4));
     g.instanceCount = n;
@@ -1301,7 +1315,7 @@ export function createHarbor(canvasEl, opts = {}) {
         uniform float uTime, uDim; varying vec2 vUv; varying vec4 vB; varying float vFog;
         void main(){
           float across = 1.0 - abs(vUv.x - 0.5) * 2.0;
-          float a = pow(across, 2.0) * pow(1.0 - vUv.y, 1.4) * smoothstep(0.0, 0.08, vUv.y);
+          float a = pow(across, 1.6) * pow(1.0 - vUv.y, 0.9) * smoothstep(0.0, 0.06, vUv.y);
           a *= 0.55 + 0.45 * sin(vUv.y * 38.0 - uTime * 2.2 + vB.r * 10.0);
           a *= vB.a * vFog * uDim;
           if (a < 0.002) discard;
@@ -1353,7 +1367,7 @@ export function createHarbor(canvasEl, opts = {}) {
 
   // ---------------------------------------------------------------- sky, stars, mountains
   const skyU = {
-    uZenith: { value: C(HEX.deep) }, uBand: { value: C(HEX.dusk) }, uWarm: { value: C(0xe0908a) },
+    uZenith: { value: C(HEX.deep) }, uBand: { value: C(HEX.dusk) }, uWarm: { value: C(0xf2a07e) },
     uSeaFar: { value: C(HEX.night).lerp(C(HEX.dusk), 0.28) }, uGlow: { value: new THREE.Vector2(0.9, -0.43).normalize() },
   };
   const skyMat = keep(new THREE.ShaderMaterial({
@@ -1366,22 +1380,26 @@ export function createHarbor(canvasEl, opts = {}) {
         vec3 d = normalize(vD); float el = degrees(asin(clamp(d.y, -1.0, 1.0)));
         vec2 dh = normalize(d.xz + 1e-5); float side = clamp(dot(dh, uGlow) * 0.5 + 0.5, 0.0, 1.0);
         float band = exp(-max(el, 0.0) / mix(2.0, 4.4, side * side));
-        vec3 col = mix(uZenith, uBand * 1.5, band * mix(0.72, 1.0, side));
+        vec3 col = mix(uZenith, uBand * 1.32, band * mix(0.72, 1.0, side));
         float warm = exp(-max(el, 0.0) / 1.6) * pow(side, 2.2);
         col += uWarm * 0.38 * warm;
         // long thin cloud strata, dark against the glow with a faint lit underside
         float az = atan(d.z, d.x);
-        float n1 = sin(az * 23.0 + sin(az * 7.0) * 1.7) * 0.5 + sin(az * 51.0 + 1.3) * 0.3 + sin(az * 97.0 + 0.4) * 0.2;
-        float n2 = sin(az * 17.0 + 2.1 + sin(az * 5.0) * 2.0) * 0.6 + sin(az * 61.0) * 0.4;
-        float n3 = sin(az * 31.0 + 4.0 + sin(az * 11.0) * 1.2) * 0.6 + sin(az * 83.0 + 2.0) * 0.4;
-        float s1 = smoothstep(1.1, 1.9, el) * (1.0 - smoothstep(2.8, 3.9, el));
-        float s2 = smoothstep(3.4, 4.3, el) * (1.0 - smoothstep(5.4, 6.8, el));
-        float s3 = smoothstep(6.4, 7.4, el) * (1.0 - smoothstep(8.4, 9.8, el));
-        float cl = s1 * smoothstep(-0.15, 0.45, n1 + (el - 2.4) * 0.2) + s2 * 0.85 * smoothstep(-0.05, 0.55, n2) + s3 * 0.6 * smoothstep(0.1, 0.6, n3);
+        float c1 = 1.7 + 0.45 * sin(az * 9.0 + 1.0) + 0.2 * sin(az * 23.0);
+        float h1 = 0.22 + 0.2 * (0.5 + 0.5 * sin(az * 13.0 + 2.0)) + 0.08 * sin(az * 41.0);
+        float k1 = smoothstep(-0.35, 0.25, sin(az * 19.0 + sin(az * 6.0) * 2.0) + 0.4 * sin(az * 47.0));
+        float c2 = 3.4 + 0.6 * sin(az * 7.0 + 3.0) + 0.25 * sin(az * 29.0 + 1.0);
+        float h2 = 0.3 + 0.25 * (0.5 + 0.5 * sin(az * 11.0)) + 0.1 * sin(az * 37.0 + 2.0);
+        float k2 = smoothstep(-0.2, 0.35, sin(az * 15.0 + 2.5 + sin(az * 4.0) * 2.5) + 0.35 * sin(az * 53.0));
+        float c3 = 5.6 + 0.8 * sin(az * 5.0 + 0.5);
+        float h3 = 0.35 + 0.25 * (0.5 + 0.5 * sin(az * 9.0 + 4.0));
+        float k3 = smoothstep(0.0, 0.5, sin(az * 12.0 + 1.0 + sin(az * 3.0) * 2.0));
+        float cl = k1 * smoothstep(h1, h1 * 0.25, abs(el - c1)) + 0.8 * k2 * smoothstep(h2, h2 * 0.3, abs(el - c2)) + 0.55 * k3 * smoothstep(h3, h3 * 0.3, abs(el - c3));
         cl = clamp(cl, 0.0, 1.0);
-        vec3 cloudC = mix(uZenith * 1.05, uBand * 0.62, 0.35) + uWarm * 0.08 * warm;
-        col = mix(col, cloudC, cl * 0.72);
-        col += uWarm * 0.12 * warm * s1 * smoothstep(0.35, 0.0, abs(n1 - 0.1)) ;
+        vec3 cloudC = mix(uZenith, uBand * 0.55, 0.45);
+        col = mix(col, cloudC, cl * 0.62);
+        // the dusk lights the cloud undersides
+        col += uWarm * 0.22 * warm * k1 * smoothstep(h1 * 1.6, 0.0, abs(el - (c1 - h1 * 0.7))) * (1.0 - cl * 0.5);
         col = mix(uSeaFar, col, smoothstep(-0.25, 0.12, el));
         col += (hash(gl_FragCoord.xy) - 0.5) / 200.0;
         gl_FragColor = vec4(col, 1.0);
@@ -1546,7 +1564,7 @@ export function createHarbor(canvasEl, opts = {}) {
     for (const p of parts) {
       const cv = CURVES[p.k];
       const head = p.off + t * p.spd;
-      const lim = clamp01(reveal * 1.18 - p.k * 0.025);
+      const lim = clamp01(reveal * 1.5 - Math.min(p.k, 3) * 0.12);
       for (let j = 0; j < TAIL.length; j++) {
         const u = head - TAIL[j][0] * (cv.c.closed ? 1 : 1.8);
         const uu = cv.c.closed ? ((u % 1) + 1) % 1 : ((u % 1) + 1) % 1;
@@ -1571,7 +1589,7 @@ export function createHarbor(canvasEl, opts = {}) {
       const col = tr.dir > 0 ? TW : TC;
       for (let s = 0; s < TSEG; s++) {
         const f = s / (TSEG - 1); // 0 tail .. 1 head
-        const u = head - tr.dir * 0.015 * (1 - f);
+        const u = head - tr.dir * 0.03 * (1 - f);
         lutAt(L, u, pv3, tv3);
         const lane = 0.36 * tr.dir;
         const sx = -tv3[2], sz = tv3[0], sl = Math.hypot(sx, sz) || 1;
@@ -1579,13 +1597,13 @@ export function createHarbor(canvasEl, opts = {}) {
         // ribbon width perpendicular to tangent and view
         const vx = camLocal.x - x, vy = camLocal.y - y, vz = camLocal.z - z;
         let wx = tv3[1] * vz - tv3[2] * vy, wy = tv3[2] * vx - tv3[0] * vz, wz = tv3[0] * vy - tv3[1] * vx;
-        const wl = Math.hypot(wx, wy, wz) || 1; const w = 0.16 * (0.3 + 0.7 * f);
+        const wl = Math.hypot(wx, wy, wz) || 1; const w = 0.22 * (0.3 + 0.7 * f);
         wx = wx / wl * w; wy = wy / wl * w; wz = wz / wl * w;
         const o = vi * 3;
         trailPos[o] = x + wx; trailPos[o + 1] = y + wy; trailPos[o + 2] = z + wz;
         trailPos[o + 3] = x - wx; trailPos[o + 4] = y - wy; trailPos[o + 5] = z - wz;
         const edgeFade = smooth(0, 0.04, u) * (1 - smooth(0.96, 1, u));
-        const a = Math.pow(f, 1.2) * 1.5 * edgeFade;
+        const a = Math.pow(f, 1.2) * 2.2 * edgeFade;
         for (let q2 = 0; q2 < 2; q2++) { const c4 = (vi + q2) * 4; trailCol[c4] = col.r; trailCol[c4 + 1] = col.g; trailCol[c4 + 2] = col.b; trailCol[c4 + 3] = a; }
         vi += 2;
       }

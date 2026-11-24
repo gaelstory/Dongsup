@@ -56,14 +56,18 @@
     if (!scene) return;
     var L = function (c) { return $('.layer--' + c, scene); };
     S = {
-      layers: ['sky', 'far', 'mid', 'vfog', 'near', 'fog', 'front'].map(L),
-      depthY: [0, 16, 38, 46, 70, 82, 130],
-      depthX: [0, 2, 4, 5, 8, 9, 12],
+      layers: ['sky', 'far', 'mid', 'vfog', 'vfog2', 'near', 'fog', 'front'].map(L),
+      depthY: [0, 14, 30, 36, 36, 44, 52, 96],
+      depthX: [0, 2, 4, 5, 5, 8, 9, 12],
+      driftX: [0, 0, 0, -1, 1, 0, 0, 0],
       skyStops: $$('#g-sky stop'),
       grad: $('#g-sky'),
       grads: [$$('#g-haze stop'), $$('#g-far stop'), $$('#g-mid stop'), $$('#g-near stop')],
       treeB: $('.trees-back', scene), treeF: $('.trees-front', scene), ground: $('.ground', scene),
-      roof: $$('.c-roof, .c-frame', scene), face: $$('.c-face', scene), glass: $$('.c-glass', scene),
+      tb1: $('.tb1', scene), tb2: $('.tb2', scene), mistrow: $('.mistrow', scene),
+      roof: $$('.c-roof, .c-frame', scene), face: $$('.c-face', scene),
+      gTop: [$('.c-glass--top', scene)], gDoor: [$('.c-glass--door', scene)], gStar: [$('.c-glass--star', scene)],
+      rimR: $('.c-rim--r', scene), rimL: $('.c-rim--l', scene), meteorG: $('.meteor-g', scene), meteor: $('.meteor', scene),
       lamp: $('.c-lamp', scene), glow: $('.c-glow', scene), spill: $('.c-spill', scene), smoke: $('.smoke', scene),
       rays: $('.rays', scene), smokePath: $('.smoke-path', scene), puffEls: $$('.smoke circle', scene),
       sun: $('.sun', scene), sunDisc: $('.sun-disc', scene), sunGlow: $('.sun-glow', scene), horizon: $('.horizon', scene),
@@ -100,15 +104,19 @@
   }
   function fit() {
     var el = S.layers[0], W = el.clientWidth || innerWidth, H = el.clientHeight || innerHeight, ar = W / H, w, h, x, y;
-    if (ar >= 1.6) { w = Math.min(1000 * ar, 2400); h = w / ar; x = 800 - w / 2; y = 1000 - h; }
-    else if (ar >= 1) { h = 1000; w = 1000 * ar; x = 800 + ((1.6 - ar) / 0.6) * 150 - w / 2; y = 0; }
-    else { w = Math.min(1200, Math.max(700, W * 1.5)); h = w / ar; x = 960 - w / 2; y = 1150 - h; }  // portrait: lift the cabin clear of the booking bar
+    if (ar >= 1) {
+      h = 840; w = h * ar;
+      if (w > 2100) { w = 2100; h = w / ar; }
+      x = 960 - (ar >= 1.5 ? 0.62 : 0.68) * w; y = 1000 - h;
+    } else { w = Math.min(1200, Math.max(700, W * 1.5)); h = w / ar; x = 960 - w / 2; y = 1150 - h; }  // portrait: lift the cabin clear of the booking bar
     S.vb = { x: x, y: y, w: w, h: h };
     var str = x.toFixed(1) + ' ' + y.toFixed(1) + ' ' + w.toFixed(1) + ' ' + h.toFixed(1);
     S.layers.forEach(function (l) { l.setAttribute('viewBox', str); });
     S.grad.setAttribute('y1', y.toFixed(0)); S.grad.setAttribute('y2', '690');
     var hy = 640;
-    S.arc = { cx: x + w / 2, hy: hy, rx: w * (ar < 1 ? 0.44 : 0.4), ry: (hy - y) * (ar < 1 ? 0.7 : 0.74) };
+    S.arc = { cx: x + w / 2, hy: hy, rx: w * (ar < 1 ? 0.44 : 0.46), ry: (hy - y) * (ar < 1 ? 0.85 : 0.74) };
+    S.px = W / w;
+    if (S.meteorG) S.meteorG.setAttribute('transform', 'translate(' + (x + w * 0.8).toFixed(0) + ' ' + (y + (560 - y) * 0.22).toFixed(0) + ') scale(' + Math.max(0.7, w / 1500).toFixed(2) + ')');
     S.horizon.setAttribute('rx', (w * 0.72).toFixed(0));
     S.horizon.setAttribute('ry', ((690 - y) * 0.5).toFixed(0));
     placeStars();
@@ -139,20 +147,29 @@
     for (var i = 0; i < 4; i++) setAttr(S.skyStops[i], 'stop-color', css(c[i]));
     for (var g = 0; g < 4; g++) { setAttr(S.grads[g][0], 'stop-color', css(c[4 + g * 2])); setAttr(S.grads[g][1], 'stop-color', css(c[5 + g * 2])); }
     setAttr(S.treeB, 'fill', css(c[12])); setAttr(S.treeF, 'fill', css(c[13])); setAttr(S.ground, 'fill', css(c[14]));
+    // the back rows fade toward the valley haze: three depth tones
+    setAttr(S.tb1, 'fill', mix(c[12], c[2], 0.24)); setAttr(S.tb2, 'fill', mix(c[12], c[2], 0.46));
+    setAttr(S.mistrow, 'opacity', (Math.max(1 - smooth(6.6, 9, h), smooth(20.5, 22.8, h) * 0.22) * 0.9).toFixed(3));
     setFill(S.roof, css(c[15])); setFill(S.face, css(c[16]));
-    // window light: an early lamp at dawn, then the evening glow from 18:00
-    var lit = Math.max((1 - smooth(6.2, 7.4, h)) * 0.48, smooth(17.6, 19.2, h));
-    setFill(S.glass, mix(c[17], LAMP, lit));
-    setAttr(S.lamp, 'opacity', lit.toFixed(3));
-    setAttr(S.glow, 'opacity', (lit * (0.45 + 0.55 * smooth(18, 20.5, h))).toFixed(3));
-    setAttr(S.spill, 'opacity', (lit * 0.9).toFixed(3));
+    // windows come on one at a time: loft 17:30, door 18:10, deck lamp 18:40, star house 19:30 (and a dawn lamp in the loft)
+    var dawn = (1 - smooth(6.2, 7.4, h)) * 0.5;
+    var wTop = Math.max(dawn, smooth(17.3, 17.8, h)), wDoor = smooth(17.9, 18.4, h), wLamp = smooth(18.5, 18.9, h), wStar = smooth(19.2, 19.7, h);
+    setFill(S.gTop, mix(c[17], LAMP, wTop)); setFill(S.gDoor, mix(c[17], LAMP, wDoor)); setFill(S.gStar, mix(c[17], LAMP, wStar));
+    setAttr(S.lamp, 'opacity', wLamp.toFixed(3));
+    setAttr(S.glow, 'opacity', ((wTop + wDoor) * 0.5 * (0.45 + 0.55 * smooth(18, 20.5, h))).toFixed(3));
+    var spill = Math.max(dawn * 0.7, wTop * 0.25 + wDoor * 0.35 + wLamp * 0.2 + wStar * 0.2);
+    setAttr(S.spill, 'opacity', spill.toFixed(3));
+    setAttr(S.spill, 'rx', (170 + 150 * spill).toFixed(0));
+    // rim light on the sunny side of the roof: right edge at dawn, left edge at sunset
+    setAttr(S.rimR, 'opacity', ((1 - smooth(6.6, 7.8, h)) * 0.6).toFixed(3));
+    setAttr(S.rimL, 'opacity', (smooth(17.4, 18.2, h) * (1 - smooth(18.9, 19.6, h)) * 0.55).toFixed(3));
     var smokeA = h < 9 ? lerp(0.5, 0.22, smooth(7, 9, h)) : h < 17.5 ? 0.22 : lerp(0.22, 0.7, smooth(17.5, 18.8, h));
     setAttr(S.smoke, 'opacity', smokeA.toFixed(3));
     puffs(((window.scrollY || 0) * 0.0011 + h * 0.4) % 1);
 
     // sun and moon on one arc
-    // morning and evening halves of the arc run at different speeds: up at 04:12, top at 12:30, down at 20:36
-    var A = S.arc, ts = h < 12.5 ? (h - 4.2) / 8.3 * Math.PI / 2 : Math.PI / 2 + (h - 12.5) / 8.1 * Math.PI / 2;
+    // morning and evening halves of the arc run at different speeds so the sun clears the ridges at dawn and sunset
+    var A = S.arc, ts = h < 12.5 ? (h - 3) / 9.5 * Math.PI / 2 : Math.PI / 2 + (h - 12.5) / 8.1 * Math.PI / 2;
     var sx = A.cx + A.rx * Math.cos(ts), sy = A.hy - A.ry * Math.sin(ts);
     setAttr(S.sun, 'transform', 'translate(' + sx.toFixed(1) + ' ' + sy.toFixed(1) + ')');
     setAttr(S.sunDisc, 'fill', css(c[18]));
@@ -171,7 +188,7 @@
         if (S.rays.__t !== rt) { S.rays.style.transform = rt; S.rays.__t = rt; }
       }
     }
-    var tm = (h - 19.4) / 9.6 * Math.PI;
+    var tm = (h - 19.4) / 12 * Math.PI;
     var mx = A.cx + A.rx * Math.cos(tm), my = A.hy - A.ry * Math.sin(tm);
     setAttr(S.moon, 'transform', 'translate(' + mx.toFixed(1) + ' ' + my.toFixed(1) + ')');
     setAttr(S.moon, 'opacity', smooth(19.4, 20.4, h).toFixed(3));
@@ -188,16 +205,20 @@
 
     // valley mist: thick at dawn, a thin moonlit band late at night
     var vfog = Math.max(1 - smooth(6.4, 9.6, h), smooth(20, 22.8, h) * 0.14);
-    S.layers[3].style.opacity = vfog.toFixed(3);
-    S.layers[5].style.opacity = (fx.bands * (1 - smooth(6.6, 8.4, h))).toFixed(3);
+    var vf = vfog.toFixed(3);
+    if (S.layers[3].__o !== vf) { S.layers[3].style.opacity = vf; S.layers[4].style.opacity = vf; S.layers[3].__o = vf; }
+    S.layers[6].style.opacity = (fx.bands * (1 - smooth(6.6, 8.4, h))).toFixed(3);
 
+    // the two valley-fog sheets slide apart while the morning burns the mist off
+    var drift = smooth(6, 8.6, h) * 120 * (S.px || 1);
     var vh = (S.layers[0].clientHeight || innerHeight) / 900 * (S.vb.w < 1000 ? 0.55 : 1);
     for (var l = 0; l < S.layers.length; l++) {
-      var ty = S.depthY[l] * p * vh, tx = -S.depthX[l] * px;
+      var ty = S.depthY[l] * p * vh, tx = -S.depthX[l] * px + S.driftX[l] * drift;
       var tr = 'translate3d(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px,0)';
       if (S.layers[l].__t !== tr) { S.layers[l].style.transform = tr; S.layers[l].__t = tr; }
     }
-    var dusk = h >= 17.6;
+    // dark scrim + snow text from the moment the sky's luminance drops below ~0.35
+    var dusk = h >= 16.2;
     if (dusk !== root.classList.contains('is-dusk')) root.classList.toggle('is-dusk', dusk);
     clockTo(h);
   }
@@ -314,15 +335,18 @@
   function watchModes() {
     watchers.forEach(function (w) { w.disconnect(); }); watchers = [];
     var vh = innerHeight;
-    if (header) surfaceWatch(header, '-36px 0px -' + Math.max(0, vh - 37) + 'px 0px');
-    if (clockEl) surfaceWatch(clockEl, innerWidth >= 1200 ? '-' + Math.max(0, vh - 52) + 'px 0px -51px 0px' : '-36px 0px -' + Math.max(0, vh - 37) + 'px 0px');
+    var hh = innerWidth >= 768 ? 72 : 60, line = '-' + (hh - 1) + 'px 0px -' + Math.max(0, vh - hh) + 'px 0px';
+    if (header) surfaceWatch(header, line);
+    if (clockEl) surfaceWatch(clockEl, line);
   }
-  var bookingInView = false, heroEl = $('.hero');
+  var bookingInView = false, footerInView = false, heroEl = $('.hero');
   function updateBar() {
     if (!bar) return;
     var desktop = innerWidth >= 1200;
     var inHero = desktop && (window.scrollY || 0) < (heroEl ? heroEl.offsetHeight * 0.55 : 400);
-    bar.classList.toggle('is-hidden', inHero || bookingInView);
+    var off = inHero || bookingInView || footerInView;
+    if (off !== bar.classList.contains('is-hidden')) bar.classList.toggle('is-hidden', off);
+    if (off !== root.classList.contains('bar-off')) root.classList.toggle('bar-off', off);
   }
 
   /* ---------------- mobile menu ---------------- */
@@ -374,7 +398,9 @@
     var spots = $$('.spot'), warm = false, openT = 0, coolT = 0;
     function place(spot, tip) {
       var fig = spot.parentElement, fw = fig.clientWidth, tw = tip.offsetWidth, cx = spot.offsetLeft + 22, cy = spot.offsetTop + 22;
-      tip.style.left = clamp(cx, tw / 2 + 4, fw - tw / 2 - 4) + 'px';
+      var left = clamp(cx, tw / 2 + 4, fw - tw / 2 - 4);
+      tip.style.left = left + 'px';
+      tip.style.setProperty('--ax', clamp(cx - (left - tw / 2), 16, tw - 16) + 'px');
       tip.style.setProperty('--y', cy + 'px');
       tip.classList.toggle('is-below', cy < tip.offsetHeight + 44);
     }
@@ -505,11 +531,12 @@
         var s = +b.getAttribute('data-step');
         b.setAttribute('aria-disabled', String((s < 0 && st.guests <= 1) || (s > 0 && st.guests >= 4)));
       });
-      var bd = $('#bar-dates'), bp = $('#bar-price');
+      var bd = $('#bar-dates'), bp = $('#bar-price'), narrow = innerWidth < 600;
+      var tiny = function (d) { return (d.getMonth() + 1) + '.' + d.getDate() + '(' + DOW[d.getDay()] + ')'; };
       if (bd && bp) {
-        if (n) { bd.textContent = short(st.inD) + '부터 ' + short(st.outD) + '까지, ' + st.guests + '명'; bp.textContent = n + '박 ' + won(price()); }
-        else if (st.inD) { bd.textContent = short(st.inD) + ' 입실'; bp.textContent = '나가는 날을 골라 주세요'; }
-        else { bd.textContent = '날짜를 고르면'; bp.textContent = '요금이 바로 계산됩니다'; }
+        if (n) { bd.textContent = narrow ? tiny(st.inD) + '~' + tiny(st.outD) + ', ' + st.guests + '명' : short(st.inD) + '부터 ' + short(st.outD) + '까지, ' + st.guests + '명'; bp.textContent = n + '박 ' + won(price()); }
+        else if (st.inD) { bd.textContent = (narrow ? tiny(st.inD) : short(st.inD)) + ' 입실'; bp.textContent = narrow ? '나가는 날을 골라요' : '나가는 날을 골라 주세요'; }
+        else { bd.textContent = '날짜를 고르면'; bp.textContent = '요금이 나옵니다'; }
       }
     }
     function pick(d) {
@@ -667,6 +694,14 @@
             .from(line, { drawSVG: 0, duration: 0.9, ease: 'power2.inOut' })
             .from(dirt, { drawSVG: 0, duration: 0.7, ease: 'power2.out' }, '-=0.1');
         }
+        // one shooting star while "별을 셉니다" crosses the middle of the screen
+        var lastMoment = $$('.moment').pop();
+        if (S && S.meteor && lastMoment && window.DrawSVGPlugin) {
+          gsap.timeline({ scrollTrigger: { trigger: lastMoment.firstElementChild, start: 'top 62%', once: true }, delay: 0.25 })
+            .set(S.meteor, { opacity: 1 })
+            .fromTo(S.meteor, { drawSVG: '0% 0%' }, { drawSVG: '60% 100%', duration: 0.55, ease: 'power1.in' })
+            .to(S.meteor, { drawSVG: '100% 100%', opacity: 0, duration: 0.25, ease: 'power1.out' });
+        }
       }
 
       return function () {
@@ -684,7 +719,9 @@
     try {
       watchModes();
       var booking = $('#booking');
-      if (booking) new IntersectionObserver(function (en) { bookingInView = en[0].isIntersecting; updateBar(); }, { rootMargin: '-35% 0px -35% 0px' }).observe(booking);
+      if (booking) new IntersectionObserver(function (en) { bookingInView = en[0].isIntersecting; updateBar(); }, { rootMargin: '-12% 0px -12% 0px' }).observe(booking);
+      var foot = $('.site-footer');
+      if (foot) new IntersectionObserver(function (en) { footerInView = en[0].isIntersecting; updateBar(); }, { rootMargin: '0px 0px -12% 0px' }).observe(foot);
     } catch (err) { /* header keeps its default look */ }
     try { initMotion(); } catch (err) { root.classList.add('no-motion'); state.motion = false; }
     try { steppedTime(); } catch (err) { /* stays at dawn */ }
