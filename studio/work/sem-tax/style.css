@@ -290,7 +290,7 @@ svg { display: block; }
   grid-column: 1 / -1; padding: 0 var(--cell); font-size: 13px; color: var(--ink-2); text-align: left; line-height: var(--half);
   max-width: 63%;
 }
-@media (min-width: 900px) { .ledger__note { grid-column: 2 / -1; text-align: right; max-width: none; } .ledger__hint { display: none; } }
+@media (min-width: 900px) { .ledger__note { grid-column: -2 / -1; text-align: right; max-width: none; } .ledger__hint { display: none; } }
 
 /* seals: inked, multiplied into the paper */
 .seal { color: var(--seal); mix-blend-mode: multiply; overflow: visible; }

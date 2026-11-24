@@ -158,7 +158,7 @@
     row.addEventListener('click', function (e) {
       if (mqWide.matches && e.pointerType === 'mouse') return;
       var open = !row.classList.contains('is-open');
-      heroRows.forEach(function (r) { r.classList.remove('is-open', 'is-hot'); if (r !== totalRow) r.setAttribute('aria-expanded', 'false'); });
+      heroRows.forEach(function (r) { r.classList.remove('is-open', 'is-hot'); if (r !== totalRow && !r.classList.contains('lrow--fix')) r.setAttribute('aria-expanded', 'false'); });
       if (open) row.classList.add('is-open', 'is-hot');
       row.setAttribute('aria-expanded', String(open));
     });
@@ -395,7 +395,8 @@
     var list = '<ul class="dues">' + items.map(function (x) {
       var nd = nextDate(m, x.d);
       var moved = nd.getDate() !== x.d || nd.getMonth() !== m;
-      var past = isNow && nd < today;
+      // in the open month, a deadline already behind us this year reads 지남
+      var past = isNow && shift(new Date(tY, m, x.d)) < today;
       var dd = dday(nd);
       var shiftNote = moved ? '<span class="due__shift">주말이라 ' + (nd.getMonth() + 1) + '월 ' + nd.getDate() + '일(' + WD[nd.getDay()] + ')까지</span>' : '';
       return '<li class="due"><span class="due__d' + (past ? ' is-past' : '') + '">' + tabStr(x.d) + '일' + shiftNote + '</span>' +
