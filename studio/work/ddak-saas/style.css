@@ -268,6 +268,7 @@ button.chip { cursor: pointer; }
 .sx-fade { transition: opacity 260ms ease; }
 .sx-layer:not(.is-on) .sx-fade { opacity: 0; transition-duration: 160ms; }
 .ledger__table--stage td { transition: border-color 260ms ease; }
+.app--stage.is-stacked .sx-side .sx-layer:not(.is-on) { display: none; }
 .sx-layer:not(.is-on) .ledger__table--stage td { border-color: transparent; }
 td.c-chip:has(.chip) .slot { opacity: 0; }
 .conn { display: grid; gap: 8px; margin-top: 10px; }

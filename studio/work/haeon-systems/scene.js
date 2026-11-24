@@ -1383,7 +1383,6 @@ export function createHarbor(canvasEl, opts = {}) {
         const h0 = hFn(i / n), h1 = hFn((i + 1) / n);
         const P = (a, y) => [-46 + Math.cos(a) * R, y, 58 + Math.sin(a) * R];
         const nr = [-Math.cos((a0 + a1) / 2), 0, -Math.sin((a0 + a1) / 2)];
-        const bb = [P(a0, -60), P(a1, -60), P(a1, h1), P(a0, h0)];
         // gradient: build two quads (lower haze to mid, mid to ridge)
         const mid0 = -2, mid1 = -2;
         mb.quad(P(a0, -60), P(a1, -60), P(a1, mid1), P(a0, mid0), nr, bot);
@@ -1571,11 +1570,6 @@ export function createHarbor(canvasEl, opts = {}) {
   let running = false, raf = 0, last = 0, time = 0, firstFrame = false, inView = true, pageVisible = !document.hidden;
   let introStart = -1;
   const INTRO_DELAY = 0.35, INTRO_DRAW = 1.2;
-  function renderOnce(t) {
-    update(t, 1 / 60);
-    renderer.render(scene, camera);
-    if (!firstFrame) { firstFrame = true; opts.onReady && opts.onReady(); }
-  }
   function tick(now) {
     if (!running) return;
     raf = requestAnimationFrame(tick);

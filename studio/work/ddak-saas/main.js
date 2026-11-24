@@ -253,6 +253,7 @@
     function stacked() {
       var made = [1, 2, 3].map(function (n) {
         var el = pristine.cloneNode(true);
+        el.classList.add('is-stacked');
         slots[n - 1].appendChild(el);
         var stage = Stage(el, MOTION ? n - 1 : n);
         if (MOTION) ST.create({ trigger: el, start: 'top 72%', once: true, onEnter: function () { stage.go(n, true); } });
