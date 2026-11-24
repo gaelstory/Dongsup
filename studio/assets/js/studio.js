@@ -253,16 +253,24 @@
         name: c.getAttribute('data-name'),
         kind: c.getAttribute('data-kind'),
         href: 'work/' + slug + '/index.html',
-        url: 'assets/thumbs/' + slug + '.jpg',
-        status: 'unknown'
+        v: {}
       };
     });
+    // Each slide keeps one record per image size: phones always take the 720px file, wider screens let the
+    // browser pick from srcset by stage width and pixel density, and the file it chose (currentSrc) is painted.
+    var STAGE_SIZES = 'min(1240px, calc(100vw - 96px))';
+    var variant = function () { return mqTablet.matches ? 'wide' : 'phone'; };
+    var rec = function (s) { var k = variant(); return s.v[k] || (s.v[k] = { status: 'unknown', src: '' }); };
+    var look = function (s) { var r = rec(s); return { slug: s.slug, name: s.name, kind: s.kind, status: r.status, url: r.src }; };
     var L = slides.length;
     if (!L) return;
     var cur = 0;
-    watchImg($('[data-stage-img]', base), function () { slides[0].status = 'broken'; }, function () {
-      slides[0].status = 'ok';
-      if (built && cur === 0) built.fronts.forEach(function (f) { paint(f, slides[0]); });
+    var baseImg = $('[data-stage-img]', base);
+    watchImg(baseImg, function () { rec(slides[0]).status = 'broken'; }, function () {
+      var r = rec(slides[0]);
+      r.status = 'ok';
+      r.src = baseImg.currentSrc || baseImg.src;
+      if (built && cur === 0) built.fronts.forEach(function (f) { paint(f, look(slides[0])); });
     });
 
     nav.hidden = false;
@@ -270,27 +278,36 @@
     // Resolves with the image status, or 'timeout' after ms. The download keeps going after a timeout,
     // and if that slide is on screen by then its poster is swapped for the real screenshot.
     function ensure(s, ms) {
-      if (s.status === 'ok' || s.status === 'broken') return Promise.resolve(s.status);
-      if (!s._ready) {
-        s._ready = new Promise(function (res) {
+      var r = rec(s);
+      if (r.status === 'ok' || r.status === 'broken') return Promise.resolve(r.status);
+      if (!r.ready) {
+        r.ready = new Promise(function (res) {
           var img = new Image();
           img.onload = function () {
             (img.decode ? img.decode() : Promise.resolve()).catch(function () {}).then(function () {
-              s.status = 'ok';
+              r.status = 'ok';
+              r.src = img.currentSrc || img.src;
               res('ok');
               arrived(s);
             });
           };
-          img.onerror = function () { s.status = 'broken'; res('broken'); };
+          img.onerror = function () { r.status = 'broken'; res('broken'); };
           img.decoding = 'async';
-          img.src = s.url;
+          var base720 = 'assets/thumbs/' + s.slug + '-720.jpg', full = 'assets/thumbs/' + s.slug + '.jpg';
+          if (variant() === 'phone') {
+            img.src = base720;
+          } else {
+            img.sizes = STAGE_SIZES;
+            img.srcset = base720 + ' 720w, ' + full + ' 1440w';
+            img.src = full;
+          }
         });
       }
-      return Promise.race([s._ready, wait(ms || 1500).then(function () { return 'timeout'; })]);
+      return Promise.race([r.ready, wait(ms || 1500).then(function () { return 'timeout'; })]);
     }
     function arrived(s) {
       if (slides[cur] !== s) return;
-      if (built) built.fronts.forEach(function (f) { paint(f, s); });
+      if (built) built.fronts.forEach(function (f) { paint(f, look(s)); });
       else showOnBase(s, true);
     }
 
@@ -347,7 +364,7 @@
         wrap.appendChild(slat);
         B.slats.push(slat); B.lifts.push(lift); B.flips.push(flip); B.fronts.push(front); B.backs.push(back);
         B.fShades.push($('.face__shade', front)); B.bShades.push($('.face__shade', back)); B.gloss.push($('.face__gloss', front));
-        paint(front, slides[cur]);
+        paint(front, look(slides[cur]));
       }
       view.appendChild(wrap);
       stage.classList.add('is-built');
@@ -365,7 +382,7 @@
     function showOnBase(s, fade) {
       var layer = document.createElement('span');
       layer.className = 'stage__fade';
-      paint(layer, s);
+      paint(layer, look(s));
       base.appendChild(layer);
       var cleanup = function () {
         $$(':scope > :not(:last-child)', base).forEach(function (n) { n.remove(); });
@@ -403,14 +420,14 @@
         return;
       }
       var B = built;
-      B.backs.forEach(function (b) { paint(b, s); });
+      B.backs.forEach(function (b) { paint(b, look(s)); });
       var st = { each: 0.045, from: pointerIndex(B.n) };
       liftPaused = true;
       resetLift(true);
       if (hl) G.to(hl, { scaleX: 0, duration: 0.3, ease: 'power2.out', overwrite: true });
       tl = G.timeline({
         onComplete: function () {
-          B.fronts.forEach(function (f) { paint(f, s); });
+          B.fronts.forEach(function (f) { paint(f, look(s)); });
           G.set(B.flips, { rotationX: 0 });
           G.set(B.fShades.concat(B.bShades), { opacity: 0 });
           cur = target;
@@ -867,7 +884,9 @@
       img.decoding = 'async';
       img.loading = 'lazy';
       img.addEventListener('error', function () { img.hidden = true; });
-      img.src = 'assets/thumbs/' + slug + '.jpg';
+      img.sizes = '192px';
+      img.srcset = 'assets/thumbs/' + slug + '-720.jpg 720w, assets/thumbs/' + slug + '.jpg 1440w';
+      img.src = 'assets/thumbs/' + slug + '-720.jpg';
       holder.appendChild(img);
     };
 

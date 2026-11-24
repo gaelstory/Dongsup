@@ -394,6 +394,8 @@
     sheet.classList.add('is-open');
     outside.forEach(function (el) { el.inert = true; });
     if (TEUM.lenis) TEUM.lenis.stop();
+    var sbw = innerWidth - root.clientWidth;
+    if (sbw > 0) { document.body.style.paddingRight = sbw + 'px'; header.style.paddingRight = sbw + 'px'; }
     document.body.style.overflow = 'hidden';
     msgEl.textContent = '';
     setTimeout(function () { $('.sheet__close', sheet).focus(); }, 40);
@@ -405,6 +407,7 @@
     outside.forEach(function (el) { el.inert = false; });
     if (TEUM.lenis) TEUM.lenis.start();
     document.body.style.overflow = '';
+    document.body.style.paddingRight = ''; header.style.paddingRight = '';
     closeTm = setTimeout(function () { sheet.hidden = true; sheet.classList.remove('is-closing'); }, mqReduce.matches ? 170 : 300);
     if (opener && opener.focus) opener.focus({ preventScroll: true });
   }
