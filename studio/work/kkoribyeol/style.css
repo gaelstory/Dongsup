@@ -184,15 +184,19 @@ svg { display: block; }
 .pg-js .ball { left: 0; top: 0; bottom: auto; margin-left: 0; }
 @media (max-width: 767px) { .ball { width: 48px; height: 48px; padding: 6px; margin-left: -24px; } }
 
-.ball-hint { position: absolute; left: 52%; bottom: calc(var(--ground) + 62px); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; font-family: var(--f-head); font-size: 21px; line-height: 1.2; }
+.ball-hint { position: absolute; left: 52%; bottom: calc(var(--ground) + var(--dog-h) + 2px); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; font-family: var(--f-head); font-size: 20px; line-height: 1.2; }
 .ball-hint span { padding: 6px 12px; background: var(--cream); border: 2px solid var(--nose); border-radius: 14px; transform: rotate(-3deg); white-space: nowrap; }
-.ball-hint svg { width: 40px; height: 30px; margin-top: 2px; transform: rotate(62deg); }
-@media (max-width: 767px) { .ball-hint { left: 50%; bottom: calc(var(--ground) + 58px); font-size: 17px; } .ball-hint svg { width: 32px; height: 24px; } }
+.ball-hint svg { display: none; }
+/* a dotted guide from the bubble down to the ball, above the dogs' heads */
+.ball-hint::after { content: ""; display: block; width: 0; height: max(14px, calc(var(--dog-h) - 58px)); margin-top: 6px; border-left: 3px dotted var(--nose); }
+@media (max-width: 767px) { .ball-hint { left: 50%; font-size: 16px; } .ball-hint span { padding: 5px 10px; } }
+@media (max-width: 359px) { .ball-hint { display: none; } }
 .fetch-count {
-  position: absolute; right: max(var(--gutter), env(safe-area-inset-right, 0px)); bottom: calc(var(--grass-h) - 58px);
+  position: absolute; right: max(var(--gutter), env(safe-area-inset-right, 0px)); bottom: calc(var(--grass-h) - 30px);
   padding: 6px 12px; background: var(--cream); border: 2px solid var(--nose); border-radius: 16px; box-shadow: 3px 3px 0 var(--nose);
   font-family: var(--f-head); font-size: 16px; line-height: 1.2; transform: rotate(3deg); white-space: nowrap;
 }
+@media (max-width: 359px) { .fetch-count { bottom: calc(var(--grass-h) - 96px); } }
 @media (min-width: 768px) {
   .fetch-count { right: auto; left: calc(52% + 118px); bottom: calc(var(--grass-h) - 14px); font-size: 20px; padding: 8px 16px; }
 }
