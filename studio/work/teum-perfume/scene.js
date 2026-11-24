@@ -1,4 +1,4 @@
-/* 틈 TEUM — the glass bottle. Reads window.TEUM.state (written by main.js) and draws one frame per rAF. */
+/* 틈 TEUM: the glass bottle. Reads window.TEUM.state (written by main.js) and draws one frame per rAF. */
 import * as THREE from '../../assets/vendor/three/three.module.min.js';
 
 const TEUM = window.TEUM;

@@ -139,7 +139,7 @@
         if (!c[1].querySelector('.slot')) c[1].insertAdjacentHTML('afterbegin', '<span class="slot" aria-hidden="true"></span>');
         r.classList.add('is-empty');
       });
-      chips.forEach(function (c) { c.removeAttribute('tabindex'); G && G.set(c, { clearProps: 'transform' }); pile.appendChild(c); });
+      chips.forEach(function (c) { c.removeAttribute('tabindex'); c.classList.remove('is-flash'); if (G) G.set(c, { clearProps: 'transform' }); pile.appendChild(c); });
       filled = 0; sum = 0; setTotal(0, false); status(); live.textContent = '';
       if (state) Flip.from(state, { duration: 0.42, ease: 'power3.inOut', absolute: true, zIndex: 30, stagger: 0.012 });
     }
@@ -181,6 +181,15 @@
     var cells = Array.prototype.map.call(el.querySelectorAll('.ledger__table--stage tbody tr'), function (r) { return r.cells[0]; });
     var switches = Array.prototype.slice.call(el.querySelectorAll('[data-conn]')), countEl = el.querySelector('.sx-main .pane-count');
     var fees = Array.prototype.slice.call(el.querySelectorAll('.ledger__table--stage td[data-v]'));
+    var stacked = el.classList.contains('is-stacked'), main = el.querySelector('.sx-main');
+    // phones show one step per window: hidden layers collapse, and the height change is tweened once
+    function settle(on, anim) {
+      if (!stacked || el.classList.contains('is-settled') === on) return;
+      var h0 = main.offsetHeight;
+      el.classList.toggle('is-settled', on);
+      var h1 = main.offsetHeight;
+      if (anim && h0 !== h1) G.fromTo(main, { height: h0 }, { height: h1, duration: 0.4, ease: 'power2.inOut', clearProps: 'height' });
+    }
 
     function home(c, n) { var ch = c.getAttribute('data-ch'); return n <= 1 ? trays[ch] : n === 2 ? cells[+c.getAttribute('data-i')] : tokens[ch]; }
     function layers(n) {
@@ -225,10 +234,12 @@
       if (flight) { flight.progress(1); flight = null; }
       allOn();
       var state = anim ? Flip.getState(chips) : null;
+      settle(false, anim);
       chips.forEach(function (c) { home(c, n).appendChild(c); });
       layers(n);
       if (n === 2) countFees(anim);
-      if (state) flight = Flip.from(state, { duration: 0.62, ease: 'power3.inOut', absolute: true, zIndex: 20, stagger: { each: 0.022, from: n === 3 ? 'start' : 'end' } });
+      if (state) flight = Flip.from(state, { duration: 0.62, ease: 'power3.inOut', absolute: true, zIndex: 20, stagger: { each: 0.022, from: n === 3 ? 'start' : 'end' }, onComplete: function () { settle(true, true); } });
+      else settle(true, false);
     }
     switches.forEach(function (s) {
       s.addEventListener('click', function () {
@@ -240,6 +251,7 @@
     // place everything for the starting step without animation
     if (start === 0) go(0, false);
     else if (start > 1) { step = 1; go(start, false); }
+    settle(true, false);
     return { go: go, get step() { return step; } };
   }
 

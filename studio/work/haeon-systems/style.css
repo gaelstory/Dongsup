@@ -26,7 +26,7 @@
   --fs-h2: clamp(2rem, 1.35rem + 2.2vw, 3.25rem);
 
   --gutter: clamp(20px, 4vw, 64px);
-  --maxw: 1280px;
+  --maxw: 1440px;
   --header-h: 64px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --radius: 20px;
@@ -246,7 +246,9 @@ html.is-twin .fb-buildings rect, html.is-twin .fb-land, html.is-twin .fb-piers p
   font-size: clamp(2.5rem, 5.6vw, 5.25rem);
   line-height: 1.12;
   letter-spacing: -0.025em;
-  text-wrap: nowrap;
+}
+@media (max-width: 359.98px) {
+  .hero-title { font-size: 2.0625rem; }
 }
 .hero-title .line { display: block; }
 .hero-lead {
@@ -528,8 +530,8 @@ html:not(.js) .twin-toggle { display: none; }
 .al-high .al-level::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; background: var(--warm); box-shadow: 0 0 0 3px rgba(255, 201, 138, 0.2); vertical-align: 1px; }
 .al-mid .al-level { color: #FFDDB5; }
 
-.console-pager { display: none; justify-content: center; gap: 4px; padding: 8px 0 10px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
-.pager-btn { width: 44px; height: 32px; border: 0; background: transparent; position: relative; }
+.console-pager { display: none; justify-content: center; gap: 4px; padding: 2px 0 4px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.pager-btn { width: 44px; height: 44px; border: 0; background: transparent; position: relative; }
 .pager-btn::before { content: ""; position: absolute; left: 50%; top: 50%; width: 18px; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.25); transform: translate(-50%, -50%); transition: background-color 180ms ease, width 180ms ease; }
 .pager-btn[aria-current="true"]::before { background: var(--cyan); }
 
@@ -645,7 +647,6 @@ html:not(.js) .twin-toggle { display: none; }
 /* ---------- motion safety */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
-  .hero-canvas { transition: opacity 150ms linear !important; }
 }
 @media print {
   .site-header, .hero-visual, .hero-scrim, .twin-toggle { display: none; }

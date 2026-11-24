@@ -1,4 +1,4 @@
-/* 틈 TEUM — page behaviour. The WebGL bottle lives in scene.js and reads window.TEUM.state each frame. */
+/* 틈 TEUM: page behaviour. The WebGL bottle lives in scene.js and reads window.TEUM.state each frame. */
 (function () {
   'use strict';
   var root = document.documentElement;

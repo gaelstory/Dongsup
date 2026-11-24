@@ -1,4 +1,4 @@
-/* 셈 세무회계 — page behaviour. Loaded at the end of <body> (not deferred) so the hero
+/* 셈 세무회계: page behaviour. Loaded at the end of <body> (not deferred) so the hero
    odometers are in place before the first paint and nothing flashes from final to zero. */
 (function () {
   'use strict';

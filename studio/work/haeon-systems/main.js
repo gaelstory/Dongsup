@@ -122,6 +122,15 @@ grid.addEventListener('scroll', () => {
   });
 }, { passive: true });
 pagerBtns.forEach((b, i) => { if (i) b.removeAttribute('aria-current'); });
+// only a scrolling console needs to be reachable by keyboard
+const syncGridFocus = () => {
+  const scrolls = grid.scrollWidth > grid.clientWidth + 2;
+  if (scrolls) { grid.setAttribute('tabindex', '0'); grid.setAttribute('aria-label', '대시보드 패널, 좌우로 넘겨 볼 수 있습니다'); }
+  else { grid.removeAttribute('tabindex'); grid.setAttribute('aria-label', '대시보드 패널'); }
+};
+syncGridFocus();
+let gridRz = 0;
+window.addEventListener('resize', () => { clearTimeout(gridRz); gridRz = setTimeout(syncGridFocus, 150); });
 
 /* ---------------------------------------------------------------- contact form */
 const form = $('#lead-form');

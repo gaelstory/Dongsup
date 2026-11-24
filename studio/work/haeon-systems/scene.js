@@ -1424,6 +1424,7 @@ export function createHarbor(canvasEl, opts = {}) {
     rig.pos.fromArray(cfg.pos); rig.tgt.fromArray(cfg.tgt); rig.fov = cfg.fov;
   }
   applyCamBase();
+  const UP = new V3(0, 1, 0);
   const tgtV = new V3(), tmpV = new V3(), tmpV2 = new V3(), fwdV = new V3(), rightV = new V3(), upV = new V3();
   function placeCamera(t) {
     const mob = isMobileView();
@@ -1431,7 +1432,7 @@ export function createHarbor(canvasEl, opts = {}) {
     const amp = mob ? 1.5 : 1;
     // orbit about target: azimuth +/-2deg, height +/-0.6
     tmpV.subVectors(rig.pos, rig.tgt);
-    tmpV.applyAxisAngle(new V3(0, 1, 0), THREE.MathUtils.degToRad(2 * amp) * drift);
+    tmpV.applyAxisAngle(UP, THREE.MathUtils.degToRad(2 * amp) * drift);
     const pos = tmpV2.copy(rig.tgt).add(tmpV); pos.y += 0.6 * amp * Math.cos((t / 40) * TAU) * (still ? 0 : 1);
     const tgt = tgtV.copy(rig.tgt);
     // focus on a node: move a little closer and turn toward it (stays within ~15% of the framing)
@@ -1447,7 +1448,7 @@ export function createHarbor(canvasEl, opts = {}) {
     // pointer parallax (desktop only)
     if (!mob && !still) {
       fwdV.subVectors(tgt, pos).normalize();
-      rightV.crossVectors(fwdV, new V3(0, 1, 0)).normalize(); upV.crossVectors(rightV, fwdV).normalize();
+      rightV.crossVectors(fwdV, UP).normalize(); upV.crossVectors(rightV, fwdV).normalize();
       pos.addScaledVector(rightV, rig.pointerS.x * 1.4).addScaledVector(upV, -rig.pointerS.y * 1.4 * 0.6);
     }
     camera.position.copy(pos); camera.lookAt(tgt);
@@ -1552,13 +1553,13 @@ export function createHarbor(canvasEl, opts = {}) {
         // ribbon width perpendicular to tangent and view
         const vx = camLocal.x - x, vy = camLocal.y - y, vz = camLocal.z - z;
         let wx = tv3[1] * vz - tv3[2] * vy, wy = tv3[2] * vx - tv3[0] * vz, wz = tv3[0] * vy - tv3[1] * vx;
-        const wl = Math.hypot(wx, wy, wz) || 1; const w = 0.12 * (0.3 + 0.7 * f);
+        const wl = Math.hypot(wx, wy, wz) || 1; const w = 0.16 * (0.3 + 0.7 * f);
         wx = wx / wl * w; wy = wy / wl * w; wz = wz / wl * w;
         const o = vi * 3;
         trailPos[o] = x + wx; trailPos[o + 1] = y + wy; trailPos[o + 2] = z + wz;
         trailPos[o + 3] = x - wx; trailPos[o + 4] = y - wy; trailPos[o + 5] = z - wz;
         const edgeFade = smooth(0, 0.04, u) * (1 - smooth(0.96, 1, u));
-        const a = Math.pow(f, 1.3) * 1.25 * edgeFade;
+        const a = Math.pow(f, 1.2) * 1.5 * edgeFade;
         for (let q2 = 0; q2 < 2; q2++) { const c4 = (vi + q2) * 4; trailCol[c4] = col.r; trailCol[c4 + 1] = col.g; trailCol[c4 + 2] = col.b; trailCol[c4 + 3] = a; }
         vi += 2;
       }
