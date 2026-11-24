@@ -1412,19 +1412,17 @@ export function createHarbor(canvasEl, opts = {}) {
   }
 
   // ---------------------------------------------------------------- camera rig
-  const params = new URLSearchParams(location.search);
-  const camOverride = params.get('cam') ? params.get('cam').split(',').map(Number) : null;
   const rig = {
     pos: new V3(), tgt: new V3(), fov: 32,
     pointer: new THREE.Vector2(), pointerS: new THREE.Vector2(),
     scroll: 0, focus: -1, focusAmt: 0, focusNode: new V3(), twin: 0, twinT: 0,
   };
-  const isMobileView = () => window.innerWidth < 768;
+  // portrait heroes (phones, upright tablets) put the text on top and frame the complex below it
+  const isMobileView = () => window.innerWidth < 768 || canvasEl.clientWidth < canvasEl.clientHeight * 0.95;
   function applyCamBase() {
     const cfg = isMobileView() ? CAMS.mob : CAMS.desk;
     rig.hfov = cfg.hfov || 26;
-    if (camOverride) { rig.pos.set(camOverride[0], camOverride[1], camOverride[2]); rig.tgt.set(camOverride[3], camOverride[4], camOverride[5]); rig.fov = camOverride[6] || cfg.fov; rig.hfov = camOverride[6] || rig.hfov; }
-    else { rig.pos.fromArray(cfg.pos); rig.tgt.fromArray(cfg.tgt); rig.fov = cfg.fov; }
+    rig.pos.fromArray(cfg.pos); rig.tgt.fromArray(cfg.tgt); rig.fov = cfg.fov;
   }
   applyCamBase();
   const tgtV = new V3(), tmpV = new V3(), tmpV2 = new V3(), fwdV = new V3(), rightV = new V3(), upV = new V3();

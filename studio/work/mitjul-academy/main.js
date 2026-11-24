@@ -36,7 +36,10 @@
       ann.appendChild(svg);
     }
     var a = ann.getBoundingClientRect();
-    svg.setAttribute('viewBox', '0 0 ' + Math.max(1, a.width).toFixed(1) + ' ' + Math.max(1, a.height).toFixed(1));
+    // fixed pixel size: the box may grow later (a note being written below) and must not rescale the lines
+    var W = Math.max(1, a.width).toFixed(1), H = Math.max(1, a.height).toFixed(1);
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.style.width = W + 'px'; svg.style.height = H + 'px';
     var rects = Array.prototype.slice.call(key.getClientRects()).filter(function (r) { return r.width > 4; });
     var d = rects.map(function (r, i) {
       var x1 = r.left - a.left - 2, x2 = r.right - a.left + 3, y = r.bottom - a.top - 1, len = x2 - x1;

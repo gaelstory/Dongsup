@@ -46,8 +46,10 @@ const TR = {
   person: [0, [1.35, 1.75, 1, 'out']],
   sunArc: [0, [1.05, 1.55, 1, 'out']],
   sunArcA: [1, [2.05, 2.5, 0.38, 'io'], [6.0, 6.6, 0, 'io']],
-  sunA: [0, [1.1, 1.3, 1, 'out'], [6.2, 6.7, 0, 'io']],
-  sunPos: [0.04, [1.15, 1.95, 0.5, 'io'], [6.0, 6.95, 0.92, 'io']],
+  sunA: [0, [1.1, 1.3, 1, 'out'], [2.0, 2.4, 0, 'io']],
+  ringA: [0, [1.1, 1.3, 1, 'out'], [2.0, 2.4, 0.45, 'io'], [6.2, 6.6, 0, 'io']],
+  ringS: [1, [2.0, 2.4, 0.65, 'io']],
+  sunPos: [0.04, [1.15, 1.95, 0.43, 'io'], [6.0, 6.95, 0.92, 'io']],
   plan: [0, [2.0, 2.55, 1, 'out']],
   frames1: [0, [2.55, 2.95, 1, 'out']],
   stairs: [0, [3.0, 3.4, 1, 'out']],
@@ -70,12 +72,22 @@ const TR = {
   route: [0, [5.5, 5.95, 1, 'out']],
   routeA: [1, [6.1, 6.45, 0, 'io']],
   glass: [0, [6.3, 6.8, 0.5, 'out']],
-  zoom: [1, [1.0, 1.55, 0.74, 'io'], [2.0, 2.6, 1, 'io'], [3.0, 3.6, 0.96, 'io'], [5.0, 5.5, 0.8, 'io'], [6.0, 6.6, 0.88, 'io']],
+  night: [0, [6.15, 6.85, 0.85, 'io']],
+  pool: [0, [6.4, 6.9, 0.075, 'out']],
+  zoom: [0.94, [1.0, 1.55, 0.74, 'io'], [2.0, 2.6, 1, 'io'], [3.0, 3.6, 0.96, 'io'], [5.0, 5.5, 0.8, 'io'], [6.0, 6.6, 0.88, 'io']],
   camY: [1.5, [2.0, 2.8, 1.9, 'io'], [3.0, 3.8, 2.6, 'io'], [5.0, 5.5, 4.6, 'io'], [6.0, 6.6, 3.0, 'io']],
   az: [0, [6.0, 7.0, -45, 'io']],
   el: [0, [6.0, 7.0, -12, 'io']],
   camX: [0.2, [6.0, 7.0, -1.1, 'io']],
 };
+// Phones get their own end frame for chapter 6: the full 1/8 turn leaves the house small in a
+// corner of the short stage, so the camera turns a little less and comes closer.
+function phoneTracks() {
+  TR.zoom = [1, [1.0, 1.55, 0.74, 'io'], [2.0, 2.6, 1, 'io'], [3.0, 3.6, 0.96, 'io'], [5.0, 5.5, 0.8, 'io'], [6.0, 6.6, 1.02, 'io']];
+  TR.camY = [1.5, [2.0, 2.8, 1.9, 'io'], [3.0, 3.8, 2.6, 'io'], [5.0, 5.5, 4.6, 'io'], [6.0, 6.6, 2.4, 'io']];
+  TR.az = [0, [6.0, 7.0, -32, 'io']];
+  TR.camX = [0.2, [6.0, 7.0, -0.2, 'io']];
+}
 function tr(k, t) {
   const a = TR[k];
   let v = a[0];
@@ -147,6 +159,7 @@ function hash(i) {
 
 function init() {
   const small = mqSmall.matches;
+  if (small) phoneTracks();
   let dpr = Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2);
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setClearColor(0x000000, 0);
@@ -267,6 +280,21 @@ function init() {
     glass[gl.id] = mesh;
     disposables.push(g, m);
   }
+  // light pools on the ground in front of the living-room glazing and the court door
+  const poolGeo = new THREE.BufferGeometry();
+  poolGeo.setAttribute('position', new THREE.Float32BufferAttribute([
+    -2.75, 0.02, 3.62, 0.25, 0.02, 3.62, 0.9, 0.02, 5.3, -2.75, 0.02, 3.62, 0.9, 0.02, 5.3, -3.4, 0.02, 5.3,
+    1.62, 0.02, 1.0, 1.62, 0.02, 3.0, 3.3, 0.02, 3.4, 1.62, 0.02, 1.0, 3.3, 0.02, 3.4, 3.3, 0.02, 0.6,
+  ], 3));
+  const poolMat = new THREE.MeshBasicMaterial({ color: 0xff7a1f, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+  const pool = new THREE.Mesh(poolGeo, poolMat);
+  pool.renderOrder = 3;
+  pool.visible = false;
+  nodes.lower.add(pool);
+  disposables.push(poolGeo, poolMat);
+  const nightEl = stage.querySelector('.stage__night');
+  let nightV = -1;
+
   const sunGeo = new THREE.SphereGeometry(0.42, 20, 14);
   const sunMat = new THREE.MeshBasicMaterial({ color: 0xff7a1f, transparent: true, opacity: 0 });
   const sun = new THREE.Mesh(sunGeo, sunMat);
@@ -314,7 +342,7 @@ function init() {
   let sheetIdx = -1;
 
   let W = 1, H = 1, headerPx = 0, hudPx = 0;
-  const REQ_W = 17, REQ_H = 16;
+  const REQ_W = small ? 18.6 : 17, REQ_H = 16;
   let halfH = 8;
 
   function resize() {
@@ -370,8 +398,9 @@ function init() {
     setPart('north', tr('north', t));
     setPart('person', tr('person', t));
     setPart('sunArc', tr('sunArc', t), tr('sunArcA', t));
-    const sa = tr('sunA', t);
-    setPart('sunRing', sa > 0.001 ? 1 : 0, sa);
+    const sa = tr('sunA', t), ra = tr('ringA', t);
+    setPart('sunRing', ra > 0.001 ? 1 : 0, ra);
+    nodes.sunBody.scale.setScalar(tr('ringS', t));
     sunMat.opacity = sa;
     sun.visible = sa > 0.001;
     nodes.sunBody.position.fromArray(sunAt(tr('sunPos', t)));
@@ -400,6 +429,11 @@ function init() {
     setPart('route', tr('route', t), tr('routeA', t));
     const gv = tr('glass', t);
     for (const k in glass) { glass[k].material.opacity = gv; glass[k].visible = gv > 0.001; }
+    const pv = tr('pool', t);
+    poolMat.opacity = pv;
+    pool.visible = pv > 0.001;
+    const nv = Math.round(tr('night', t) * 100) / 100;
+    if (nv !== nightV && nightEl) { nightV = nv; nightEl.style.opacity = String(nv); }
     curZoom = tr('zoom', t);
     placeCamera(curZoom, tr('camX', t), tr('camY', t), 45 + tr('az', t) + ptr.az, 35.264 + tr('el', t) + ptr.el);
 
@@ -446,6 +480,38 @@ function init() {
     ptr.tx = (e.clientX / window.innerWidth) * 2 - 1;
     ptr.ty = (e.clientY / window.innerHeight) * 2 - 1;
   }, { passive: true });
+  // Drafting crosshair: thin cross-lines follow the mouse over the sheet and the title block reads
+  // out the plan coordinate under it (ground plane, 100 mm grid, origin at the centre of the house).
+  const cross = stage.querySelector('.stage__cross');
+  const xyEl = stage.querySelector('[data-xy]');
+  const mqCross = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)');
+  const ray = new THREE.Raycaster();
+  const ground = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  const ndc = new THREE.Vector2();
+  const hit = new THREE.Vector3();
+  let lastXY = '';
+  const fmtMM = (m) => {
+    const v = Math.round(m * 10) * 100;
+    return (v < 0 ? '-' : '') + Math.abs(v).toLocaleString('ko-KR');
+  };
+  if (cross && xyEl) {
+    stage.addEventListener('pointermove', (e) => {
+      if (!mqCross.matches || e.pointerType !== 'mouse') return;
+      const r = stage.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      cross.style.setProperty('--cx', x.toFixed(0) + 'px');
+      cross.style.setProperty('--cy', y.toFixed(0) + 'px');
+      if (!cross.classList.contains('is-on')) cross.classList.add('is-on');
+      ndc.set((x / r.width) * 2 - 1, -(y / r.height) * 2 + 1);
+      ray.setFromCamera(ndc, camera);
+      if (ray.ray.intersectPlane(ground, hit)) {
+        const txt = 'X ' + fmtMM(hit.x) + '  Y ' + fmtMM(-hit.z);
+        if (txt !== lastXY) { lastXY = txt; xyEl.textContent = txt; }
+      }
+    }, { passive: true });
+    stage.addEventListener('pointerleave', () => cross.classList.remove('is-on'));
+  }
+
   mqReduce.addEventListener('change', () => {
     if (SHOT) return;
     mode = mqReduce.matches ? 'static' : 'live';
@@ -532,4 +598,9 @@ try {
   init();
 } catch (err) {
   root.classList.add('gl-fail');
+  // the fallback drawing is the finished house, so the title block says so
+  const no = stage && stage.querySelector('[data-sheet-no]'), name = stage && stage.querySelector('[data-sheet-name]');
+  if (no) no.textContent = 'A-06';
+  if (name) name.textContent = '완성 조감도';
+  if (stage) stage.querySelectorAll('.titleblock__ticks i').forEach((el) => el.classList.add('is-on'));
 }

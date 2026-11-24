@@ -127,7 +127,7 @@ table { border-collapse: collapse; }
 .hero__title { font-weight: 900; font-size: clamp(38px, 10vw, 66px); line-height: 1.1; letter-spacing: -0.035em; max-width: 13em; }
 .hero__lead { margin-top: 18px; font-size: clamp(16.5px, 1.5vw, 18px); color: var(--fog); max-width: 33em; }
 .hero__actions { margin-top: 26px; display: grid; justify-items: center; gap: 12px; }
-.hero__note { font-size: 13.5px; color: var(--fog); }
+.hero__note { font-size: 13.5px; color: var(--fog); text-wrap: balance; }
 .hero__stage { position: relative; margin-top: 36px; padding-bottom: 72px; }
 @media (min-width: 900px) {
   .hero { padding-top: 44px; }
@@ -179,6 +179,13 @@ button.chip { cursor: pointer; }
 .inbox { padding: 16px 16px 14px; background-color: var(--tray); background-image: radial-gradient(rgba(22, 17, 42, 0.07) 1px, transparent 1.2px); background-size: 16px 16px; border-bottom: 1px solid var(--line); }
 .inbox__pile { position: relative; height: 320px; }
 .inbox__pile .chip { position: absolute; left: var(--px); top: var(--py); transform: rotate(var(--r)); z-index: var(--z); }
+.inbox { position: relative; }
+.inbox__clear { position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 4px; text-align: center; opacity: 0; transition: opacity 240ms ease; pointer-events: none; width: 80%; }
+.app.is-clear .inbox__clear { opacity: 1; transition-delay: 300ms; }
+.inbox__check { width: 44px; height: 44px; border-radius: 14px; background: var(--lime); position: relative; margin-bottom: 8px; }
+.inbox__check::after { content: ""; position: absolute; left: 16px; top: 10px; width: 10px; height: 18px; border: solid var(--ink); border-width: 0 3px 3px 0; transform: rotate(45deg); }
+.inbox__clear-title { font-weight: 700; font-size: 15px; }
+.inbox__clear-sub { font-size: 13px; color: var(--fog); }
 .inbox__hint { min-height: 0; font-size: 13px; color: var(--violet-text); font-weight: 500; }
 .inbox__hint:empty { display: none; }
 .ledger { padding: 16px 12px 0; display: flex; flex-direction: column; }
@@ -195,7 +202,8 @@ button.chip { cursor: pointer; }
 .ledger__table .c-time, .ledger__table .c-fee, .ledger__table .c-vat { display: none; }
 .c-chip .chip { display: flex; width: 100%; height: 32px; box-shadow: none; border-color: var(--line); padding: 0 10px; transform: none; }
 .c-chip .chip .chip__amt { margin-left: auto; }
-.slot { display: block; height: 32px; border-radius: 9px; border: 1px dashed rgba(106, 59, 255, 0.28); background: rgba(240, 235, 255, 0.4); }
+.ledger__table td.c-chip { position: relative; }
+.slot { position: absolute; left: 8px; right: 8px; top: 50%; height: 32px; margin-top: -16px; border-radius: 9px; border: 1px dashed rgba(106, 59, 255, 0.28); background: rgba(240, 235, 255, 0.4); }
 .ph { display: inline-block; width: 62%; height: 7px; border-radius: 4px; background: #EEEBF6; vertical-align: middle; }
 .c-time .ph { width: 80%; }
 .ledger__total { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding: 16px 8px 18px; margin-top: auto; }
@@ -212,7 +220,7 @@ button.chip { cursor: pointer; }
   .ledger__table td { height: 28px; }
   .ledger__table .c-time, .ledger__table .c-fee, .ledger__table .c-vat { display: table-cell; }
   .c-chip .chip { height: 24px; border-radius: 7px; font-size: 12.5px; }
-  .slot { height: 22px; border-radius: 7px; }
+  .slot { height: 22px; margin-top: -11px; border-radius: 7px; }
   .ledger__total { padding: 12px 8px 14px; }
   .ledger__total-num { font-size: 26px; }
 }
@@ -259,6 +267,9 @@ button.chip { cursor: pointer; }
 .sx-layer:not(.is-on) { pointer-events: none; }
 .sx-fade { transition: opacity 260ms ease; }
 .sx-layer:not(.is-on) .sx-fade { opacity: 0; transition-duration: 160ms; }
+.ledger__table--stage td { transition: border-color 260ms ease; }
+.sx-layer:not(.is-on) .ledger__table--stage td { border-color: transparent; }
+td.c-chip:has(.chip) .slot { opacity: 0; }
 .conn { display: grid; gap: 8px; margin-top: 10px; }
 .conn li { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #fff; border-radius: 12px; box-shadow: var(--sh-sm); }
 .conn li > div { flex: 1; min-width: 0; }
@@ -280,14 +291,14 @@ button.chip { cursor: pointer; }
 .tray__label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--fog); margin-bottom: 6px; }
 .tray__chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 36px; }
 .tray__chips .chip { height: 32px; font-size: 13px; }
-.tray__chips .chip .chip__ch { display: none; }
+.tray__chips .chip .chip__ch { display: none !important; }
 .tray__chips .chip.is-out { display: none; }
 .ledger__table--stage td { height: 30px; }
 .ledger__table--stage .c-fee, .ledger__table--stage .c-vat { display: table-cell; width: 70px; }
 .ledger__table--stage .c-dep { width: 84px; }
 .ledger__table--stage .c-chip .chip .chip__ch { display: none; }
 .ledger__table--stage .c-chip .chip { height: 24px; font-size: 12.5px; }
-.ledger__table--stage .slot { height: 22px; }
+.ledger__table--stage .slot { height: 22px; margin-top: -11px; }
 .ledger__table--stage td.c-fee, .ledger__table--stage td.c-vat { transition: background-color 300ms ease calc(var(--ri, 0) * 25ms), color 300ms ease, opacity 260ms ease; }
 .is-match .ledger__table--stage td.c-fee, .is-match .ledger__table--stage td.c-vat { background: var(--lav); color: var(--violet-text); font-weight: 700; }
 .is-match .ledger__table--stage th.c-fee, .is-match .ledger__table--stage th.c-vat { color: var(--violet-text); font-weight: 700; }
@@ -446,7 +457,7 @@ input[type="range"]:focus-visible { outline: 2px solid var(--violet); outline-of
 .lime-chip { display: inline-flex; align-items: center; height: 22px; padding: 0 7px; border-radius: 6px; font-size: 12px; }
 .plan-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 0 auto 16px; max-width: 420px; }
 .plan-tabs button { min-height: 44px; border-radius: 10px; border: 1px solid var(--line-2); background: #fff; font-weight: 700; cursor: pointer; }
-.plan-tabs button[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.plan-tabs button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
 .price-table { width: 100%; table-layout: fixed; }
 .price-table th, .price-table td { padding: 14px 12px; border-bottom: 1px solid var(--line); text-align: center; font-size: 15px; vertical-align: middle; }
 .price-table tbody th { text-align: left; font-weight: 500; color: var(--ink-2); width: 44%; }

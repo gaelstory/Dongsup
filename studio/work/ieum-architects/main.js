@@ -163,6 +163,23 @@
     }
     return { py: py, m2: m2, Wm: Wm, Dm: Dm, x0: x0, y0: y0, W: W, D: D, nBed: nBed, nBath: nBath, R: R };
   }
+  // Door, windows and entry mark on the south (bottom) wall, in the same drawing language as the
+  // project plans: a gap in the wall, a door leaf with its swing, double lines for glazing.
+  function planDecor(P) {
+    var k = 19, yb = P.y0 + P.D, r = 0.9 * k, f = function (n) { return n.toFixed(1); };
+    var hx = P.x0 + P.W * 0.56 * 0.7;
+    var w1 = [P.x0 + P.W * 0.07, P.x0 + P.W * 0.56 * 0.5];
+    var w2 = [P.x0 + P.W * 0.56 + P.W * 0.44 * 0.22, P.x0 + P.W * 0.56 + P.W * 0.44 * 0.78];
+    var gap = 'M' + f(hx) + ' ' + f(yb) + 'H' + f(hx + r) +
+      'M' + f(w1[0]) + ' ' + f(yb) + 'H' + f(w1[1]) + 'M' + f(w2[0]) + ' ' + f(yb) + 'H' + f(w2[1]);
+    var win = '';
+    [w1, w2].forEach(function (w) {
+      win += 'M' + f(w[0]) + ' ' + f(yb - 2.5) + 'H' + f(w[1]) + 'M' + f(w[0]) + ' ' + f(yb + 2.5) + 'H' + f(w[1]) +
+        'M' + f(w[0]) + ' ' + f(yb - 2.5) + 'v5M' + f(w[1]) + ' ' + f(yb - 2.5) + 'v5';
+    });
+    var door = 'M' + f(hx) + ' ' + f(yb) + 'V' + f(yb - r) + 'A' + f(r) + ' ' + f(r) + ' 0 0 1 ' + f(hx + r) + ' ' + f(yb);
+    return { gap: gap, win: win, door: door, ex: hx + r / 2, ey: yb + 15 };
+  }
   function fmt(n) { return Math.round(n).toLocaleString('ko-KR'); }
   function initEstimate() {
     var input = document.getElementById('pyeong');
@@ -176,6 +193,16 @@
     var feeEl = document.querySelector('[data-fee]'), perEl = document.querySelector('[data-period]');
     var roomsEl = document.querySelector('[data-rooms]'), capEl = document.querySelector('[data-cap]');
     var NS = 'http://www.w3.org/2000/svg';
+    var decor = svg.querySelector('.eplan__decor');
+    var dGap = svg.querySelector('[data-decor="gap"]'), dWin = svg.querySelector('[data-decor="win"]');
+    var dDoor = svg.querySelector('[data-decor="door"]'), dEntry = svg.querySelector('[data-decor="entry"]');
+    var mqTiny = window.matchMedia('(max-width: 480px)');
+    var decorT = 0;
+    function placeDecor(P) {
+      var d = planDecor(P);
+      dGap.setAttribute('d', d.gap); dWin.setAttribute('d', d.win); dDoor.setAttribute('d', d.door);
+      dEntry.setAttribute('x', d.ex.toFixed(1)); dEntry.setAttribute('y', d.ey.toFixed(1));
+    }
     var els = {};
     KEYS.forEach(function (key) {
       var g = roomsG.querySelector('[data-k="' + key + '"]');
@@ -195,9 +222,11 @@
       KEYS.forEach(function (key) {
         var room = P.R[key], el = els[key];
         el.r.setAttribute('class', 'eplan__room' + (room.wet ? ' eplan__room--wet' : ''));
-        el.t.setAttribute('class', 'eplan__label');
+        el.t.setAttribute('class', 'eplan__label' + (room.wet ? ' eplan__label--sm' : ''));
         el.t.textContent = room.t;
-        var fits = !room.off && room.w > 40 && room.h > 26;
+        // label only where it fits: font size in SVG units times character count, plus a little air
+        var fs = (mqTiny.matches ? 16 : 14) - (room.wet ? 2 : 0);
+        var fits = !room.off && room.w > room.t.length * fs + 6 && room.h > fs + 8;
         var attrs = { x: room.x, y: room.y, width: Math.max(0, room.w), height: Math.max(0, room.h) };
         var ta = { x: room.x + room.w / 2, y: room.y + room.h / 2 };
         if (dur) {
@@ -210,6 +239,15 @@
         el.r.style.opacity = room.off ? '0' : '1';
         el.t.style.opacity = fits ? '1' : '0';
       });
+      // the openings jump to their new places, so they step aside while the walls are moving
+      clearTimeout(decorT);
+      if (dur) {
+        decor.style.opacity = '0';
+        decorT = setTimeout(function () { placeDecor(P); decor.style.opacity = '1'; }, 320);
+      } else {
+        placeDecor(P);
+        decor.style.opacity = '1';
+      }
       var o = { x: P.x0, y: P.y0, width: P.W, height: P.D };
       if (dur) gsap.to(outer, { attr: o, duration: dur, ease: 'power3.out', overwrite: true });
       else for (var a in o) outer.setAttribute(a, o[a].toFixed(1));
@@ -255,6 +293,14 @@
     var form = document.getElementById('consult');
     if (!form) return;
     var result = form.querySelector('.form__result');
+    var submit = form.querySelector('button[type="submit"]');
+    function formatTel(v) {
+      var d = v.replace(/\D/g, '');
+      if (/^02/.test(d)) return d.length > 9 ? d.replace(/^(02)(\d{4})(\d{4})$/, '$1-$2-$3') : d.replace(/^(02)(\d{3})(\d{4})$/, '$1-$2-$3');
+      if (d.length === 11) return d.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
+      if (d.length === 10) return d.replace(/^(\d{3})(\d{3})(\d{4})$/, '$1-$2-$3');
+      return v.trim();
+    }
     var fields = {
       name: { el: form.querySelector('#f-name'), err: form.querySelector('#f-name-err'), check: function (v) { return v.trim() ? '' : '이름을 적어 주세요.'; } },
       tel: { el: form.querySelector('#f-tel'), err: form.querySelector('#f-tel-err'), check: function (v) {
@@ -281,12 +327,18 @@
         result.textContent = '';
         return;
       }
+      if (submit.getAttribute('aria-disabled') === 'true') return;
       var kind = form.querySelector('input[name="kind"]:checked');
       result.textContent = '';
       var b = document.createElement('b');
       b.textContent = fields.name.el.value.trim() + '님, ' + (kind ? kind.value : '설계') + ' 상담 신청 내용을 확인했습니다.';
       result.appendChild(b);
-      result.appendChild(document.createTextNode('컨셉 시안이라 실제로 접수되지는 않습니다. 실제 사무소라면 하루 안에 ' + fields.tel.el.value.trim() + '로 연락드립니다.'));
+      result.appendChild(document.createTextNode('컨셉 시안이라 실제로 접수되지는 않습니다. 실제 사무소라면 하루 안에 ' + formatTel(fields.tel.el.value) + '로 연락드립니다.'));
+      result.tabIndex = -1;
+      result.focus({ preventScroll: true });
+      result.scrollIntoView({ block: 'center', behavior: reduced() ? 'auto' : 'smooth' });
+      submit.setAttribute('aria-disabled', 'true');
+      setTimeout(function () { submit.removeAttribute('aria-disabled'); }, 2000);
     });
   }
 
@@ -312,21 +364,15 @@
       }
       var desk = c.desktop;
 
-      // Load sequence for the headline, once per page view (the drawing starts in scene.js at the same moment).
+      // Load sequence for the headline: under 0.7s, starting at once. The lead and the CTA are
+      // never hidden, so the first screen is complete well inside 1.2s.
       if (!introPlayed) {
         introPlayed = true;
-        // start once the display font is in (or after 800ms), so the headline never swaps mid-reveal
-        var intro = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
-        intro
-          .from('.hl > span', { yPercent: 108, duration: 0.7, stagger: 0.09 }, 0.05)
-          .from('.hero__rule-line', { scaleX: 0, transformOrigin: '0% 50%', duration: 0.75, ease: 'power2.inOut' }, 0.2)
-          .from('.hero__rule-tick', { opacity: 0, duration: 0.25 }, 0.25)
-          .from('.hero__lead', { y: 12, opacity: 0, duration: 0.6 }, 0.32)
-          .from('.hero__actions > *', { y: 10, opacity: 0, duration: 0.5, stagger: 0.06 }, 0.42)
-          .from('.hero__hint', { opacity: 0, duration: 0.5 }, 0.65);
-        var go = function () { if (!intro.isActive() && intro.progress() === 0) intro.play(); };
-        setTimeout(go, 800);
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
+        gsap.timeline({ defaults: { ease: 'power3.out' } })
+          .from('.hl > span', { yPercent: 108, duration: 0.5, stagger: 0.06 }, 0)
+          .from('.hero__rule-line', { scaleX: 0, transformOrigin: '0% 50%', duration: 0.5, ease: 'power2.inOut' }, 0.1)
+          .from('.hero__rule-tick', { opacity: 0, duration: 0.2 }, 0.1)
+          .from('.hero__hint', { opacity: 0, duration: 0.3 }, 0.3);
       }
 
       // Chapter progress drives the drawing; each chapter builds while its text rises into view.
@@ -383,6 +429,14 @@
   function safe(fn) {
     try { fn(); } catch (err) { root.classList.add('no-motion'); if (window.console) console.warn(err); }
   }
+  // The static HTML names the finished drawing (that is what the no-JS fallback shows); with motion on,
+  // the live drawing starts from the cover sheet.
+  if (!mqReduce.matches && !SHOT) safe(function () {
+    var no = document.querySelector('[data-sheet-no]'), name = document.querySelector('[data-sheet-name]');
+    if (no) no.textContent = 'A-00';
+    if (name) name.textContent = '계획 개요';
+    document.querySelectorAll('.titleblock__ticks i').forEach(function (el) { el.classList.remove('is-on'); });
+  });
   safe(initMenu);
   safe(initProjects);
   safe(initEstimate);

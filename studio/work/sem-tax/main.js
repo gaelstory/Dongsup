@@ -20,7 +20,7 @@
   function announce(t) { announcer.textContent = ''; setTimeout(function () { announcer.textContent = t; }, 40); }
 
   /* ---------- keep every block on the 56px rows ---------- */
-  var SNAP = '.grid > .sec__head, .grid > .hero__copy, .grid > .people__text, .grid > .people__seal, .lrow--svc, .calc__inputs .field, .calc__note, .consult .field, .consult__done, .faq__in, .month__body, .foot__main';
+  var SNAP = '.grid > .sec__head, .grid > .hero__copy, .grid > .people__text, .grid > .people__seal, .lrow--svc, .calc__inputs .field, .calc__note, .consult .field, .consult__done, .faq__in > p, .month__body, .foot__main';
   function snap() {
     $$(SNAP).forEach(function (el) { el.style.minHeight = ''; });
     $$(SNAP).forEach(function (el) {

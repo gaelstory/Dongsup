@@ -1,8 +1,0 @@
-<!doctype html><html><head><meta charset="utf-8"><style>canvas{width:100vw;height:100vh;display:block}body{margin:0}</style></head><body><canvas id=c></canvas>
-<script type="module">
-const t0 = performance.now();
-const m = await import('./scene.js');
-const t1 = performance.now();
-const h = m.createHarbor(document.getElementById('c'), { still: true, onReady(){ console.log('ready at', Math.round(performance.now()-t0)); } });
-console.log('import', Math.round(t1-t0), 'create', Math.round(performance.now()-t1));
-</script></body></html>

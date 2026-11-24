@@ -45,10 +45,15 @@ svg { display: block; }
 .topbar {
   position: fixed; inset: 0 0 auto; z-index: 30;
   padding-top: env(safe-area-inset-top, 0px);
+}
+/* the frosted backdrop lives on a pseudo-element: a backdrop-filter on the bar itself would trap the fixed menu sheet inside it */
+.topbar::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
   background: rgba(233, 238, 242, 0.9);
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   box-shadow: 0 1px 0 rgba(38, 38, 38, 0.07);
 }
+.topbar__inner { position: relative; }
 .topbar__inner {
   height: 60px; max-width: 1240px; margin: 0 auto;
   display: flex; align-items: center; gap: 18px;
@@ -95,7 +100,8 @@ html.menu-open body { overflow: hidden; }
 }
 /* red margin line */
 .sheet::before { content: ''; position: absolute; top: 0; bottom: 0; left: 12px; width: 1.5px; background: rgba(222, 51, 39, 0.55); pointer-events: none; }
-.sheet__clip { position: absolute; top: -26px; left: 34px; width: 20px; height: 56px; z-index: 2; }
+.sheet__clip { position: absolute; top: -28px; left: 64%; width: 22px; height: 62px; z-index: 2; }
+.sheet__clip path { stroke: #7D8A94; }
 .sheet__head {
   display: flex; flex-wrap: wrap; align-items: stretch; gap: 0;
   margin: 0 calc(var(--pad-r) * -1) 0 calc(var(--pad-l) * -1);
@@ -162,10 +168,10 @@ html.intro .ms__ch, html.intro .marks .pen, html.intro .ms-memo__ink { opacity: 
 .ann > p:first-child { font-size: 17px; }
 .key { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 html.pen-ready .key { text-decoration: none; }
-.key-ink { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.key-ink { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
 .key-ink path { fill: none; stroke: var(--red); stroke-width: 2.6; stroke-linecap: round; }
 .note {
-  position: relative; margin-top: 10px; padding-left: 30px;
+  position: relative; margin-top: 10px; padding-left: 30px; min-height: 1.3em;
   font: 700 22px/1.3 var(--hand); color: var(--red);
   transform: rotate(-1.5deg); transform-origin: left center;
 }
@@ -388,7 +394,7 @@ select.q__input { appearance: none; -webkit-appearance: none; padding-right: 32p
   .desk { padding: calc(92px + env(safe-area-inset-top, 0px)) 24px 64px; }
   .sheet { padding-bottom: 64px; }
   .sheet::before { left: 50px; width: 4px; background: linear-gradient(90deg, rgba(222, 51, 39, 0.6) 1.5px, transparent 1.5px, transparent 2.5px, rgba(222, 51, 39, 0.6) 2.5px); }
-  .sheet__clip { left: 92px; }
+  .sheet__clip { left: 18px; }
   .sheet__head { font-size: 14px; }
   .sheet__head i { width: 110px; }
   .sheet__field--name { display: flex !important; }

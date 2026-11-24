@@ -65,6 +65,7 @@
     </div>
 
     <figure class="stage" id="stage" role="img" aria-label="청사진 위에 선으로 그린 2층 박공지붕 주택의 등각 투상도. 대지, 해의 길, 1층과 2층, 지붕, 가구 배치가 차례로 그려집니다.">
+      <div class="stage__night" aria-hidden="true"></div>
       <div class="sheet" aria-hidden="true">
         <span class="sheet__frame"></span>
         <span class="sheet__zones sheet__zones--x"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i></span>
@@ -82,6 +83,7 @@
         <span class="tag tag--note tag--desk" data-tag="route"><span>현관에서 부엌까지 3.5m</span></span>
         <span class="tag tag--note tag--desk" data-tag="roof"><span>지붕 경사 35°</span></span>
       </div>
+      <div class="stage__cross" aria-hidden="true"><i></i><i></i></div>
       <div class="stage__hud" aria-hidden="true">
         <div class="scalebar">
           <span class="scalebar__bar"></span>
@@ -92,10 +94,11 @@
         </div>
         <div class="titleblock">
           <p class="titleblock__firm">이음 건축사사무소</p>
-          <div class="titleblock__row"><span>도면명</span><b data-sheet-name>계획 개요</b></div>
-          <div class="titleblock__row"><span>도면번호</span><b data-sheet-no>A-00</b></div>
+          <div class="titleblock__row"><span>도면명</span><b data-sheet-name>완성 조감도</b></div>
+          <div class="titleblock__row"><span>도면번호</span><b data-sheet-no>A-06</b></div>
           <div class="titleblock__row titleblock__row--scale"><span>축척</span><b>1:100</b></div>
-          <div class="titleblock__ticks"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="titleblock__row titleblock__row--xy"><span>좌표</span><b data-xy>X 0  Y 0</b></div>
+          <div class="titleblock__ticks"><i class="is-on"></i><i class="is-on"></i><i class="is-on"></i><i class="is-on"></i><i class="is-on"></i><i class="is-on"></i></div>
         </div>
       </div>
     </figure>
@@ -108,6 +111,7 @@
           <h3 class="chapter__title">땅을 읽습니다</h3>
           <p class="chapter__body">설계는 땅에서 시작합니다. 해가 어디서 떠서 어디로 지는지, 바람이 어느 쪽에서 오는지, 옆집 창이 어디를 보는지부터 확인합니다.</p>
           <p class="chapter__note">현장 답사, 측량, 일조 분석까지 2주</p>
+          <p class="chapter__out"><span>산출물</span>대지 분석도, 일조 다이어그램</p>
         </div>
       </article>
       <article class="chapter" data-ch="2">
@@ -116,6 +120,7 @@
           <h3 class="chapter__title">선을 긋습니다</h3>
           <p class="chapter__body">가족이 하루를 보내는 순서대로 평면을 그립니다. 현관에서 부엌까지 몇 걸음인지, 마당 쪽 큰 창이 남쪽을 보는지, 선 하나마다 이유를 적어 둡니다.</p>
           <p class="chapter__note">평면 스케치 세 가지 안을 놓고 함께 고릅니다</p>
+          <p class="chapter__out"><span>산출물</span>평면도 세 가지 안, 면적표</p>
         </div>
       </article>
       <article class="chapter" data-ch="3">
@@ -124,6 +129,7 @@
           <h3 class="chapter__title">층을 올립니다</h3>
           <p class="chapter__body">아이 방과 부부 침실은 2층에 올리고, 계단은 식탁에서 보이는 자리에 둡니다. 구조와 단열은 이 단계에서 시공사와 함께 검토합니다.</p>
           <p class="chapter__note">구조 검토와 에너지 계획 포함</p>
+          <p class="chapter__out"><span>산출물</span>단면도, 구조 검토서</p>
         </div>
       </article>
       <article class="chapter" data-ch="4">
@@ -132,6 +138,7 @@
           <h3 class="chapter__title">지붕을 덮습니다</h3>
           <p class="chapter__body">박공지붕의 기울기는 눈과 비, 그리고 다락의 높이로 정합니다. 마당에는 여름 그늘이 될 나무 자리를 미리 비워 둡니다.</p>
           <p class="chapter__note">지붕 경사 35도, 처마 550mm</p>
+          <p class="chapter__out"><span>산출물</span>지붕 평면도, 입면도 4면</p>
         </div>
       </article>
       <article class="chapter" data-ch="5">
@@ -139,7 +146,8 @@
           <p class="chapter__sheet"><span>A-05</span>분해 조감도</p>
           <h3 class="chapter__title">안을 채웁니다</h3>
           <p class="chapter__body">식탁과 소파, 침대를 실제 크기로 놓아 보고 동선을 확인합니다. 장 본 짐을 들고 현관에서 부엌까지 가는 길은 짧을수록 좋습니다.</p>
-          <p class="chapter__note">가구 배치도와 동선도를 함께 드립니다</p>
+          <p class="chapter__note">현관에서 부엌까지 3.5m 안쪽으로 잡습니다</p>
+          <p class="chapter__out"><span>산출물</span>가구 배치도, 동선도</p>
         </div>
       </article>
       <article class="chapter" data-ch="6">
@@ -148,6 +156,7 @@
           <h3 class="chapter__title">삶이 들어옵니다</h3>
           <p class="chapter__body">준공 날 창에 불이 켜지는 순간까지 함께합니다. 입주한 뒤 1년 동안은 계절이 바뀔 때마다 집을 다시 살펴봅니다.</p>
           <p class="chapter__note">입주 후 1년, 계절마다 하자 점검</p>
+          <p class="chapter__out"><span>산출물</span>준공 도서, 1년 하자 점검표</p>
         </div>
       </article>
     </div>
@@ -157,7 +166,7 @@
     <div class="wrap">
       <div class="sec-head">
         <h2 class="sec-title" id="projects-title">지은 집들</h2>
-        <p class="sec-lead">단독주택 다섯 채와 작은 가게 두 곳입니다. 행에 마우스를 올리면 평면도가 그려지고, 이름을 누르면 설명이 펼쳐집니다.</p>
+        <p class="sec-lead">단독주택 다섯 채와 작은 가게 두 곳입니다. 이름을 누르면 평면도와 설명이 펼쳐집니다.<span class="only-fine"> 행에 마우스를 올리면 평면도가 먼저 그려집니다.</span></p>
       </div>
       <table class="ptable">
         <caption class="sr-only">이음 건축사사무소가 설계한 프로젝트 7건의 연도, 이름, 위치, 용도, 면적</caption>
@@ -179,6 +188,7 @@
               <div class="pdetail__text">
                 <dl class="pdetail__meta"><div><dt>위치</dt><dd>경기 양평군</dd></div><div><dt>용도</dt><dd>단독주택</dd></div><div><dt>면적</dt><dd>142㎡</dd></div></dl>
                 <p>강이 보이는 북쪽 경사지에 앉힌 2층 박공집입니다. 거실 창은 남쪽 마당으로 돌리고, 강 쪽으로는 긴 툇마루를 냈습니다.</p>
+                <dl class="pdetail__spec"><div><dt>규모</dt><dd>지상 2층</dd></div><div><dt>구조</dt><dd>경골목구조</dd></div><div><dt>설계와 시공</dt><dd>11개월</dd></div></dl>
               </div>
             </div></div></td>
           </tr>
@@ -191,10 +201,11 @@
           </tr>
           <tr class="pdetail is-open" id="pd-1">
             <td colspan="5"><div class="pdetail__in"><div class="pdetail__body">
-              <div class="pdetail__plan"><svg class="plan" viewBox="-14.4 -14.4 140.8 188.8" aria-hidden="true" focusable="false"><path class="pl-out" d="M64 160L112 160L112 0L0 0L0 160L48 160"/><path class="pl-in" d="M41.6 57.6L41.6 102.4"/><path class="pl-in" d="M70.4 57.6L70.4 102.4"/><path class="pl-in" d="M70.4 57.6L112 57.6"/><path class="pl-in" d="M70.4 102.4L80 102.4"/><path class="pl-in" d="M94.4 102.4L112 102.4"/><path class="pl-win" d="M12.8 157.4L38.4 157.4M12.8 162.6L38.4 162.6"/><path class="pl-win" d="M-2.6 22.4L-2.6 48M2.6 22.4L2.6 48"/><path class="pl-win" d="M109.4 115.2L109.4 147.2M114.6 115.2L114.6 147.2"/><path class="pl-win" d="M76.8 -2.6L102.4 -2.6M76.8 2.6L102.4 2.6"/><path class="pl-win" d="M-2.6 108.8L-2.6 137.6M2.6 108.8L2.6 137.6"/><path class="pl-door" d="M48 160L48 144A16 16 0 0 1 64 160"/><path class="pl-door" d="M80 102.4L80 88A14.4 14.4 0 0 1 94.4 102.4"/><path class="pl-fx" d="M44 60L68 60L68 100L44 100ZM44 64.4L68 64.4M44 68.9L68 68.9M44 73.3L68 73.3M44 77.8L68 77.8M44 82.2L68 82.2M44 86.7L68 86.7M44 91.1L68 91.1M44 95.6L68 95.6M56 96.8L56 64.8M52 69.6L56 64.8L60 69.6"/><path class="pl-fx" d="M3.2 3.2L67.2 3.2L67.2 12.8L3.2 12.8Z"/><path class="pl-fx" d="M14.4 27.2L43.2 27.2L43.2 43.2L14.4 43.2Z"/><path class="pl-fx" d="M6.4 128L38.4 128L38.4 153.6L6.4 153.6Z"/><path class="pl-fx" d="M83.2 64L108.8 64L108.8 76.8L83.2 76.8Z"/><path class="pl-fx" d="M95 89.6a4.2 4.2 0 1 0 8.3 0a4.2 4.2 0 1 0 -8.3 0"/><text class="pl-t" x="57.6" y="38.4">주방</text><text class="pl-t" x="75.2" y="132.8">거실</text><text class="pl-t" x="91.2" y="84">욕실</text></svg></div>
+              <div class="pdetail__plan"><svg class="plan plan--narrow" viewBox="-14.4 -14.4 140.8 188.8" aria-hidden="true" focusable="false"><path class="pl-out" d="M64 160L112 160L112 0L0 0L0 160L48 160"/><path class="pl-in" d="M41.6 57.6L41.6 102.4"/><path class="pl-in" d="M70.4 57.6L70.4 102.4"/><path class="pl-in" d="M70.4 57.6L112 57.6"/><path class="pl-in" d="M70.4 102.4L80 102.4"/><path class="pl-in" d="M94.4 102.4L112 102.4"/><path class="pl-win" d="M12.8 157.4L38.4 157.4M12.8 162.6L38.4 162.6"/><path class="pl-win" d="M-2.6 22.4L-2.6 48M2.6 22.4L2.6 48"/><path class="pl-win" d="M109.4 115.2L109.4 147.2M114.6 115.2L114.6 147.2"/><path class="pl-win" d="M76.8 -2.6L102.4 -2.6M76.8 2.6L102.4 2.6"/><path class="pl-win" d="M-2.6 108.8L-2.6 137.6M2.6 108.8L2.6 137.6"/><path class="pl-door" d="M48 160L48 144A16 16 0 0 1 64 160"/><path class="pl-door" d="M80 102.4L80 88A14.4 14.4 0 0 1 94.4 102.4"/><path class="pl-fx" d="M44 60L68 60L68 100L44 100ZM44 64.4L68 64.4M44 68.9L68 68.9M44 73.3L68 73.3M44 77.8L68 77.8M44 82.2L68 82.2M44 86.7L68 86.7M44 91.1L68 91.1M44 95.6L68 95.6M56 96.8L56 64.8M52 69.6L56 64.8L60 69.6"/><path class="pl-fx" d="M3.2 3.2L67.2 3.2L67.2 12.8L3.2 12.8Z"/><path class="pl-fx" d="M14.4 27.2L43.2 27.2L43.2 43.2L14.4 43.2Z"/><path class="pl-fx" d="M6.4 128L38.4 128L38.4 153.6L6.4 153.6Z"/><path class="pl-fx" d="M98.4 60L109.6 60L109.6 75.2L98.4 75.2Z"/><path class="pl-fx" d="M99.4 87.2a3.8 3.8 0 1 0 7.7 0a3.8 3.8 0 1 0 -7.7 0"/><text class="pl-t" x="57.6" y="38.4">주방</text><text class="pl-t" x="75.2" y="132.8">거실</text><text class="pl-t" x="84" y="73.6">욕실</text></svg></div>
               <div class="pdetail__text">
                 <dl class="pdetail__meta"><div><dt>위치</dt><dd>서울 서대문구</dd></div><div><dt>용도</dt><dd>단독주택</dd></div><div><dt>면적</dt><dd>118㎡</dd></div></dl>
                 <p>34평 땅에 지은 3층 협소주택입니다. 계단을 집 한가운데 두어 세 식구가 어느 층에 있어도 목소리가 닿게 했습니다.</p>
+                <dl class="pdetail__spec"><div><dt>규모</dt><dd>지상 3층</dd></div><div><dt>구조</dt><dd>철근콘크리트</dd></div><div><dt>설계와 시공</dt><dd>13개월</dd></div></dl>
               </div>
             </div></div></td>
           </tr>
@@ -211,6 +222,7 @@
               <div class="pdetail__text">
                 <dl class="pdetail__meta"><div><dt>위치</dt><dd>서울 성동구</dd></div><div><dt>용도</dt><dd>근린생활시설</dd></div><div><dt>면적</dt><dd>86㎡</dd></div></dl>
                 <p>모퉁이 두 면을 통유리로 열고 바를 대각선으로 놓았습니다. 줄이 길어져도 출입문 앞이 막히지 않습니다.</p>
+                <dl class="pdetail__spec"><div><dt>규모</dt><dd>1층 상가</dd></div><div><dt>구조</dt><dd>기존 건물 리모델링</dd></div><div><dt>설계와 시공</dt><dd>4개월</dd></div></dl>
               </div>
             </div></div></td>
           </tr>
@@ -227,6 +239,7 @@
               <div class="pdetail__text">
                 <dl class="pdetail__meta"><div><dt>위치</dt><dd>제주 서귀포시</dd></div><div><dt>용도</dt><dd>숙박시설</dd></div><div><dt>면적</dt><dd>96㎡</dd></div></dl>
                 <p>돌담 안쪽에 두 동을 나눠 앉히고 데크로 이었습니다. 두 팀이 머물러도 서로의 마당이 보이지 않습니다.</p>
+                <dl class="pdetail__spec"><div><dt>규모</dt><dd>단층 2개 동</dd></div><div><dt>구조</dt><dd>경골목구조</dd></div><div><dt>설계와 시공</dt><dd>10개월</dd></div></dl>
               </div>
             </div></div></td>
           </tr>
@@ -243,6 +256,7 @@
               <div class="pdetail__text">
                 <dl class="pdetail__meta"><div><dt>위치</dt><dd>서울 마포구</dd></div><div><dt>용도</dt><dd>상가 인테리어</dd></div><div><dt>면적</dt><dd>54㎡</dd></div></dl>
                 <p>폭 4.5m 좁은 가게라 오븐을 길 쪽 창 앞으로 내놓았습니다. 빵 굽는 모습이 그대로 간판이 됩니다.</p>
+                <dl class="pdetail__spec"><div><dt>규모</dt><dd>1층 상가</dd></div><div><dt>구조</dt><dd>기존 건물 리모델링</dd></div><div><dt>설계와 시공</dt><dd>3개월</dd></div></dl>
               </div>
             </div></div></td>
           </tr>
@@ -259,6 +273,7 @@
               <div class="pdetail__text">
                 <dl class="pdetail__meta"><div><dt>위치</dt><dd>경기 파주시</dd></div><div><dt>용도</dt><dd>다가구주택</dd></div><div><dt>면적</dt><dd>210㎡</dd></div></dl>
                 <p>부모님 세대와 아들 세대가 마당 하나를 나눠 쓰는 집입니다. 현관은 따로 두고, 두 집의 부엌 창은 마당을 사이에 두고 마주 봅니다.</p>
+                <dl class="pdetail__spec"><div><dt>규모</dt><dd>지상 2층</dd></div><div><dt>구조</dt><dd>철근콘크리트</dd></div><div><dt>설계와 시공</dt><dd>14개월</dd></div></dl>
               </div>
             </div></div></td>
           </tr>
@@ -275,6 +290,7 @@
               <div class="pdetail__text">
                 <dl class="pdetail__meta"><div><dt>위치</dt><dd>강원 춘천시</dd></div><div><dt>용도</dt><dd>단독주택</dd></div><div><dt>면적</dt><dd>74㎡</dd></div></dl>
                 <p>도예가 부부의 작업실 겸 집입니다. 가마가 있는 작업동과 살림채 사이에 지붕 덮인 마당을 두어 비 오는 날에도 작업을 이어 갑니다.</p>
+                <dl class="pdetail__spec"><div><dt>규모</dt><dd>단층 2개 동</dd></div><div><dt>구조</dt><dd>중목구조</dd></div><div><dt>설계와 시공</dt><dd>9개월</dd></div></dl>
               </div>
             </div></div></td>
           </tr>
@@ -358,8 +374,9 @@
             <text class="eplan__dimtext" data-dimtext="w" x="221.0" y="54.9">12,400</text>
             <text class="eplan__dimtext" data-dimtext="h" x="70.3" y="169.0" transform="rotate(-90 70.3 169.0)">8,500</text>
           </g>
-          <g class="eplan__rooms" aria-hidden="true"><g data-k="kitchen"><rect class="eplan__room" x="103.3" y="87.9" width="89.6" height="68.2"/><text class="eplan__label" x="148.1" y="121.9">주방</text></g><g data-k="living"><rect class="eplan__room" x="103.3" y="156.0" width="131.8" height="94.1"/><text class="eplan__label" x="169.2" y="203.1">거실</text></g><g data-k="bath0"><rect class="eplan__room eplan__room--wet" x="193.0" y="87.9" width="42.2" height="34.1"/><text class="eplan__label" x="214.0" y="104.9">욕실</text></g><g data-k="bath1"><rect class="eplan__room eplan__room--wet" x="193.0" y="121.9" width="42.2" height="34.1"/><text class="eplan__label" x="214.0" y="139.0">욕실</text></g><g data-k="bath2"><rect class="eplan__room eplan__room--wet" x="193.0" y="156.0" width="42.2" height="0.0" style="opacity:0"/><text class="eplan__label" x="214.0" y="156.0" style="opacity:0">욕실</text></g><g data-k="bed0"><rect class="eplan__room" x="235.1" y="87.9" width="103.5" height="54.1"/><text class="eplan__label" x="286.9" y="114.9">안방</text></g><g data-k="bed1"><rect class="eplan__room" x="235.1" y="142.0" width="103.5" height="54.1"/><text class="eplan__label" x="286.9" y="169.0">방</text></g><g data-k="bed2"><rect class="eplan__room" x="235.1" y="196.0" width="103.5" height="54.1"/><text class="eplan__label" x="286.9" y="223.1">방</text></g><g data-k="bed3"><rect class="eplan__room" x="235.1" y="250.1" width="103.5" height="0.0" style="opacity:0"/><text class="eplan__label" x="286.9" y="250.1" style="opacity:0">방</text></g><g data-k="bed4"><rect class="eplan__room" x="235.1" y="250.1" width="103.5" height="0.0" style="opacity:0"/><text class="eplan__label" x="286.9" y="250.1" style="opacity:0">방</text></g></g>
+          <g class="eplan__rooms" aria-hidden="true"><g data-k="kitchen"><rect class="eplan__room" x="103.3" y="87.9" width="89.6" height="68.2"/><text class="eplan__label" x=""148.1" y="121.9">주방</text></g><g data-k="living"><rect class="eplan__room" x="103.3" y="156.0" width="131.8" height="94.1"/><text class="eplan__label" x=""169.2" y="203.1">거실</text></g><g data-k="bath0"><rect class="eplan__room eplan__room--wet" x="193.0" y="87.9" width="42.2" height="34.1"/><text class="eplan__label eplan__label--sm" x=""214.0" y="104.9">욕실</text></g><g data-k="bath1"><rect class="eplan__room eplan__room--wet" x="193.0" y="121.9" width="42.2" height="34.1"/><text class="eplan__label eplan__label--sm" x=""214.0" y="139.0">욕실</text></g><g data-k="bath2"><rect class="eplan__room eplan__room--wet" x="193.0" y="156.0" width="42.2" height="0.0" style="opacity:0"/><text class="eplan__label eplan__label--sm" x=""214.0" y="156.0" style="opacity:0">욕실</text></g><g data-k="bed0"><rect class="eplan__room" x="235.1" y="87.9" width="103.5" height="54.1"/><text class="eplan__label" x=""286.9" y="114.9">안방</text></g><g data-k="bed1"><rect class="eplan__room" x="235.1" y="142.0" width="103.5" height="54.1"/><text class="eplan__label" x=""286.9" y="169.0">방</text></g><g data-k="bed2"><rect class="eplan__room" x="235.1" y="196.0" width="103.5" height="54.1"/><text class="eplan__label" x=""286.9" y="223.1">방</text></g><g data-k="bed3"><rect class="eplan__room" x="235.1" y="250.1" width="103.5" height="0.0" style="opacity:0"/><text class="eplan__label" x=""286.9" y="250.1" style="opacity:0">방</text></g><g data-k="bed4"><rect class="eplan__room" x="235.1" y="250.1" width="103.5" height="0.0" style="opacity:0"/><text class="eplan__label" x=""286.9" y="250.1" style="opacity:0">방</text></g></g>
           <rect class="eplan__outer" x="103.3" y="87.9" width="235.3" height="162.3"/>
+          <g class="eplan__decor" aria-hidden="true"><path class="eplan__gap" data-decor="gap" d="M195.6 250.1H212.7M119.8 250.1H169.2M257.9 250.1H315.9"/><path class="eplan__win" data-decor="win" d="M119.8 247.6H169.2M119.8 252.6H169.2M119.8 247.6v5M169.2 247.6v5M257.9 247.6H315.9M257.9 252.6H315.9M257.9 247.6v5M315.9 247.6v5"/><path class="eplan__door" data-decor="door" d="M195.6 250.1V233.0A17.1 17.1 0 0 1 212.7 250.1"/><text class="eplan__entry" data-decor="entry" x="204.1" y="265.1">입구</text></g>
         </svg>
         <figcaption id="eplan-cap" class="eplan__cap" data-cap>32평 단층 기준 평면 예시. 거실, 주방, 방 3개, 욕실 2개</figcaption>
       </figure>
@@ -369,7 +386,7 @@
   <section class="contact" id="contact" aria-labelledby="contact-title">
     <div class="wrap contact__grid">
       <div class="contact__copy">
-        <h2 class="sec-title" id="contact-title">땅이 있다면, 이야기부터 시작합니다</h2>
+        <h2 class="sec-title" id="contact-title"><span class="nobr-line">땅이 있다면,</span><br>이야기부터 시작합니다</h2>
         <p class="sec-lead">대지 주소나 지번만 알려 주셔도 첫 상담에서 일조와 지을 수 있는 면적을 대략 짚어 드립니다. 상담은 무료이고 한 시간쯤 걸립니다.</p>
         <ul class="contact__info">
           <li><span>전화</span><a href="tel:020000000">02-000-0000</a></li>
