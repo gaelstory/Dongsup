@@ -179,7 +179,7 @@ function windowTexture(seed) {
     const m = r(); const pLit = m < 0.27 ? 0.06 : m < 0.72 ? 0.42 : 0.86;
     const floorWarm = r() < 0.67;
     let run = 0, lit = false, warm = floorWarm;
-    for (let c = 0; c < W / cw; c++) {
+    for (let c = 0; c < 16; c++) {
       if (run <= 0) { run = 1 + Math.floor(r() * 5); lit = r() < pLit; warm = r() < 0.86 ? floorWarm : !floorWarm; }
       run--;
       const x = c * cw, y = f * ch;
@@ -194,6 +194,20 @@ function windowTexture(seed) {
         g.fillStyle = r() < 0.2 ? 'rgb(14,22,44)' : 'rgb(5,8,17)';
       }
       g.fillRect(x + 1, y + 1, cw - 2, ch - 3);
+    }
+    // curtain wall: each floor reads as one glazed band, lit in long segments of varying brightness
+    const bandLit = r() < 0.5, bandWarm = r() < 0.68;
+    for (let c = 16; c < 32;) {
+      const seg = 2 + Math.floor(r() * 4), x = c * cw, y = f * ch, wpx = Math.min(seg, 32 - c) * cw;
+      const on = bandLit ? r() < 0.85 : r() < 0.12;
+      if (on) {
+        const b = 0.45 + r() * 0.55, rgb = (r() < 0.88 ? bandWarm : !bandWarm) ? [255, 201, 138] : [159, 212, 255];
+        g.fillStyle = `rgb(${rgb.map((v) => Math.round(v * b)).join(',')})`;
+      } else g.fillStyle = r() < 0.3 ? 'rgb(16,26,52)' : 'rgb(6,10,22)';
+      g.fillRect(x, y + 1, wpx, ch - 2);
+      g.fillStyle = 'rgba(0,0,0,0.55)';
+      for (let k = x; k < x + wpx; k += cw * 2) g.fillRect(k, y + 1, 1, ch - 2);
+      c += seg;
     }
   }
   return cv;
@@ -222,11 +236,11 @@ const PIERS = [
   { z: -14, x1: -17, w: 2.2 },
 ];
 const TOWERS = [
-  { x: 14, z: -10, w: 4.6, d: 4.6, h: 10.2, top: { w: 3.3, d: 3.3, h: 5.2 }, crown: HEX.cyan, seed: 11 }, // tallest, 2-tier
-  { x: 7.5, z: -3.5, w: 3.5, d: 3.0, h: 11.2, crown: null, seed: 23 },
+  { x: 14, z: -10, w: 4.6, d: 4.6, h: 10.2, top: { w: 3.3, d: 3.3, h: 5.2 }, crown: HEX.cyan, seed: 11, band: true }, // tallest, 2-tier
+  { x: 7.5, z: -3.5, w: 3.5, d: 3.0, h: 11.2, crown: 0xdff4ff, seed: 23 },
   { x: 20.5, z: -2.5, w: 3.8, d: 3.8, h: 9.4, crown: HEX.warm, seed: 37, round: true },
-  { x: 21.5, z: -16, w: 4.0, d: 3.2, h: 12.6, crown: HEX.cool, seed: 41 },
-  { x: 8, z: -17.5, w: 3.2, d: 3.2, h: 7.2, crown: null, seed: 53 },
+  { x: 21.5, z: -16, w: 4.0, d: 3.2, h: 12.6, crown: HEX.cool, seed: 41, band: true },
+  { x: 8, z: -17.5, w: 3.2, d: 3.2, h: 7.2, crown: HEX.warm, seed: 53 },
 ];
 // Low-rise offices (with windows) and warehouses (solid).
 const OFFICES = [
@@ -253,7 +267,7 @@ const MAINLAND = [[24, -70], [34, -66], [56, -66], [90, -70], [140, -76], [230, 
 
 const CAMS = {
   desk: { pos: [-70, 34, 78], tgt: [-3.5, 7.5, -15], fov: 35 },
-  mob: { pos: [-70, 90, 100], tgt: [12, 21, -12], fov: 50, hfov: 25 },
+  mob: { pos: [-52, 44, 82], tgt: [10, 6, -4], fov: 50, hfov: 30 },
 };
 
 // Layout is shared with the build-time generator of the illustrated (no-WebGL) fallback.
@@ -308,7 +322,7 @@ export function createHarbor(canvasEl, opts = {}) {
   const propsMat = keep(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.72, metalness: 0.25 }));
   const glowMat = keep(new THREE.MeshBasicMaterial({ vertexColors: true }));
   const winTex = tex(windowTexture(7), { wrap: true });
-  const towerMat = keep(new THREE.MeshStandardMaterial({ color: 0x0e1b40, roughness: 0.55, metalness: 0.3, emissive: 0xffffff, emissiveMap: winTex, emissiveIntensity: 1 }));
+  const towerMat = keep(new THREE.MeshStandardMaterial({ color: 0x0e1b40, roughness: 0.35, metalness: 0.6, emissive: 0xffffff, emissiveMap: winTex, emissiveIntensity: 1 }));
   const skyRefl = { value: 1 };
   towerMat.onBeforeCompile = (sh) => {
     sh.uniforms.uRefl = skyRefl;
@@ -316,6 +330,7 @@ export function createHarbor(canvasEl, opts = {}) {
       .replace('#include <begin_vertex>', '#include <begin_vertex>\nvWP = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     // A faint dusk-sky reflection that grows with height: glass reads as glass, not as black boxes.
     sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vWP; uniform float uRefl;')
+      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n totalEmissiveRadiance *= mix(0.8, 1.15, smoothstep(0.0, 16.0, vWP.y));')
       .replace('#include <opaque_fragment>', '#include <opaque_fragment>\n gl_FragColor.rgb += uRefl * (vec3(0.020,0.030,0.070) * smoothstep(0.0, 16.0, vWP.y) + vec3(0.03,0.025,0.06) * pow(1.0 - abs(dot(normalize(vViewPosition), normal)), 3.0));');
   };
 
@@ -366,7 +381,7 @@ export function createHarbor(canvasEl, opts = {}) {
   lg.strokeStyle = 'rgba(160,190,240,0.12)';
   for (let x = 32; x < 46; x += 0.8) { lg.beginPath(); lg.moveTo(px(x), pz(17)); lg.lineTo(px(x), pz(19.5)); lg.stroke(); lg.beginPath(); lg.moveTo(px(x), pz(21)); lg.lineTo(px(x), pz(23.5)); lg.stroke(); }
   // parks
-  for (const p of PARKS) rectW(p[0], p[1], p[2], p[3], '#0a1a27');
+  for (const p of PARKS) rectW(p[0], p[1], p[2], p[3], '#0f2430');
   // light pools: warm yard floods, cool plaza
   const pool = (x, z, rad, rgb, a) => {
     const gr = lg.createRadialGradient(px(x), pz(z), 0, px(x), pz(z), ps(rad));
@@ -390,6 +405,41 @@ export function createHarbor(canvasEl, opts = {}) {
   const landTop = keep(new THREE.MeshBasicMaterial({ map: landTex }));
   const landSide = keep(new THREE.MeshBasicMaterial({ color: 0x0b1530 }));
   const land = new THREE.Mesh(landGeo, [landTop, landSide]); site.add(land);
+
+  // static additive light ribbons (quay halo on the water, road glow): rows of [x, y, z, r, g, b, a] cross-sections
+  const ribbons = { p: [], c: [], i: [], n: 0 };
+  const ribbon = (rows) => {
+    const k = rows[0].length;
+    rows.forEach((row, ri) => {
+      for (const v of row) { ribbons.p.push(v[0], v[1], v[2]); ribbons.c.push(v[3], v[4], v[5], v[6]); }
+      if (ri) for (let j = 0; j < k - 1; j++) { const a = ribbons.n + (ri - 1) * k + j, b = a + k; ribbons.i.push(a, b, a + 1, a + 1, b, b + 1); }
+    });
+    ribbons.n += rows.length * k;
+  };
+  // lit quay edge: a warm band on the quay wall and its spill on the water
+  {
+    const pts = shape.getSpacedPoints(360).map((v) => [v.x, -v.y]);
+    pts.pop();
+    let cxs = 0, czs = 0; for (const p of pts) { cxs += p[0]; czs += p[1]; } cxs /= pts.length; czs /= pts.length;
+    const N = pts.map((p, i) => {
+      const a = pts[(i - 1 + pts.length) % pts.length], b = pts[(i + 1) % pts.length];
+      let nx = -(b[1] - a[1]), nz = b[0] - a[0]; const l = Math.hypot(nx, nz) || 1; nx /= l; nz /= l;
+      if (nx * (p[0] - cxs) + nz * (p[1] - czs) < 0) { nx = -nx; nz = -nz; }
+      return [nx, nz];
+    });
+    const qc = C(0xffd9a8), wc = C(0xffc98a), rows = [];
+    for (let i = 0; i <= pts.length; i++) {
+      const k = i % pts.length, p = pts[k], n = N[k];
+      if (i < pts.length) {
+        const q = pts[(k + 1) % pts.length], m = N[(k + 1) % pts.length];
+        const A = [p[0] + n[0] * 0.03, 0.4, p[1] + n[1] * 0.03], B = [q[0] + m[0] * 0.03, 0.4, q[1] + m[1] * 0.03];
+        const Cq = [B[0], 0.62, B[2]], D = [A[0], 0.62, A[2]];
+        glows.quad(A, B, Cq, D, [n[0], 0, n[1]], qc); glows.quad(B, A, D, Cq, [n[0], 0, n[1]], qc);
+      }
+      rows.push([[p[0] + n[0] * 0.05, 0.03, p[1] + n[1] * 0.05, wc.r, wc.g, wc.b, 0.2], [p[0] + n[0] * 1.6, 0.03, p[1] + n[1] * 1.6, wc.r, wc.g, wc.b, 0]]);
+    }
+    ribbon(rows);
+  }
 
   // mainland (far shore): flat, almost invisible except for its lights
   const ms = new THREE.Shape(MAINLAND.map((p) => new THREE.Vector2(p[0], -p[1])));
@@ -511,7 +561,7 @@ export function createHarbor(canvasEl, opts = {}) {
   const containers = new THREE.InstancedMesh(contGeo, contMat, counts.containers);
   const CONT_COLORS = [C(0x2c4a8c), C(0x24707c), C(0x94503c), C(0x3a5ca0), C(0x34808a)];
   let ci = 0;
-  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sv = new V3(), pv = new V3();
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sv = new V3(), pv = new V3(), UPV = new V3(0, 1, 0);
   const placeContainer = (x, y, z, ry, colr) => {
     if (ci >= counts.containers) return false;
     q.setFromAxisAngle(new V3(0, 1, 0), ry); sv.set(0.5, 0.52, 2.4); pv.set(x, y, z);
@@ -565,12 +615,14 @@ export function createHarbor(canvasEl, opts = {}) {
     const local = new Builder(), lg2 = new Builder();
     const deckY = H - 0.35;
     if (kind === 'container') {
-      local.box(L * 0.1, deckY, 0, 1.6, 2.4, B * 0.86, C(0xb9c2d8), { top: C(0x8a94b0) });
+      local.box(L * 0.1, deckY, 0, 1.6, 2.4, B * 0.86, C(0xdce6ff), { top: C(0xa8b4d4) });
+      for (const sd of [-1, 1]) lg2.box(L * 0.45, 0.42, sd * (B / 2 + 0.01), L * 0.62, 0.07, 0.02, C(0xffd6a0));
       local.box(L * 0.1, deckY + 2.4, 0, 1.0, 0.5, B * 0.5, C(0x6a7698));
       lg2.box(L * 0.1 + 0.81, deckY + 1.5, 0, 0.02, 0.28, B * 0.8, C(0xffd9a6));
       lg2.box(L * 0.1 + 0.81, deckY + 0.9, 0, 0.02, 0.22, B * 0.8, C(0xc7955f));
     } else if (kind === 'tanker') {
-      local.box(L * 0.1, deckY, 0, 1.8, 2.0, B * 0.84, C(0xaeb6cc), { top: C(0x7f89a6) });
+      local.box(L * 0.1, deckY, 0, 1.8, 2.0, B * 0.84, C(0xd6deef), { top: C(0x9aa6c4) });
+      for (const sd of [-1, 1]) lg2.box(L * 0.45, 0.42, sd * (B / 2 + 0.01), L * 0.6, 0.07, 0.02, C(0xffd6a0));
       lg2.box(L * 0.1 + 0.91, deckY + 1.3, 0, 0.02, 0.26, B * 0.76, C(0xffd4a0));
       local.box(L * 0.55, deckY, 0, L * 0.7, 0.16, 0.3, C(0x5a6688));
       for (let i = 0; i < 4; i++) local.box(L * (0.3 + i * 0.15), deckY, 0, 0.9, 0.35, 0.9, C(0x4a5679));
@@ -657,14 +709,21 @@ export function createHarbor(canvasEl, opts = {}) {
 
   // ---------------------------------------------------------------- towers and offices
   const CW = 0.42, FH = 0.4; // window column width, floor height (world units)
-  const winUV = (seedU, seedV) => (face, w, y0, y1) => {
+  // band = true samples the curtain-wall half of the atlas; every face stays inside its half
+  const winUV = (seedU, seedV, band = false) => (face, w, y0, y1) => {
     if (face === 4) { const u0 = 0.5 / 256, v0 = 0.5 / 256; return [[u0, v0], [u0, v0], [u0, v0], [u0, v0]]; }
-    const u0 = seedU + face * 7.3, u1 = u0 + w / CW / 32; // texture = 32 columns
+    const span = w / CW / 32, room = Math.max(0, 0.495 - span);
+    const u0 = (band ? 0.5 : 0.0025) + (((seedU + face * 0.37) % 1) * room), u1 = u0 + span; // texture = 32 columns
     const v0 = seedV + y0 / FH / 32, v1 = seedV + y1 / FH / 32;
     return [[u0, v0], [u1, v0], [u1, v1], [u0, v1]];
   };
   const wuv = winUV;
   const TOWER_TOPS = [];
+  const rims = new Edges();
+  const rimTop = (cx, y, cz, w, d) => {
+    const c = [[cx - w / 2, y + 0.02, cz - d / 2], [cx + w / 2, y + 0.02, cz - d / 2], [cx + w / 2, y + 0.02, cz + d / 2], [cx - w / 2, y + 0.02, cz + d / 2]];
+    for (let k = 0; k < 4; k++) rims.seg(c[k], c[(k + 1) % 4]);
+  };
   TOWERS.forEach((t, i) => {
     const su = (t.seed * 0.137) % 1, sv2 = (t.seed * 0.291) % 1;
     const base = LAND_Y;
@@ -676,7 +735,7 @@ export function createHarbor(canvasEl, opts = {}) {
       const cyl = new THREE.CylinderGeometry(rad, rad, hh, 28, 1, true); cyl.translate(0, hh / 2, 0);
       // window uvs in world scale: u around the circumference, v by floor
       const uvA = cyl.attributes.uv.array, pA = cyl.attributes.position.array;
-      for (let k = 0; k < uvA.length / 2; k++) { uvA[k * 2] = su + uvA[k * 2] * (TAU * rad) / CW / 32; uvA[k * 2 + 1] = sv2 + pA[k * 3 + 1] / FH / 32; }
+      for (let k = 0; k < uvA.length / 2; k++) { uvA[k * 2] = 0.5 + uvA[k * 2] * 0.49; uvA[k * 2 + 1] = sv2 + pA[k * 3 + 1] / FH / 32; }
       const cm = new THREE.Matrix4().makeTranslation(t.x, base + 0.9, t.z);
       buildings.geom(cyl, cm, C(0xffffff)); edges.geom(cyl, cm, 20); cyl.dispose();
       const cap = new THREE.CircleGeometry(rad, 28); cap.rotateX(-Math.PI / 2); cap.translate(t.x, base + t.h, t.z);
@@ -684,12 +743,12 @@ export function createHarbor(canvasEl, opts = {}) {
       buildings.geom(cap, new THREE.Matrix4(), C(0xffffff)); cap.dispose();
       edges.box(t.x, base, t.z, t.w + 1.2, 0.9, t.d + 1.2);
     } else {
-      buildings.box(t.x, base + 0.9, t.z, t.w, t.h - 0.9, t.d, C(0xffffff), { uv: wuv(su, sv2) });
+      buildings.box(t.x, base + 0.9, t.z, t.w, t.h - 0.9, t.d, C(0xffffff), { uv: wuv(su, sv2, !!t.band) });
       edges.box(t.x, base, t.z, t.w + 1.2, 0.9, t.d + 1.2); edges.box(t.x, base + 0.9, t.z, t.w, t.h - 0.9, t.d);
     }
     let top = base + t.h, tw = t.w, td = t.d;
     if (t.top) {
-      buildings.box(t.x, top, t.z, t.top.w, t.top.h, t.top.d, C(0xffffff), { uv: wuv(su + 0.5, sv2 + 0.25) });
+      buildings.box(t.x, top, t.z, t.top.w, t.top.h, t.top.d, C(0xffffff), { uv: wuv(su + 0.5, sv2 + 0.25, !!t.band) });
       edges.box(t.x, top, t.z, t.top.w, t.top.h, t.top.d);
       // setback terrace lights
       for (const [dx, dz] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) lights.add(t.x + dx * (t.w / 2 - 0.2), top + 0.15, t.z + dz * (t.d / 2 - 0.2), 0xfff0dc, 0.13, 0.9);
@@ -702,7 +761,10 @@ export function createHarbor(canvasEl, opts = {}) {
       const ring = new THREE.CylinderGeometry(tw / 2 + 0.03, tw / 2 + 0.03, 0.12, 28, 1, true); ring.translate(t.x, top - 0.18, t.z);
       glows.geom(ring, new THREE.Matrix4(), C(t.crown)); ring.dispose();
     } else if (t.crown) glows.box(t.x, top - 0.18, t.z, tw + 0.04, 0.12, td + 0.04, C(t.crown), { skip: [4] });
-    for (const [dx, dz] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) lights.add(t.x + dx * (tw / 2 - 0.12), top + 0.1, t.z + dz * (td / 2 - 0.12), i === 0 ? 0xffffff : 0xffe6c8, 0.13, 0.85);
+    if (i !== 0) lights.add(t.x, top + 0.55, t.z, 0xffffff, 0.16, 0.95);
+    if (t.crown) halos.add(t.x, top - 0.2, t.z, t.crown, tw * 1.6, 0.12);
+    if (t.round) { for (let k = 0; k < 24; k++) { const a0 = (k / 24) * TAU, a1 = ((k + 1) / 24) * TAU; rims.seg([t.x + Math.cos(a0) * tw / 2, top + 0.02, t.z + Math.sin(a0) * tw / 2], [t.x + Math.cos(a1) * tw / 2, top + 0.02, t.z + Math.sin(a1) * tw / 2]); } }
+    else rimTop(t.x, top, t.z, tw, td);
     TOWER_TOPS.push(new V3(t.x, top, t.z));
   });
   // tallest tower mast
@@ -713,7 +775,8 @@ export function createHarbor(canvasEl, opts = {}) {
   }
   OFFICES.forEach((o, i) => {
     const [x, z, w, d, h] = o;
-    buildings.box(x, LAND_Y, z, w, h, d, C(0xffffff), { uv: wuv((i * 0.173) % 1, (i * 0.37) % 1) });
+    buildings.box(x, LAND_Y, z, w, h, d, C(0xffffff), { uv: wuv((i * 0.173) % 1, (i * 0.37) % 1, i % 3 === 1) });
+    rimTop(x, LAND_Y + h, z, w, d);
     edges.box(x, LAND_Y, z, w, h, d);
     props.box(x + w * 0.1, LAND_Y + h, z, w * 0.3, 0.3, d * 0.3, C(0x18234b));
     if (i % 3 === 0) lights.add(x + w / 2 - 0.1, LAND_Y + h + 0.1, z + d / 2 - 0.1, 0xffe6c8, 0.12, 0.8);
@@ -790,6 +853,7 @@ export function createHarbor(canvasEl, opts = {}) {
     // canopy columns at the forecourt
     for (let x = x0 + 1; x < x1; x += 3) props.box(x, b, z + rad + 0.2, 0.14, 2.1, 0.14, C(0x2a3866));
     TERMINAL_NODE = new V3(cx, b + 2.1 + rad * 0.36 + 0.05, z);
+    for (let x = x0 + 1; x < x1; x += 3) halos.add(x, b + 2.05, z + rad, 0xffc890, 3.2, 0.12);
     for (let x = x0 + 1.5; x < x1; x += 3) {
       const zEdge = x < 12 ? 26 + (x - 2) * 0.25 : 28.5 + (x - 12) * 0.054;
       reflections.push([x, zEdge + 0.8, C(HEX.warm), 9, 1.2, 0.55]);
@@ -801,6 +865,19 @@ export function createHarbor(canvasEl, opts = {}) {
   const bridgeCurve = new THREE.CatmullRomCurve3(BRIDGE_PTS.map(([x, y, z]) => new V3(x, y + 0.025, z)), false, 'centripetal');
   const allRoads = [...roadCurves, bridgeCurve];
   const roadLUT = allRoads.map((c) => makeLUT(c, 400));
+  // electric road network: a soft cyan glow under every road
+  {
+    const cc = C(HEX.cyan), v = [0, 0, 0], t = [0, 0, 0];
+    roadLUT.forEach((L) => {
+      const rows = [];
+      for (let i = 0; i <= L.n; i += 2) {
+        lutAt(L, i / L.n, v, t); const sx = -t[2], sz = t[0], sl = Math.hypot(sx, sz) || 1, hw = 1.5;
+        const y = v[1] + 0.035;
+        rows.push([[v[0] + sx / sl * hw, y, v[2] + sz / sl * hw, cc.r, cc.g, cc.b, 0], [v[0], y, v[2], cc.r, cc.g, cc.b, 0.11], [v[0] - sx / sl * hw, y, v[2] - sz / sl * hw, cc.r, cc.g, cc.b, 0]]);
+      }
+      ribbon(rows);
+    });
+  }
   {
     const [rcv2, rg2] = canvas(64, 64);
     rg2.fillStyle = '#111c3c'; rg2.fillRect(0, 0, 64, 64);
@@ -916,8 +993,8 @@ export function createHarbor(canvasEl, opts = {}) {
       if (x > -5.6 && x < 6.6 && z > -13.2 && z < 19.2) continue; // yard
       if (z > 11.6 && z < 20.6 && x > TERMINAL.x0 - 0.5 && x < TERMINAL.x1 + 0.5) continue;
       const s = 0.7 + r() * 0.65;
-      m4.compose(new V3(x, LAND_Y, z), q.setFromAxisAngle(new V3(0, 1, 0), r() * TAU), new V3(s, s * (0.8 + r() * 0.4), s));
-      trees.setMatrixAt(n, m4); tc.setHSL(0.44 + r() * 0.1, 0.38, 0.07 + r() * 0.05); trees.setColorAt(n, tc); n++;
+      m4.compose(pv.set(x, LAND_Y, z), q.setFromAxisAngle(UPV, r() * TAU), sv.set(s * 0.9, s * (1.3 + r() * 0.5), s * 0.9));
+      trees.setMatrixAt(n, m4); tc.setHSL(0.45 + r() * 0.06, 0.5, (0.105 + r() * 0.05) * (0.75 + r() * 0.5)); trees.setColorAt(n, tc); n++;
     }
     trees.count = n; trees.instanceMatrix.needsUpdate = true; if (trees.instanceColor) trees.instanceColor.needsUpdate = true;
     site.add(trees);
@@ -935,7 +1012,7 @@ export function createHarbor(canvasEl, opts = {}) {
 
   // ---------------------------------------------------------------- moving ferry
   const ferry = new THREE.Group(); scene.add(ferry);
-  const FERRY_PATH = { a: new V3(84, 0, -42), b: new V3(-50, 0, -62), period: 300 };
+  const FERRY_PATH = { a: new V3(-62, 0, -40), b: new V3(-30, 0, 26), period: 300 };
   {
     const fb = new Builder(), fg = new Builder(), fe = new Edges();
     const o = { x: 0, z: 0, ry: 0, L: 9, B: 2.1, kind: 'ferry' };
@@ -949,7 +1026,7 @@ export function createHarbor(canvasEl, opts = {}) {
     const [wcv, wg] = canvas(128, 64);
     const wgr = wg.createLinearGradient(0, 0, 128, 0); wgr.addColorStop(0, 'rgba(200,225,255,0)'); wgr.addColorStop(1, 'rgba(200,225,255,0.55)');
     wg.fillStyle = wgr; wg.beginPath(); wg.moveTo(128, 26); wg.lineTo(0, 0); wg.lineTo(0, 10); wg.lineTo(128, 32); wg.lineTo(0, 54); wg.lineTo(0, 64); wg.lineTo(128, 38); wg.closePath(); wg.fill();
-    const wake = new THREE.Mesh(keep(new THREE.PlaneGeometry(14, 6)), keep(new THREE.MeshBasicMaterial({ map: tex(wcv), transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false })));
+    const wake = new THREE.Mesh(keep(new THREE.PlaneGeometry(14, 6)), keep(new THREE.MeshBasicMaterial({ map: tex(wcv), transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false })));
     wake.rotation.x = -Math.PI / 2; wake.position.set(-7, 0.05, 0); ferry.add(wake);
     ferry.userData.edges = fe;
   }
@@ -1217,6 +1294,14 @@ export function createHarbor(canvasEl, opts = {}) {
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
   }));
   const trailMesh = new THREE.Mesh(trailGeo, trailMat); trailMesh.frustumCulled = false; site.add(trailMesh);
+  {
+    const g = keep(new THREE.BufferGeometry());
+    g.setAttribute('position', new THREE.Float32BufferAttribute(ribbons.p, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(ribbons.c, 4)); g.setIndex(ribbons.i);
+    const glowRib = new THREE.Mesh(g, trailMat); glowRib.renderOrder = -3; site.add(glowRib);
+  }
+  const rimMat = keep(new THREE.LineBasicMaterial({ color: HEX.cyan, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false }));
+  const rimGeo = keep(new THREE.BufferGeometry()); rimGeo.setAttribute('position', new THREE.Float32BufferAttribute(rims.p, 3));
+  const rimLines = new THREE.LineSegments(rimGeo, rimMat); site.add(rimLines);
   const TW = C(0xfff0d8), TC = C(0xbfefff);
 
   // ---------------------------------------------------------------- sea
@@ -1333,7 +1418,7 @@ export function createHarbor(canvasEl, opts = {}) {
 
   // soft light haze over the complex (additive, no depth): the city glows into the night air
   const hazes = [];
-  for (const [x, y, z, sx, sy, hex, op] of [[20, 7, -10, 110, 36, 0x4a5cb0, 0.2], [8, 3, 12, 70, 20, 0xffb47a, 0.07], [-8, 2, -2, 40, 14, 0x5fd4ff, 0.05]]) {
+  for (const [x, y, z, sx, sy, hex, op] of [[20, 7, -10, 110, 36, 0x4a5cb0, 0.3], [8, 3, 12, 70, 20, 0xffb47a, 0.1], [-8, 2, -2, 40, 14, 0x5fd4ff, 0.07]]) {
     const sm = keep(new THREE.SpriteMaterial({ map: glowTex, color: hex, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, fog: false }));
     const sp = new THREE.Sprite(sm); sp.position.set(x, y, z); sp.scale.set(sx, sy, 1); sp.renderOrder = 8; site.add(sp);
     hazes.push([sm, op]);
@@ -1482,8 +1567,8 @@ export function createHarbor(canvasEl, opts = {}) {
     // focus on a node: move a little closer and turn toward it (stays within ~15% of the framing)
     if (rig.focusAmt > 0.0001) {
       const f = rig.focusAmt;
-      pos.lerp(tmpV.copy(rig.focusNode), 0.1 * f);
-      tgt.lerp(rig.focusNode, 0.2 * f);
+      pos.lerp(tmpV.copy(rig.focusNode), 0.07 * f);
+      tgt.lerp(rig.focusNode, (rig.focus === 0 ? 0.12 : 0.18) * f);
     }
     // scroll: rise 8 units and lean forward
     const s = rig.scroll;
@@ -1504,7 +1589,7 @@ export function createHarbor(canvasEl, opts = {}) {
   function resize() {
     const rect = canvasEl.getBoundingClientRect();
     W = Math.max(1, Math.round(rect.width)); H = Math.max(1, Math.round(rect.height));
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1.5 : 2));
     renderer.setSize(W, H, false);
     applyCamBase();
     const aspect = W / H;
@@ -1537,7 +1622,7 @@ export function createHarbor(canvasEl, opts = {}) {
     // twin blend
     rig.twin += (rig.twinT - rig.twin) * (still ? 1 : 1 - Math.exp(-dt / 0.22));
     const tw = rig.twin; U.twin.value = tw;
-    towerMat.emissiveIntensity = 1 - tw * 0.9; towerMat.color.setRGB(0.055 * (1 - tw * 0.5), 0.106 * (1 - tw * 0.5), 0.25 * (1 - tw * 0.4));
+    towerMat.emissiveIntensity = (mobile ? 1.5 : 1.08) * (1 - tw * 0.9); towerMat.color.setRGB(0.055 * (1 - tw * 0.5), 0.106 * (1 - tw * 0.5), 0.25 * (1 - tw * 0.4));
     skyRefl.value = 1 - tw;
     roofMat.emissiveIntensity = 0.9 * (1 - tw * 0.7);
     glowMat.color.setScalar(1 - tw * 0.75);
@@ -1546,13 +1631,14 @@ export function createHarbor(canvasEl, opts = {}) {
     hallMat.color.setScalar(1 - tw * 0.8);
     landTop.color.setScalar(1 - tw * 0.45);
     U.dim.value = 1 - tw * 0.55;
-    for (const [sm, op] of hazes) sm.opacity = op * (1 - tw * 0.6);
+    rimMat.opacity = 0.22 * (1 - tw); rimLines.visible = tw < 0.99;
+    for (const [sm, op] of hazes) sm.opacity = op * (mobile ? 1.5 : 1) * (1 - tw * 0.6);
     edgeMat.opacity = tw * 0.85; edgeLines.visible = tw > 0.01; ferryEdges.visible = edgeLines.visible; grid.visible = tw > 0.01;
 
     placeCamera(t);
 
     // ferry
-    const fp = ((t + 70) / FERRY_PATH.period) % 1;
+    const fp = ((t + 165) / FERRY_PATH.period) % 1;
     ferryL.lerpVectors(FERRY_PATH.a, FERRY_PATH.b, fp);
     ferry.position.copy(ferryL); ferry.position.y = Math.sin(t * 0.8) * 0.03;
     const fvis = smooth(0, 0.06, fp) * (1 - smooth(0.94, 1, fp));

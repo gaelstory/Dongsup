@@ -463,7 +463,8 @@
       '<div class="cal__bar"><p class="cal__hint" id="cal-hint" aria-live="polite">들어오는 날을 눌러 주세요.</p>' +
       '<div class="cal__navs"><button type="button" class="cal__nav" data-dir="-1" aria-label="이전 달 보기"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M12.5 4 6.5 10l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
       '<button type="button" class="cal__nav" data-dir="1" aria-label="다음 달 보기"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M7.5 4l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>' +
-      '<div class="cal__months"></div>';
+      '<div class="cal__months"></div>' +
+      '<p class="cal__legend"><span class="cal__key cal__key--off" aria-hidden="true">17</span>사선은 예약 마감 <span class="cal__key cal__key--today" aria-hidden="true">24</span>동그라미는 오늘 <span class="cal__key cal__key--sel" aria-hidden="true">5</span>고른 날</p>';
     var monthsEl = $('.cal__months', cal), hint = $('#cal-hint'), navs = $$('.cal__nav', cal);
     var status = $('#book-status');
 

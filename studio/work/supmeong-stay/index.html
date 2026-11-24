@@ -29,7 +29,7 @@
   </linearGradient>
   <radialGradient id="g-sunglow"><stop offset="0" stop-color="#F7D9B4" stop-opacity=".9"/><stop offset=".35" stop-color="#F7D9B4" stop-opacity=".35"/><stop offset="1" stop-color="#F7D9B4" stop-opacity="0"/></radialGradient>
   <radialGradient id="g-horizon" cx=".5" cy="1" r=".75"><stop offset="0" stop-color="#F6CFA8" stop-opacity="1"/><stop offset="1" stop-color="#F6CFA8" stop-opacity="0"/></radialGradient>
-  <linearGradient id="g-meteor" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="-300" y2="130"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+  <linearGradient id="g-meteor" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="-300" y2="130"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
   <radialGradient id="g-moonglow"><stop offset="0" stop-color="#E8ECF2" stop-opacity=".34"/><stop offset="1" stop-color="#E8ECF2" stop-opacity="0"/></radialGradient>
   <radialGradient id="g-milky"><stop offset="0" stop-color="#C9D4E8" stop-opacity=".36"/><stop offset=".6" stop-color="#C9D4E8" stop-opacity=".11"/><stop offset="1" stop-color="#C9D4E8" stop-opacity="0"/></radialGradient>
   <mask id="m-moon"><rect x="-60" y="-60" width="120" height="120" fill="#fff"/><circle cx="9" cy="-6" r="19" fill="#000"/></mask>
@@ -207,7 +207,7 @@
 
   <div class="surfaces" data-hour="22.6">
     <section class="surface surface--snow houses" id="houses" data-surface="light" aria-labelledby="houses-title">
-      <svg class="edge edge--top" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 90V58C90 40 170 26 260 34S420 70 520 62 690 18 800 14 980 44 1080 52 1280 30 1360 36 1440 52 1440 52V90Z"/></svg>
+      <svg class="edge edge--top" data-surface="light" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 90V58C90 40 170 26 260 34S420 70 520 62 690 18 800 14 980 44 1080 52 1280 30 1360 36 1440 52 1440 52V90Z"/></svg>
       <div class="wrap">
         <div class="sec-head">
           <h2 id="houses-title">숲동과 별동</h2>
@@ -280,7 +280,7 @@
             <p>전나무 숲 쪽으로 지붕이 땅까지 내려온 A자형 집입니다. 부엌과 거실, 욕실이 모두 여기 있고, 지붕 경사 아래 다락에 낮잠용 침대를 두었습니다.</p>
             <dl class="specs">
               <div><dt>쓰임</dt><dd>거실, 부엌, 욕실, 다락</dd></div>
-              <div><dt>넓이</dt><dd>49㎡, 다락 포함</dd></div>
+              <div><dt>넓이</dt><dd>49m<sup>2</sup>, 다락 포함</dd></div>
               <div><dt>난방</dt><dd>화목난로와 바닥 난방</dd></div>
             </dl>
           </div>
@@ -356,7 +356,7 @@
             <p>낮은 지붕 위로 넓은 천창을 낸 단층 침실입니다. 잠만 자는 집이라 텔레비전도 시계도 두지 않았습니다. 책장에는 지난 손님들이 두고 간 책이 조금씩 늘어갑니다.</p>
             <dl class="specs">
               <div><dt>쓰임</dt><dd>침실, 책장, 툇마루</dd></div>
-              <div><dt>넓이</dt><dd>23㎡</dd></div>
+              <div><dt>넓이</dt><dd>23m<sup>2</sup></dd></div>
               <div><dt>침대</dt><dd>퀸 하나, 요청하면 이불 한 채 더</dd></div>
             </dl>
           </div>
@@ -520,17 +520,17 @@
             <path d="M545 72 566 112H524Z" fill="#1B3A32"/>
             <rect x="540" y="98" width="10" height="14" fill="#F3C46B"/>
             <g font-family="'Nanum Myeongjo', serif" fill="#1B3A32">
-              <text x="548" y="58" font-size="17" font-weight="800" text-anchor="middle">숲멍 스테이</text>
+              <text class="map__name" x="548" y="58" font-size="17" font-weight="800" text-anchor="middle">숲멍 스테이</text>
               <text x="220" y="330" font-size="14" text-anchor="end">가상리 마을회관</text>
               <text x="428" y="318" font-size="14">개울 다리</text>
               <text x="408" y="236" font-size="14" font-weight="700" fill="#4A675C" text-anchor="end">흙길 10분</text>
               <text x="190" y="488" font-size="14" font-weight="700" fill="#4A675C">국도 25분</text>
-              <text x="92" y="546" font-size="13" fill="#4A675C">홍천 나들목 방면</text>
+              <text class="map__far" x="92" y="546" font-size="13" fill="#4A675C">홍천 나들목 방면</text>
             </g>
           </svg>
         </figure>
       </div>
-      <svg class="edge edge--bottom" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0V40C110 54 210 70 330 62S520 22 640 26 820 74 960 78 1180 46 1290 40 1440 30 1440 30V0Z"/></svg>
+      <svg class="edge edge--bottom" data-surface="light" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0V40C110 54 210 70 330 62S520 22 640 26 820 74 960 78 1180 46 1290 40 1440 30 1440 30V0Z"/></svg>
     </section>
   </div>
 </main>
@@ -562,7 +562,7 @@
 </footer>
 
 <div class="book-bar" id="book-bar">
-  <p class="book-bar__summary" aria-live="polite"><span class="book-bar__dates" id="bar-dates">날짜를 고르면</span> <span class="book-bar__price" id="bar-price">요금이 바로 계산됩니다</span></p>
+  <p class="book-bar__summary" aria-live="polite"><span class="book-bar__dates" id="bar-dates">날짜를 고르면</span> <span class="book-bar__price" id="bar-price">요금이 나옵니다</span></p>
   <a class="btn btn--lamp book-bar__btn" href="#booking">머물 날짜 고르기</a>
 </div>
 

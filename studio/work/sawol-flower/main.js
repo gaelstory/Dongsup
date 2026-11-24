@@ -82,7 +82,12 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open()) { set(false); btn.focus(); } });
     document.addEventListener('click', function (e) { if (open() && !e.target.closest('.nav')) set(false); });
     var ticking = false;
-    function onScroll() { ticking = false; header.classList.toggle('is-scrolled', window.scrollY > 24); }
+    var hero = document.querySelector('.hero'), wind = document.getElementById('wind-toggle');
+    function onScroll() {
+      ticking = false;
+      header.classList.toggle('is-scrolled', window.scrollY > 24);
+      if (wind) wind.classList.toggle('is-away', window.scrollY > hero.offsetHeight * 0.25);
+    }
     window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
     onScroll();
   }
@@ -408,7 +413,12 @@
       lastY = y;
       if (garden.inView() && d) { budget = Math.min(4, budget + d * 0.045); kick(); }
     }, { passive: true });
-    var wasActive = false;
+    var wasActive = false, perches = Array.prototype.slice.call(document.querySelectorAll('#today-title, .specimen:nth-child(-n+3) .tag'));
+    function perch() {
+      var landing = list.filter(function (q) { return q.target; }).length;
+      if (landing >= 8 || Math.random() > 0.5) return null;
+      return perches[(Math.random() * perches.length) | 0];
+    }
     tasks.push(function (dt) {
       while (budget >= 1 && list.length < 20) {
         budget -= 1;
@@ -418,8 +428,10 @@
         list.push({
           x: s.x + (k() - 0.5) * s.size, y: s.y + (k() - 0.5) * s.size * 0.6, vx: (k() - 0.5) * 40, vy: 10 + k() * 30, term: 60 + k() * 60,
           rot: k() * 6.28, vr: (k() - 0.5) * 5, flip: k() * 6.28, vf: 2 + k() * 3, ph: k() * 6.28, life: 0, max: 3 + k() * 1.8,
-          len: s.size * (0.45 + k() * 0.25), shape: s.shape, fill: s.fill
+          len: s.size * (0.45 + k() * 0.25), shape: s.shape, fill: s.fill, target: perch(), tf: 0.12 + k() * 0.76, landed: false
         });
+        var np = list[list.length - 1];
+        if (np.target) np.max = 8;
       }
       if (list.length < 20) budget = Math.min(budget, 1.5);
       if (!list.length) {
@@ -434,12 +446,28 @@
       for (var i = list.length - 1; i >= 0; i--) {
         var p = list[i];
         p.life += dt;
-        if (gone && p.max - p.life > 0.5) p.max = p.life + 0.5;
-        p.vy = Math.min(p.term, p.vy + 55 * dt);
-        p.x += (p.vx + Math.sin(p.life * 2.2 + p.ph) * 34) * dt;
-        p.y += p.vy * dt;
-        p.rot += p.vr * dt;
-        p.flip += p.vf * dt;
+        if (p.target) {
+          // a few petals drift toward the heading or a price tag and settle on its top edge
+          var tr = p.target.getBoundingClientRect(), tx = tr.left + tr.width * p.tf, ty = tr.top + (p.target.tagName === 'H2' ? 8 : -1);
+          if (p.landed) {
+            p.x = tr.left + p.ox; p.y = ty - p.len * 0.12;
+            p.rot += (p.rest - p.rot) * Math.min(1, dt * 6); p.flip += (0 - p.flip) * Math.min(1, dt * 6);
+            if (tr.bottom < -30 || tr.top > H + 30) p.max = Math.min(p.max, p.life);
+          } else if (p.y > ty + 40) { p.target = null; p.max = Math.min(p.max, p.life + 1.5); }
+          else {
+            p.x += (tx - p.x) * Math.min(1, dt * 0.9);
+            if (p.y >= ty - p.len * 0.12 && Math.abs(p.x - tx) < 40) { p.landed = true; p.ox = p.x - tr.left; p.rest = (Math.random() - 0.5) * 1.2 + Math.PI / 2; p.flip = Math.round(p.flip / Math.PI) * Math.PI; p.max = p.life + 4; }
+          }
+          if (!p.landed && p.life > 6) p.max = Math.min(p.max, p.life + 0.8);
+        }
+        if (gone && !p.landed && p.max - p.life > 0.5) p.max = p.life + 0.5;
+        if (!p.landed) {
+          p.vy = Math.min(p.term, p.vy + 55 * dt);
+          p.x += (p.vx + Math.sin(p.life * 2.2 + p.ph) * 34) * dt;
+          p.y += p.vy * dt;
+          p.rot += p.vr * dt;
+          p.flip += p.vf * dt;
+        }
         if (p.life > p.max || p.y > H + 40) { list.splice(i, 1); continue; }
         var a = Math.min(1, p.life * 4) * Math.min(1, (p.max - p.life) / 1);
         ctx.save();
@@ -487,15 +515,18 @@
       form.querySelectorAll('.pick').forEach(function (p) { p.classList.toggle('is-on', p.querySelector('input').checked); });
       count.textContent = order.length === 3 ? '3가지 골랐어요' : order.length + '가지 골랐어요, ' + (3 - order.length) + '가지 더 고를 수 있어요';
     }
-    var setter = null;
+    var setter = null, touched = false, hintEl = document.getElementById('pick-hint'), submit = form.querySelector('[type="submit"]'), dy = 0;
     function render(anim) {
       var st = state(), out = A.bouquet(st);
       svg.innerHTML = out.svg;
       setter = mountHeads(svg, out.heads);
+      dy = { S: -44, M: -16, L: 0 }[st.size];
       cap.textContent = st.kinds.length ? out.label : '꽃을 한 가지 이상 골라 주세요';
       price.set(priceOf(st), anim && !REDUCED);
+      form.classList.toggle('is-empty', !st.kinds.length);
+      submit.setAttribute('aria-disabled', String(!st.kinds.length));
       if (anim && MOTION) {
-        G.fromTo(svg.querySelector('.bq'), { scale: 0.965 }, { scale: 1, duration: 0.6, ease: 'back.out(2.4)', svgOrigin: '280 600' });
+        G.fromTo(svg.querySelector('.bq'), { scale: 0.965 }, { scale: 1, duration: 0.6, ease: 'back.out(2.4)', svgOrigin: '280 ' + (600 + dy) });
         var o = { b: 0.45 };
         setter(0.45);
         G.to(o, { b: 1, duration: 0.7, ease: 'power2.out', onUpdate: function () { setter(o.b); } });
@@ -503,6 +534,7 @@
     }
     form.addEventListener('change', function (e) {
       var el = e.target;
+      touched = true;
       result.textContent = '';
       if (el.name === 'flower') {
         if (el.checked) {
@@ -523,10 +555,66 @@
     });
     sync();
     render(false);
+    // The first time the workbench comes into view the bouquet is tied in front of you, once.
     if (MOTION && ST) {
       setter(0.05);
-      ST.create({ trigger: svg, start: 'top 80%', once: true, onEnter: function () { bloomIn(setter, 0.05); } });
+      var built = false;
+      ST.create({ trigger: svg, start: 'top 80%', once: true, onEnter: function () {
+        built = true;
+        var q = function (c) { return svg.querySelector(c); }, neck = '280 ' + (494 + dy);
+        G.timeline()
+          .from(q('.bq-stems'), { y: -26, opacity: 0, duration: 0.32, ease: 'power3.out' })
+          .from(q('.bq-back'), { scaleY: 0.45, opacity: 0, duration: 0.36, ease: 'power3.out', svgOrigin: neck }, 0.08)
+          .from(q('.bq-leaves'), { opacity: 0, scale: 0.86, duration: 0.32, ease: 'power2.out', svgOrigin: '280 ' + (300 + dy) }, 0.18)
+          .add(function () { bloomIn(setter, 0.03); }, 0.24)
+          .from(q('.bq-front'), { scaleY: 0.5, opacity: 0, duration: 0.34, ease: 'power3.out', svgOrigin: '280 ' + (506 + dy) }, 0.42)
+          .from(q('.bq-ribbon'), { scale: 0.5, opacity: 0, duration: 0.42, ease: 'back.out(2.2)', transformOrigin: '50% 30%' }, 0.62);
+      } });
     }
+    bench = {
+      // flowers planted in the hero become the workbench's first pick, until the visitor chooses
+      suggest: function (kinds) {
+        if (touched || !kinds.length) return;
+        order = kinds.slice(0, 3);
+        form.querySelectorAll('input[name="flower"]').forEach(function (el) { el.checked = order.indexOf(el.value) >= 0; });
+        sync();
+        hintEl.textContent = '정원에 심은 꽃으로 골라 두었어요. 바꿔도 돼요.';
+        var keep = setter;
+        render(false);
+        if (MOTION && !built) setter(0.05);
+        void keep;
+      }
+    };
+  }
+  var bench = null;
+
+  /* ---------- choose which flower to plant ---------- */
+  function initPicker() {
+    var opts = Array.prototype.slice.call(document.querySelectorAll('.picker__opt'));
+    if (!garden) { var p = document.querySelector('.picker'); if (p) p.hidden = true; return; }
+    var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches, cursors = {}, recent = [];
+    function cursorFor(kind) {
+      if (!fine) return '';
+      if (cursors[kind]) return cursors[kind];
+      var c = document.createElement('canvas'), x = c.getContext('2d'), h = F.build(kind, { r: 10, seed: 7 });
+      c.width = c.height = 32;
+      var at = { tulip: [16, 27], freesia: [7, 27] }[kind] || [16, 16];
+      x.translate(at[0], at[1]);
+      x.scale(1, h.front ? h.tilt : 1);
+      F.drawHead(x, h, 1);
+      return (cursors[kind] = 'url(' + c.toDataURL('image/png') + ') 16 16, crosshair');
+    }
+    opts.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var on = b.getAttribute('aria-pressed') !== 'true', kind = b.getAttribute('data-kind');
+        opts.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b && on)); });
+        garden.choose(on ? kind : null, on ? cursorFor(kind) : '');
+      });
+    });
+    garden.onPlant(function (kind) {
+      recent = [kind].concat(recent.filter(function (k) { return k !== kind; })).slice(0, 3);
+      if (bench) bench.suggest(recent);
+    });
   }
 
   /* ---------- seasonal calendar ---------- */
@@ -546,7 +634,7 @@
   ];
   function initSeason() {
     var btns = Array.prototype.slice.call(document.querySelectorAll('.month')), sets = [], bloom = [], tw = [];
-    var now = SHOT ? 3 : new Date().getMonth(), sel = now, REST = 0.34;
+    var now = 3, sel = now, REST = 0.6;  // the shop's story is April (사월)
     var mdMonth = document.getElementById('md-month'), mdNow = document.getElementById('md-now'), mdNames = document.getElementById('md-names'), mdNote = document.getElementById('md-note');
     btns.forEach(function (b, i) {
       var r = A.month(i), svg = b.querySelector('svg');
@@ -566,16 +654,26 @@
       var prev = sel;
       sel = i;
       btns.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === i)); });
+      detail.setAttribute('aria-live', 'polite');
+      text(i);
+      to(i, 1, 0.7);
+      if (prev !== i && !btns[prev].matches(':hover') && document.activeElement !== btns[prev]) to(prev, REST, 0.35);
+    }
+    var detail = document.getElementById('month-detail');
+    function text(i) {
       mdMonth.textContent = (i + 1) + '월';
       mdNow.hidden = i !== now;
       mdNames.textContent = MONTH_INFO[i][0];
       mdNote.textContent = MONTH_INFO[i][1];
-      to(i, 1, 0.7);
-      if (prev !== i && !btns[prev].matches(':hover') && document.activeElement !== btns[prev]) to(prev, REST, 0.35);
     }
     btns.forEach(function (b, i) {
-      b.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') to(i, 1, 0.7); });
-      b.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && i !== sel && document.activeElement !== b) to(i, REST, 0.35); });
+      // hovering previews the month (quietly, without announcing); leaving restores the chosen one
+      b.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') { to(i, 1, 0.7); detail.setAttribute('aria-live', 'off'); text(i); } });
+      b.addEventListener('pointerleave', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        if (i !== sel && document.activeElement !== b) to(i, REST, 0.35);
+        text(sel); detail.setAttribute('aria-live', 'polite');
+      });
       b.addEventListener('focus', function () { to(i, 1, 0.7); });
       b.addEventListener('blur', function () { if (i !== sel && !b.matches(':hover')) to(i, REST, 0.35); });
       b.addEventListener('click', function () { select(i); });
@@ -633,7 +731,7 @@
 
   function initMeadow() {
     var svg = document.getElementById('meadow');
-    if (svg) svg.innerHTML = A.meadow(1440, 110).svg;
+    if (svg) svg.innerHTML = A.meadow(1440, 120).svg;
   }
 
   var defs = document.getElementById('flora-defs');
@@ -646,6 +744,7 @@
   guard(initBench);
   guard(initSeason);
   guard(initSub);
+  guard(initPicker);
   guard(initMeadow);
   if (ST) {
     var refresh = function () { ST.refresh(); };

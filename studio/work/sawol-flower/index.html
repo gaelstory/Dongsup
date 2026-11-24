@@ -54,6 +54,13 @@
         <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 17 V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M10 11 C6 11 4 8 4 5 C7 5 10 7 10 11 Z M10 9 C10 6 12 3.5 16 3.5 C16 7 13.5 9 10 9 Z" fill="currentColor"/></svg>
         <span>아무 데나 눌러 꽃을 심어 보세요</span>
       </button>
+      <div class="picker" role="group" aria-label="심을 꽃 고르기">
+        <button class="picker__opt" type="button" aria-pressed="false" data-kind="tulip" aria-label="튤립 심기" title="튤립"><svg viewBox="-22 -22 44 44" aria-hidden="true" focusable="false" data-icon="tulip"></svg></button>
+        <button class="picker__opt" type="button" aria-pressed="false" data-kind="freesia" aria-label="프리지아 심기" title="프리지아"><svg viewBox="-22 -22 44 44" aria-hidden="true" focusable="false" data-icon="freesia"></svg></button>
+        <button class="picker__opt" type="button" aria-pressed="false" data-kind="ranunculus" aria-label="라넌큘러스 심기" title="라넌큘러스"><svg viewBox="-22 -22 44 44" aria-hidden="true" focusable="false" data-icon="ranunculus"></svg></button>
+        <button class="picker__opt" type="button" aria-pressed="false" data-kind="daisy" aria-label="데이지 심기" title="데이지"><svg viewBox="-22 -22 44 44" aria-hidden="true" focusable="false" data-icon="daisy"></svg></button>
+        <button class="picker__opt" type="button" aria-pressed="false" data-kind="poppy" aria-label="양귀비 심기" title="양귀비"><svg viewBox="-22 -22 44 44" aria-hidden="true" focusable="false" data-icon="poppy"></svg></button>
+      </div>
     </div>
     <button class="hero__wind" type="button" id="wind-toggle" aria-pressed="false" aria-label="바람 멈추기">
       <svg class="icon-pause" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="5.5" y="4.5" width="3" height="11" rx="1.2" fill="currentColor"/><rect x="11.5" y="4.5" width="3" height="11" rx="1.2" fill="currentColor"/></svg>
@@ -169,7 +176,7 @@
           </fieldset>
           <div class="field">
             <label class="field__legend" for="card-msg">카드 문구 <span class="field__optional">선택</span></label>
-            <input class="input" id="card-msg" name="card" type="text" maxlength="40" autocomplete="off" placeholder="예: 늘 고마워요, 봄 같은 사람에게">
+            <input class="input" id="card-msg" name="card" type="text" maxlength="40" autocomplete="off" placeholder="예: 늘 고마워요">
           </div>
           <div class="bench__total">
             <span class="bench__total-label">예상 금액</span>
@@ -192,20 +199,20 @@
         <li><button class="month" type="button" aria-pressed="false" data-m="0"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">1월</span></button></li>
         <li><button class="month" type="button" aria-pressed="false" data-m="1"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">2월</span></button></li>
         <li><button class="month" type="button" aria-pressed="false" data-m="2"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">3월</span></button></li>
-        <li><button class="month" type="button" aria-pressed="false" data-m="3"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">4월</span></button></li>
+        <li><button class="month" type="button" aria-pressed="true" data-m="3"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">4월</span></button></li>
         <li><button class="month" type="button" aria-pressed="false" data-m="4"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">5월</span></button></li>
         <li><button class="month" type="button" aria-pressed="false" data-m="5"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">6월</span></button></li>
         <li><button class="month" type="button" aria-pressed="false" data-m="6"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">7월</span></button></li>
         <li><button class="month" type="button" aria-pressed="false" data-m="7"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">8월</span></button></li>
         <li><button class="month" type="button" aria-pressed="false" data-m="8"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">9월</span></button></li>
         <li><button class="month" type="button" aria-pressed="false" data-m="9"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">10월</span></button></li>
-        <li><button class="month" type="button" aria-pressed="true" data-m="10"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">11월</span></button></li>
+        <li><button class="month" type="button" aria-pressed="false" data-m="10"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">11월</span></button></li>
         <li><button class="month" type="button" aria-pressed="false" data-m="11"><svg class="month__art" viewBox="0 0 90 112" aria-hidden="true" focusable="false"></svg><span class="month__num">12월</span></button></li>
       </ol>
       <div class="month-detail" id="month-detail" aria-live="polite">
-        <p class="month-detail__when"><span id="md-month">11월</span><span class="month-detail__now" id="md-now">이번 달</span></p>
-        <p class="month-detail__names" id="md-names">국화, 안개꽃</p>
-        <p class="month-detail__note" id="md-note">작은 국화 여러 송이에 안개꽃을 섞으면 오래 두고 보기 좋아요.</p>
+        <p class="month-detail__when"><span id="md-month">4월</span><span class="month-detail__now" id="md-now">이번 달</span></p>
+        <p class="month-detail__names" id="md-names">튤립, 양귀비</p>
+        <p class="month-detail__note" id="md-note">가게 이름이 된 달. 튤립 종류가 가장 많고 양귀비가 들어오기 시작해요.</p>
       </div>
       <noscript><p class="season__plain">1월 라넌큘러스와 아네모네, 2월 프리지아와 튤립, 3월 튤립과 프리지아와 라넌큘러스, 4월 튤립과 양귀비, 5월 작약과 은방울꽃, 6월 수국과 데이지, 7월 해바라기와 수국, 8월 해바라기와 백일홍, 9월 다알리아와 코스모스, 10월 코스모스와 국화, 11월 국화와 안개꽃, 12월 안개꽃과 아네모네.</p></noscript>
     </div>
@@ -230,14 +237,14 @@
           <legend class="sr-only">구독 크기</legend>
           <label class="plan">
             <input type="radio" name="plan" value="jar" checked>
-            <svg class="plan__art" viewBox="0 0 240 300" role="img" aria-label="작은 유리병에 꽂은 국화와 안개꽃" data-vase="jar"><!--flora:vase-jar--><!--/flora:vase-jar--></svg>
+            <svg class="plan__art" viewBox="0 0 240 300" role="img" aria-label="작은 유리병에 꽂은 튤립, 라넌큘러스, 프리지아와 안개꽃" data-vase="jar"><!--flora:vase-jar--><!--/flora:vase-jar--></svg>
             <span class="plan__name">식탁 한 병</span>
             <span class="plan__desc">꽃 5송이에서 7송이. 식탁이나 창가에 두기 좋은 크기예요.</span>
             <span class="plan__price"><span class="price"><span class="price__num" data-two="26000" data-four="29000">26,000</span><span class="price__unit">원</span></span><small>한 번 배송</small></span>
           </label>
           <label class="plan">
             <input type="radio" name="plan" value="armful">
-            <svg class="plan__art" viewBox="0 0 240 300" role="img" aria-label="둥근 유리 화병에 가득 꽂은 국화, 라넌큘러스, 아네모네, 안개꽃" data-vase="big"><!--flora:vase-big--><!--/flora:vase-big--></svg>
+            <svg class="plan__art" viewBox="0 0 240 300" role="img" aria-label="둥근 유리 화병에 가득 꽂은 라넌큘러스, 튤립, 아네모네, 데이지와 안개꽃" data-vase="big"><!--flora:vase-big--><!--/flora:vase-big--></svg>
             <span class="plan__name">거실 한 아름</span>
             <span class="plan__desc">꽃 12송이 안팎. 거실 테이블이 환해지는 크기예요.</span>
             <span class="plan__price"><span class="price"><span class="price__num" data-two="44000" data-four="48000">44,000</span><span class="price__unit">원</span></span><small>한 번 배송</small></span>
