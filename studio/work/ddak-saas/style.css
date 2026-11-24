@@ -313,7 +313,7 @@ td.c-chip:has(.chip) .slot { opacity: 0; }
 .mc__bg { position: absolute; inset: 0; border-radius: 10px; background: var(--tray); border: 1px solid var(--line); }
 .mc--today .mc__bg { border: 1.5px solid var(--violet); background: #fff; }
 .mc__n { position: relative; font-family: var(--num); font-size: 11.5px; font-weight: 500; color: var(--ink-2); }
-.mc--weekend .mc__n { color: #A3A0B4; }
+.mc--weekend .mc__n { color: var(--fog); font-weight: 400; }
 .mc__tokens { position: relative; display: grid; gap: 3px; margin-top: 6px; }
 .mc__tokens .chip { display: block; height: 7px; padding: 0; border: 0; border-radius: 4px; background: var(--c); box-shadow: none; }
 .mc__tokens .chip > span { display: none; }
@@ -357,7 +357,7 @@ td.c-chip:has(.chip) .slot { opacity: 0; }
 button.day { cursor: pointer; transition: background-color 140ms ease, border-color 140ms ease, transform 140ms var(--ease); -webkit-tap-highlight-color: transparent; }
 button.day:active { transform: scale(0.97); }
 .day__n { font-family: var(--num); font-size: 12.5px; font-weight: 500; line-height: 1; }
-.day--off .day__n { color: #A9A6B9; }
+.day--off .day__n { color: var(--fog); font-weight: 400; }
 .day--done { background: #F6F4FA; }
 .day--soon { background: #fff; border: 1px dashed rgba(106, 59, 255, 0.45); }
 .day--today { border: 1.5px solid var(--violet); background: #fff; }
@@ -477,7 +477,7 @@ input[type="range"]:focus-visible { outline: 2px solid var(--violet); outline-of
 .price-table thead [data-col="owner"] { border-radius: 16px 16px 0 0; box-shadow: inset 0 3px 0 var(--violet); }
 .yes { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
 .yes::before { content: ""; width: 6px; height: 10px; border: solid var(--violet); border-width: 0 2px 2px 0; transform: translateY(-2px) rotate(45deg); }
-.no { color: #9592A8; }
+.no { color: var(--fog); }
 @media (max-width: 759px) {
   .price-table [data-col] { display: none; }
   .price-table[data-plan="free"] [data-col="free"], .price-table[data-plan="owner"] [data-col="owner"], .price-table[data-plan="multi"] [data-col="multi"] { display: table-cell; }
@@ -536,7 +536,7 @@ html:not(.js) .qa__a { grid-template-rows: 1fr; }
 .signup { width: 100%; max-width: 760px; display: grid; gap: 12px; text-align: left; }
 .signup__field label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; }
 .signup input { width: 100%; min-height: 54px; padding: 0 16px; border-radius: 12px; border: 1px solid transparent; background: #fff; color: var(--ink); font-size: 16px; }
-.signup input::placeholder { color: #8A8799; }
+.signup input::placeholder { color: #737086; }
 .signup input:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
 .signup input[aria-invalid="true"] { border-color: #FFD2CC; box-shadow: 0 0 0 2px #FF8A7A; }
 .signup .btn { min-height: 54px; align-self: end; }

@@ -146,7 +146,7 @@
     function auto(delay) {
       if (tl) tl.kill();
       tl = G.timeline({ delay: delay });
-      chips.forEach(function (c, i) { tl.call(function () { place(c, true); }, null, i * 0.26); });
+      chips.forEach(function (c, i) { tl.call(function () { place(c, true); }, null, i * 0.25); });
     }
     pile.addEventListener('click', function (e) {
       var chip = e.target.closest('.chip');
@@ -193,7 +193,7 @@
 
     function home(c, n) { var ch = c.getAttribute('data-ch'); return n <= 1 ? trays[ch] : n === 2 ? cells[+c.getAttribute('data-i')] : tokens[ch]; }
     function layers(n) {
-      el.querySelectorAll('.sx-layer').forEach(function (l) { l.classList.toggle('is-on', +l.getAttribute('data-layer') === n); });
+      el.querySelectorAll('.sx-layer').forEach(function (l) { var on = +l.getAttribute('data-layer') === n; l.classList.toggle('is-on', on); l.inert = !on; });
       el.querySelectorAll('[data-tab]').forEach(function (t) { t.classList.toggle('is-on', +t.getAttribute('data-tab') === n); });
       el.classList.toggle('is-match', n === 2);
       el.setAttribute('data-step', String(n));
@@ -249,6 +249,7 @@
       });
     });
     // place everything for the starting step without animation
+    layers(1);
     if (start === 0) go(0, false);
     else if (start > 1) { step = 1; go(start, false); }
     settle(true, false);
