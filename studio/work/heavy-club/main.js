@@ -65,15 +65,16 @@
     var bb = $('.barbell'), line2 = $('.line--2');
     if (!bb || !line2) return;
     var chs = $$('.ch', line2);
-    var small = window.innerWidth < 768;
-    var h = fitState.lineH * (small ? 0.6 : 0.78);
-    bb.style.height = h.toFixed(1) + 'px';
-    var w = h * 5;
     var lr = line2.getBoundingClientRect();
     var a = chs[1].getBoundingClientRect(), b = chs[2].getBoundingClientRect();
+    // 글자 사이가 좁으면(모바일, 태블릿) 바벨을 줄여 마지막 글자 위에 걸친다
+    var tight = (b.left - a.right) < fitState.lineH * 0.6;
+    var h = fitState.lineH * (tight ? 0.56 : 0.78);
+    bb.style.height = h.toFixed(1) + 'px';
+    var w = h * 5;
     var gap = (a.right + b.left) / 2 - lr.left;
-    // 왼쪽 원판 묶음(가로 0.12~0.22)이 마지막 두 글자 사이에 오도록
-    barbellRest = small ? (b.left - lr.left) + (b.width * 0.18) - w * 0.17 : gap - w * 0.169;
+    // 넓을 때는 왼쪽 원판 묶음(가로 0.12~0.22)이 마지막 두 글자 사이에 오도록
+    barbellRest = tight ? (b.left - lr.left) + (b.width * 0.18) - w * 0.17 : gap - w * 0.169;
     if (!G) { bb.style.transform = 'translate(' + barbellRest.toFixed(1) + 'px, -50%)'; return; }
     if (!bb.dataset.moving) G.set(bb, { x: barbellRest, yPercent: -50 });
   }
@@ -102,20 +103,30 @@
     ST.refresh();
   }
 
+  // 글꼴이 준비되면(최대 0.5초) 원판처럼 떨어뜨린다
+  var fontGate = Promise.race([
+    document.fonts && document.fonts.load ? document.fonts.load('100px "Black Han Sans"', '들어라버텨한번더') : Promise.resolve(),
+    new Promise(function (r) { setTimeout(r, 500); })
+  ]);
   function intro(hero, bb) {
     var plate = window.CustomEase ? window.CustomEase.create('plate', 'M0,0 C0.3,0 0.5,1.1 0.6,1.1 0.7,1.1 0.8,0.97 1,1') : 'power3.out';
     hero.classList.add('is-dropping');
-    var tl = G.timeline({ defaults: { overwrite: 'auto' } });
     bb.dataset.moving = '1';
-    tl.from('.ch', { yPercent: -120, duration: 0.62, ease: plate, stagger: 0.03 }, 0.05)
-      .from('.strip', { yPercent: 100, duration: 0.55, ease: 'power3.out' }, 0.15)
-      .to('.lines', { y: 7, duration: 0.07, ease: 'power2.out', yoyo: true, repeat: 1 }, 0.74)
-      .add(function () { hero.classList.remove('is-dropping'); }, 0.92)
-      .fromTo(bb, { x: function () { return -bb.getBoundingClientRect().width - 60; } }, {
-        x: function () { return barbellRest; }, duration: 1.0, ease: 'power4.out',
+    var tl = G.timeline({ paused: true });
+    tl.from('.ch', { yPercent: -120, duration: 0.62, ease: plate, stagger: 0.03 }, 0)
+      .from('.strip', { yPercent: 100, duration: 0.55, ease: 'power3.out' }, 0.1)
+      .to('.lines', { y: 7, duration: 0.07, ease: 'power2.out', yoyo: true, repeat: 1 }, 0.69)
+      .add(function () { hero.classList.remove('is-dropping'); }, 0.87);
+    G.set(bb, { x: -4000 });
+    fontGate.then(function () {
+      safe(fitLines);
+      tl.play();
+      G.fromTo(bb, { x: -bb.getBoundingClientRect().width - 60 }, {
+        x: barbellRest, duration: 1.0, ease: 'power4.out', delay: 0.57,
         onComplete: function () { delete bb.dataset.moving; }
-      }, 0.62);
-    return tl;
+      });
+    });
+    return function () { tl.kill(); hero.classList.remove('is-dropping'); delete bb.dataset.moving; G.set(bb, { x: barbellRest }); };
   }
 
   // 빨리 내릴수록 글자가 늘어나고 기운다

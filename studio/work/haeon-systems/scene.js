@@ -249,11 +249,11 @@ const ROAD_PTS = [
   [[0.6, 6], [10, 5.8], [24, 3.5], [36, -1], [50, -4.5], [70, -7], [96, -8]],
 ];
 const BRIDGE_PTS = [[30, LAND_Y, -29.6], [28.6, 1.8, -36], [28, 4.0, -44], [31, 5.0, -51.5], [37.5, 4.3, -58.5], [43.5, 2.4, -63.5], [48, 1.0, -67.5], [51, LAND_Y, -72]];
-const MAINLAND = [[24, -70], [34, -66], [56, -66], [90, -70], [140, -76], [230, -86], [420, -110], [420, -520], [230, -360], [120, -210], [62, -118], [36, -92], [26, -80]];
+const MAINLAND = [[24, -70], [34, -66], [56, -66], [90, -70], [140, -76], [230, -86], [420, -110], [1400, -300], [1400, -1600], [700, -1600], [230, -360], [120, -210], [62, -118], [36, -92], [26, -80]];
 
 const CAMS = {
   desk: { pos: [-59, 29, 65.5], tgt: [-3, 5, -16.6], fov: 32 },
-  mob: { pos: [-62, 80, 92], tgt: [12, 16, -10], fov: 50, hfov: 26 },
+  mob: { pos: [-70, 90, 100], tgt: [12, 21, -12], fov: 50, hfov: 25 },
 };
 
 // ---------------------------------------------------------------------------------------------
@@ -297,6 +297,8 @@ export function createHarbor(canvasEl, opts = {}) {
   scene.add(new THREE.HemisphereLight(0x2a3a7a, HEX.deep, 2.4));
   const moon = new THREE.DirectionalLight(0x8fa8ff, 1.5); moon.position.set(-30, 40, 20); scene.add(moon);
   const moonFill = new THREE.DirectionalLight(0x6a5aa8, 0.5); moonFill.position.set(40, 20, -60); scene.add(moonFill);
+  const flood = [[0, 7, 4, 0xffcf9a, 90, 26], [-15, 7, 5, 0xffd6a8, 60, 22], [14, 5, -9, 0x8fc8ff, 45, 18], [16, 5, 22, 0xffc58a, 60, 22]];
+  for (const [x, y, z, c, i, d] of flood) { const pl = new THREE.PointLight(c, i, d, 2); pl.position.set(x, y, z); scene.add(pl); }
 
   // ---- shared materials
   const propsMat = keep(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.72, metalness: 0.25 }));
@@ -487,7 +489,7 @@ export function createHarbor(canvasEl, opts = {}) {
   cg.strokeStyle = 'rgba(0,0,0,0.5)'; cg.lineWidth = 2; cg.strokeRect(1, 1, 30, 30);
   const contMat = keep(new THREE.MeshStandardMaterial({ map: tex(ccv), roughness: 0.8, metalness: 0.15 }));
   const containers = new THREE.InstancedMesh(contGeo, contMat, counts.containers);
-  const CONT_COLORS = [C(0x223a72), C(0x1f5f6b), C(0x7a3e30), C(0x2a4a86), C(0x2c6e72)];
+  const CONT_COLORS = [C(0x2c4a8c), C(0x24707c), C(0x94503c), C(0x3a5ca0), C(0x34808a)];
   let ci = 0;
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sv = new V3(), pv = new V3();
   const placeContainer = (x, y, z, ry, colr) => {
@@ -1209,11 +1211,11 @@ export function createHarbor(canvasEl, opts = {}) {
     uniforms: {
       uTime: U.time, uCam: U.camPos, uFog: U.fogD, uTwin: U.twin,
       uBase: { value: C(HEX.deep) }, uFogC: { value: C(HEX.night) }, uHorizon: { value: C(HEX.dusk) }, uCyan: { value: C(HEX.cyan) },
-      uPool: { value: poolTex }, uPoolRect: { value: new THREE.Vector4(PR.x, PR.z, PR.w, PR.h) }, uLayers: { value: counts.seaLayers },
+      uPool: { value: poolTex }, uPoolRect: { value: new THREE.Vector4(PR.x, PR.z, PR.w, PR.h) }, uLayers: { value: counts.seaLayers }, uLand: { value: 0 },
     },
     vertexShader: `varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position,1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
     fragmentShader: `
-      uniform float uTime, uFog, uLayers, uTwin; uniform vec3 uCam, uBase, uFogC, uHorizon, uCyan; uniform sampler2D uPool; uniform vec4 uPoolRect;
+      uniform float uTime, uFog, uLayers, uTwin, uLand; uniform vec3 uCam, uBase, uFogC, uHorizon, uCyan; uniform sampler2D uPool; uniform vec4 uPoolRect;
       varying vec3 vW;
       float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
       void main(){
@@ -1230,12 +1232,12 @@ export function createHarbor(canvasEl, opts = {}) {
           streak += 0.6 * smoothstep(0.7, 0.98, s3) * (1.0 - clamp(fwidth(s3) * 2.0, 0.0, 1.0));
         }
         float sFade = smoothstep(40.0, 85.0, dist) * (1.0 - smoothstep(150.0, 320.0, dist));
-        vec3 col = uBase + uCyan * 0.08 * streak * sFade;
+        vec3 col = uBase + uCyan * 0.08 * streak * sFade * (1.0 - uLand);
         float fres = pow(1.0 - clamp(v.y, 0.0, 1.0), 5.0);
-        col = mix(col, uHorizon * 0.75, fres * 0.32);
+        col = mix(col, uHorizon * 0.75, fres * 0.32 * (1.0 - uLand));
         vec2 puv = (p - uPoolRect.xy) / uPoolRect.zw;
         vec3 pool = texture2D(uPool, puv).rgb * step(0.0, puv.x) * step(puv.x, 1.0) * step(0.0, puv.y) * step(puv.y, 1.0);
-        col += pool * (0.7 + 0.3 * sin(n1 * 2.6 + uTime * 0.6) + streak * 0.8);
+        col += pool * (0.7 + 0.3 * sin(n1 * 2.6 + uTime * 0.6) + streak * 0.8) * (1.0 - uLand);
         // digital twin: measured grid on the water
         vec2 gp = abs(fract(p / 4.0) - 0.5); float gl = smoothstep(0.03 + fwidth(p.x)*0.25, 0.0, min(gp.x, gp.y));
         col += uCyan * gl * 0.12 * uTwin * (1.0 - smoothstep(30.0, 140.0, dist));
@@ -1247,6 +1249,10 @@ export function createHarbor(canvasEl, opts = {}) {
       }`,
   }));
   const sea = new THREE.Mesh(keep(new THREE.PlaneGeometry(5000, 5000)), seaMat);
+  // the far shore shares the water's haze so both melt into the same horizon
+  const landHaze = keep(seaMat.clone());
+  landHaze.uniforms = { ...seaMat.uniforms, uLand: { value: 1 }, uBase: { value: C(0x0c1636) }, uTwin: { value: 0 } };
+  mainland.material = landHaze;
   sea.rotation.x = -Math.PI / 2; sea.renderOrder = -5; scene.add(sea);
 
   // reflection streaks under lights (instanced quads stretched toward the viewer)
@@ -1344,9 +1350,9 @@ export function createHarbor(canvasEl, opts = {}) {
       void main(){
         vec3 d = normalize(vD); float el = degrees(asin(clamp(d.y, -1.0, 1.0)));
         vec2 dh = normalize(d.xz + 1e-5); float side = clamp(dot(dh, uGlow) * 0.5 + 0.5, 0.0, 1.0);
-        float band = exp(-max(el, 0.0) / mix(1.5, 3.4, side * side));
-        vec3 col = mix(uZenith, uBand, band * mix(0.62, 1.0, side));
-        col += uWarm * 0.10 * exp(-max(el, 0.0) / 0.55) * pow(side, 3.0);
+        float band = exp(-max(el, 0.0) / mix(1.7, 3.8, side * side));
+        vec3 col = mix(uZenith, uBand * 1.12, band * mix(0.7, 1.0, side));
+        col += uWarm * 0.16 * exp(-max(el, 0.0) / 0.7) * pow(side, 2.5);
         col = mix(uSeaFar, col, smoothstep(-0.25, 0.12, el));
         col += (hash(gl_FragCoord.xy) - 0.5) / 200.0;
         gl_FragColor = vec4(col, 1.0);

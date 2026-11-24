@@ -14,7 +14,7 @@
 
   var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   var mqCoarse = window.matchMedia('(pointer: coarse)');
-  var HOME_X = 0.68, HOME_Y = 0.52; // must match --lx / --ly in style.css
+  var HOME_X = 0.68, HOME_Y = 0.52; // read from --lx / --ly in style.css
 
   var W = 0, H = 0, R0 = 140;
   var st = { x: 0, y: 0, e: 0 };
@@ -32,6 +32,9 @@
     W = hero.clientWidth;
     H = hero.clientHeight;
     R0 = W >= 768 ? 140 : 92;
+    var cs = getComputedStyle(hero);
+    HOME_X = (parseFloat(cs.getPropertyValue('--lx')) || 68) / 100;
+    HOME_Y = (parseFloat(cs.getPropertyValue('--ly')) || 52) / 100;
   }
 
   function render() {
@@ -51,17 +54,24 @@
     // the rim dissolves as the lens grows past the screen, so its thickening border is never seen
     var fade = st.e <= 0.06 ? 1 : Math.max(0, 1 - (st.e - 0.06) / 0.3);
     lens.style.opacity = fade.toFixed(3);
+    lens.style.pointerEvents = fade < 0.05 ? 'none' : '';
   }
 
   function floatCenter() {
     return mqCoarse.matches || W < 768
-      ? { x: W * 0.56, y: H * 0.6, ax: W * 0.2, ay: H * 0.1 }
+      ? { x: W * 0.58, y: H * 0.76, ax: W * 0.2, ay: H * 0.05 }
       : { x: W * HOME_X, y: H * HOME_Y, ax: W * 0.15, ay: H * 0.13 };
+  }
+
+  // pause (never kill) the quickTo tweens: killing their x/y would leave quickTo unable to restart
+  function holdQuick() {
+    if (xTo) xTo.tween.pause();
+    if (yTo) yTo.tween.pause();
   }
 
   function startFloat() {
     if (mode === 'float') return;
-    if (G) G.killTweensOf(st, 'x,y');
+    holdQuick();
     mode = 'float';
     floatT = 0;
   }
@@ -95,6 +105,7 @@
     st.e = 0;
     lastKey = '';
     render();
+    lens.style.pointerEvents = 'none'; // nothing to drag in the still frame, so let touches scroll
   }
 
   function local(e) {
@@ -125,7 +136,6 @@
       if (e.pointerType === 'touch' || drag || still()) return;
       if (introTween) { introTween.kill(); introTween = null; }
       var p = local(e);
-      if (mode === 'float' || mode === 'intro') G.killTweensOf(st, 'x,y');
       mode = 'follow';
       lastInput = performance.now();
       xTo(p.x);
@@ -136,7 +146,7 @@
     lens.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' || still()) return;
       if (introTween) { introTween.kill(); introTween = null; }
-      G.killTweensOf(st, 'x,y');
+      holdQuick();
       var p = local(e);
       drag = { id: e.pointerId, ox: st.x - p.x, oy: st.y - p.y };
       mode = 'drag';

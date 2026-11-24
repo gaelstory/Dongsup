@@ -253,8 +253,8 @@ svg { display: block; }
 .memo::before {
   content: ""; position: absolute; left: 0; top: 11px; width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
 }
-.hero__ledger .lc--memo { display: none; padding-bottom: var(--half); margin-top: -10px; }
-.hero__ledger .lrow.is-open .lc--memo { display: block; }
+.hero__ledger .lc--memo { display: none; min-height: var(--row); margin: 0; }
+.hero__ledger .lrow.is-open .lc--memo { display: flex; align-items: center; }
 
 .amt {
   font-family: var(--serif); font-weight: 600; font-size: 19px; letter-spacing: 0; white-space: nowrap;

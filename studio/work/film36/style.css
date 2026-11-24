@@ -419,6 +419,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(.9); }
 .visit { position: relative; z-index: 1; background: var(--chem); padding: 112px 0 120px; }
 .visit__grid { display: grid; gap: 32px; align-items: center; }
 .visit__sign svg { width: min(360px, 100%); height: auto; margin: 0 auto; }
+@media (min-width: 900px) { .visit__sign svg { width: min(480px, 100%); } }
 .visit__text h2 { font-size: clamp(32px, 5.6vw, 60px); margin-bottom: 16px; }
 .visit__text > p { color: rgba(241, 238, 230, .86); max-width: 28em; }
 .info { margin: 28px 0 0; }

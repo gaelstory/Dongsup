@@ -220,7 +220,7 @@ html.is-twin .fb-buildings rect, html.is-twin .fb-land, html.is-twin .fb-piers p
 .hero-scrim {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(6, 12, 31, 0.55) 0, rgba(6, 12, 31, 0) 140px),
+    linear-gradient(180deg, rgba(6, 12, 31, 0.4) 0, rgba(6, 12, 31, 0) 120px),
     linear-gradient(0deg, rgba(10, 20, 48, 0.88) 0%, rgba(10, 20, 48, 0) 30%),
     linear-gradient(90deg, rgba(10, 20, 48, 0.92) 0%, rgba(10, 20, 48, 0.55) 38%, rgba(10, 20, 48, 0) 62%);
 }

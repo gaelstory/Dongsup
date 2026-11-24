@@ -364,8 +364,9 @@
       // reduced motion: pressing the ball swaps to a new spot with a quick cross-fade, nothing travels
       ballEl.addEventListener('click', function () {
         if (SHOT) return;
+        if (hint) hint.style.visibility = 'hidden';
         var d = dogs[Math.floor(Math.random() * dogs.length)];
-        var nx = clamp(W * (0.25 + Math.random() * 0.55), d.el.offsetWidth, W - d.el.offsetWidth);
+        var nx = clamp(matX + (Math.random() - 0.5) * W * 0.3, d.el.offsetWidth, W - d.el.offsetWidth);
         gsap.to([ballEl, d.el], { opacity: 0, duration: 0.12, onComplete: function () {
           ball.x = clamp(nx - B / 2, 0, maxX); ball.y = maxY; applyBall();
           var f = nx > cxOf(d) ? 1 : -1; setFace(d, f, true);

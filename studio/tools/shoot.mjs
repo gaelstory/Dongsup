@@ -78,8 +78,8 @@ async function checkPage(browser, base, rel) {
   const report = { page: rel, consoleErrors: [], pageErrors: [], failedRequests: [], views: {} };
 
   for (const view of [
-    { name: 'desktop', viewport: { width: 1440, height: 900 }, max: 14 },
-    { name: 'phone', viewport: { width: 390, height: 844 }, max: 14, isMobile: true, hasTouch: true },
+    { name: 'desktop', viewport: { width: 1440, height: 900 }, max: 24 },
+    { name: 'phone', viewport: { width: 390, height: 844 }, max: 24, isMobile: true, hasTouch: true },
   ]) {
     const ctx = await browser.newContext({ viewport: view.viewport, deviceScaleFactor: 1, isMobile: !!view.isMobile, hasTouch: !!view.hasTouch, locale: 'ko-KR' });
     const page = await ctx.newPage();

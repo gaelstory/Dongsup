@@ -214,7 +214,7 @@ html:not(.js) .barbell { transform: translate(62vw, -50%); }
   /* 왼쪽 아래 컨셉 배지 자리를 비워 둔다 */
   padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
 }
-.strip__copy { font-weight: 700; font-size: 1.0625rem; line-height: 1.45; color: var(--iron); max-width: 34em; }
+.strip__copy { font-weight: 700; font-size: 1.0625rem; line-height: 1.45; color: var(--iron); max-width: 34em; text-wrap: balance; }
 .strip .btn { width: 100%; }
 @media (min-width: 768px) {
   .strip__inner { grid-template-columns: 1fr auto; align-items: start; gap: 32px; padding-top: 20px; padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
@@ -608,7 +608,7 @@ html:not(.js) .barbell { transform: translate(62vw, -50%); }
 }
 .reps__done:empty { display: none; }
 .reps.is-hidden { visibility: hidden; }
-html.is-shot .reps { display: none; }
+html.is-shot .reps, html:not(.js) .reps { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 1ms !important; animation: none !important; }

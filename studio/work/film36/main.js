@@ -203,6 +203,8 @@
       var mainTween = null;
       if (wide) {
         scroller.classList.add('is-pinned');
+        // pinned, the strip moves with the page scroll, so it is no longer its own scroll stop
+        scroller.removeAttribute('tabindex');
         var dist = function () { return Math.max(0, track.scrollWidth - document.documentElement.clientWidth + 2 * parseFloat(getComputedStyle(scroller).paddingLeft)); };
         mainTween = G.to(track, {
           x: function () { return -dist(); }, ease: 'none',
@@ -277,6 +279,7 @@
 
       return function () {
         scroller.classList.remove('is-pinned');
+        scroller.setAttribute('tabindex', '0');
         G.set([fly, tilt, track], { clearProps: 'transform,opacity,visibility' });
       };
     });

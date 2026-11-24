@@ -222,7 +222,7 @@ svg { display: block; }
 .stop-dot { position: relative; z-index: 1; width: 56px; height: 56px; border-radius: 50%; background: var(--cream); border: 3px solid var(--nose); display: grid; place-items: center; box-shadow: 3px 3px 0 var(--nose); }
 .stop-dot svg { width: 36px; height: 36px; }
 .stop-card { padding: 18px 20px 20px; background: var(--cream); border: 3px solid var(--nose); border-radius: 24px; }
-.stop-time { font-family: var(--f-head); font-size: 18px; color: var(--grass-tuft); line-height: 1.2; }
+.stop-time { font-family: var(--f-head); font-size: 18px; color: #17703F; line-height: 1.2; }
 .stop-card h3 { font-size: 28px; margin-top: 2px; }
 .stop-card p:last-child { margin-top: 6px; font-size: 17px; }
 .stop:nth-child(even) .stop-dot { margin-left: 26px; }
@@ -245,9 +245,15 @@ svg { display: block; }
 /* diary */
 .diary { background: var(--cream); padding: clamp(64px, 8vw, 112px) 0 clamp(96px, 11vw, 150px); }
 .diary-grid { display: grid; gap: 48px; align-items: center; }
-.diary-list { margin-top: 28px; display: grid; gap: 10px; }
-.diary-list li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 12px 16px; border: 2px solid var(--nose); border-radius: 16px; background: #fff; }
-.diary-list strong { font-family: var(--f-head); font-weight: 400; font-size: 20px; }
+.diary-list { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 520px; }
+.diary-list li { display: grid; gap: 2px; padding: 14px 16px 16px; border: 2px solid var(--nose); border-radius: 20px; box-shadow: 3px 3px 0 var(--nose); font-size: 16px; line-height: 1.5; }
+.diary-list li:nth-child(1) { background: var(--ball); transform: rotate(-1.5deg); }
+.diary-list li:nth-child(2) { background: #FFC9D4; transform: rotate(1.2deg); }
+.diary-list li:nth-child(3) { background: var(--sky); transform: rotate(1deg); }
+.diary-list li:nth-child(4) { background: #CDEFD9; transform: rotate(-1.2deg); }
+.diary-list strong { font-family: var(--f-head); font-weight: 400; font-size: 21px; }
+.phone-sticker { position: absolute; z-index: 3; top: 150px; right: -34px; padding: 8px 12px; background: var(--ball); border: 2px solid var(--nose); border-radius: 14px; box-shadow: 3px 3px 0 var(--nose); font-family: var(--f-head); font-size: 17px; line-height: 1.2; transform: rotate(9deg); white-space: nowrap; }
+@media (max-width: 420px) { .phone-sticker { right: -6px; top: 136px; } }
 .phone-wrap { justify-self: center; display: grid; justify-items: center; gap: 18px; }
 .phone { position: relative; width: min(320px, 86vw); padding: 12px; background: var(--nose); border-radius: 50px; box-shadow: 8px 8px 0 rgba(30, 25, 21, 0.18); }
 .phone-notch { position: absolute; top: 22px; left: 50%; width: 84px; height: 22px; margin-left: -42px; background: var(--nose); border-radius: 12px; z-index: 2; }
