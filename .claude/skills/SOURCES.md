@@ -25,9 +25,20 @@ AI로 만든 화면이 서로 비슷해 보이지 않게, 홈페이지를 만들
 | `impeccable` | 디자인 마감 종합 스킬: 비평(critique)·점검(audit)·다듬기(polish)·타이포·레이아웃·모션·반응형 등 명령 모음 | [Sunwoo-choi-1/selling-product-page-skill](https://github.com/Sunwoo-choi-1/selling-product-page-skill/tree/main/impeccable) (원작: [pbakaus/impeccable](https://github.com/pbakaus/impeccable)) | `fe950ff` | Apache-2.0 (`LICENSE`, `NOTICE.md`) |
 
 `impeccable`은 원작자 저장소(`pbakaus/impeccable`, 엔진 0.1.27)의 스킬과 내용이 같습니다(Windows용 `impeccable.cmd`의
-줄바꿈만 다름). `NOTICE.md`는 원작 저장소에서 가져왔습니다. `scripts/impeccable`을 실행하면 GitHub 릴리스에서
-운영체제별 엔진 파일을 내려받아(체크섬 검증) 돌립니다. 디자인 감지 훅은 `/impeccable hooks on`을 직접 실행해야만
-켜집니다. 앞서 만든 `adapt` 스킬은 이 스킬의 `reference/adapt.md`를 꺼낸 것이라, 이제 같은 내용을 `/impeccable adapt`로도
+줄바꿈만 다름). `NOTICE.md`는 원작 저장소에서 가져왔습니다.
+
+**`impeccable`을 부르기 전에 알아둘 것** (원작자가 설계한 동작이며, 점검해서 확인한 내용):
+- 스킬을 부르면 맨 먼저 `scripts/impeccable context`를 실행합니다. 이 스크립트는 GitHub 릴리스
+  (`pbakaus/impeccable`)에서 운영체제별 엔진 실행 파일을 `~/.impeccable/`에 내려받아(SHA-256 체크섬 검증) 돌립니다.
+  엔진은 내용을 들여다볼 수 없는 바이너리이고, 스킬은 그 출력을 지시로 따릅니다. 이 실행을 거절하면 스킬은
+  마크다운 문서만 읽는 방식으로 넘어갑니다.
+- 비평(critique)·점검(audit) 결과를 Impeccable 계정에 저장하는 기능이 있고, `init`은 `npx impeccable login`
+  가입 안내를 첫 줄에 띄우라고 합니다. 새 화면 생성 흐름에는 사용 기록(telemetry) 전송이 있고, 이미지 생성 API 키가
+  있으면 페이지 캡처를 외부 이미지 API로 보냅니다.
+- `/impeccable hooks on`(또는 `update`, `doctor --fix`)은 `.claude/settings.local.json` 등에 훅을 써넣어, 이후 UI 파일을
+  고칠 때마다 엔진이 자동으로 돌게 합니다. `live`는 프로젝트 HTML에 스크립트를 넣고 로컬 서버를 띄웁니다.
+- 이 저장소의 홈페이지·목업 작업에서는 스킬을 부르지 않고 `reference/`의 마크다운(비평 기준, 다듬기 체크리스트 등)만
+  참고했습니다. 앞서 만든 `adapt` 스킬은 이 스킬의 `reference/adapt.md`를 꺼낸 것이라, 이제 같은 내용을 `/impeccable adapt`로도
 쓸 수 있습니다.
 
 같은 저장소의 `selling-product-page`(상세페이지 제작 스킬)는 라이선스 표기가 없어서 이 공개 저장소에는 넣지 않았습니다.
