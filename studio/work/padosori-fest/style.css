@@ -311,7 +311,7 @@ html:not(.js) .site-nav a { display: inline-flex; min-height: 44px; align-items:
   position: relative;
   z-index: 1;
   flex: 1 0 auto;
-  min-height: max(28svh, 170px);
+  min-height: max(28svh, 220px);
 }
 @media (min-width: 768px) {
   .hero { display: block; }
@@ -406,8 +406,11 @@ html:not(.js) .site-nav a { display: inline-flex; min-height: 44px; align-items:
 @media (min-width: 1024px) {
   .hero__copy { max-width: 32em; }
 }
+/* narrow phones: the lede already names the beach, so the slab keeps only the dates */
+@media (max-width: 389.98px) { .hero__place { display: none; } }
 @media (max-width: 359.98px) {
-  .hero__dates { bottom: 76px; padding: 9px 11px 10px; }
+  .hero__hint { display: none; }
+  .hero__dates { bottom: 72px; padding: 9px 11px 10px; }
   .hero__days { font-size: 32px; }
   .hero__place { font-size: 12px; }
   .hero__sun { --d: 96px; right: 4vw; }
