@@ -1437,8 +1437,8 @@ export function createHarbor(canvasEl, opts = {}) {
     // focus on a node: move a little closer and turn toward it (stays within ~15% of the framing)
     if (rig.focusAmt > 0.0001) {
       const f = rig.focusAmt;
-      pos.lerp(tmpV.copy(rig.focusNode), 0.13 * f);
-      tgt.lerp(rig.focusNode, 0.3 * f);
+      pos.lerp(tmpV.copy(rig.focusNode), 0.1 * f);
+      tgt.lerp(rig.focusNode, 0.2 * f);
     }
     // scroll: rise 8 units and lean forward
     const s = rig.scroll;

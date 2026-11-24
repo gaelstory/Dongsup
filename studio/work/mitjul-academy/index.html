@@ -13,8 +13,15 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gothic+A1:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="style.css">
 <script>
-  document.documentElement.classList.add('js');
-  if (/[?&]shot=1/.test(location.search)) document.documentElement.classList.add('is-shot');
+  (function (r) {
+    r.classList.add('js');
+    if (/[?&]shot=1/.test(location.search)) { r.classList.add('is-shot'); return; }
+    // the hero waits a moment for the red pen; if the script never arrives, everything shows anyway
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      r.classList.add('intro');
+      setTimeout(function () { r.classList.remove('intro'); }, 1500);
+    }
+  })(document.documentElement);
 </script>
 </head>
 <body>

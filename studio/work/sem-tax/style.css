@@ -78,7 +78,7 @@ svg { display: block; }
   padding-left: var(--gutter);
   padding-right: var(--gutter-r);
 }
-.grid { display: grid; grid-template-columns: var(--cols); }
+.grid { display: grid; grid-template-columns: var(--cols); align-items: start; }
 .rules { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 .rules__grid { height: 100%; display: grid; grid-template-columns: var(--cols); }
 .rules__grid i { border-left: 1px solid var(--rule); }
@@ -220,7 +220,7 @@ svg { display: block; }
 }
 
 /* ledger rows */
-.ledger { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-columns: subgrid; position: relative; }
+.ledger { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-columns: subgrid; position: relative; align-content: start; }
 .lrow {
   grid-column: 1 / -1;
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-columns: subgrid;
