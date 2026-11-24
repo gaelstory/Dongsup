@@ -53,8 +53,14 @@
       if (kakao) a.setAttribute('href', kakao);
     });
     $$('[data-kakao-row]').forEach(function (r) { r.hidden = !kakao; });
+    // copy that sends people to KakaoTalk only appears when there is a channel to go to
+    if (kakao) $$('[data-kakao-swap]').forEach(function (e) { e.textContent = e.getAttribute('data-kakao-swap'); });
     root.classList.toggle('has-kakao', !!kakao);
     if (C.business && C.business.mailOrderNo) $$('[data-mailorder]').forEach(function (e) { e.hidden = false; });
+    if (typeof C.FORM_PROCESSOR === 'string' && C.FORM_PROCESSOR.trim()) $$('[data-processor-row]').forEach(function (e) { e.hidden = false; });
+    var owner = C.business && typeof C.business.owner === 'string' ? C.business.owner.trim() : '';
+    if (C.oneMaker === true && owner && !isPlaceholder(owner)) $$('[data-maker-row]').forEach(function (e) { e.hidden = false; });
+    warnPlaceholders();
 
     // prices live only in #pricing; anything else that needs one reads it from there
     $$('[data-price]').forEach(function (d) { PRICE[d.getAttribute('data-price')] = d.textContent.replace(/\s+/g, ' ').trim(); });
@@ -62,6 +68,24 @@
       var t = PRICE[s.getAttribute('data-price-ref')];
       if (t) s.textContent = t;
     });
+    if (PRICE.first) $$('[data-price-line]').forEach(function (e) { e.hidden = false; });
+  }
+
+  function isPlaceholder(v) {
+    return !v || /^\[.*\]$/.test(v) || /example\.(com|org|net)/i.test(v) || /^0\d{1,2}-0{3,4}-0{4}$/.test(v);
+  }
+
+  // a pre-launch check: anything still holding a placeholder is listed once in the console
+  function warnPlaceholders() {
+    var left = [];
+    if (isPlaceholder(String(C.email || ''))) left.push('email');
+    if (isPlaceholder(String(C.phone || ''))) left.push('phone');
+    if (!kakaoUrl()) left.push('kakaoUrl');
+    ['owner', 'regNo', 'address'].forEach(function (k) {
+      if (!C.business || isPlaceholder(String(C.business[k] || ''))) left.push('business.' + k);
+    });
+    if (!String(C.FORM_ENDPOINT || '').trim()) left.push('FORM_ENDPOINT (비어 있으면 의뢰서를 메일/문자로 보내는 방식)');
+    if (left.length) console.warn('[studio] config.js 자리표시자: ' + left.join(', '));
   }
 
   function kakaoUrl() {
@@ -77,6 +101,23 @@
       new IntersectionObserver(function (entries) {
         header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
       }).observe(sentinel);
+    }
+
+    // the header turns ink while it sits over the pricing band or the footer
+    if (header && has('ScrollTrigger')) {
+      var over = 0;
+      $$('.band').forEach(function (band) {
+        window.ScrollTrigger.create({
+          trigger: band,
+          start: function () { return 'top ' + header.offsetHeight / 2 + 'px'; },
+          end: function () { return 'bottom ' + header.offsetHeight / 2 + 'px'; },
+          invalidateOnRefresh: true,
+          onToggle: function (self) {
+            over += self.isActive ? 1 : -1;
+            header.classList.toggle('is-on-ink', over > 0);
+          }
+        });
+      });
     }
 
     var btn = $('[data-menu-btn]');
@@ -144,6 +185,17 @@
       update();
       requestAnimationFrame(function () { requestAnimationFrame(function () { seg.classList.remove('no-anim'); }); });
     };
+    if (scroller) {
+      // fade the edge that has more items behind it
+      var edges = function () {
+        var max = scroller.scrollWidth - scroller.clientWidth;
+        scroller.classList.toggle('fade-r', max > 1 && scroller.scrollLeft < max - 1);
+        scroller.classList.toggle('fade-l', max > 1 && scroller.scrollLeft > 1);
+      };
+      scroller.addEventListener('scroll', edges, { passive: true });
+      if ('ResizeObserver' in window) new ResizeObserver(edges).observe(scroller);
+      edges();
+    }
     if ('ResizeObserver' in window) new ResizeObserver(quiet).observe(track);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(quiet);
     quiet();
@@ -215,29 +267,31 @@
 
     nav.hidden = false;
 
-    function ensure(s) {
-      if (s.status !== 'unknown') return Promise.resolve(s.status);
-      if (s._p) return s._p;
-      s._p = new Promise(function (res) {
-        var img = new Image();
-        var done = false;
-        var fin = function (st) {
-          if (done) return;
-          done = true;
-          clearTimeout(timer);
-          if (st !== 'timeout') s.status = st;
-          s._p = null;
-          res(st);
-        };
-        var timer = setTimeout(function () { fin('timeout'); }, 1500);
-        img.onload = function () {
-          (img.decode ? img.decode() : Promise.resolve()).catch(function () {}).then(function () { fin('ok'); });
-        };
-        img.onerror = function () { fin('broken'); };
-        img.decoding = 'async';
-        img.src = s.url;
-      });
-      return s._p;
+    // Resolves with the image status, or 'timeout' after ms. The download keeps going after a timeout,
+    // and if that slide is on screen by then its poster is swapped for the real screenshot.
+    function ensure(s, ms) {
+      if (s.status === 'ok' || s.status === 'broken') return Promise.resolve(s.status);
+      if (!s._ready) {
+        s._ready = new Promise(function (res) {
+          var img = new Image();
+          img.onload = function () {
+            (img.decode ? img.decode() : Promise.resolve()).catch(function () {}).then(function () {
+              s.status = 'ok';
+              res('ok');
+              arrived(s);
+            });
+          };
+          img.onerror = function () { s.status = 'broken'; res('broken'); };
+          img.decoding = 'async';
+          img.src = s.url;
+        });
+      }
+      return Promise.race([s._ready, wait(ms || 1500).then(function () { return 'timeout'; })]);
+    }
+    function arrived(s) {
+      if (slides[cur] !== s) return;
+      if (built) built.fronts.forEach(function (f) { paint(f, s); });
+      else showOnBase(s, true);
     }
 
     /* caption, link, counter, address */
@@ -272,23 +326,26 @@
       wrap.className = 'slats';
       wrap.setAttribute('aria-hidden', 'true');
       stage.style.setProperty('--n', n);
-      var B = { wrap: wrap, n: n, slats: [], flips: [], fronts: [], backs: [], fShades: [], bShades: [], gloss: [] };
+      var B = { wrap: wrap, n: n, slats: [], lifts: [], flips: [], fronts: [], backs: [], fShades: [], bShades: [], gloss: [] };
       for (var i = 0; i < n; i++) {
         var slat = document.createElement('span');
         slat.className = 'slat';
         slat.style.setProperty('--i', i);
+        var lift = document.createElement('span');
+        lift.className = 'slat__lift';
         var flip = document.createElement('span');
         flip.className = 'slat__flip';
         var front = document.createElement('span');
         front.className = 'face face--front';
-        front.innerHTML = '<span class="face__gloss"></span><span class="face__shade"></span>';
+        front.innerHTML = '<span class="face__tilt"></span><span class="face__gloss"></span><span class="face__shade"></span>';
         var back = document.createElement('span');
         back.className = 'face face--back';
-        back.innerHTML = '<span class="face__shade"></span>';
+        back.innerHTML = '<span class="face__tilt"></span><span class="face__shade"></span>';
         flip.append(front, back);
-        slat.appendChild(flip);
+        lift.appendChild(flip);
+        slat.appendChild(lift);
         wrap.appendChild(slat);
-        B.slats.push(slat); B.flips.push(flip); B.fronts.push(front); B.backs.push(back);
+        B.slats.push(slat); B.lifts.push(lift); B.flips.push(flip); B.fronts.push(front); B.backs.push(back);
         B.fShades.push($('.face__shade', front)); B.bShades.push($('.face__shade', back)); B.gloss.push($('.face__gloss', front));
         paint(front, slides[cur]);
       }
@@ -330,7 +387,8 @@
       if (tl) tl.progress(1);
       killTimer();
       if (user) cap.setAttribute('aria-live', 'polite');
-      ensure(slides[target]).then(function () {
+      // a click should answer quickly; autoplay can wait up to 2s more for the real screenshot
+      ensure(slides[target], user ? 1200 : 3500).then(function () {
         if (token !== seq) return;
         flipTo(target, dir);
       });
@@ -476,7 +534,7 @@
       toggle.hidden = false;
       built = build(conditions.desk ? 10 : 6);
       if (conditions.fine) {
-        liftTo = built.slats.map(function (s) { return G.quickTo(s, 'rotationX', { duration: 0.35, ease: 'power3' }); });
+        liftTo = built.lifts.map(function (s) { return G.quickTo(s, 'rotationX', { duration: 0.35, ease: 'power3' }); });
         glossTo = built.gloss.map(function (g) { return G.quickTo(g, 'opacity', { duration: 0.35, ease: 'power3' }); });
         liftOn = true;
         view.addEventListener('pointermove', onMove, { passive: true });
@@ -493,10 +551,22 @@
           onRight: function () { if (!swiped) { swiped = true; swipedAt = Date.now(); go(-1, true); } }
         });
       }
+      var opening = null;
+      var hero = $('#top');
+      if (has('ScrollTrigger') && hero) {
+        // a staggered fromTo inside a scrubbed timeline does not paint its start until the first scroll
+        G.set(built.slats, { rotationX: -22 });
+        opening = G.timeline({
+          scrollTrigger: { trigger: hero, start: 0, end: function () { return hero.offsetHeight * 0.35; }, scrub: 0.4, invalidateOnRefresh: true }
+        })
+          .fromTo(built.slats, { rotationX: -22 }, { rotationX: 0, duration: 1, ease: 'none', stagger: 0.02 }, 0)
+          .fromTo(stage, { '--open': 0 }, { '--open': 1, duration: 1, ease: 'none' }, 0);
+      }
       startTimer();
       return function () {
         if (tl) tl.progress(1);
         killTimer();
+        if (opening) { opening.scrollTrigger.kill(); opening.kill(); stage.style.removeProperty('--open'); }
         if (observer) observer.kill();
         view.removeEventListener('pointermove', onMove);
         view.removeEventListener('pointerleave', onLeave);
@@ -532,14 +602,16 @@
           onComplete: function () { if (split) { split.revert(); split = null; } }
         });
       });
-      if (has('ScrollTrigger')) {
-        G.timeline({
-          scrollTrigger: { trigger: hero, start: 0, end: function () { return hero.offsetHeight * 0.35; }, scrub: 0.4, invalidateOnRefresh: true }
-        })
-          .fromTo(unit, { scale: 0.94 }, { scale: 1, ease: 'none' }, 0)
-          .to(copy, { y: -24, ease: 'none' }, 0);
-      }
       return function () { alive = false; if (split) { split.revert(); split = null; } };
+    });
+    if (!has('ScrollTrigger')) return;
+    mm.add({ ok: '(prefers-reduced-motion: no-preference)', wide: '(min-width: 768px)' }, function (ctx) {
+      if (!ctx.conditions.ok) return;
+      var t = G.timeline({
+        scrollTrigger: { trigger: hero, start: 0, end: function () { return hero.offsetHeight * 0.35; }, scrub: 0.4, invalidateOnRefresh: true }
+      });
+      if (ctx.conditions.wide) t.fromTo(unit, { scale: 0.94 }, { scale: 1, ease: 'none' }, 0);
+      t.to(copy, { y: -24, ease: 'none' }, 0);
     });
   }
 
@@ -555,6 +627,7 @@
 
     var current = 'all', expanded = false;
     var moreWrap = $('[data-more]'), moreBtn = $('[data-more-btn]');
+    var endBlock = $('[data-work-end]', grid);
     var shown = function (c) { return c.getClientRects().length > 0; };
     var matches = function (c, v) { return v === 'all' || c.getAttribute('data-category') === v; };
 
@@ -592,14 +665,14 @@
       var nextUp = cards.filter(function (c) { return matches(c, v); });
       var doLayout = function () {
         phase1 = null;
-        var state = window.Flip.getState(nextUp);
+        var state = window.Flip.getState(endBlock ? nextUp.concat(endBlock) : nextUp);
         layout(v);
         G.set(leaving, { clearProps: 'opacity,transform' });
         flipTl = window.Flip.from(state, {
           duration: 0.5,
           ease: 'power2.inOut',
           onEnter: function (els) { return G.fromTo(els, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.35, delay: 0.12, ease: 'power2.out' }); },
-          onComplete: function () { flipTl = null; G.set(nextUp, { clearProps: 'opacity,transform' }); refresh(); }
+          onComplete: function () { flipTl = null; G.set(endBlock ? nextUp.concat(endBlock) : nextUp, { clearProps: 'opacity,transform' }); refresh(); }
         });
       };
       if (leaving.length) phase1 = G.to(leaving, { opacity: 0, scale: 0.96, duration: 0.2, ease: 'power1.out', onComplete: doLayout });
@@ -615,6 +688,14 @@
         if (!Form.pickWork) return;
         e.preventDefault();
         Form.pickWork(a.getAttribute('data-ask'));
+      });
+    });
+    // the closing invitation opens the mockup picker in the form
+    $$('[data-open-liked]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        if (!Form.openLiked) return;
+        e.preventDefault();
+        Form.openLiked();
       });
     });
 
@@ -695,7 +776,7 @@
         frame.classList.remove('is-open');
         for (var n = 1; n <= 5; n++) {
           G.set(strokes(n), { drawSVG: '0% 0%' });
-          G.set(fills(n), { fillOpacity: 0 });
+          if (fills(n).length) G.set(fills(n), { fillOpacity: 0 });
         }
       }
       function reach(i) {
@@ -706,7 +787,7 @@
           if (drawn[n]) continue;
           drawn[n] = true;
           G.to(strokes(n), { drawSVG: '0% 100%', duration: 0.6, ease: 'power2.out', stagger: 0.04, delay: delay });
-          G.to(fills(n), { fillOpacity: 1, duration: 0.4, ease: 'power1.out', delay: delay });
+          if (fills(n).length) G.to(fills(n), { fillOpacity: 1, duration: 0.4, ease: 'power1.out', delay: delay });
           delay += 0.15;
         }
         if (i >= 6) frame.classList.add('is-open');
@@ -769,50 +850,160 @@
         Form.pickPackage(a.getAttribute('data-pick-package'));
       });
     });
+    initSamples(wrap, table);
+  }
+
+  // The "견본 시안" names show their mockup: a small preview above the link on desktop,
+  // and two still thumbnails under the chosen package on phones and tablets.
+  function initSamples(wrap, table) {
+    var links = $$('.row-samples a', table);
+    var slugOf = function (a) { var m = /work\/([^/]+)\//.exec(a.getAttribute('href') || ''); return m ? m[1] : ''; };
+    var sample = function (slug, name) { return { slug: slug, name: name, kind: '', status: 'unknown' }; };
+    var thumb = function (holder, slug, name) {
+      paint(holder, sample(slug, name));
+      var img = document.createElement('img');
+      img.className = 'thumb__img';
+      img.alt = '';
+      img.decoding = 'async';
+      img.loading = 'lazy';
+      img.addEventListener('error', function () { img.hidden = true; });
+      img.src = 'assets/thumbs/' + slug + '.jpg';
+      holder.appendChild(img);
+    };
+
+    $$('.row-samples td', table).forEach(function (td) {
+      var row = document.createElement('span');
+      row.className = 'sample-thumbs';
+      row.setAttribute('aria-hidden', 'true');
+      $$('a', td).forEach(function (a) {
+        var t = document.createElement('a');
+        t.className = 'sample-thumb thumb';
+        t.href = a.getAttribute('href');
+        t.tabIndex = -1;
+        thumb(t, slugOf(a), a.textContent);
+        row.appendChild(t);
+      });
+      td.appendChild(row);
+    });
+
+    var peek = document.createElement('span');
+    peek.className = 'peek';
+    peek.setAttribute('aria-hidden', 'true');
+    peek.innerHTML = '<span class="peek__thumb thumb"></span><span class="corners"><i></i><i></i><i></i><i></i></span>';
+    wrap.appendChild(peek);
+    var holder = $('.peek__thumb', peek);
+    function show(a) {
+      if (!mqWide.matches) return;
+      var slug = slugOf(a);
+      if (!slug) return;
+      if (holder._slug !== slug) {
+        holder.textContent = '';
+        thumb(holder, slug, a.textContent);
+        holder.querySelector('img').loading = 'eager';
+        holder._slug = slug;
+      }
+      var wr = wrap.getBoundingClientRect(), r = a.getBoundingClientRect();
+      peek.style.left = Math.round(r.left - wr.left) + 'px';
+      peek.style.top = Math.round(r.top - wr.top - 14) + 'px';
+      peek.classList.add('is-on');
+    }
+    function hide() { peek.classList.remove('is-on'); }
+    links.forEach(function (a) {
+      a.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') show(a); });
+      a.addEventListener('pointerleave', hide);
+      a.addEventListener('focus', function () {
+        var fv = true;
+        try { fv = a.matches(':focus-visible'); } catch (err) { /* older browsers */ }
+        if (fv) show(a);
+      });
+      a.addEventListener('blur', hide);
+    });
   }
 
   /* ---------- faq ---------- */
 
-  function initFaq() {
-    $$('.qa').forEach(function (d) {
-      var sum = $('summary', d);
-      var body = $('.qa__a', d);
-      var anim = null;
-      sum.addEventListener('click', function (e) {
-        if (reduced() || !body.animate) return;
-        e.preventDefault();
-        if (anim) anim.finish();
-        if (!d.open) {
-          d.open = true;
-          var h = body.scrollHeight;
-          anim = body.animate([{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }], { duration: 280, easing: EASE });
-          anim.onfinish = function () { anim = null; };
-        } else {
-          d.classList.add('is-closing');
-          var h2 = body.offsetHeight;
-          anim = body.animate([{ height: h2 + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 200, easing: EASE });
-          anim.onfinish = function () { d.open = false; d.classList.remove('is-closing'); anim = null; };
-        }
-      });
+  function wireDetails(d, body) {
+    var sum = $(':scope > summary', d);
+    if (!sum || !body) return;
+    var anim = null;
+    var settle = function () { anim = null; body.style.overflow = ''; };
+    sum.addEventListener('click', function (e) {
+      if (reduced() || !body.animate) return;
+      e.preventDefault();
+      if (anim) anim.finish();
+      body.style.overflow = 'hidden';
+      if (!d.open) {
+        d.open = true;
+        var h = body.scrollHeight;
+        anim = body.animate([{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }], { duration: 280, easing: EASE });
+        anim.onfinish = settle;
+      } else {
+        d.classList.add('is-closing');
+        var h2 = body.offsetHeight;
+        anim = body.animate([{ height: h2 + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 200, easing: EASE });
+        anim.onfinish = function () { d.open = false; d.classList.remove('is-closing'); settle(); };
+      }
     });
+  }
+
+  function initFaq() {
+    $$('.qa').forEach(function (d) { wireDetails(d, $('.qa__a', d)); });
+    var more = $('[data-more-fields]');
+    if (more) wireDetails(more, $('.fs--more', more));
   }
 
   /* ---------- request form ---------- */
 
   var PKG_NAMES = { first: '첫 화면', five: '다섯 화면', ten: '열 화면', custom: '맞춤 화면' };
 
+  // Korean numbers as people actually write them: mobile 010, Seoul 02, area codes, 070, 050x safe numbers,
+  // 15xx/16xx/18xx business numbers, and +82 / 82 prefixes (turned into the domestic 0 form).
+  function phoneDigits(raw) {
+    var d = String(raw || '').replace(/\D/g, '');
+    if (d.indexOf('82') === 0) d = '0' + d.slice(2);
+    if (d.indexOf('00') === 0) d = d.slice(1); // "+82 010 ..." written with the trunk zero kept
+    var max = /^1[5-9]/.test(d) ? 8 : d.indexOf('02') === 0 ? 10 : d.indexOf('050') === 0 ? 12 : 11;
+    return d.slice(0, max);
+  }
+  function phoneOk(d) {
+    return /^1[5-9]\d{6}$/.test(d) || /^02\d{7,8}$/.test(d) || /^050\d{8,9}$/.test(d) || /^0[1-9]\d{8,9}$/.test(d);
+  }
   function fmtPhone(d) {
-    d = d.slice(0, 11);
+    if (/^1[5-9]/.test(d)) return d.length <= 4 ? d : d.slice(0, 4) + '-' + d.slice(4, 8);
     if (d.indexOf('02') === 0) {
       if (d.length <= 2) return d;
       if (d.length <= 5) return d.slice(0, 2) + '-' + d.slice(2);
       if (d.length <= 9) return d.slice(0, 2) + '-' + d.slice(2, 5) + '-' + d.slice(5);
       return d.slice(0, 2) + '-' + d.slice(2, 6) + '-' + d.slice(6, 10);
     }
+    if (d.indexOf('050') === 0) {
+      if (d.length <= 4) return d;
+      if (d.length <= 7) return d.slice(0, 4) + '-' + d.slice(4);
+      if (d.length <= 11) return d.slice(0, 4) + '-' + d.slice(4, 7) + '-' + d.slice(7);
+      return d.slice(0, 4) + '-' + d.slice(4, 8) + '-' + d.slice(8, 12);
+    }
     if (d.length <= 3) return d;
     if (d.length <= 6) return d.slice(0, 3) + '-' + d.slice(3);
     if (d.length <= 10) return d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
     return d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7);
+  }
+
+  // Trim text so its URL-encoded form stays under max characters (long mailto/sms links break in some apps)
+  function fitEncoded(text, max, tail) {
+    if (encodeURIComponent(text).length <= max) return text;
+    var budget = max - encodeURIComponent(tail).length;
+    var lo = 0, hi = text.length;
+    while (lo < hi) {
+      var mid = (lo + hi + 1) >> 1;
+      var cut = text.slice(0, mid);
+      var c = cut.charCodeAt(cut.length - 1);
+      if (c >= 0xD800 && c <= 0xDBFF) cut = cut.slice(0, -1);
+      if (encodeURIComponent(cut).length <= budget) lo = mid; else hi = mid - 1;
+    }
+    var out = text.slice(0, lo);
+    var last = out.charCodeAt(out.length - 1);
+    if (last >= 0xD800 && last <= 0xDBFF) out = out.slice(0, -1);
+    return out + tail;
   }
 
   // Korean particle: 전화로, 문자로, 이메일로, 카카오톡으로
@@ -845,6 +1036,15 @@
     var dirty = {};
     var consentAt = null;
     var sending = false;
+    var summaryKeys = [];
+    var more = $('[data-more-fields]');
+    var note = $('[data-form-note]');
+    var endpoint = function () { return String(C.FORM_ENDPOINT || '').trim(); };
+    // the button says what it does: with no form service connected it completes a request to send yourself
+    var SUBMIT_LABEL = endpoint() ? '의뢰서 보내기' : '의뢰서 완성하기';
+    submitBtn.textContent = SUBMIT_LABEL;
+    if (note) note.textContent = endpoint() ? '보내신 내용은 상담 목적으로만 사용합니다.'
+      : '완성된 의뢰서를 메일이나 문자로 보내 주시는 방식입니다. 보내신 내용은 상담 목적으로만 사용합니다.';
 
     var digits = function (v) { return String(v || '').replace(/\D/g, ''); };
     var radio = function (n) { var r = form.querySelector('input[name="' + n + '"]:checked'); return r ? r.value : ''; };
@@ -857,8 +1057,7 @@
         return n >= 2 && n <= 40 ? '' : '성함이나 상호를 두 글자 이상 적어 주세요.';
       },
       phone: function () {
-        var n = digits(E.phone.value).length;
-        return n >= 9 && n <= 11 ? '' : '연락 가능한 전화번호를 적어 주세요.';
+        return phoneOk(phoneDigits(E.phone.value)) ? '' : '연락 가능한 전화번호를 적어 주세요.';
       },
       email: function () {
         var v = E.email.value.trim();
@@ -885,6 +1084,8 @@
         c.removeAttribute('aria-invalid');
         err.textContent = '';
         err.hidden = true;
+        var at = summaryKeys.indexOf(k);
+        if (at >= 0) { summaryKeys.splice(at, 1); renderSummary(false); }
       }
       if (ids.length) c.setAttribute('aria-describedby', ids.join(' ')); else c.removeAttribute('aria-describedby');
     }
@@ -920,19 +1121,20 @@
     });
 
     // phone: keep digits, add hyphens as they type, keep the caret where it was
-    var lastDigits = digits(E.phone.value);
+    var lastDigits = phoneDigits(E.phone.value);
     E.phone.addEventListener('input', function (e) {
       var el = E.phone;
+      if (/^\s*\+\d{0,2}\s*$/.test(el.value)) { recheckIfShowing('phone'); return; } // still typing "+82"
       var pos = el.selectionStart == null ? el.value.length : el.selectionStart;
-      var d = digits(el.value);
-      var before = digits(el.value.slice(0, pos)).length;
+      var d = phoneDigits(el.value);
+      var before = phoneDigits(el.value.slice(0, pos)).length;
       if (e.inputType === 'deleteContentBackward' && d === lastDigits && before > 0) {
         d = d.slice(0, before - 1) + d.slice(before);
         before -= 1;
       }
       var f = fmtPhone(d);
       el.value = f;
-      lastDigits = digits(f);
+      lastDigits = d;
       var count = 0, p = 0;
       while (p < f.length && count < before) { if (/\d/.test(f.charAt(p))) count++; p++; }
       try { el.setSelectionRange(p, p); } catch (err) { /* some input types refuse selection */ }
@@ -984,7 +1186,7 @@
         var vals = d.c[n] || [];
         $$('input[name="' + n + '"]', form).forEach(function (i) { i.checked = vals.indexOf(i.value) >= 0; });
       });
-      lastDigits = digits(E.phone.value);
+      lastDigits = phoneDigits(E.phone.value);
     }
     var saveTimer = 0;
     var queueSave = function () { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); };
@@ -997,13 +1199,35 @@
     msgCount.textContent = String(msg.value.length);
     if (msg.value) autosize();
     if ($$('input[name="likedWorks"]:checked', form).length) liked.open = true;
+    // optional questions start folded, unless a restored draft already has answers in them
+    var hasOptional = E.reference.value.trim() || msg.value.trim() ||
+      $$('[data-more-fields] input:checked', form).length;
+    if (more) more.open = !!hasOptional;
     $$('[data-seg]', form).forEach(function (s) { if (s._update) s._update(); });
 
     /* coming from a portfolio card or the price table */
-    function showPicked(text) {
-      picked.textContent = text;
-      picked.hidden = false;
+    var pickedWorks = [], pickedPkg = '';
+    function renderPicked() {
+      var q = function (s) { return '"' + s + '"'; };
+      var parts = [];
+      if (pickedWorks.length) parts.push(pickedWorks.map(q).join(', ') + ' 느낌');
+      if (pickedPkg) parts.push(q(pickedPkg) + ' 구성');
+      picked.hidden = !parts.length;
+      picked.textContent = parts.length ? parts.join(', ') + '을 선택하셨습니다.' : '';
     }
+    likedBoxes.forEach(function (b) {
+      b.addEventListener('change', function () {
+        if (!b.checked && pickedWorks.indexOf(b.value) >= 0) { pickedWorks.splice(pickedWorks.indexOf(b.value), 1); renderPicked(); }
+      });
+    });
+    $$('input[name="package"]', form).forEach(function (r) {
+      r.addEventListener('change', function () {
+        if (!pickedPkg || !r.checked) return;
+        var key = r.getAttribute('data-key');
+        pickedPkg = PKG_NAMES[key] || '';
+        renderPicked();
+      });
+    });
     // two columns: show the section's content top; one column: jump past the contact block to the form
     function formTop() { return mqWide.matches ? $('#request .layout-12') : surface; }
     function goToForm(focusEl) {
@@ -1016,16 +1240,28 @@
       if (!box) return;
       box.checked = true;
       updLiked();
+      if (more) more.open = true;
       liked.open = true;
-      showPicked('"' + box.value + '" 느낌을 선택하셨습니다.');
+      if (pickedWorks.indexOf(box.value) < 0) pickedWorks.push(box.value);
+      renderPicked();
       goToForm(picked);
       save();
+    };
+    // the portfolio's closing invitation: open the mockup picker and go straight to it
+    Form.openLiked = function () {
+      if (!result.hidden) backToForm(true);
+      if (more) more.open = true;
+      liked.open = true;
+      var field = form.querySelector('[data-field="likedWorks"]');
+      field.scrollIntoView({ behavior: behavior(), block: 'start' });
+      $('summary', liked).focus({ preventScroll: true });
     };
     Form.pickPackage = function (key) {
       var r = form.querySelector('input[name="package"][data-key="' + key + '"]');
       if (!r) return;
       r.checked = true;
-      showPicked('"' + (PKG_NAMES[key] || r.value) + '" 구성을 선택하셨습니다.');
+      pickedPkg = PKG_NAMES[key] || r.value;
+      renderPicked();
       goToForm(picked);
       save();
     };
@@ -1038,7 +1274,15 @@
       c.focus({ preventScroll: true });
     }
     function showSummary(errs) {
+      summaryKeys = errs.slice();
+      renderSummary(true);
+    }
+    // announce=true on submit; fixes update the list quietly so each keystroke is not read out
+    function renderSummary(announce) {
       summary.textContent = '';
+      if (!summaryKeys.length) { summary.hidden = true; return; }
+      if (announce) summary.setAttribute('role', 'alert'); else summary.removeAttribute('role');
+      var errs = summaryKeys;
       var p = document.createElement('p');
       p.className = 'form-summary__title';
       p.textContent = '확인이 필요한 항목이 ' + errs.length + '개 있습니다.';
@@ -1062,7 +1306,7 @@
       var now = new Date();
       return {
         name: v('name'),
-        phone: fmtPhone(digits(v('phone'))),
+        phone: fmtPhone(phoneDigits(v('phone'))),
         email: v('email'),
         replyBy: replyBy(),
         industry: v('industry'),
@@ -1085,8 +1329,20 @@
       var p = function (n) { return String(n).padStart(2, '0'); };
       return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
     }
-    function compose(d) {
+    // compact drops unanswered lines, for mail and text-message bodies that have a length limit
+    function compose(d, compact) {
       var or = function (x) { var s = Array.isArray(x) ? x.join(', ') : x; return s || '(미입력)'; };
+      if (compact) {
+        var line = function (label, x) { var s = Array.isArray(x) ? x.join(', ') : x; return s ? label + ': ' + s : null; };
+        return [
+          '[' + (C.name || '첫화면 스튜디오') + ' 제작 의뢰서]',
+          line('성함/상호', d.name), line('연락처', d.phone), line('이메일', d.email), line('답변 방법', d.replyBy),
+          line('업종', d.industry), line('필요한 구성', d.package), line('예산', d.budget), line('희망 오픈 시기', d.timeline),
+          line('마음에 든 시안', d.likedWorks), line('참고 사이트', d.reference), line('필요한 기능', d.features),
+          line('준비된 자료', d.materials), d.message ? '하고 싶은 이야기:\n' + d.message : null,
+          '개인정보 수집·이용 동의: 동의함 (' + stamp(d.consentAt) + ')'
+        ].filter(Boolean).join('\n');
+      }
       return [
         '[' + (C.name || '첫화면 스튜디오') + ' 제작 의뢰서]',
         '성함/상호: ' + or(d.name),
@@ -1161,23 +1417,25 @@
 
     function showResult(type, data, text, failed) {
       var email = (C.email || 'hello@example.com').trim();
+      var kakao = kakaoUrl();
+      var where = kakao ? '이메일이나 카카오톡으로' : '이메일로';
+      var promise = (C.replyPromise || '영업일 기준 24시간 안에');
       result.textContent = '';
-      var title = el('h3', 'result__title',
-        type === 'A' ? '의뢰서를 잘 받았습니다' : (failed ? '의뢰서를 직접 보내 주세요' : '의뢰서가 완성되었습니다. 아래 내용을 보내 주세요'));
+      var title = el('h3', 'result__title', type === 'A' ? '의뢰서를 잘 받았습니다'
+        : (failed ? '의뢰서를 직접 보내 주세요' : '의뢰서가 완성되었습니다. 아직 보내지지 않았습니다'));
       title.tabIndex = -1;
       var body = el('p', 'result__body', type === 'A'
-        ? (C.replyPromise || '영업일 기준 24시간 안에') + ' ' + withRo(data.replyBy) + ' 연락드리겠습니다. 급하시면 아래 연락처로 바로 말씀해 주세요.'
-        : (failed ? '아래 의뢰서를 복사해서 이메일이나 카카오톡으로 보내 주시면 바로 확인하겠습니다.'
-          : '아직 자동 접수가 연결되어 있지 않습니다. 아래 의뢰서를 복사해서 이메일이나 카카오톡으로 보내 주시면 바로 확인하겠습니다.'));
+        ? promise + ' ' + withRo(data.replyBy) + ' 연락드리겠습니다. 급하시면 아래 연락처로 바로 말씀해 주세요.'
+        : '아래 버튼으로 메일 앱을 열거나, 의뢰서를 복사해 ' + where + ' 보내 주세요. 받는 대로 확인하고 ' + promise + ' 연락드립니다.');
       var box = el('div', 'result__box');
       var pre = el('pre', 'result__text', text);
       var corners = el('span', 'corners');
       corners.setAttribute('aria-hidden', 'true');
       corners.innerHTML = '<i></i><i></i><i></i><i></i>';
       box.append(pre, corners);
+      result.append(title, body, box);
 
-      var actions = el('div', 'result__actions');
-      var copyBtn = el('button', 'btn btn--primary', type === 'A' ? '접수 내용 복사하기' : '의뢰서 복사하기');
+      var copyBtn = el('button', type === 'A' ? 'btn btn--primary' : 'btn btn--outline', type === 'A' ? '접수 내용 복사하기' : '의뢰서 복사하기');
       copyBtn.type = 'button';
       var hint = el('p', 'result__hint', '길게 눌러 복사해 주세요');
       hint.hidden = true;
@@ -1186,11 +1444,9 @@
           if (ok) { hint.hidden = true; flash(copyBtn, '복사했습니다'); } else { hint.hidden = false; }
         });
       });
-      actions.append(copyBtn, hint);
-      result.append(title, body, box, actions);
 
-      var kakao = kakaoUrl();
       if (type === 'B') {
+        // one-tap ways to actually send it; none of them can confirm delivery, so the copy never says "sent"
         var send = el('div', 'result__send');
         var lab = el('p', 'result__label', '보낼 곳');
         var row = el('div', 'result__email');
@@ -1201,7 +1457,23 @@
           copyText(email, addr).then(function (ok) { flash(addrBtn, ok ? '복사했습니다' : '주소를 길게 눌러 복사해 주세요'); });
         });
         row.append(addr, addrBtn);
-        send.append(lab, row);
+
+        var short = compose(data, true);
+        var actions = el('div', 'result__actions');
+        var mail = el('a', 'btn btn--primary', '메일 앱으로 보내기');
+        var subject = '제작 의뢰서 (' + (data.name || '') + ')';
+        mail.href = 'mailto:' + email + '?subject=' + encodeURIComponent(subject) + '&body=' +
+          encodeURIComponent(fitEncoded(short.replace(/\n/g, '\r\n'), 1800, '\r\n\r\n(길어서 일부만 담겼습니다. 화면의 의뢰서를 복사해 붙여 넣어 주세요.)'));
+        actions.appendChild(mail);
+        var phoneNum = String(C.phone || '').replace(/[^\d+]/g, '');
+        if (phoneNum && window.matchMedia('(pointer: coarse)').matches) {
+          var sms = el('a', 'btn btn--outline', '문자로 보내기');
+          sms.href = 'sms:' + phoneNum + '?&body=' + encodeURIComponent(fitEncoded(short, 1500, '\n(이하 생략)'));
+          actions.appendChild(sms);
+        }
+        actions.append(copyBtn);
+        var how = el('p', 'result__how', '메일이나 문자 앱에서 보내기까지 눌러야 전달됩니다. 앱이 열리지 않으면 의뢰서를 복사해 위 주소로 보내 주세요.');
+        send.append(lab, row, actions, hint, how);
         if (kakao) {
           var k = el('a', 'btn btn--outline result__kakao', '카카오톡으로 상담하기');
           k.href = kakao;
@@ -1213,6 +1485,9 @@
         edit.addEventListener('click', function () { backToForm(); });
         result.appendChild(edit);
       } else {
+        var actionsA = el('div', 'result__actions');
+        actionsA.append(copyBtn, hint);
+        result.appendChild(actionsA);
         var contact = el('p', 'result__contact');
         var em = el('span', 'selectable', email);
         var ph = el('a', 'link', C.phone || '010-0000-0000');
@@ -1242,7 +1517,7 @@
       sending = on;
       submitBtn.disabled = on;
       submitBtn.setAttribute('aria-busy', String(on));
-      submitBtn.textContent = on ? '보내는 중…' : '의뢰서 보내기';
+      submitBtn.textContent = on ? '보내는 중…' : SUBMIT_LABEL;
     }
 
     form.addEventListener('submit', function (e) {
@@ -1255,21 +1530,31 @@
         focusField(errs[0]);
         return;
       }
-      summary.hidden = true;
-      summary.textContent = '';
+      summaryKeys = [];
+      renderSummary(false);
       var data = collect();
       var text = compose(data);
       // honeypot filled: look done, send nothing
       if (E.company_site.value) { showResult('A', data, text); return; }
-      var endpoint = String(C.FORM_ENDPOINT || '').trim();
-      if (!endpoint) { showResult('B', data, text); return; }
+      var url = endpoint();
+      if (!url) { showResult('B', data, text); return; }
       setSending(true);
       var ctrl = 'AbortController' in window ? new AbortController() : null;
       var t = setTimeout(function () { if (ctrl) ctrl.abort(); }, 10000);
-      fetch(endpoint, {
+      var asForm = String(C.FORM_ENDPOINT_FORMAT || 'json').toLowerCase() === 'form';
+      var headers = { Accept: 'application/json' };
+      var payload;
+      if (asForm) {
+        payload = new URLSearchParams();
+        Object.keys(data).forEach(function (k) { payload.append(k, Array.isArray(data[k]) ? data[k].join(', ') : String(data[k])); });
+      } else {
+        headers['Content-Type'] = 'application/json';
+        payload = JSON.stringify(data);
+      }
+      fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(data),
+        headers: headers,
+        body: payload,
         signal: ctrl ? ctrl.signal : undefined
       }).then(function (res) {
         clearTimeout(t);
@@ -1279,11 +1564,18 @@
       }).catch(function () {
         clearTimeout(t);
         setSending(false);
-        sendAlert.textContent = '전송에 실패했습니다. 아래 의뢰서를 복사해 이메일이나 카카오톡으로 보내 주시면 바로 확인하겠습니다.';
+        sendAlert.textContent = '전송에 실패했습니다. 아래 버튼으로 메일 앱을 열거나, 의뢰서를 복사해 ' + (kakaoUrl() ? '이메일이나 카카오톡으로' : '이메일로') + ' 보내 주시면 바로 확인하겠습니다.';
         sendAlert.hidden = false;
         showResult('B', data, text, true);
       });
     });
+    // a mockup can link here with ?work=<slug> to arrive with that design already picked
+    try {
+      var w = new URLSearchParams(window.location.search).get('work');
+      if (w && likedBoxes.some(function (b) { return b.getAttribute('data-slug') === w; })) {
+        window.addEventListener('load', function () { setTimeout(function () { Form.pickWork(w); }, 200); });
+      }
+    } catch (err) { /* URLSearchParams missing: skip */ }
   }
 
   /* ---------- privacy dialog ---------- */
@@ -1314,6 +1606,7 @@
       var desk = mqTablet.matches;
       var show = past && !inReq && !(desk && inFoot) && !(!desk && typing);
       bar.classList.toggle('is-shown', show);
+      root.classList.toggle('float-on', show && !desk);
     }
     new IntersectionObserver(function (en) {
       past = !en[0].isIntersecting && en[0].boundingClientRect.top < 0;

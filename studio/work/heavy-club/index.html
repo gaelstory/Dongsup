@@ -63,15 +63,19 @@
     <h1 class="lines" id="hero-title">
       <span class="line line--1"><span class="line__fit"><span class="line__kin"><span class="ch">들</span><span class="ch">어</span><span class="ch">라</span></span></span></span>
       <span class="line line--2"><span class="line__fit"><span class="line__kin"><span class="ch">버</span><span class="ch">텨</span><span class="ch">라</span></span></span>
-        <svg class="barbell" viewBox="0 0 1000 200" aria-hidden="true" focusable="false">
+        <svg class="barbell barbell--bar" viewBox="0 0 1000 200" aria-hidden="true" focusable="false">
           <rect x="0" y="92" width="1000" height="16" fill="#000"/>
           <rect x="96" y="80" width="18" height="40" fill="#000"/>
           <rect x="886" y="80" width="18" height="40" fill="#000"/>
-          <g class="barbell__plates" fill="#FF3B0F" stroke="#000" stroke-width="7">
-            <rect x="120" y="8" width="54" height="184"/>
-            <rect x="178" y="28" width="40" height="144"/>
-            <rect x="782" y="28" width="40" height="144"/>
-            <rect x="826" y="8" width="54" height="184"/>
+        </svg>
+        <svg class="barbell barbell--plates" viewBox="0 0 1000 200" aria-hidden="true" focusable="false">
+          <g fill="#E4E3DE" stroke="#E4E3DE" stroke-width="19">
+            <rect x="120" y="8" width="54" height="184"/><rect x="178" y="28" width="40" height="144"/>
+            <rect x="782" y="28" width="40" height="144"/><rect x="826" y="8" width="54" height="184"/>
+          </g>
+          <g fill="#FF3B0F" stroke="#000" stroke-width="7">
+            <rect x="120" y="8" width="54" height="184"/><rect x="178" y="28" width="40" height="144"/>
+            <rect x="782" y="28" width="40" height="144"/><rect x="826" y="8" width="54" height="184"/>
           </g>
           <g fill="#000" font-family="Black Han Sans, sans-serif" font-size="30" text-anchor="middle">
             <text x="147" y="112">20</text>
@@ -238,6 +242,7 @@
         <h2 class="sec__title kin" id="schedule-title">이번 주 수업</h2>
         <p class="sec__note">칸을 누르면 그 시간의 코치가 보입니다. 오늘은 빨간 줄로 표시했습니다.</p>
       </div>
+      <a class="tt-skip" href="#price">시간표 건너뛰기</a>
       <div class="sched__app" id="sched-app">
         <p class="sched__static">평일 06:30, 07:30, 12:10, 19:00, 20:10, 21:20. 주말 10:00, 11:30. 크로스핏, 웨이트 입문, 바디 서킷 수업이 번갈아 열립니다.</p>
       </div>
@@ -291,7 +296,7 @@
       <div class="apply__head">
         <h2 class="sec__title kin" id="apply-title">일단 한 번 들어 보세요</h2>
         <p class="apply__lead">체험은 50분, 코치 한 명이 붙습니다. 운동복과 수건은 빌려 드리니 운동화만 챙겨 오세요.</p>
-        <p class="apply__zero"><span class="apply__zero-label">체험비</span><span class="apply__zero-num kin">0원</span></p>
+        <p class="apply__zero"><span class="apply__zero-label">체험비</span><span class="apply__zero-num">0원</span></p>
       </div>
       <form class="form" id="form" novalidate>
         <div class="field">
@@ -339,15 +344,25 @@
       <p><strong>문의</strong><br><a href="tel:020000000">02-000-0000</a></p>
       <p><strong>여는 시간</strong><br>24시간, 연중무휴. 코치 상주 06:00부터 01:00까지</p>
     </div>
+    <div class="foot__rule" aria-hidden="true"></div>
     <p class="foot__word" aria-hidden="true">HEAVY CLUB</p>
     <p class="foot__notice">이 사이트는 첫화면 스튜디오가 만든 가상의 브랜드 컨셉 시안입니다. 실제 업체, 가격, 후기가 아닙니다.</p>
   </div>
 </footer>
 
-<div class="reps" id="reps">
-  <p class="reps__count" aria-hidden="true"><span class="reps__label">스크롤</span><span class="reps__num" id="reps-num">0</span><span class="reps__unit">회</span></p>
-  <p class="reps__done" role="status"></p>
+<div class="reps is-hidden" id="reps" aria-hidden="true">
+  <svg class="reps__bar" viewBox="0 0 64 24" focusable="false">
+    <rect x="2" y="11" width="60" height="2"/>
+    <rect class="reps__collar" x="23" y="8" width="2" height="8"/><rect class="reps__collar" x="39" y="8" width="2" height="8"/>
+    <rect class="reps__p" data-i="1" x="19" y="3" width="3" height="18"/><rect class="reps__p" data-i="1" x="42" y="3" width="3" height="18"/>
+    <rect class="reps__p" data-i="2" x="15" y="3" width="3" height="18"/><rect class="reps__p" data-i="2" x="46" y="3" width="3" height="18"/>
+    <rect class="reps__p" data-i="3" x="11" y="5" width="3" height="14"/><rect class="reps__p" data-i="3" x="50" y="5" width="3" height="14"/>
+    <rect class="reps__p" data-i="4" x="7" y="7" width="3" height="10"/><rect class="reps__p" data-i="4" x="54" y="7" width="3" height="10"/>
+  </svg>
+  <span class="reps__num" id="reps-num">0</span><span class="reps__unit">회</span>
+  <span class="reps__msg"></span>
 </div>
+<p class="reps__done sr-only" role="status"></p>
 
 <script src="../../assets/vendor/gsap/gsap.min.js" defer></script>
 <script src="../../assets/vendor/gsap/ScrollTrigger.min.js" defer></script>

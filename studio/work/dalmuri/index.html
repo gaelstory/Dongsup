@@ -143,6 +143,7 @@
               <circle cx="200" cy="200" r="178" fill="none" stroke="#B9975B" stroke-opacity=".55" stroke-width="1.4"/>
               <circle cx="200" cy="200" r="132" fill="none" stroke="#E9E3D5" stroke-opacity=".07" stroke-width="1"/>
               <path d="M70 128 A150 150 0 0 1 150 58" fill="none" stroke="#F4F1E8" stroke-opacity=".16" stroke-width="5" stroke-linecap="round"/>
+              <circle class="plate__bloom" cx="200" cy="200" r="120" fill="#E9E3D5" opacity="0" filter="url(#brush)"/>
               <g class="plate__food" filter="url(#brush)">
                 <path class="plate__a" d="M200 140 C236 140 262 166 262 200 C262 236 236 262 200 262 C164 262 138 236 138 200 C138 166 164 140 200 140Z" fill="#E9E3D5"/>
                 <path class="plate__b" d="M262 132 C270 132 276 138 276 146 C276 154 270 160 262 160 C254 160 248 154 248 146 C248 138 254 132 262 132Z" fill="#B9975B"/>
@@ -256,7 +257,7 @@
   <section class="sec space" id="space" aria-labelledby="space-title">
     <div class="sec__inner wrap">
       <div class="sec__head">
-        <h2 class="sec__title" id="space-title"><span>열두 자리의</span> <span>바</span></h2>
+        <h2 class="sec__title" id="space-title"><span>열두</span> <span>자리의 바</span></h2>
         <p class="sec__intro">주방을 둘러싼 ㄱ자 카운터에 열두 자리가 있습니다. 어느 자리에 앉아도 화로가 보입니다.</p>
       </div>
       <div class="sec__body space__body">
@@ -319,8 +320,8 @@
   <section class="sec reserve" id="reserve" aria-labelledby="reserve-title">
     <div class="sec__inner wrap">
       <div class="sec__head">
-        <h2 class="sec__title" id="reserve-title"><span>자리를</span> <span>맡아 두겠습니다</span></h2>
-        <p class="sec__intro">밝은 달이 뜬 날이 예약할 수 있는 날입니다. 보름 무렵은 일찍 찹니다.</p>
+        <h2 class="sec__title" id="reserve-title"><span>자리를 맡아</span> <span>두겠습니다</span></h2>
+        <p class="sec__intro">테두리가 밝은 날이 예약할 수 있는 날입니다. 달 모양은 그날 밤의 위상입니다. 보름 무렵은 일찍 찹니다.</p>
       </div>
       <div class="sec__body reserve__body">
         <div class="cal" id="cal">
@@ -330,8 +331,9 @@
             <button class="cal__nav" type="button" data-dir="1" aria-label="다음 달"><span aria-hidden="true">›</span></button>
           </div>
           <div class="cal__grid-wrap"></div>
+          <p class="cal__note" id="cal-note" role="status" aria-live="polite"></p>
           <ul class="cal__legend">
-            <li><span class="cal__key is-open" aria-hidden="true"></span>예약할 수 있는 날</li>
+            <li><span class="cal__key is-open" aria-hidden="true"></span>테두리가 밝은 날: 예약할 수 있는 날</li>
             <li><span class="cal__key is-off" aria-hidden="true"></span>쉬는 날, 지난 날</li>
             <li><span class="cal__key is-full" aria-hidden="true"></span>마감</li>
           </ul>
@@ -339,9 +341,17 @@
         </div>
 
         <form class="book" id="book" novalidate>
-          <div class="book__step" data-step="date">
+          <div class="book__step book__step--date" data-step="date">
             <p class="book__label"><span class="book__num">1</span>날짜</p>
-            <p class="book__date is-empty" id="book-date">달력에서 날짜를 골라 주세요.</p>
+            <div class="book__daterow">
+              <p class="book__date is-empty" id="book-date">달력에서 날짜를 골라 주세요.</p>
+              <svg class="book__moon" viewBox="-60 -60 120 120" aria-hidden="true" focusable="false">
+                <circle class="bm-glow" r="56"/>
+                <circle class="bm-halo" r="46"/>
+                <circle class="bm-base" r="30"/>
+                <path class="bm-lit" d="M0,-30 A30,30 0 0 1 0,30 A0,30 0 0 0 0,-30Z"/>
+              </svg>
+            </div>
           </div>
           <fieldset class="book__step" data-step="time" disabled>
             <legend class="book__label"><span class="book__num">2</span>시간</legend>
@@ -377,8 +387,8 @@
               <textarea id="b-memo" name="memo" rows="2"></textarea>
             </div>
           </fieldset>
-          <button class="btn btn--solid book__submit" type="submit"><span>자리 예약하기</span></button>
-          <p class="book__msg" id="book-msg" role="status" aria-live="polite"></p>
+          <button class="btn book__submit" type="submit"><span class="book__submit-label">자리 예약하기</span></button>
+          <p class="book__msg" id="book-msg" role="status" aria-live="polite" tabindex="-1"></p>
         </form>
       </div>
     </div>

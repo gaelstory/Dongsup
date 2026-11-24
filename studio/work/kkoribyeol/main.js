@@ -97,9 +97,12 @@
       MotionPathPlugin.cacheRawPathMeasurements(raw);
       var len = path.getTotalLength();
       var step = tr.width < 700 ? 30 : 36, n = Math.floor(len / step), size = tr.width < 700 ? 15 : 18;
+      var clear = tr.width < 700 ? 36 : 44;
       var ns = 'http://www.w3.org/2000/svg', frag = document.createDocumentFragment();
       for (var j = 1; j < n; j++) {
         var pos = MotionPathPlugin.getPositionOnPath(raw, j / n, true);
+        // leave the stop badges clean
+        if (pts.some(function (q) { return Math.hypot(q[0] - pos.x, q[1] - pos.y) < clear; })) continue;
         var side = j % 2 ? 1 : -1, a = pos.angle * Math.PI / 180;
         var ox = -Math.sin(a) * 7 * side, oy = Math.cos(a) * 7 * side;
         var g = document.createElementNS(ns, 'g');
@@ -128,6 +131,16 @@
     build();
     window.addEventListener('resize', onResize, { passive: true });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { build(); if (window.ScrollTrigger) ScrollTrigger.refresh(); });
+  });
+
+  /* diary: dates are today and the two evenings before */
+  safe('diary-dates', function () {
+    var WD = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+    var now = new Date();
+    $$('.page-date[data-ago]').forEach(function (el) {
+      var ago = Number(el.dataset.ago), d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ago);
+      el.textContent = (ago === 0 ? '오늘, ' : ago === 1 ? '어제, ' : '') + (d.getMonth() + 1) + '월 ' + d.getDate() + '일 ' + WD[d.getDay()];
+    });
   });
 
   /* diary: swipe pages inside the phone */
@@ -193,7 +206,10 @@
       sdogs.forEach(function (el) {
         var on = Number(el.getAttribute('data-c')) === c;
         if (on && !el.classList.contains('on') && hasGsap && !REDUCED && sdogs.some(function (x) { return x.classList.contains('on'); })) {
-          gsap.fromTo(el, { y: -14 }, { y: 0, duration: 0.45, ease: 'bounce.out' });
+          gsap.timeline()
+            .fromTo(el, { y: -22 }, { y: 0, duration: 0.32, ease: 'power2.in' })
+            .fromTo(el, { scaleY: 0.86, scaleX: 1.06, transformOrigin: '50% 100%' }, { scaleY: 1, scaleX: 1, duration: 0.4, ease: 'back.out(3)' })
+            .fromTo(scaleRead, { rotation: -5, transformOrigin: '50% 50%' }, { rotation: 0, duration: 0.4, ease: 'elastic.out(1, 0.35)' }, '<');
         }
         el.classList.toggle('on', on);
       });

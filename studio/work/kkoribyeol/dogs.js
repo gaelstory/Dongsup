@@ -13,6 +13,9 @@
     var pg = hero.querySelector('#playground');
     var ballEl = hero.querySelector('#ball');
     var ballSvg = ballEl.querySelector('.ball-svg');
+    var ballUse = ballSvg.querySelector('use');
+    var comet = hero.querySelector('#comet'), extra = hero.querySelector('#fetch-extra');
+    var copyRect = null;
     var mat = hero.querySelector('#mat');
     var hint = hero.querySelector('#ball-hint');
     var countEl = hero.querySelector('#fetch-n');
@@ -54,8 +57,10 @@
         head: svg.querySelector('.d-head'), rear: svg.querySelector('.d-rear'), tail: svg.querySelector('.d-tail'),
         tongue: svg.querySelector('.d-tongue'), pupils: svg.querySelectorAll('.d-pupil'), eyes: svg.querySelectorAll('.d-eye'),
         ears: svg.querySelectorAll('.d-ear'), legs: svg.querySelectorAll('.d-leg'),
-        nearBack: svg.querySelector('.d-near .d-leg'), runTweens: []
+        sitpaw: svg.querySelector('.d-sitpaw'), runTweens: [], boostUntil: 0,
+        sit: (svg.querySelector('.d-rear').dataset.sit || '-12 10').split(' ').map(Number)
       };
+      d.backLegs = Array.prototype.filter.call(d.legs, function (l) { return l.dataset.front !== '1'; });
       var ho = d.head.dataset.o.split(' ').map(Number);
       d.headC = [ho[0], ho[1] - 36];
       gsap.set(d.head, { svgOrigin: d.head.dataset.o });
@@ -63,7 +68,8 @@
       gsap.set(d.rear, { svgOrigin: d.rear.dataset.o });
       Array.prototype.forEach.call(d.ears, function (e) { gsap.set(e, { svgOrigin: e.dataset.o }); });
       Array.prototype.forEach.call(d.legs, function (l) { gsap.set(l, { svgOrigin: l.dataset.o }); });
-      gsap.set(d.tongue, { svgOrigin: d.mouth[0] + ' ' + (d.mouth[1] - 8), scaleY: 0.4, opacity: 0 });
+      gsap.set(d.tongue, { transformOrigin: '50% 0%', scaleY: 0.4, opacity: 0 });
+      if (d.sitpaw) gsap.set(d.sitpaw, { opacity: 0 });
       d.rotTo = gsap.quickTo(d.head, 'rotation', { duration: 0.35, ease: 'power3' });
       d.pxTo = []; d.pyTo = [];
       Array.prototype.forEach.call(d.pupils, function (p) {
@@ -85,8 +91,9 @@
     function setFace(d, f, instant) {
       if (d.face === f) return;
       d.face = f;
-      if (instant) gsap.set(d.flip, { scaleX: f });
-      else gsap.to(d.flip, { scaleX: f, duration: 0.14, ease: 'power2.out', overwrite: true });
+      // flip at once (tweening scaleX would pass through a paper-thin frame) and sell the turn with a small squash
+      gsap.set(d.flip, { scaleX: f });
+      if (!instant && !REDUCED) gsap.fromTo(d.hop, { scaleY: 0.9 }, { scaleY: 1, duration: 0.16, ease: 'back.out(2)', overwrite: 'auto' });
     }
 
     function layout() {
@@ -99,6 +106,16 @@
       minY = header ? header.getBoundingClientRect().bottom + 8 : 70;
       maxX = W - B; maxY = groundY - B + 6;
       speed = clamp(W * 0.55, 300, 720);
+      // the copy's text column; a ball flying through it passes behind the words
+      var hr = hero.getBoundingClientRect(), els = hero.querySelectorAll('.hero-title .line, .hero-sub, .hero-copy .btn');
+      copyRect = null;
+      Array.prototype.forEach.call(els, function (el) {
+        var r = el.getBoundingClientRect();
+        var w = el.classList.contains('line') ? Math.min(r.width, el.scrollWidth) : r.width;
+        var box = { x0: r.left - hr.left, y0: r.top - hr.top, x1: r.left - hr.left + w, y1: r.bottom - hr.top };
+        if (!copyRect) copyRect = box;
+        else copyRect = { x0: Math.min(copyRect.x0, box.x0), y0: Math.min(copyRect.y0, box.y0), x1: Math.max(copyRect.x1, box.x1), y1: Math.max(copyRect.y1, box.y1) };
+      });
     }
 
     function restOnMat() {
@@ -106,9 +123,13 @@
       ball.x = clamp(matX - B / 2, 0, maxX); ball.y = maxY;
       applyBall();
     }
-    function applyBall(sq) {
+    var behind = false;
+    function applyBall() {
       gsap.set(ballEl, { x: ball.x, y: ball.y });
-      gsap.set(ballSvg, { rotation: ball.spin });
+      // spin the drawing inside the svg around its own centre, so the button and the ball never drift apart
+      if (ballUse) gsap.set(ballUse, { rotation: ball.spin, svgOrigin: '30 30' });
+      var over = copyRect && ball.mode !== 'drag' && ball.x + B > copyRect.x0 && ball.x < copyRect.x1 && ball.y + B > copyRect.y0 && ball.y < copyRect.y1;
+      if (over !== behind) { behind = over; pg.style.zIndex = over ? '2' : ''; }
     }
 
     function init() {
@@ -184,9 +205,9 @@
       d.runTweens.push(gsap.to(d.hop, { y: -h * 0.12, duration: 0.14, ease: 'sine.out', yoyo: true, repeat: -1 }));
       var legs = d.legs;
       for (var i = 0; i < legs.length; i++) {
-        var front = i % 2 === 1;
+        var front = legs[i].dataset.front === '1';
         gsap.set(legs[i], { rotation: front ? -24 : 20 });
-        d.runTweens.push(gsap.to(legs[i], { rotation: front ? 24 : -22, duration: 0.14, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i < 2 ? 0 : 0.07 }));
+        d.runTweens.push(gsap.to(legs[i], { rotation: front ? 24 : -22, duration: 0.14, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i % 2 ? 0.07 : 0 }));
       }
       gsap.to(d.tongue, { opacity: 1, scaleY: 1, duration: 0.15 });
       d.boost = 1;
@@ -198,15 +219,23 @@
       gsap.to(d.hop, { y: 0, duration: quick ? 0.05 : 0.12, ease: 'power2.out' });
       gsap.to(d.legs, { rotation: 0, duration: quick ? 0.05 : 0.12 });
     }
+    // sitting: the rear drops onto the haunches, the back legs fold away and a tucked paw shows
     function sit(d) {
       d.sitting = true;
-      gsap.to(d.rear, { rotation: -8, duration: 0.22, ease: 'power2.out' });
-      if (d.nearBack) gsap.to(d.nearBack, { scaleY: 0.72, duration: 0.22 });
+      gsap.to(d.rear, { rotation: d.sit[0], y: d.sit[1], duration: 0.26, ease: 'back.out(1.6)', overwrite: 'auto' });
+      gsap.to(d.backLegs, { opacity: 0, duration: 0.1, overwrite: 'auto' });
+      if (d.sitpaw) gsap.to(d.sitpaw, { opacity: 1, duration: 0.12, delay: 0.06, overwrite: 'auto' });
+      gsap.to(d.head, { y: -3, duration: 0.24, ease: 'power2.out' });
+      gsap.to(d.tongue, { opacity: 1, scaleY: 1, duration: 0.15 });
+      d.boostUntil = performance.now() + 2000;
     }
     function unsit(d) {
+      if (!d.sitting) return;
       d.sitting = false;
-      gsap.to(d.rear, { rotation: 0, duration: 0.15 });
-      if (d.nearBack) gsap.to(d.nearBack, { scaleY: 1, duration: 0.15 });
+      gsap.to(d.rear, { rotation: 0, y: 0, duration: 0.15, overwrite: 'auto' });
+      gsap.to(d.backLegs, { opacity: 1, duration: 0.08, overwrite: 'auto' });
+      if (d.sitpaw) gsap.to(d.sitpaw, { opacity: 0, duration: 0.08, overwrite: 'auto' });
+      gsap.to(d.head, { y: 0, duration: 0.15 });
     }
     function run(d, targetCx, onDone, slow) {
       var from = cxOf(d), dist = targetCx - from;
@@ -233,25 +262,45 @@
         // dip the head to grab the ball
         gsap.to(d, { tilt: 10, duration: 0.12, yoyo: true, repeat: 1 });
         ball.mode = 'carried'; carrier = d; ball.thrown = false;
+        cheer(d);
         gsap.delayedCall(0.18, function () {
           if (fetching !== d) return;
           if (matDog && matDog !== d) goHome(matDog);
-          run(d, matX, function () {
+          var back = matX >= cxOf(d) ? 1 : -1;
+          run(d, matX - mouthOffset(d, back) - back * 12, function () {
             if (fetching !== d) return;
-            carrier = null;
-            var f = d.face;
-            ball.x = clamp(cxOf(d) + mouthOffset(d, f) - B / 2 + f * B * 0.35, 0, maxX);
-            ball.y = maxY; ball.vx = ball.vy = 0; ball.mode = 'rest'; ball.rest = 0;
-            applyBall(); squash(0.5);
-            sit(d);
-            matDog = d; fetching = null; d.busy = false;
-            d.boost = 1;
-            bump();
+            carrier = null; ball.mode = 'drop';
+            gsap.to(ball, { x: clamp(matX - B / 2, 0, maxX), y: maxY, duration: 0.18, ease: 'power2.in', onUpdate: applyBall,
+              onComplete: function () { ball.mode = 'rest'; ball.vx = ball.vy = 0; ball.rest = 0; applyBall(); squash(0.5); } });
+            gsap.to(d.el, { x: '-=' + (back * 40), duration: 0.28, ease: 'power2.out', delay: 0.1, onComplete: function () {
+              sit(d);
+              matDog = d; fetching = null; d.busy = false;
+              bump();
+              dogs.forEach(function (o) { o.boostUntil = performance.now() + 2000; });
+              if (follower) { goHome(follower); follower = null; }
+            } });
           });
         });
       });
     }
+    // while one dog carries the ball the others perk up, and the closest idle one trots a couple of steps after it
+    var follower = null;
+    function cheer(d) {
+      var best = null, bd = Infinity;
+      dogs.forEach(function (o) {
+        if (o === d) return;
+        o.boost = Math.max(o.boost, 0.8);
+        if (o.busy || o === matDog) return;
+        var dist = Math.abs(cxOf(o) - cxOf(d));
+        if (dist < bd) { bd = dist; best = o; }
+      });
+      if (!best || REDUCED) return;
+      follower = best; best.busy = true;
+      var step = cxOf(d) > cxOf(best) ? 1 : -1;
+      run(best, cxOf(best) + step * Math.min(60, bd * 0.3), function () { best.busy = false; });
+    }
     function goHome(d) {
+      unsit(d);
       d.busy = true;
       var home = d.homeF * W;
       run(d, home, function () {
@@ -267,10 +316,27 @@
       stopRun(d);
       gsap.delayedCall(0.25, function () { if (!d.busy || fetching !== d) goHome(d); });
     }
+    var extraT = null;
     function bump() {
       count += 1;
       countEl.textContent = String(count);
       if (!REDUCED) gsap.fromTo(countEl, { scale: 1.7, rotation: -12 }, { scale: 1, rotation: 0, duration: 0.5, ease: 'back.out(3)' });
+      // every fifth ball: a tailed star (the brand's 꼬리별) crosses the sky and it is snack time
+      if (count % 5 === 0) {
+        if (extra) {
+          extra.textContent = ', 간식 시간이에요';
+          if (extraT) extraT.kill();
+          extraT = gsap.delayedCall(3, function () { extra.textContent = ''; });
+        }
+        if (comet && !REDUCED && window.MotionPathPlugin) {
+          var y0 = Math.max(minY + 10, H * 0.16);
+          gsap.set(comet, { opacity: 0, x: -200, y: y0 + 60 });
+          gsap.timeline()
+            .to(comet, { opacity: 1, duration: 0.2 })
+            .to(comet, { duration: 1.6, ease: 'power1.inOut', motionPath: { path: [{ x: -200, y: y0 + 60 }, { x: W * 0.45, y: y0 - 20 }, { x: W + 40, y: y0 + 40 }], curviness: 1.25, autoRotate: true } }, 0)
+            .to(comet, { opacity: 0, duration: 0.3 }, 1.3);
+        }
+      }
     }
 
     /* ---------- gaze, tails, ears, blinking ---------- */
@@ -306,7 +372,7 @@
       excite += (clamp(sp / 1300, 0, 1) - excite) * Math.min(1, dt * 6);
       dogs.forEach(function (d) {
         d.boost = Math.max(0, d.boost - dt * 0.6);
-        if (d.runTweens.length) d.boost = 1;
+        if (d.runTweens.length || performance.now() < d.boostUntil) d.boost = 1;
         var e = Math.max(excite, d.boost);
         if (e > 0.06) {
           if (d.wag.paused()) d.wag.play();
@@ -365,11 +431,21 @@
       ballEl.addEventListener('click', function () {
         if (SHOT) return;
         if (hint) hint.style.visibility = 'hidden';
-        var d = dogs[Math.floor(Math.random() * dogs.length)];
-        var nx = clamp(matX + (Math.random() - 0.5) * W * 0.3, d.el.offsetWidth, W - d.el.offsetWidth);
+        var nx = matX, d = null;
+        dogs.forEach(function (o) { placeDog(o, o.homeF * W); setFace(o, o.homeF * W > matX ? -1 : 1, true); });
+        for (var tries = 0; tries < 8; tries++) {
+          var cand = clamp(matX + (Math.random() - 0.5) * W * 0.5, B, W - B);
+          var pick = nearestDog(cand);
+          var ok = dogs.every(function (o) {
+            return o === pick || Math.abs(cxOf(o) - cand) > (pick.el.offsetWidth + o.el.offsetWidth) / 2 + 16;
+          });
+          if (ok) { nx = cand; d = pick; break; }
+        }
+        if (!d) { nx = matX; d = nearestDog(matX); }
         gsap.to([ballEl, d.el], { opacity: 0, duration: 0.12, onComplete: function () {
+          var f = nx > cxOf(d) ? 1 : -1;
+          setFace(d, f, true);
           ball.x = clamp(nx - B / 2, 0, maxX); ball.y = maxY; applyBall();
-          var f = nx > cxOf(d) ? 1 : -1; setFace(d, f, true);
           placeDog(d, nx - mouthOffset(d, f) - f * B * 0.4);
           lookAll(true);
           bump();

@@ -40,6 +40,7 @@
     }
     btn.addEventListener('click', function () { setOpen(!isOpen(), true); });
     nav.addEventListener('click', function (e) { if (e.target.closest('a') && isOpen()) setOpen(false, false); });
+    document.addEventListener('click', function (e) { if (isOpen() && !e.target.closest('.site-header')) setOpen(false, true); });
     document.addEventListener('keydown', function (e) {
       if (!isOpen()) return;
       if (e.key === 'Escape') { e.preventDefault(); setOpen(false, true); return; }
@@ -99,8 +100,11 @@
         if (n !== null) { e.preventDefault(); select(n, true, true); }
       });
     });
+    function fade() { scroller.classList.toggle('has-more', scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth - 4); }
+    scroller.addEventListener('scroll', fade, { passive: true });
     select(0, false, false);
-    var reclip = function () { clipTo(current, false); };
+    fade();
+    var reclip = function () { clipTo(current, false); fade(); };
     window.addEventListener('resize', reclip);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(reclip);
   });
@@ -109,7 +113,7 @@
   guard(function () {
     $$('.compare').forEach(function (fig) {
       var stage = $('.compare__stage', fig), afterEl = $('.compare__after', fig), handle = $('.compare__handle', fig);
-      var pos = 50, width = 0, drag = null;
+      var pos = 50, width = 0, drag = null, pending = null, introTween = null, introduced = false;
       function measure() { width = stage.clientWidth; }
       function set(p) {
         pos = Math.max(0, Math.min(100, p));
@@ -117,25 +121,43 @@
         handle.style.transform = 'translateX(' + ((pos / 100 - 0.5) * width).toFixed(1) + 'px)';
         var v = Math.round(pos);
         handle.setAttribute('aria-valuenow', String(v));
-        handle.setAttribute('aria-valuetext', '관리 전 ' + v + '퍼센트, 관리 후 ' + (100 - v) + '퍼센트');
+        handle.setAttribute('aria-valuetext', '치료 전 예시 ' + v + '퍼센트, 치료 후 예시 ' + (100 - v) + '퍼센트');
       }
       function fromEvent(e) {
         var r = stage.getBoundingClientRect();
         return ((e.clientX - r.left) / r.width) * 100;
       }
-      stage.addEventListener('pointerdown', function (e) {
-        if (e.button > 0 || drag) return;
+      function begin(e) {
+        if (introTween) { introTween.kill(); introTween = null; }
         drag = e.pointerId;
         measure();
         stage.setPointerCapture(e.pointerId);
         stage.classList.add('is-dragging');
         set(fromEvent(e));
+      }
+      stage.addEventListener('pointerdown', function (e) {
+        if (e.button > 0 || drag !== null) return;
+        // a finger on the circle may just be scrolling the page: wait for a sideways move (the handle starts at once)
+        if (e.pointerType === 'touch' && !e.target.closest('.compare__handle')) {
+          pending = { id: e.pointerId, x: e.clientX, y: e.clientY };
+          return;
+        }
+        begin(e);
       });
-      stage.addEventListener('pointermove', function (e) { if (drag === e.pointerId) set(fromEvent(e)); });
+      stage.addEventListener('pointermove', function (e) {
+        if (pending && e.pointerId === pending.id) {
+          var dx = e.clientX - pending.x, dy = e.clientY - pending.y;
+          if (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) { pending = null; begin(e); }
+          else if (Math.abs(dy) > 6) pending = null;
+          return;
+        }
+        if (drag === e.pointerId) set(fromEvent(e));
+      });
       function end(e) {
+        if (pending && pending.id === e.pointerId) pending = null;
         if (drag !== e.pointerId) return;
         drag = null;
-        stage.classList.remove('is-dragging');
+        stage.classList.toggle('is-dragging', false);
       }
       stage.addEventListener('pointerup', end);
       stage.addEventListener('pointercancel', end);
@@ -148,6 +170,19 @@
       if ('ResizeObserver' in window) new ResizeObserver(function () { measure(); set(pos); }).observe(stage);
       measure();
       set(50);
+      // the first time a circle is seen, the divider glides from 30% to 50% so it reads as movable
+      if ('IntersectionObserver' in window && G) {
+        var io = new IntersectionObserver(function (entries) {
+          if (!entries[0].isIntersecting || introduced) return;
+          introduced = true;
+          io.disconnect();
+          if (calm() || drag !== null) return;
+          var o = { p: 30 };
+          set(30);
+          introTween = G.to(o, { p: 50, duration: 0.6, delay: 0.15, ease: 'power2.out', onUpdate: function () { set(o.p); }, onComplete: function () { introTween = null; } });
+        }, { threshold: 0.5 });
+        io.observe(stage);
+      }
     });
   });
 
@@ -182,7 +217,7 @@
 
   guard(function () {
     var status = $('[data-status]');
-    var text = $('.status__text', status);
+    var text = $('.status__text', status), label = $('.status__label', status);
     function update() {
       var now = seoul();
       $$('.hours tr').forEach(function (tr) {
@@ -197,12 +232,13 @@
           $('th', tr).appendChild(mark);
         } else if (!today && mark) mark.remove();
       });
-      var h = HOURS[now.day], m = now.min, msg, open = false;
-      if (!h) msg = '오늘은 쉽니다. 다음 진료는 ' + nextOpen(now.day) + '부터입니다';
-      else if (m < h[0]) msg = '진료 전입니다. 오늘 ' + clock(h[0]) + '에 시작합니다';
-      else if (now.day !== 6 && m >= LUNCH[0] && m < LUNCH[1]) msg = '점심시간입니다. 오후 2시에 다시 받습니다';
-      else if (m < h[1] - 30) { open = true; msg = '지금 진료 중, 접수는 ' + clock(h[1] - 30) + '까지'; }
-      else msg = '접수 마감. 다음 진료는 ' + nextOpen(now.day) + '부터입니다';
+      var h = HOURS[now.day], m = now.min, head, msg, open = false;
+      if (!h) { head = '오늘 휴진'; msg = '다음 진료는 ' + nextOpen(now.day) + '입니다.'; }
+      else if (m < h[0]) { head = '진료 전'; msg = '오늘 ' + clock(h[0]) + '에 시작합니다.'; }
+      else if (now.day !== 6 && m >= LUNCH[0] && m < LUNCH[1]) { head = '점심시간'; msg = '오후 2시에 다시 받습니다.'; }
+      else if (m < h[1] - 30) { open = true; head = '지금 진료 중'; msg = '접수는 ' + clock(h[1] - 30) + '까지 받습니다.'; }
+      else { head = '접수 마감'; msg = '다음 진료는 ' + nextOpen(now.day) + '입니다.'; }
+      label.textContent = head;
       text.textContent = msg;
       status.classList.toggle('is-open', open);
       status.classList.toggle('is-closed', !open);
@@ -219,9 +255,17 @@
       name: $('#f-name'), phone: $('#f-phone'), concern: $('#f-concern'), date: $('#f-date'), agree: $('#f-agree')
     };
     var timeSet = $('.field--choice', form);
+    var summary = $('[data-summary]', form), timeHelp = $('[data-time-help]', form);
     var tried = false;
     var today = seoul().iso;
     f.date.min = today;
+    var HOLIDAYS = ['01-01', '03-01', '05-05', '06-06', '08-15', '10-03', '10-09', '12-25'];
+    // the example date in the hint is a real, bookable day a week from now
+    (function () {
+      var p = today.split('-'), d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + 7));
+      while (d.getUTCDay() === 0 || HOLIDAYS.indexOf(d.toISOString().slice(5, 10)) >= 0) d.setUTCDate(d.getUTCDate() + 1);
+      $('#h-date').textContent = '예: ' + d.toISOString().slice(0, 10) + '. 일요일과 공휴일은 쉽니다.';
+    })();
 
     function weekday(iso) { var p = iso.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])).getUTCDay(); }
     function time() { var r = $('input[name="time"]:checked', form); return r ? r.value : ''; }
@@ -238,6 +282,7 @@
         if (!v) return '원하는 날을 골라 주세요.';
         if (v < today) return '지난 날짜는 고를 수 없습니다.';
         if (weekday(v) === 0) return '일요일은 쉽니다. 다른 날을 골라 주세요.';
+        if (HOLIDAYS.indexOf(v.slice(5)) >= 0) return '공휴일은 쉽니다. 다른 날을 골라 주세요.';
         return '';
       },
       time: function () {
@@ -257,21 +302,39 @@
       if (key === 'time') timeSet.classList.toggle('is-invalid', !!msg);
       else f[key].setAttribute('aria-invalid', msg ? 'true' : 'false');
     }
-    function validate() {
-      var first = null;
+    function validate(announce) {
+      var first = null, count = 0;
       Object.keys(checks).forEach(function (k) {
         var msg = checks[k]();
         show(k, msg);
-        if (msg && !first) first = k;
+        if (msg) { count++; if (!first) first = k; }
       });
+      if (announce || !count) summary.textContent = count ? '입력을 확인해 주세요. ' + count + '곳을 고쳐야 합니다.' : '';
       return first;
     }
-    form.addEventListener('input', function () { if (tried) validate(); });
-    form.addEventListener('change', function () { if (tried) validate(); });
+    // times the chosen day does not offer are switched off before anyone picks them
+    var radiosByValue = {};
+    $$('input[name="time"]', form).forEach(function (r) { radiosByValue[r.value] = r; });
+    function syncTimes() {
+      var v = f.date.value, wd = v ? weekday(v) : -1;
+      var noEvening = !!v && wd !== 3, noAfternoon = wd === 6;
+      [['저녁', noEvening], ['오후', noAfternoon]].forEach(function (pair) {
+        var r = radiosByValue[pair[0]];
+        r.disabled = pair[1];
+        if (pair[1] && r.checked) r.checked = false;
+      });
+      var note = wd === 6 ? '토요일은 오후 2시에 마치므로 오전만 예약할 수 있습니다.' : noEvening ? '저녁 진료는 수요일에만 합니다.' : '';
+      timeHelp.textContent = note;
+      timeHelp.hidden = !note;
+    }
+    f.date.addEventListener('change', syncTimes);
+    f.date.addEventListener('input', syncTimes);
+    form.addEventListener('input', function () { if (tried) validate(false); });
+    form.addEventListener('change', function () { if (tried) validate(false); });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       tried = true;
-      var bad = validate();
+      var bad = validate(true);
       if (bad) {
         (bad === 'time' ? $('input[name="time"]', form) : f[bad]).focus();
         return;
@@ -288,6 +351,8 @@
       form.reset();
       tried = false;
       Object.keys(checks).forEach(function (k) { show(k, ''); });
+      summary.textContent = '';
+      syncTimes();
       done.hidden = true;
       form.hidden = false;
       f.name.focus();

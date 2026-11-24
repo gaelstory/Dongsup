@@ -68,40 +68,54 @@
 
   /* ---------- sound toggle ---------- */
   var soundBtn = $('.sound');
+  // turns sound on or off from any control; returns whether sound is now on
+  var setSound = function () { return false; };
   guard(function () {
     if (!PADO.sound) { soundBtn.hidden = true; return; }
     var label = $('.sound__label', soundBtn);
     var bars = $$('.sound__bar', soundBtn);
-    var raf = 0;
-    var meter = new Uint8Array(0);
-    function meterLoop() {
+    var raf = 0, quietSince = 0;
+    function meterLoop(now) {
       raf = 0;
       if (!PADO.sound.isOn()) { bars.forEach(function (b) { b.style.transform = ''; }); return; }
       var bins = PADO.sound.read();
       if (bins) {
-        meter = bins;
-        for (var i = 0; i < bars.length; i++) {
-          var v = meter[3 + i * 6] / 255;
-          bars[i].style.transform = 'scaleY(' + (0.25 + v * 0.95).toFixed(3) + ')';
+        var peak = 0;
+        for (var i = 0; i < bars.length; i++) peak = Math.max(peak, bins[3 + i * 6]);
+        if (peak < 8) {
+          // silence: settle back on the static icon instead of a row of dots
+          if (!quietSince) quietSince = now;
+          if (now - quietSince > 600) bars.forEach(function (b) { b.style.transform = ''; });
+        } else {
+          quietSince = 0;
+          for (var j = 0; j < bars.length; j++) {
+            bars[j].style.transform = 'scaleY(' + (0.45 + (bins[3 + j * 6] / 255) * 0.75).toFixed(3) + ')';
+          }
         }
       }
       raf = requestAnimationFrame(meterLoop);
     }
-    soundBtn.addEventListener('click', function () {
-      var want = soundBtn.getAttribute('aria-pressed') !== 'true';
+    setSound = function (want, chime) {
       var ok = PADO.sound.setOn(want);
       if (want && !ok) {
         label.textContent = '소리를 낼 수 없는 브라우저입니다';
-        return;
+        return false;
       }
       soundBtn.setAttribute('aria-pressed', String(want));
       label.textContent = want ? '소리 끄기' : '소리 켜기';
       if (want) {
-        // a short rising chime so the visitor hears that it worked
-        [5, 7, 9, 10, 12].forEach(function (k, i) { PADO.sound.play(k, i * 0.085, 0.8); });
-        if (PADO.sea) PADO.sea.swell(0.62, 1);
+        if (chime) {
+          // a short rising chime so the visitor hears that it worked
+          [5, 7, 9, 10, 12].forEach(function (k, i) { PADO.sound.play(k, i * 0.085, 0.8); });
+          if (PADO.sea) PADO.sea.swell(0.62, 1);
+        }
         if (!raf && !mqReduce.matches) raf = requestAnimationFrame(meterLoop);
       }
+      document.dispatchEvent(new CustomEvent('pado:sound', { detail: want }));
+      return want;
+    };
+    soundBtn.addEventListener('click', function () {
+      setSound(soundBtn.getAttribute('aria-pressed') !== 'true', true);
     });
   });
 
@@ -138,7 +152,9 @@
   guard(function () {
     var section = $('#lineup');
     var nowEl = $('.lineup__now', section), descEl = $('.lineup__desc', section);
+    var defaultNow = nowEl.innerHTML, defaultDesc = descEl.textContent;
     var lit = null;
+    var hinted = false;
 
     function wipeIn(btn) {
       var wash = $('.act__wash', btn);
@@ -169,6 +185,15 @@
       nowEl.appendChild(note);
       descEl.textContent = btn.dataset.desc + ' ' + btn.dataset.meta + '.';
     }
+    function resetReadout() {
+      nowEl.innerHTML = defaultNow;
+      descEl.textContent = defaultDesc;
+    }
+    // where the name sits on screen, so the shore swell starts right under it
+    function shoreX(btn) {
+      var r = btn.getBoundingClientRect();
+      return Math.min(1, Math.max(0, (r.left + r.width / 2) / (document.documentElement.clientWidth || 1)));
+    }
 
     var lastPing = new WeakMap();
     function sing(btn, visualAlways) {
@@ -177,8 +202,8 @@
       lastPing.set(btn, t);
       var k = +btn.dataset.k;
       var on = PADO.sound && PADO.sound.isOn();
-      if (on) PADO.ping(k);
-      else if (visualAlways) PADO.ping(k, true);
+      if (on) PADO.ping(k, false, shoreX(btn));
+      else if (visualAlways) PADO.ping(k, true, shoreX(btn));
     }
 
     $$('.act', section).forEach(function (btn) {
@@ -196,11 +221,53 @@
         wipeIn(btn); describe(btn);
         lastPing.delete(btn);
         sing(btn, true);
+        if (!hinted && PADO.sound && !PADO.sound.isOn()) {
+          hinted = true;
+          descEl.textContent += ' 소리가 꺼져 있습니다. 위의 “소리 켜기”를 눌러 보세요.';
+        }
       });
     });
 
+    // play the night: the day's ten notes in set order while the names light in turn
+    var listen = $('.listen', section), listenLabel = $('.listen__label', listen);
+    var timers = [];
+    function stopListen() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      listen.classList.remove('is-playing');
+      listenLabel.textContent = '이날 무대 순서대로 듣기';
+    }
+    function startListen() {
+      var panel = $('.lineup__panel:not([hidden])', section);
+      if (!panel) return;
+      if (!(PADO.sound && PADO.sound.isOn()) && !setSound(true, false)) return;
+      var acts = $$('.act', panel).sort(function (a, b) { return +a.dataset.start - +b.dataset.start; });
+      listen.classList.add('is-playing');
+      listenLabel.textContent = '그만 듣기';
+      acts.forEach(function (btn, n) {
+        timers.push(setTimeout(function () {
+          wipeIn(btn); describe(btn);
+          PADO.ping(+btn.dataset.k, false, shoreX(btn));
+        }, n * 720));
+      });
+      timers.push(setTimeout(function () {
+        if (lit) wipeOut(lit);
+        stopListen();
+      }, acts.length * 720 + 700));
+    }
+    if (PADO.sound) {
+      listen.hidden = false;
+      listen.addEventListener('click', function () {
+        if (listen.classList.contains('is-playing')) { stopListen(); if (lit) wipeOut(lit); resetReadout(); }
+        else startListen();
+      });
+      document.addEventListener('pado:sound', function (e) { if (!e.detail && timers.length) { stopListen(); resetReadout(); } });
+    }
+
     makeTabs($('.daytabs', section), function (i, panel) {
+      if (timers.length) stopListen();
       if (lit) wipeOut(lit);
+      resetReadout();
       if (calm()) return;
       G.fromTo($$('.act', panel), { yPercent: 40, rotation: function (n) { return [-5, 4, -3, 6][n % 4]; }, opacity: 0 },
         { yPercent: 0, rotation: 0, opacity: 1, duration: 0.42, ease: 'expo.out', stagger: 0.022, overwrite: true, clearProps: 'transform,opacity' });
@@ -215,34 +282,51 @@
     function px(name) { return parseFloat(getComputedStyle(tt).getPropertyValue(name)) || 0; }
     function hourW() { return px('--hour'); }
 
+    var FEST = ['2027-08-14', '2027-08-15', '2027-08-16'];
+    function seoulNow() {
+      var o = {};
+      new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+        .formatToParts(new Date()).forEach(function (p) { o[p.type] = p.value; });
+      return { h: +o.hour % 24, m: +o.minute, date: o.year + '-' + o.month + '-' + o.day };
+    }
     function pad(n) { return (n < 10 ? '0' : '') + n; }
+    var festDay = -1;
     function placeNow() {
-      var d = new Date();
-      var mins = (d.getHours() - 14) * 60 + d.getMinutes();
-      var clock = pad(d.getHours()) + ':' + pad(d.getMinutes());
+      var n = seoulNow();
+      festDay = FEST.indexOf(n.date);
+      var mins = (n.h - 14) * 60 + n.m;
+      var clock = pad(n.h) + ':' + pad(n.m);
       var inside = mins >= 0 && mins <= 600;
       track.style.setProperty('--now', String(Math.max(0, Math.min(600, mins))));
-      nowLabel.textContent = inside ? '지금 ' + clock : '지금 ' + clock + ', 첫 무대 전';
+      if (festDay >= 0) nowLabel.textContent = inside ? '지금 ' + clock : '지금 ' + clock + ', 첫 무대 전';
+      else nowLabel.textContent = '지금 ' + clock + (inside ? ' (축제 날이라면)' : ' (축제 날이라면 첫 무대 전)');
       nowLine.hidden = false;
-      $$('.tt__set', section).forEach(function (el) {
-        var on = inside && mins >= +el.dataset.start && mins < +el.dataset.end;
-        el.classList.toggle('is-now', on);
+      // only a festival day lights the set that is actually on stage, and only on that day's board
+      $$('.tt__day', section).forEach(function (day) {
+        var today = +day.dataset.day === festDay;
+        $$('.tt__set', day).forEach(function (el) {
+          el.classList.toggle('is-now', today && inside && mins >= +el.dataset.start && mins < +el.dataset.end);
+        });
       });
       return inside ? mins : 0;
     }
     var nowMins = placeNow();
     setInterval(placeNow, 60000);
 
+    // the board always rests on a whole hour, so no time is cut under the stage column
+    function hourAt(x) { return Math.round(x / hourW()); }
+    function goHour(h, smooth) {
+      var max = vp.scrollWidth - vp.clientWidth;
+      vp.scrollTo({ left: Math.max(0, Math.min(max, h * hourW())), behavior: smooth && !calm() ? 'smooth' : 'auto' });
+    }
     function scrollToMinute(m, smooth) {
       var label = px('--label');
-      var x = label + m * (hourW() / 60) - (label + (vp.clientWidth - label) * 0.4);
-      vp.scrollTo({ left: Math.max(0, x), behavior: smooth && !calm() ? 'smooth' : 'auto' });
+      goHour(hourAt(m * (hourW() / 60) - (vp.clientWidth - label) * 0.4), smooth);
     }
-    scrollToMinute(nowMins, false);
+    // before the festival the board opens at 14:00; on a festival day it opens around now
+    scrollToMinute(festDay >= 0 ? nowMins : 0, false);
 
-    function step(dir) {
-      vp.scrollBy({ left: dir * hourW(), behavior: calm() ? 'auto' : 'smooth' });
-    }
+    function step(dir) { goHour(hourAt(vp.scrollLeft) + dir, true); }
     $$('.tt-arrow', section).forEach(function (b) {
       b.addEventListener('click', function () { step(+b.dataset.dir); });
     });
@@ -263,14 +347,17 @@
         maxDuration: 1.2,
         cursor: 'grab',
         activeCursor: 'grabbing',
-        allowContextMenu: true
+        allowContextMenu: true,
+        onThrowComplete: function () { goHour(hourAt(vp.scrollLeft), true); },
+        onDragEnd: function () { if (!window.InertiaPlugin) goHour(hourAt(vp.scrollLeft), true); }
       });
     }
 
-    makeTabs($('.daytabs', section), function (i, panel) {
+    var ttTabs = makeTabs($('.daytabs', section), function (i, panel) {
       if (calm()) return;
       G.fromTo($$('.tt__set', panel), { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.32, ease: 'power3.out', stagger: 0.015, overwrite: true, clearProps: 'transform,opacity' });
     });
+    if (festDay > 0) ttTabs.select(festDay, false, true);
   });
 
   /* ---------- tickets ---------- */
@@ -278,7 +365,7 @@
     var form = $('#order');
     var radios = $$('.ticket-radio', form);
     var empty = $('[data-empty]', form), body = $('[data-body]', form);
-    var nameEl = $('[data-name]', form), totalEl = $('[data-total]', form), dayField = $('[data-day-field]', form);
+    var nameEl = $('.summary__name', form), totalEl = $('[data-total]', form), dayField = $('[data-day-field]', form);
     var qtyEl = $('#qty'), daySel = $('#o-day'), result = $('[data-result]', form);
     var qty = 1;
 
@@ -297,7 +384,42 @@
       totalEl.textContent = won(+r.dataset.price * qty);
       if (animate && !calm()) G.fromTo(body, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.28, ease: 'power3.out', clearProps: 'transform,opacity' });
     }
-    radios.forEach(function (r) { r.addEventListener('change', function () { render(true); }); });
+    var slot = $('[data-stub]', form);
+    function holdStub(r) {
+      var label = form.querySelector('label[for="' + r.id + '"]');
+      var stub = label && $('.ticket__stub', label);
+      if (!stub || !slot) return;
+      var paper = getComputedStyle(label).getPropertyValue('--paper');
+      var ink = getComputedStyle(label).getPropertyValue('--ink');
+      slot.style.setProperty('--paper', paper);
+      slot.style.setProperty('--ink', ink);
+      $('.summary__stubno', slot).textContent = $('.ticket__stubno', stub).textContent;
+      var to = slot.getBoundingClientRect();
+      var from = stub.getBoundingClientRect();
+      var onScreen = to.top > 0 && to.bottom < window.innerHeight && from.bottom > 0 && from.top < window.innerHeight;
+      slot.hidden = false;
+      if (calm() || !onScreen) return;
+      // a copy of the stub flies from the ticket into the order card (transform only)
+      to = slot.getBoundingClientRect();
+      var fly = stub.cloneNode(true);
+      fly.classList.add('ticket__stub--fly');
+      fly.style.cssText = 'position:fixed;left:' + from.left + 'px;top:' + from.top + 'px;width:' + from.width + 'px;height:' + from.height +
+        'px;margin:0;z-index:60;pointer-events:none;transition:none;--paper:' + paper + ';--ink:' + ink + ';background:' + paper + ';color:' + ink + ';transform-origin:0 0;';
+      document.body.appendChild(fly);
+      G.set(slot, { opacity: 0 });
+      G.to(fly, {
+        x: to.left - from.left,
+        y: to.top - from.top,
+        scaleX: to.width / from.width,
+        scaleY: to.height / from.height,
+        rotation: 0,
+        duration: 0.42,
+        delay: 0.18,
+        ease: 'power3.inOut',
+        onComplete: function () { fly.remove(); G.set(slot, { opacity: 1 }); }
+      });
+    }
+    radios.forEach(function (r) { r.addEventListener('change', function () { render(true); holdStub(r); }); });
     $$('.qty__btn', form).forEach(function (b) {
       b.addEventListener('click', function () {
         qty = Math.min(4, Math.max(1, qty + +b.dataset.step));
@@ -310,7 +432,10 @@
       if (!r) {
         result.className = 'summary__result is-err';
         result.textContent = '먼저 위에서 표를 하나 골라 주세요.';
-        radios[0].focus();
+        // the radios are visually hidden, so bring the tickets themselves into view
+        var firstTicket = form.querySelector('label[for="' + radios[0].id + '"]');
+        if (firstTicket) firstTicket.scrollIntoView({ block: 'center', behavior: calm() ? 'auto' : 'smooth' });
+        radios[0].focus({ preventScroll: true });
         return;
       }
       var what = r.dataset.name + (r.value === 'day' ? '(' + daySel.value + ')' : '') + ' ' + qty + '장, 합계 ' + won(+r.dataset.price * qty);

@@ -9,7 +9,11 @@
   var G = window.gsap;
   var hero = document.querySelector('.hero');
   var after = hero && hero.querySelector('.skin__after');
+  var zoom = hero && hero.querySelector('.skin__zoom');
   var lens = hero && hero.querySelector('.lens');
+  var words = hero ? [hero.querySelector('.hero__title'), hero.querySelector('.hero__lede')].filter(Boolean) : [];
+  var ZOOM = 1.15;
+  var nowLabel = hero && hero.querySelector('.skin__now');
   if (!after || !lens) return;
 
   var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -25,6 +29,8 @@
   var xTo = null, yTo = null, introTween = null, openTween = null;
   var drag = null;
   var lastKey = '';
+  var textBox = null; // the headline and lede, in hero coordinates
+  var quiet = false;
 
   function still() { return SHOT || mqReduce.matches || !G; }
 
@@ -35,7 +41,18 @@
     var cs = getComputedStyle(hero);
     HOME_X = (parseFloat(cs.getPropertyValue('--lx')) || 68) / 100;
     HOME_Y = (parseFloat(cs.getPropertyValue('--ly')) || 52) / 100;
+    var hr = hero.getBoundingClientRect();
+    textBox = null;
+    words.forEach(function (el) {
+      // the glyphs, not the full-width block
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      var r = range.getBoundingClientRect();
+      var b = { l: r.left - hr.left, t: r.top - hr.top, r: r.right - hr.left, b: r.bottom - hr.top };
+      textBox = textBox ? { l: Math.min(textBox.l, b.l), t: Math.min(textBox.t, b.t), r: Math.max(textBox.r, b.r), b: Math.max(textBox.b, b.b) } : b;
+    });
   }
+  function inText(x, y) { return !!textBox && x > textBox.l && x < textBox.r && y > textBox.t && y < textBox.b; }
 
   function render() {
     var R = R0;
@@ -54,13 +71,20 @@
     // the rim dissolves as the lens grows past the screen, so its thickening border is never seen
     var fade = st.e <= 0.06 ? 1 : Math.max(0, 1 - (st.e - 0.06) / 0.3);
     lens.style.opacity = fade.toFixed(3);
+    if (nowLabel) nowLabel.style.opacity = fade.toFixed(3);
     lens.style.pointerEvents = fade < 0.05 ? 'none' : '';
+    // a real magnifier: the smooth surface is enlarged around the lens centre, not the screen centre
+    if (zoom) zoom.style.transform = 'translate3d(' + (st.x * (1 - ZOOM)).toFixed(1) + 'px,' + (st.y * (1 - ZOOM)).toFixed(1) + 'px,0) scale(' + ZOOM + ')';
+    // the caption steps aside while the lens passes over the headline or the lede
+    var q = inText(st.x, st.y) || inText(st.x + R0 * 0.5, st.y + R0 * 0.9);
+    if (q !== quiet) { quiet = q; lens.classList.toggle('is-quiet', q); }
   }
 
   function floatCenter() {
+    // the drift stays clear of the text column: low right on desktop, below the button on phones
     return mqCoarse.matches || W < 768
-      ? { x: W * 0.58, y: H * 0.76, ax: W * 0.2, ay: H * 0.05 }
-      : { x: W * HOME_X, y: H * HOME_Y, ax: W * 0.15, ay: H * 0.13 };
+      ? { x: W * 0.6, y: H * 0.72, ax: W * 0.18, ay: H * 0.03 }
+      : { x: W * HOME_X, y: H * HOME_Y, ax: W * 0.09, ay: H * 0.1 };
   }
 
   // pause (never kill) the quickTo tweens: killing their x/y would leave quickTo unable to restart
@@ -99,6 +123,7 @@
   }
 
   function placeStill() {
+    if (zoom) zoom.style.transformOrigin = '0 0';
     measure();
     st.x = W * HOME_X;
     st.y = H * HOME_Y;
@@ -114,7 +139,12 @@
   }
 
   function init() {
+    if (zoom) zoom.style.transformOrigin = '0 0';
     measure();
+    // the headline box moves when the web font arrives
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { if (still()) placeStill(); else { measure(); lastKey = ''; render(); } });
+    }
     if (still()) { placeStill(); return; }
 
     st.x = -R0 * 1.4;
@@ -177,7 +207,7 @@
         scrollTrigger: {
           trigger: hero,
           start: 'top top',
-          end: function () { return '+=' + Math.round(hero.offsetHeight * 0.6); },
+          end: function () { return '+=' + Math.round(hero.offsetHeight * 0.45); },
           scrub: 0.4,
           invalidateOnRefresh: true
         }

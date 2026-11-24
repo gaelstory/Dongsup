@@ -24,6 +24,12 @@
     { id: 'family', title: '세 식구', alt: '부모 사이에 선 아이, 세 식구의 실루엣 사진' }
   ];
 
+  // 을 after a final consonant, 를 after a vowel
+  function objectParticle(word) {
+    var c = word.charCodeAt(word.length - 1) - 0xAC00;
+    return c >= 0 && c < 11172 && c % 28 !== 0 ? '을' : '를';
+  }
+
   /* ---------------- navigation ---------------- */
   function initNav() {
     var btn = $('.menu-btn'), nav = $('#site-nav'), label = $('.menu-btn__label', btn);
@@ -111,7 +117,7 @@
     function next() {
       if (swapping) return;
       idx = (idx + 1) % PHOTOS.length;
-      live.textContent = (idx + 1) + '번째 사진, ' + PHOTOS[idx].title + '을 현상합니다.';
+      live.textContent = (idx + 1) + '번째 사진, ' + PHOTOS[idx].title + objectParticle(PHOTOS[idx].title) + ' 현상합니다.';
       if (!G || !motion() || isShot) {
         if (G && motion()) {
           G.to(svg, { opacity: 0, duration: 0.12, onComplete: function () { setPhoto(idx); G.to(svg, { opacity: 1, duration: 0.15 }); } });
@@ -140,18 +146,28 @@
       var my = G.quickTo(print, 'y', { duration: 1.1, ease: 'power3' });
       var gx = G.quickTo(glint, 'xPercent', { duration: 0.7, ease: 'power3' });
       var gy = G.quickTo(glint, 'yPercent', { duration: 0.7, ease: 'power3' });
-      var ticking = false, cx = 0, cy = 0;
+      var ticking = false, cx = 0, cy = 0, px = -1, py = -1, pt = 0, still = 0;
+      var slosh = $('.bath__slosh');
       section.addEventListener('pointermove', function (e) {
         cx = e.clientX; cy = e.clientY;
         if (ticking) return;
         ticking = true;
-        requestAnimationFrame(function () {
+        requestAnimationFrame(function (now) {
           ticking = false;
           if (window.scrollY > 40) return;
           var nx = cx / window.innerWidth * 2 - 1, ny = cy / window.innerHeight * 2 - 1;
           rot(nx * 1.5); mx(nx * 12); my(ny * 7 - 4);
           var r = print.getBoundingClientRect();
           gx(((cx - r.left) / r.width) * 143); gy(((cy - r.top) / r.height) * 100);
+          // Moving fast sloshes the developer; holding still lets it settle, which is the whole point of waiting.
+          if (px >= 0 && now > pt) {
+            var dt = (now - pt) / 1000, vx = (cx - px) / dt, vy = (cy - py) / dt;
+            var k = 0.012, lim = 16;
+            G.to(slosh, { x: Math.max(-lim, Math.min(lim, vx * k)), y: Math.max(-lim * 0.6, Math.min(lim * 0.6, vy * k)), duration: 0.45, ease: 'power2.out', overwrite: true });
+            clearTimeout(still);
+            still = setTimeout(function () { G.to(slosh, { x: 0, y: 0, duration: 1.8, ease: 'elastic.out(1, 0.3)', overwrite: true }); }, 140);
+          }
+          px = cx; py = cy; pt = now;
         });
       }, { passive: true });
       section.addEventListener('pointerleave', function () { rot(0); mx(0); my(0); });
@@ -205,21 +221,16 @@
         scroller.classList.add('is-pinned');
         // pinned, the strip moves with the page scroll, so it is no longer its own scroll stop
         scroller.removeAttribute('tabindex');
-        var dist = function () { return Math.max(0, track.scrollWidth - document.documentElement.clientWidth + 2 * parseFloat(getComputedStyle(scroller).paddingLeft)); };
+        // The track has half a screen of leader at each end, so frame 1 starts centred and frame 12 ends centred.
+        var dist = function () { return Math.max(0, track.scrollWidth - document.documentElement.clientWidth); };
         mainTween = G.to(track, {
           x: function () { return -dist(); }, ease: 'none',
           scrollTrigger: {
-            trigger: pin, pin: true, start: 'top top', end: function () { return '+=' + dist(); },
+            trigger: pin, pin: true, start: 'top top',
+            // at most five screens of scrolling, however long the strip is
+            end: function () { return '+=' + Math.min(dist(), window.innerHeight * 5); },
             scrub: 0.4, invalidateOnRefresh: true, anticipatePin: 1,
-            onUpdate: function (st) {
-              var x = st.progress * dist() + window.innerWidth / 2 - parseFloat(getComputedStyle(scroller).paddingLeft);
-              var best = 0, bd = Infinity;
-              for (var i = 0; i < frames.length; i++) {
-                var c = frames[i].offsetLeft + frames[i].offsetWidth / 2, d = Math.abs(c - x);
-                if (d < bd) { bd = d; best = i; }
-              }
-              setCount(best);
-            }
+            onUpdate: function (st) { setCount(Math.round(st.progress * (frames.length - 1))); }
           }
         });
         frames.forEach(function (f, i) {
@@ -254,7 +265,8 @@
         } else {
           tDoc = docPos(target);
           tDoc.x -= scroller.scrollLeft;
-          endScroll = tDoc.y - window.innerHeight * 0.3;
+          // land when frame 1 sits a little below the middle of the screen, where people stop to look
+          endScroll = tDoc.y + th / 2 - window.innerHeight * 0.55;
         }
         geo.k = tw / pw;
         geo.dx = (tDoc.x + tw / 2) - (picPos.x + pw / 2);
@@ -264,22 +276,36 @@
         G.set(fly, { transformOrigin: (picPos.x - flyPos.x + pw / 2) + 'px ' + (picPos.y - flyPos.y + ph / 2) + 'px' });
       }
       measure();
+      // The print and frame 1 never show at the same time: frame 1 stays empty until the print lands,
+      // then the print is gone in one step (no half-faded ghost over the reel).
+      var heroEl = $('.hero'), landed = null;
+      function setLanded(v) {
+        if (v === landed) return;
+        landed = v;
+        G.set(fly, { autoAlpha: v ? 0 : 1 });
+        frames[0].classList.toggle('is-waiting', !v);
+      }
+      setLanded(false);
       var flight = G.timeline({
         scrollTrigger: {
           trigger: document.body, start: 0, end: function () { return geo.end; },
-          scrub: 0.35, invalidateOnRefresh: true, onRefreshInit: measure
-        }
+          scrub: 0.35, invalidateOnRefresh: true, onRefreshInit: measure,
+          onUpdate: function (st) { heroEl.classList.toggle('is-flying', st.progress > 0.01); }
+        },
+        onUpdate: function () { setLanded(this.progress() >= 0.9); }
       });
       flight
         .to(tilt, { rotation: 0, scale: 1.035, duration: 0.22, ease: 'power2.out' }, 0)
         .to(print, { boxShadow: '0 60px 90px -10px rgba(0,0,0,.85)', duration: 0.22 }, 0)
-        .to(fly, { x: function () { return geo.dx; }, y: function () { return geo.dy; }, scale: function () { return geo.k; }, duration: 0.78, ease: 'power2.inOut' }, 0.1)
-        .to(tilt, { scale: 1, duration: 0.3, ease: 'power1.inOut' }, 0.62)
-        .to(fly, { autoAlpha: 0, duration: 0.12, ease: 'none' }, 0.83);
+        .to(fly, { y: function () { return geo.dy; }, scale: function () { return geo.k; }, duration: 0.78, ease: 'power2.inOut' }, 0.1)
+        .to(fly, { x: function () { return geo.dx; }, duration: 0.68, ease: 'power2.inOut' }, 0.2)
+        .to(tilt, { scale: 1, duration: 0.3, ease: 'power1.inOut' }, 0.62);
 
       return function () {
         scroller.classList.remove('is-pinned');
         scroller.setAttribute('tabindex', '0');
+        frames[0].classList.remove('is-waiting');
+        heroEl.classList.remove('is-flying');
         G.set([fly, tilt, track], { clearProps: 'transform,opacity,visibility' });
       };
     });
@@ -307,20 +333,39 @@
       root.classList.add('draw');
       G.set($$('.cut__mark path', body), { drawSVG: '0% 0%' });
     }
-    var clone = body.cloneNode(true);
-    $$('button', clone).forEach(function (b) { b.setAttribute('tabindex', '-1'); b.removeAttribute('aria-label'); b.removeAttribute('aria-pressed'); });
-    inner.appendChild(clone);
+    // The loupe's magnified copy of the sheet is built the first time a mouse comes over it.
+    var clone = null, cloneCuts = [];
     loupe.setAttribute('inert', '');
-    var cloneCuts = $$('.cut', clone);
+    function ensureClone() {
+      if (clone) return;
+      clone = body.cloneNode(true);
+      clone.removeAttribute('role'); clone.removeAttribute('aria-label');
+      $$('button', clone).forEach(function (b) { b.setAttribute('tabindex', '-1'); b.removeAttribute('aria-label'); b.removeAttribute('aria-pressed'); });
+      inner.appendChild(clone);
+      cloneCuts = $$('.cut', clone);
+      cloneCuts.forEach(function (c, i) {
+        c.classList.toggle('is-picked', picked.indexOf(i) >= 0);
+        c.classList.toggle('is-extra', cuts[i].classList.contains('is-extra'));
+      });
+    }
 
+    var LIMIT = 10;
     function say() {
       var n = picked.length;
       if (!n) count.textContent = '아직 고른 컷이 없어요.';
-      else count.innerHTML = '고른 컷 <span class="num">' + n + '</span>장. 커플 필름은 열 장까지 인화해 드려요.';
+      else if (n <= LIMIT) count.innerHTML = '고른 컷 <span class="num">' + n + '</span>장. 커플 필름은 열 장까지 인화해 드려요.';
+      else count.innerHTML = '고른 컷 <span class="num">' + n + '</span>장. 열 장을 넘겼어요. ' + (n - LIMIT) + '장을 빼거나, 가족 상품(열다섯 장)으로 바꿔 보세요.';
+      // picks past the tenth are drawn in white grease pencil
+      cuts.forEach(function (c, i) {
+        var extra = picked.indexOf(i) >= LIMIT;
+        c.classList.toggle('is-extra', extra);
+        if (cloneCuts[i]) cloneCuts[i].classList.toggle('is-extra', extra);
+      });
+      document.dispatchEvent(new CustomEvent('cuts:change', { detail: picked.map(function (i) { return i + 1; }).sort(function (a, b) { return a - b; }) }));
     }
     function mark(i, on) {
-      var paths = [$('.cut__mark path', cuts[i]), $('.cut__mark path', cloneCuts[i])];
-      cloneCuts[i].classList.toggle('is-picked', on);
+      var paths = [$('.cut__mark path', cuts[i])];
+      if (cloneCuts[i]) { paths.push($('.cut__mark path', cloneCuts[i])); cloneCuts[i].classList.toggle('is-picked', on); }
       if (hasDraw) {
         G.killTweensOf(paths);
         if (!motion()) G.set(paths, { drawSVG: on ? '0% 100%' : '0% 0%' });
@@ -340,14 +385,13 @@
     }
 
     /* touch: tap opens a big view that grows out of the thumbnail (Flip.fit) */
-    var viewer = $('.viewer'), fig = $('.viewer__fig'), vUse = $('.viewer__svg use'), vTitle = $('.viewer__title .num');
+    var viewer = $('.viewer'), fig = $('.viewer__fig'), vTitle = $('.viewer__title .num');
     var vPick = $('.viewer__pick'), vClose = $('.viewer__close'), current = -1, lastType = '';
     function openViewer(i) {
       current = i;
       var c = cuts[i];
-      vUse.setAttribute('href', '#sc-' + c.getAttribute('data-scene'));
-      var tr = c.getAttribute('data-tr');
-      if (tr) vUse.setAttribute('transform', tr); else vUse.removeAttribute('transform');
+      // same shot as the thumbnail: crop, exposure and light leak included
+      $('.viewer__svg').innerHTML = $('.cut__img', c).innerHTML;
       vTitle.textContent = c.getAttribute('data-n');
       var on = c.getAttribute('aria-pressed') === 'true';
       vPick.setAttribute('aria-pressed', String(on));
@@ -389,7 +433,26 @@
       }
     });
 
+    // One tab stop for the whole sheet: arrows move by a frame or a strip, Space or Enter circles it.
+    var focusAt = 0;
+    cuts.forEach(function (c, i) { c.setAttribute('tabindex', i === 0 ? '0' : '-1'); });
+    function moveTo(i) {
+      i = Math.max(0, Math.min(cuts.length - 1, i));
+      cuts[focusAt].setAttribute('tabindex', '-1');
+      focusAt = i;
+      cuts[i].setAttribute('tabindex', '0');
+      cuts[i].focus();
+    }
+    body.addEventListener('keydown', function (e) {
+      var i = cuts.indexOf(document.activeElement);
+      if (i < 0) return;
+      var map = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: 6, ArrowUp: -6 };
+      if (map[e.key] !== undefined) { e.preventDefault(); moveTo(i + map[e.key]); }
+      else if (e.key === 'Home') { e.preventDefault(); moveTo(0); }
+      else if (e.key === 'End') { e.preventDefault(); moveTo(cuts.length - 1); }
+    });
     cuts.forEach(function (c, i) {
+      c.addEventListener('focus', function () { if (focusAt !== i) { cuts[focusAt].setAttribute('tabindex', '-1'); focusAt = i; c.setAttribute('tabindex', '0'); } });
       c.addEventListener('pointerdown', function (e) { lastType = e.pointerType; });
       c.addEventListener('click', function () {
         if (lastType === 'touch' && !fineMQ.matches) openViewer(i);
@@ -409,11 +472,11 @@
         loupe.style.transform = 'translate3d(' + (sx - R) + 'px,' + (sy - R) + 'px,0)';
         inner.style.transform = 'translate3d(' + (R - (sx - bx) * K) + 'px,' + (R - (sy - by) * K) + 'px,0) scale(' + K + ')';
       }
-      function sizeClone() { clone.style.width = body.offsetWidth + 'px'; }
-      sizeClone();
+      function sizeClone() { if (clone) clone.style.width = body.offsetWidth + 'px'; }
       window.addEventListener('resize', sizeClone);
       sheet.addEventListener('pointerenter', function (e) {
         if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+        ensureClone();
         active = true; sizeClone();
         sheet.classList.add('is-loupe'); loupe.classList.add('is-on');
       });
@@ -433,16 +496,24 @@
 
   /* ---------------- booking form ---------------- */
   function initForm() {
-    var form = $('.form'), done = $('.form__done');
+    var form = $('.form'), done = $('.form__done'), cutsLine = $('.form__cuts');
+    var chosen = [];
+    // The circled cuts from the contact sheet travel with the booking.
+    document.addEventListener('cuts:change', function (e) {
+      chosen = e.detail;
+      cutsLine.hidden = !chosen.length;
+      $('.num', cutsLine).textContent = chosen.join(', ');
+    });
     var name = $('#f-name'), tel = $('#f-tel'), plan = $('#f-plan'), date = $('#f-date');
     var today = new Date();
     date.min = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
     $$('.plan').forEach(function (a) {
       a.addEventListener('click', function () { plan.value = a.getAttribute('data-plan'); });
     });
-    function check(input, ok) {
+    function check(input, ok, msg) {
       var err = document.getElementById(input.getAttribute('aria-describedby'));
       input.setAttribute('aria-invalid', String(!ok));
+      if (msg) err.textContent = msg;
       err.hidden = ok;
       return ok;
     }
@@ -452,7 +523,11 @@
     function validate(el) {
       if (el === name) return check(name, name.value.trim().length > 0);
       if (el === tel) return check(tel, tel.value.replace(/\D/g, '').length >= 9);
-      return check(date, !!date.value);
+      if (!date.value) return check(date, false, '촬영하고 싶은 날을 골라 주세요.');
+      if (date.value < date.min) return check(date, false, '지난 날짜는 고를 수 없어요.');
+      var p = date.value.split('-');
+      if (new Date(+p[0], +p[1] - 1, +p[2]).getDay() === 1) return check(date, false, '월요일은 쉬는 날이에요. 다른 날을 골라 주세요.');
+      return check(date, true);
     }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -460,7 +535,9 @@
       if (bad.length) { bad[0].focus(); return; }
       var d = date.value.split('-');
       var planName = plan.options[plan.selectedIndex].text.split(',')[0];
-      done.textContent = name.value.trim() + '님, ' + (+d[1]) + '월 ' + (+d[2]) + '일 ' + planName + ' 촬영 예약 요청을 받았어요. 컨셉 시안이라 실제로 접수되지는 않습니다.';
+      done.textContent = name.value.trim() + '님, ' + (+d[1]) + '월 ' + (+d[2]) + '일 ' + planName + ' 촬영 예약 요청을 받았어요.' +
+        (chosen.length ? ' 밀착 인화지에서 고르신 ' + chosen.join(', ') + '번 컷도 메모해 두었어요.' : '') +
+        ' 컨셉 시안이라 실제로 접수되지는 않습니다.';
       done.hidden = false;
       form.classList.add('is-done');
       done.focus();

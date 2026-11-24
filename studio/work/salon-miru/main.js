@@ -49,7 +49,15 @@
     var hero = $('.hero'), canvas = $('#hair-canvas');
     if (!hero || !canvas || !window.MiruHair) return;
     var checked = $('input[name="hair-color"]:checked');
-    hair = window.MiruHair.create(canvas, { reduced: REDUCED, shot: SHOT, host: hero, color: SHOT ? 'rose' : (checked ? checked.value : 'rose') });
+    var copy = $('.hero-copy');
+    // the hair never crosses the copy: its box (in canvas coordinates) is a keep-out zone
+    function keepOut() {
+      if (!copy) return null;
+      var c = canvas.getBoundingClientRect(), r = copy.getBoundingClientRect();
+      return { x0: r.left - c.left, y0: r.top - c.top, x1: r.right - c.left, y1: r.bottom - c.top };
+    }
+    hair = window.MiruHair.create(canvas, { reduced: REDUCED, shot: SHOT, host: hero, getKeepOut: keepOut, color: SHOT ? 'rose' : (checked ? checked.value : 'rose') });
+    if (hair && document.fonts && document.fonts.ready) document.fonts.ready.then(function () { hair.setKeepOut(keepOut()); });
     if (!hair) return;
     hero.classList.add('has-canvas');
     if (REDUCED || SHOT) hero.classList.add('no-comb');
@@ -57,10 +65,18 @@
 
     var toggle = $('#motion-toggle');
     if (toggle) toggle.addEventListener('click', function () {
-      var on = toggle.getAttribute('aria-pressed') !== 'true';
-      toggle.setAttribute('aria-pressed', String(on));
+      var on = toggle.dataset.paused !== 'true';
+      toggle.dataset.paused = String(on);
+      toggle.setAttribute('aria-label', on ? '머릿결 움직임 다시 재생' : '머릿결 움직임 멈추기');
       hair.setPaused(on);
     });
+    // on touch the hint line fades once the first sideways sweep has happened
+    var hint = $('.comb-hint');
+    if (hint) hero.addEventListener('pointermove', function onFirst(e) {
+      if (e.pointerType === 'mouse') return;
+      hint.classList.add('is-used');
+      hero.removeEventListener('pointermove', onFirst);
+    }, { passive: true });
 
     if (hasGsap && window.ScrollTrigger && !REDUCED && !SHOT) {
       ScrollTrigger.create({
@@ -76,7 +92,7 @@
       var lastX = 0, rot = 0, shown = false;
       hero.addEventListener('pointermove', function (e) {
         if (e.pointerType !== 'mouse') return;
-        var over = e.target.closest('.hero-copy, .comb-hint, a, button, label');
+        var over = e.target.closest('.hero-copy, a, button, label');
         if (over) { if (shown) { comb.classList.remove('is-on'); shown = false; } return; }
         var vx = e.clientX - lastX; lastX = e.clientX;
         rot += (Math.max(-16, Math.min(16, vx * 0.9)) - rot) * 0.25;
@@ -234,6 +250,9 @@
     if (!list) return;
     var tabs = $$('[role="tab"]', list);
     var panels = tabs.map(function (t) { return document.getElementById(t.getAttribute('aria-controls')); });
+    var note = $('#tab-note');
+    var NOTES = ['앞머리만 다듬는 날은 예약 없이 들르셔도 괜찮아요.', '펌 날은 머리를 감고 오지 않으셔도 돼요. 시술 전 샴푸가 들어 있습니다.',
+      '탈색이나 셀프 염색 이력이 있으면 상담 때 꼭 알려 주세요.', '클리닉만 받으셔도 한 디자이너가 처음부터 끝까지 맡습니다.'];
     function moveInk(tab, instant) {
       if (!ink) return;
       if (instant) ink.style.transition = 'none';
@@ -249,6 +268,7 @@
         panels[n].hidden = !on;
       });
       moveInk(tabs[i]);
+      if (note) note.textContent = NOTES[i] || '';
       if (focus) tabs[i].focus();
       if (hasGsap && !REDUCED) gsap.fromTo($$('.menu-row', panels[i]), { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.28, stagger: 0.035, ease: 'power2.out', overwrite: true });
     }
@@ -405,6 +425,33 @@
       $$('[aria-invalid]', form).forEach(function (el) { el.setAttribute('aria-invalid', 'false'); });
       done.hidden = true; nav.hidden = false;
       show(1, -1);
+    });
+
+    // step 2: category chips filter the full menu
+    var svcTabs = $$('.svc-tab', form), svcGroups = $$('.svc-group', form);
+    function showCat(cat) {
+      svcTabs.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.cat === cat)); });
+      svcGroups.forEach(function (g) { g.hidden = g.dataset.cat !== cat; });
+    }
+    svcTabs.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var from = viewport.offsetHeight;
+        showCat(b.dataset.cat);
+        if (hasGsap && !REDUCED) gsap.fromTo(viewport, { height: from }, { height: viewport.offsetHeight, duration: 0.24, ease: 'power3.out', clearProps: 'height', overwrite: true });
+      });
+    });
+    if (svcTabs.length) { root.classList.add('svc-js'); showCat('cut'); }
+
+    // "이 디자이너로 예약" in the reel preselects the designer here
+    $$('.designer-book').forEach(function (a) {
+      a.addEventListener('click', function () {
+        var r = form.querySelector('input[name="designer"][value="' + a.dataset.designer + '"]');
+        if (!r) return;
+        r.checked = true;
+        if (!done.hidden) $('#book-reset').click();
+        var err = $('#err-1'); if (err) err.textContent = '';
+        if (step !== 1) show(1, -1);
+      });
     });
 
     // with script running, show one step at a time

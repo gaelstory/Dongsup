@@ -72,75 +72,82 @@
           <h2 class="h2" id="lineup-title">서른 팀, 세 개의 밤</h2>
           <p class="lineup__intro">해가 지기 전에는 솔밭에서, 해가 지면 파도 앞에서. 날짜를 고르고 이름을 눌러 보세요. 팀마다 정해진 음이 하나씩 있습니다.</p>
         </div>
-        <div class="daytabs" role="tablist" aria-label="라인업 날짜">
-          <button class="daytab" type="button" role="tab" id="lineup-tab-d1" aria-controls="lineup-d1" aria-selected="true">8.14 토</button>
-          <button class="daytab" type="button" role="tab" id="lineup-tab-d2" aria-controls="lineup-d2" aria-selected="false">8.15 일</button>
-          <button class="daytab" type="button" role="tab" id="lineup-tab-d3" aria-controls="lineup-d3" aria-selected="false">8.16 월</button>
+        <div class="lineup__bar">
+          <div class="daytabs" role="tablist" aria-label="라인업 날짜">
+            <button class="daytab" type="button" role="tab" id="lineup-tab-d1" aria-controls="lineup-d1" aria-selected="true">8.14 토</button>
+            <button class="daytab" type="button" role="tab" id="lineup-tab-d2" aria-controls="lineup-d2" aria-selected="false">8.15 일</button>
+            <button class="daytab" type="button" role="tab" id="lineup-tab-d3" aria-controls="lineup-d3" aria-selected="false">8.16 월</button>
+          </div>
+          <button class="listen" type="button" hidden>
+            <svg class="listen__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path class="listen__play" d="M5 3.5v13l11-6.5z"/><path class="listen__stop" d="M4 4h12v12H4z"/></svg>
+            <span class="listen__label">이날 무대 순서대로 듣기</span>
+          </button>
         </div>
         <div class="lineup__readout" aria-hidden="true">
           <p class="lineup__now"><strong>이름을 눌러 보세요</strong></p>
-          <p class="lineup__desc">소리를 켜면 팀마다 다른 음이 나고, 파도가 그 음을 따라 칩니다.</p>
+          <p class="lineup__desc">소리를 켜면 팀마다 다른 음이 나고, 아래 물결이 그 음을 따라 칩니다.</p>
         </div>
         <div class="lineup__panels"><!--gen:lineup-->
           <div class="lineup__panel" id="lineup-d1" role="tabpanel" aria-labelledby="lineup-tab-d1" tabindex="0" data-day="0">
             <h3 class="day-label">14일 토요일</h3>
             <ul class="lineup__tier lineup__tier--1" role="list">
-              <li><button class="act" type="button" data-k="5" data-desc="해변을 통째로 흔드는 신스 록. 첫날 밤의 마지막 무대입니다." data-meta="14일 토요일, 파도 무대 22:00" aria-describedby="act-0-0"><span class="act__name">파랑주의보</span><span class="act__wash" aria-hidden="true">파랑주의보</span></button><span class="visually-hidden" id="act-0-0">해변을 통째로 흔드는 신스 록. 첫날 밤의 마지막 무대입니다. 14일 토요일, 파도 무대 22:00</span></li>
+              <li><button class="act" type="button" data-k="5" data-start="480" data-desc="해변을 통째로 흔드는 신스 록. 첫날 밤의 마지막 무대입니다." data-meta="14일 토요일, 파도 무대 22:00" aria-describedby="act-0-0"><span class="act__name">파랑주의보</span><span class="act__wash" aria-hidden="true">파랑주의보</span></button><span class="visually-hidden" id="act-0-0">해변을 통째로 흔드는 신스 록. 첫날 밤의 마지막 무대입니다. 14일 토요일, 파도 무대 22:00</span></li>
             </ul>
             <ul class="lineup__tier lineup__tier--2" role="list">
-              <li><button class="act" type="button" data-k="9" data-desc="잠 못 드는 밤을 위한 드림 팝. 노을이 끝나는 시간에 섭니다." data-meta="14일 토요일, 파도 무대 19:40" aria-describedby="act-0-1"><span class="act__name">새벽세시</span><span class="act__wash" aria-hidden="true">새벽세시</span></button><span class="visually-hidden" id="act-0-1">잠 못 드는 밤을 위한 드림 팝. 노을이 끝나는 시간에 섭니다. 14일 토요일, 파도 무대 19:40</span></li>
-              <li><button class="act" type="button" data-k="7" data-desc="둥둥 떠다니는 베이스와 쿵짝이는 댄스 펑크." data-meta="14일 토요일, 파도 무대 17:30" aria-describedby="act-0-2"><span class="act__name">해파리 클럽</span><span class="act__wash" aria-hidden="true">해파리 클럽</span></button><span class="visually-hidden" id="act-0-2">둥둥 떠다니는 베이스와 쿵짝이는 댄스 펑크. 14일 토요일, 파도 무대 17:30</span></li>
-              <li><button class="act" type="button" data-k="6" data-desc="녹슨 기타 한 대와 목소리 둘로 부르는 바닷가 블루스." data-meta="14일 토요일, 솔밭 무대 18:40" aria-describedby="act-0-3"><span class="act__name">방파제 블루스</span><span class="act__wash" aria-hidden="true">방파제 블루스</span></button><span class="visually-hidden" id="act-0-3">녹슨 기타 한 대와 목소리 둘로 부르는 바닷가 블루스. 14일 토요일, 솔밭 무대 18:40</span></li>
+              <li><button class="act" type="button" data-k="9" data-start="340" data-desc="잠 못 드는 밤을 위한 드림 팝. 노을이 끝나는 시간에 섭니다." data-meta="14일 토요일, 파도 무대 19:40" aria-describedby="act-0-1"><span class="act__name">새벽세시</span><span class="act__wash" aria-hidden="true">새벽세시</span></button><span class="visually-hidden" id="act-0-1">잠 못 드는 밤을 위한 드림 팝. 노을이 끝나는 시간에 섭니다. 14일 토요일, 파도 무대 19:40</span></li>
+              <li><button class="act" type="button" data-k="7" data-start="210" data-desc="둥둥 떠다니는 베이스와 쿵짝이는 댄스 펑크." data-meta="14일 토요일, 파도 무대 17:30" aria-describedby="act-0-2"><span class="act__name">해파리 클럽</span><span class="act__wash" aria-hidden="true">해파리 클럽</span></button><span class="visually-hidden" id="act-0-2">둥둥 떠다니는 베이스와 쿵짝이는 댄스 펑크. 14일 토요일, 파도 무대 17:30</span></li>
+              <li><button class="act" type="button" data-k="6" data-start="280" data-desc="녹슨 기타 한 대와 목소리 둘로 부르는 바닷가 블루스." data-meta="14일 토요일, 솔밭 무대 18:40" aria-describedby="act-0-3"><span class="act__name">방파제 블루스</span><span class="act__wash" aria-hidden="true">방파제 블루스</span></button><span class="visually-hidden" id="act-0-3">녹슨 기타 한 대와 목소리 둘로 부르는 바닷가 블루스. 14일 토요일, 솔밭 무대 18:40</span></li>
             </ul>
             <ul class="lineup__tier lineup__tier--3" role="list">
-              <li><button class="act" type="button" data-k="12" data-desc="한입 베어 문 수박처럼 시원하게 터지는 서프 펑크." data-meta="14일 토요일, 파도 무대 15:00" aria-describedby="act-0-4"><span class="act__name">수박 스매시</span><span class="act__wash" aria-hidden="true">수박 스매시</span></button><span class="visually-hidden" id="act-0-4">한입 베어 문 수박처럼 시원하게 터지는 서프 펑크. 14일 토요일, 파도 무대 15:00</span></li>
-              <li><button class="act" type="button" data-k="13" data-desc="해 질 녘 사진을 모아 노래로 만드는 신스 듀오." data-meta="14일 토요일, 솔밭 무대 21:00" aria-describedby="act-0-5"><span class="act__name">노을 수집가</span><span class="act__wash" aria-hidden="true">노을 수집가</span></button><span class="visually-hidden" id="act-0-5">해 질 녘 사진을 모아 노래로 만드는 신스 듀오. 14일 토요일, 솔밭 무대 21:00</span></li>
-              <li><button class="act" type="button" data-k="10" data-desc="모래 위를 행진하며 연주하는 9인조 관악대." data-meta="14일 토요일, 모래 무대 20:50" aria-describedby="act-0-6"><span class="act__name">갈매기 브라스</span><span class="act__wash" aria-hidden="true">갈매기 브라스</span></button><span class="visually-hidden" id="act-0-6">모래 위를 행진하며 연주하는 9인조 관악대. 14일 토요일, 모래 무대 20:50</span></li>
-              <li><button class="act" type="button" data-k="11" data-desc="양양 민박집에서 자란 세 자매의 포크 하모니." data-meta="14일 토요일, 솔밭 무대 16:20" aria-describedby="act-0-7"><span class="act__name">민박집 딸들</span><span class="act__wash" aria-hidden="true">민박집 딸들</span></button><span class="visually-hidden" id="act-0-7">양양 민박집에서 자란 세 자매의 포크 하모니. 14일 토요일, 솔밭 무대 16:20</span></li>
-              <li><button class="act" type="button" data-k="14" data-desc="귀에 대면 들릴 것 같은 앰비언트 기타." data-meta="14일 토요일, 솔밭 무대 14:30" aria-describedby="act-0-8"><span class="act__name">소라껍데기</span><span class="act__wash" aria-hidden="true">소라껍데기</span></button><span class="visually-hidden" id="act-0-8">귀에 대면 들릴 것 같은 앰비언트 기타. 14일 토요일, 솔밭 무대 14:30</span></li>
-              <li><button class="act" type="button" data-k="8" data-desc="공처럼 통통 튀는 리듬의 하이틴 인디 록." data-meta="14일 토요일, 모래 무대 16:00" aria-describedby="act-0-9"><span class="act__name">비치볼 키즈</span><span class="act__wash" aria-hidden="true">비치볼 키즈</span></button><span class="visually-hidden" id="act-0-9">공처럼 통통 튀는 리듬의 하이틴 인디 록. 14일 토요일, 모래 무대 16:00</span></li>
+              <li><button class="act" type="button" data-k="12" data-start="60" data-desc="한입 베어 문 수박처럼 시원하게 터지는 서프 펑크." data-meta="14일 토요일, 파도 무대 15:00" aria-describedby="act-0-4"><span class="act__name">수박 스매시</span><span class="act__wash" aria-hidden="true">수박 스매시</span></button><span class="visually-hidden" id="act-0-4">한입 베어 문 수박처럼 시원하게 터지는 서프 펑크. 14일 토요일, 파도 무대 15:00</span></li>
+              <li><button class="act" type="button" data-k="13" data-start="420" data-desc="해 질 녘 사진을 모아 노래로 만드는 신스 듀오." data-meta="14일 토요일, 솔밭 무대 21:00" aria-describedby="act-0-5"><span class="act__name">노을 수집가</span><span class="act__wash" aria-hidden="true">노을 수집가</span></button><span class="visually-hidden" id="act-0-5">해 질 녘 사진을 모아 노래로 만드는 신스 듀오. 14일 토요일, 솔밭 무대 21:00</span></li>
+              <li><button class="act" type="button" data-k="10" data-start="410" data-desc="모래 위를 행진하며 연주하는 9인조 관악대." data-meta="14일 토요일, 모래 무대 20:50" aria-describedby="act-0-6"><span class="act__name">갈매기 브라스</span><span class="act__wash" aria-hidden="true">갈매기 브라스</span></button><span class="visually-hidden" id="act-0-6">모래 위를 행진하며 연주하는 9인조 관악대. 14일 토요일, 모래 무대 20:50</span></li>
+              <li><button class="act" type="button" data-k="11" data-start="140" data-desc="양양 민박집에서 자란 세 자매의 포크 하모니." data-meta="14일 토요일, 솔밭 무대 16:20" aria-describedby="act-0-7"><span class="act__name">민박집 딸들</span><span class="act__wash" aria-hidden="true">민박집 딸들</span></button><span class="visually-hidden" id="act-0-7">양양 민박집에서 자란 세 자매의 포크 하모니. 14일 토요일, 솔밭 무대 16:20</span></li>
+              <li><button class="act" type="button" data-k="14" data-start="30" data-desc="귀에 대면 들릴 것 같은 앰비언트 기타." data-meta="14일 토요일, 솔밭 무대 14:30" aria-describedby="act-0-8"><span class="act__name">소라껍데기</span><span class="act__wash" aria-hidden="true">소라껍데기</span></button><span class="visually-hidden" id="act-0-8">귀에 대면 들릴 것 같은 앰비언트 기타. 14일 토요일, 솔밭 무대 14:30</span></li>
+              <li><button class="act" type="button" data-k="8" data-start="120" data-desc="공처럼 통통 튀는 리듬의 하이틴 인디 록." data-meta="14일 토요일, 모래 무대 16:00" aria-describedby="act-0-9"><span class="act__name">비치볼 키즈</span><span class="act__wash" aria-hidden="true">비치볼 키즈</span></button><span class="visually-hidden" id="act-0-9">공처럼 통통 튀는 리듬의 하이틴 인디 록. 14일 토요일, 모래 무대 16:00</span></li>
             </ul>
           </div>
           <div class="lineup__panel" id="lineup-d2" role="tabpanel" aria-labelledby="lineup-tab-d2" tabindex="0" data-day="1">
             <h3 class="day-label">15일 일요일</h3>
             <ul class="lineup__tier lineup__tier--1" role="list">
-              <li><button class="act" type="button" data-k="4" data-desc="현악 열두 대와 밴드가 함께 서는 해변의 오케스트라." data-meta="15일 일요일, 파도 무대 21:50" aria-describedby="act-1-0"><span class="act__name">모래알 오케스트라</span><span class="act__wash" aria-hidden="true">모래알 오케스트라</span></button><span class="visually-hidden" id="act-1-0">현악 열두 대와 밴드가 함께 서는 해변의 오케스트라. 15일 일요일, 파도 무대 21:50</span></li>
+              <li><button class="act" type="button" data-k="4" data-start="470" data-desc="현악 열두 대와 밴드가 함께 서는 해변의 오케스트라." data-meta="15일 일요일, 파도 무대 21:50" aria-describedby="act-1-0"><span class="act__name">모래알 오케스트라</span><span class="act__wash" aria-hidden="true">모래알 오케스트라</span></button><span class="visually-hidden" id="act-1-0">현악 열두 대와 밴드가 함께 서는 해변의 오케스트라. 15일 일요일, 파도 무대 21:50</span></li>
             </ul>
             <ul class="lineup__tier lineup__tier--2" role="list">
-              <li><button class="act" type="button" data-k="10" data-desc="저녁 바다 물빛처럼 반짝이는 기타 팝." data-meta="15일 일요일, 파도 무대 19:30" aria-describedby="act-1-1"><span class="act__name">윤슬밴드</span><span class="act__wash" aria-hidden="true">윤슬밴드</span></button><span class="visually-hidden" id="act-1-1">저녁 바다 물빛처럼 반짝이는 기타 팝. 15일 일요일, 파도 무대 19:30</span></li>
-              <li><button class="act" type="button" data-k="8" data-desc="잠들 수 없는 여름밤을 위한 R&amp;B." data-meta="15일 일요일, 파도 무대 17:20" aria-describedby="act-1-2"><span class="act__name">열대야</span><span class="act__wash" aria-hidden="true">열대야</span></button><span class="visually-hidden" id="act-1-2">잠들 수 없는 여름밤을 위한 R&amp;B. 15일 일요일, 파도 무대 17:20</span></li>
-              <li><button class="act" type="button" data-k="6" data-desc="사연을 읽어 주는 라이브 라디오 쇼와 시티 팝." data-meta="15일 일요일, 솔밭 무대 18:30" aria-describedby="act-1-3"><span class="act__name">밤바다 라디오</span><span class="act__wash" aria-hidden="true">밤바다 라디오</span></button><span class="visually-hidden" id="act-1-3">사연을 읽어 주는 라이브 라디오 쇼와 시티 팝. 15일 일요일, 솔밭 무대 18:30</span></li>
+              <li><button class="act" type="button" data-k="10" data-start="330" data-desc="저녁 바다 물빛처럼 반짝이는 기타 팝." data-meta="15일 일요일, 파도 무대 19:30" aria-describedby="act-1-1"><span class="act__name">윤슬밴드</span><span class="act__wash" aria-hidden="true">윤슬밴드</span></button><span class="visually-hidden" id="act-1-1">저녁 바다 물빛처럼 반짝이는 기타 팝. 15일 일요일, 파도 무대 19:30</span></li>
+              <li><button class="act" type="button" data-k="8" data-start="200" data-desc="잠들 수 없는 여름밤을 위한 R&amp;B." data-meta="15일 일요일, 파도 무대 17:20" aria-describedby="act-1-2"><span class="act__name">열대야</span><span class="act__wash" aria-hidden="true">열대야</span></button><span class="visually-hidden" id="act-1-2">잠들 수 없는 여름밤을 위한 R&amp;B. 15일 일요일, 파도 무대 17:20</span></li>
+              <li><button class="act" type="button" data-k="6" data-start="270" data-desc="사연을 읽어 주는 라이브 라디오 쇼와 시티 팝." data-meta="15일 일요일, 솔밭 무대 18:30" aria-describedby="act-1-3"><span class="act__name">밤바다 라디오</span><span class="act__wash" aria-hidden="true">밤바다 라디오</span></button><span class="visually-hidden" id="act-1-3">사연을 읽어 주는 라이브 라디오 쇼와 시티 팝. 15일 일요일, 솔밭 무대 18:30</span></li>
             </ul>
             <ul class="lineup__tier lineup__tier--3" role="list">
-              <li><button class="act" type="button" data-k="12" data-desc="보드 위에서 연주하는 인스트루멘털 서프." data-meta="15일 일요일, 파도 무대 14:50" aria-describedby="act-1-4"><span class="act__name">고양이 서퍼</span><span class="act__wash" aria-hidden="true">고양이 서퍼</span></button><span class="visually-hidden" id="act-1-4">보드 위에서 연주하는 인스트루멘털 서프. 15일 일요일, 파도 무대 14:50</span></li>
-              <li><button class="act" type="button" data-k="15" data-desc="매운맛 펑크 록. 앞줄은 각오하고 오세요." data-meta="15일 일요일, 모래 무대 20:40" aria-describedby="act-1-5"><span class="act__name">청량고추</span><span class="act__wash" aria-hidden="true">청량고추</span></button><span class="visually-hidden" id="act-1-5">매운맛 펑크 록. 앞줄은 각오하고 오세요. 15일 일요일, 모래 무대 20:40</span></li>
-              <li><button class="act" type="button" data-k="9" data-desc="커피 향이 나는 느긋한 보사노바." data-meta="15일 일요일, 솔밭 무대 16:10" aria-describedby="act-1-6"><span class="act__name">수평선 다방</span><span class="act__wash" aria-hidden="true">수평선 다방</span></button><span class="visually-hidden" id="act-1-6">커피 향이 나는 느긋한 보사노바. 15일 일요일, 솔밭 무대 16:10</span></li>
-              <li><button class="act" type="button" data-k="13" data-desc="밤하늘을 가로질러 달리는 신스 웨이브." data-meta="15일 일요일, 솔밭 무대 21:00" aria-describedby="act-1-7"><span class="act__name">별똥별 택시</span><span class="act__wash" aria-hidden="true">별똥별 택시</span></button><span class="visually-hidden" id="act-1-7">밤하늘을 가로질러 달리는 신스 웨이브. 15일 일요일, 솔밭 무대 21:00</span></li>
-              <li><button class="act" type="button" data-k="11" data-desc="바람 넣은 튜브처럼 가볍게 뜨는 어쿠스틱 팝." data-meta="15일 일요일, 모래 무대 15:30" aria-describedby="act-1-8"><span class="act__name">튜브대여소</span><span class="act__wash" aria-hidden="true">튜브대여소</span></button><span class="visually-hidden" id="act-1-8">바람 넣은 튜브처럼 가볍게 뜨는 어쿠스틱 팝. 15일 일요일, 모래 무대 15:30</span></li>
-              <li><button class="act" type="button" data-k="7" data-desc="더위를 그대로 노래하는 로파이 힙합." data-meta="15일 일요일, 솔밭 무대 14:30" aria-describedby="act-1-9"><span class="act__name">에어컨 고장</span><span class="act__wash" aria-hidden="true">에어컨 고장</span></button><span class="visually-hidden" id="act-1-9">더위를 그대로 노래하는 로파이 힙합. 15일 일요일, 솔밭 무대 14:30</span></li>
+              <li><button class="act" type="button" data-k="12" data-start="50" data-desc="보드 위에서 연주하는 인스트루멘털 서프." data-meta="15일 일요일, 파도 무대 14:50" aria-describedby="act-1-4"><span class="act__name">고양이 서퍼</span><span class="act__wash" aria-hidden="true">고양이 서퍼</span></button><span class="visually-hidden" id="act-1-4">보드 위에서 연주하는 인스트루멘털 서프. 15일 일요일, 파도 무대 14:50</span></li>
+              <li><button class="act" type="button" data-k="15" data-start="400" data-desc="매운맛 펑크 록. 앞줄은 각오하고 오세요." data-meta="15일 일요일, 모래 무대 20:40" aria-describedby="act-1-5"><span class="act__name">청량고추</span><span class="act__wash" aria-hidden="true">청량고추</span></button><span class="visually-hidden" id="act-1-5">매운맛 펑크 록. 앞줄은 각오하고 오세요. 15일 일요일, 모래 무대 20:40</span></li>
+              <li><button class="act" type="button" data-k="9" data-start="130" data-desc="커피 향이 나는 느긋한 보사노바." data-meta="15일 일요일, 솔밭 무대 16:10" aria-describedby="act-1-6"><span class="act__name">수평선 다방</span><span class="act__wash" aria-hidden="true">수평선 다방</span></button><span class="visually-hidden" id="act-1-6">커피 향이 나는 느긋한 보사노바. 15일 일요일, 솔밭 무대 16:10</span></li>
+              <li><button class="act" type="button" data-k="13" data-start="420" data-desc="밤하늘을 가로질러 달리는 신스 웨이브." data-meta="15일 일요일, 솔밭 무대 21:00" aria-describedby="act-1-7"><span class="act__name">별똥별 택시</span><span class="act__wash" aria-hidden="true">별똥별 택시</span></button><span class="visually-hidden" id="act-1-7">밤하늘을 가로질러 달리는 신스 웨이브. 15일 일요일, 솔밭 무대 21:00</span></li>
+              <li><button class="act" type="button" data-k="11" data-start="90" data-desc="바람 넣은 튜브처럼 가볍게 뜨는 어쿠스틱 팝." data-meta="15일 일요일, 모래 무대 15:30" aria-describedby="act-1-8"><span class="act__name">튜브대여소</span><span class="act__wash" aria-hidden="true">튜브대여소</span></button><span class="visually-hidden" id="act-1-8">바람 넣은 튜브처럼 가볍게 뜨는 어쿠스틱 팝. 15일 일요일, 모래 무대 15:30</span></li>
+              <li><button class="act" type="button" data-k="7" data-start="30" data-desc="더위를 그대로 노래하는 로파이 힙합." data-meta="15일 일요일, 솔밭 무대 14:30" aria-describedby="act-1-9"><span class="act__name">에어컨 고장</span><span class="act__wash" aria-hidden="true">에어컨 고장</span></button><span class="visually-hidden" id="act-1-9">더위를 그대로 노래하는 로파이 힙합. 15일 일요일, 솔밭 무대 14:30</span></li>
             </ul>
           </div>
           <div class="lineup__panel" id="lineup-d3" role="tabpanel" aria-labelledby="lineup-tab-d3" tabindex="0" data-day="2">
             <h3 class="day-label">16일 월요일</h3>
             <ul class="lineup__tier lineup__tier--1" role="list">
-              <li><button class="act" type="button" data-k="5" data-desc="모두가 따라 부르는 여름 노래들. 마지막 밤의 마지막 무대입니다." data-meta="16일 월요일, 파도 무대 22:10" aria-describedby="act-2-0"><span class="act__name">여름방학</span><span class="act__wash" aria-hidden="true">여름방학</span></button><span class="visually-hidden" id="act-2-0">모두가 따라 부르는 여름 노래들. 마지막 밤의 마지막 무대입니다. 16일 월요일, 파도 무대 22:10</span></li>
+              <li><button class="act" type="button" data-k="5" data-start="490" data-desc="모두가 따라 부르는 여름 노래들. 마지막 밤의 마지막 무대입니다." data-meta="16일 월요일, 파도 무대 22:10" aria-describedby="act-2-0"><span class="act__name">여름방학</span><span class="act__wash" aria-hidden="true">여름방학</span></button><span class="visually-hidden" id="act-2-0">모두가 따라 부르는 여름 노래들. 마지막 밤의 마지막 무대입니다. 16일 월요일, 파도 무대 22:10</span></li>
             </ul>
             <ul class="lineup__tier lineup__tier--2" role="list">
-              <li><button class="act" type="button" data-k="9" data-desc="해 뜨는 바다를 쫓아가는 포스트 록." data-meta="16일 월요일, 파도 무대 19:50" aria-describedby="act-2-1"><span class="act__name">일출 원정대</span><span class="act__wash" aria-hidden="true">일출 원정대</span></button><span class="visually-hidden" id="act-2-1">해 뜨는 바다를 쫓아가는 포스트 록. 16일 월요일, 파도 무대 19:50</span></li>
-              <li><button class="act" type="button" data-k="7" data-desc="갑자기 쏟아지는 드럼과 브라스." data-meta="16일 월요일, 파도 무대 17:40" aria-describedby="act-2-2"><span class="act__name">소나기 펀치</span><span class="act__wash" aria-hidden="true">소나기 펀치</span></button><span class="visually-hidden" id="act-2-2">갑자기 쏟아지는 드럼과 브라스. 16일 월요일, 파도 무대 17:40</span></li>
-              <li><button class="act" type="button" data-k="6" data-desc="피아노, 콘트라베이스, 드럼으로 연주하는 바다 앞 재즈." data-meta="16일 월요일, 솔밭 무대 18:50" aria-describedby="act-2-3"><span class="act__name">동해 트리오</span><span class="act__wash" aria-hidden="true">동해 트리오</span></button><span class="visually-hidden" id="act-2-3">피아노, 콘트라베이스, 드럼으로 연주하는 바다 앞 재즈. 16일 월요일, 솔밭 무대 18:50</span></li>
+              <li><button class="act" type="button" data-k="9" data-start="350" data-desc="해 뜨는 바다를 쫓아가는 포스트 록." data-meta="16일 월요일, 파도 무대 19:50" aria-describedby="act-2-1"><span class="act__name">일출 원정대</span><span class="act__wash" aria-hidden="true">일출 원정대</span></button><span class="visually-hidden" id="act-2-1">해 뜨는 바다를 쫓아가는 포스트 록. 16일 월요일, 파도 무대 19:50</span></li>
+              <li><button class="act" type="button" data-k="7" data-start="220" data-desc="갑자기 쏟아지는 드럼과 브라스." data-meta="16일 월요일, 파도 무대 17:40" aria-describedby="act-2-2"><span class="act__name">소나기 펀치</span><span class="act__wash" aria-hidden="true">소나기 펀치</span></button><span class="visually-hidden" id="act-2-2">갑자기 쏟아지는 드럼과 브라스. 16일 월요일, 파도 무대 17:40</span></li>
+              <li><button class="act" type="button" data-k="6" data-start="290" data-desc="피아노, 콘트라베이스, 드럼으로 연주하는 바다 앞 재즈." data-meta="16일 월요일, 솔밭 무대 18:50" aria-describedby="act-2-3"><span class="act__name">동해 트리오</span><span class="act__wash" aria-hidden="true">동해 트리오</span></button><span class="visually-hidden" id="act-2-3">피아노, 콘트라베이스, 드럼으로 연주하는 바다 앞 재즈. 16일 월요일, 솔밭 무대 18:50</span></li>
             </ul>
             <ul class="lineup__tier lineup__tier--3" role="list">
-              <li><button class="act" type="button" data-k="11" data-desc="쌓았다가 시원하게 무너뜨리는 개러지 록." data-meta="16일 월요일, 파도 무대 15:10" aria-describedby="act-2-4"><span class="act__name">모래성 신드롬</span><span class="act__wash" aria-hidden="true">모래성 신드롬</span></button><span class="visually-hidden" id="act-2-4">쌓았다가 시원하게 무너뜨리는 개러지 록. 16일 월요일, 파도 무대 15:10</span></li>
-              <li><button class="act" type="button" data-k="12" data-desc="주황색 단체복을 입고 나오는 스카 밴드." data-meta="16일 월요일, 모래 무대 16:10" aria-describedby="act-2-5"><span class="act__name">구명조끼</span><span class="act__wash" aria-hidden="true">구명조끼</span></button><span class="visually-hidden" id="act-2-5">주황색 단체복을 입고 나오는 스카 밴드. 16일 월요일, 모래 무대 16:10</span></li>
-              <li><button class="act" type="button" data-k="14" data-desc="들어왔다 빠지는 미니멀 일렉트로닉." data-meta="16일 월요일, 솔밭 무대 16:30" aria-describedby="act-2-6"><span class="act__name">밀물썰물</span><span class="act__wash" aria-hidden="true">밀물썰물</span></button><span class="visually-hidden" id="act-2-6">들어왔다 빠지는 미니멀 일렉트로닉. 16일 월요일, 솔밭 무대 16:30</span></li>
-              <li><button class="act" type="button" data-k="8" data-desc="누워서 듣기 좋은 칠웨이브." data-meta="16일 월요일, 솔밭 무대 14:30" aria-describedby="act-2-7"><span class="act__name">썬베드</span><span class="act__wash" aria-hidden="true">썬베드</span></button><span class="visually-hidden" id="act-2-7">누워서 듣기 좋은 칠웨이브. 16일 월요일, 솔밭 무대 14:30</span></li>
-              <li><button class="act" type="button" data-k="10" data-desc="양양 주민 서른 명이 함께 서는 동네 합창단." data-meta="16일 월요일, 모래 무대 20:30" aria-describedby="act-2-8"><span class="act__name">조개껍질 합창단</span><span class="act__wash" aria-hidden="true">조개껍질 합창단</span></button><span class="visually-hidden" id="act-2-8">양양 주민 서른 명이 함께 서는 동네 합창단. 16일 월요일, 모래 무대 20:30</span></li>
-              <li><button class="act" type="button" data-k="13" data-desc="서퍼 넷이 쉬는 날 만든 서프 록." data-meta="16일 월요일, 솔밭 무대 21:10" aria-describedby="act-2-9"><span class="act__name">파도타기 연구회</span><span class="act__wash" aria-hidden="true">파도타기 연구회</span></button><span class="visually-hidden" id="act-2-9">서퍼 넷이 쉬는 날 만든 서프 록. 16일 월요일, 솔밭 무대 21:10</span></li>
+              <li><button class="act" type="button" data-k="11" data-start="70" data-desc="쌓았다가 시원하게 무너뜨리는 개러지 록." data-meta="16일 월요일, 파도 무대 15:10" aria-describedby="act-2-4"><span class="act__name">모래성 신드롬</span><span class="act__wash" aria-hidden="true">모래성 신드롬</span></button><span class="visually-hidden" id="act-2-4">쌓았다가 시원하게 무너뜨리는 개러지 록. 16일 월요일, 파도 무대 15:10</span></li>
+              <li><button class="act" type="button" data-k="12" data-start="130" data-desc="주황색 단체복을 입고 나오는 스카 밴드." data-meta="16일 월요일, 모래 무대 16:10" aria-describedby="act-2-5"><span class="act__name">구명조끼</span><span class="act__wash" aria-hidden="true">구명조끼</span></button><span class="visually-hidden" id="act-2-5">주황색 단체복을 입고 나오는 스카 밴드. 16일 월요일, 모래 무대 16:10</span></li>
+              <li><button class="act" type="button" data-k="14" data-start="150" data-desc="들어왔다 빠지는 미니멀 일렉트로닉." data-meta="16일 월요일, 솔밭 무대 16:30" aria-describedby="act-2-6"><span class="act__name">밀물썰물</span><span class="act__wash" aria-hidden="true">밀물썰물</span></button><span class="visually-hidden" id="act-2-6">들어왔다 빠지는 미니멀 일렉트로닉. 16일 월요일, 솔밭 무대 16:30</span></li>
+              <li><button class="act" type="button" data-k="8" data-start="30" data-desc="누워서 듣기 좋은 칠웨이브." data-meta="16일 월요일, 솔밭 무대 14:30" aria-describedby="act-2-7"><span class="act__name">썬베드</span><span class="act__wash" aria-hidden="true">썬베드</span></button><span class="visually-hidden" id="act-2-7">누워서 듣기 좋은 칠웨이브. 16일 월요일, 솔밭 무대 14:30</span></li>
+              <li><button class="act" type="button" data-k="10" data-start="390" data-desc="양양 주민 서른 명이 함께 서는 동네 합창단." data-meta="16일 월요일, 모래 무대 20:30" aria-describedby="act-2-8"><span class="act__name">조개껍질 합창단</span><span class="act__wash" aria-hidden="true">조개껍질 합창단</span></button><span class="visually-hidden" id="act-2-8">양양 주민 서른 명이 함께 서는 동네 합창단. 16일 월요일, 모래 무대 20:30</span></li>
+              <li><button class="act" type="button" data-k="13" data-start="430" data-desc="서퍼 넷이 쉬는 날 만든 서프 록." data-meta="16일 월요일, 솔밭 무대 21:10" aria-describedby="act-2-9"><span class="act__name">파도타기 연구회</span><span class="act__wash" aria-hidden="true">파도타기 연구회</span></button><span class="visually-hidden" id="act-2-9">서퍼 넷이 쉬는 날 만든 서프 록. 16일 월요일, 솔밭 무대 21:10</span></li>
             </ul>
           </div>
         <!--/gen:lineup--></div>
       </div>
+      <div class="shore" aria-hidden="true"><canvas></canvas></div>
     </section>
 
     <section class="sec sec--sun timetable" id="timetable" aria-labelledby="tt-title">
@@ -257,7 +264,7 @@
               </span>
               <span class="ticket__stub" aria-hidden="true">
                 <span class="ticket__stubtop">입장권</span>
-                <span class="ticket__stubno">0814</span>
+                <span class="ticket__stubno">1DAY</span>
                 <svg class="ticket__code" viewBox="0 0 60 18" preserveAspectRatio="none" focusable="false"><path d="M1 0v18M4 0v18M6 0v18M10 0v18M13 0v18M14 0v18M19 0v18M22 0v18M25 0v18M27 0v18M31 0v18M35 0v18M36 0v18M40 0v18M44 0v18M46 0v18M49 0v18M53 0v18M55 0v18M59 0v18"/></svg>
               </span>
             </label>
@@ -272,7 +279,7 @@
               </span>
               <span class="ticket__stub" aria-hidden="true">
                 <span class="ticket__stubtop">입장권</span>
-                <span class="ticket__stubno">0815</span>
+                <span class="ticket__stubno">3DAY</span>
                 <svg class="ticket__code" viewBox="0 0 60 18" preserveAspectRatio="none" focusable="false"><path d="M1 0v18M3 0v18M7 0v18M9 0v18M12 0v18M16 0v18M17 0v18M21 0v18M24 0v18M28 0v18M30 0v18M33 0v18M37 0v18M38 0v18M42 0v18M45 0v18M48 0v18M52 0v18M56 0v18M58 0v18"/></svg>
               </span>
             </label>
@@ -287,14 +294,17 @@
               </span>
               <span class="ticket__stub" aria-hidden="true">
                 <span class="ticket__stubtop">입장권</span>
-                <span class="ticket__stubno">0816</span>
+                <span class="ticket__stubno">CAMP</span>
                 <svg class="ticket__code" viewBox="0 0 60 18" preserveAspectRatio="none" focusable="false"><path d="M2 0v18M5 0v18M6 0v18M10 0v18M14 0v18M15 0v18M18 0v18M23 0v18M26 0v18M27 0v18M31 0v18M34 0v18M38 0v18M41 0v18M43 0v18M47 0v18M50 0v18M51 0v18M55 0v18M58 0v18"/></svg>
               </span>
             </label>
           </fieldset>
 
           <div class="summary">
-            <h3 class="summary__title">주문 내용</h3>
+            <div class="summary__head">
+              <h3 class="summary__title">주문 내용</h3>
+              <span class="summary__stub" data-stub hidden aria-hidden="true"><span class="summary__stubtop">입장권</span><span class="summary__stubno">1DAY</span></span>
+            </div>
             <p class="summary__empty" data-empty>표를 고르면 여기에 주문 내용이 나옵니다.</p>
             <div class="summary__body" data-body hidden>
               <p class="summary__name" data-name></p>
@@ -317,7 +327,7 @@
               <p class="summary__total">합계 <strong data-total>0원</strong></p>
             </div>
             <button class="btn btn--ink summary__submit" type="submit">얼리버드 예매하기</button>
-            <p class="summary__result" role="status" data-result></p>
+            <p class="summary__result" role="status" aria-live="polite" data-result></p>
             <p class="summary__note">얼리버드 가격은 2027년 3월 31일까지입니다. 한 사람이 4장까지 예매할 수 있고, 개막 7일 전까지는 수수료 없이 취소됩니다.</p>
           </div>
         </form>
@@ -362,6 +372,8 @@
               <path class="map__route" d="M112 44C160 62 232 70 280 110C306 132 244 196 232 256C222 312 274 376 322 392C342 414 330 468 318 506"/>
               <circle class="map__stop" cx="112" cy="44" r="10"/>
               <circle class="map__stop" cx="280" cy="110" r="10"/>
+              <rect class="map__stage" x="335" y="325" width="16" height="16"/>
+              <rect class="map__stage" x="340" y="425" width="16" height="16"/>
               <circle class="map__stop map__stop--main" cx="322" cy="392" r="14"/>
               <circle class="map__stop" cx="318" cy="506" r="10"/>
               <path class="map__north" d="M520 36l-10 26h20z"/>
@@ -369,7 +381,9 @@
             <span class="pin" style="--x:22;--y:6.3">양양 종합터미널</span>
             <span class="pin pin--left" style="--x:47.5;--y:15.7">하조대</span>
             <span class="pin pin--left pin--main" style="--x:54;--y:56">축제장 입구</span>
-            <span class="pin pin--below" style="--x:68.6;--y:61">솔밭 무대</span>
+            <span class="pin pin--left pin--stage" style="--x:59.8;--y:47.6">파도 무대</span>
+            <span class="pin pin--left pin--stage" style="--x:60.7;--y:61.9">모래 무대</span>
+            <span class="pin pin--above" style="--x:73;--y:51.4">솔밭 무대</span>
             <span class="pin pin--left" style="--x:53.5;--y:72.3">인구해변 주차장</span>
             <span class="pin pin--road" style="--x:30.5;--y:33">7번 국도</span>
             <span class="pin pin--sea" style="--x:82;--y:32">동해</span>

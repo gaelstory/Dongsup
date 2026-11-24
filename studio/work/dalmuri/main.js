@@ -40,10 +40,6 @@
       G.ticker.lagSmoothing(0);
     }
 
-    ST.create({
-      start: 40, end: 'max',
-      onToggle: function (self) { bar.classList.toggle('is-solid', self.isActive); }
-    });
 
     var mm = G.matchMedia();
     // 고정(pin) 구간을 아래쪽 트리거보다 먼저 만든다
@@ -54,6 +50,7 @@
     }, function (ctx) {
       if (ctx.conditions.reduce) return;
       if (!SHOT) heroIntro();
+      heroExit();
       sectionReveals();
     });
 
@@ -73,6 +70,17 @@
     tl.fromTo('.hero__col', { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, stagger: 0.22, ease: 'power2.inOut' }, 0.1)
       .from('.hero__aside > *', { autoAlpha: 0, y: 12, duration: 0.6, stagger: 0.08 }, 0.45)
       .from('.hero__cue', { autoAlpha: 0, duration: 0.6 }, 0.9);
+  }
+
+  function heroExit() {
+    G.fromTo('.hero__copy, .hero__cue', { autoAlpha: 1 }, {
+      autoAlpha: 0, ease: 'none', immediateRender: false,
+      scrollTrigger: {
+        trigger: '.hero', scrub: true,
+        start: function () { return 'top -' + Math.round($('.hero').offsetHeight * 0.35); },
+        end: function () { return 'top -' + Math.round($('.hero').offsetHeight * 0.6); }
+      }
+    });
   }
 
   function sectionReveals() {
@@ -166,6 +174,7 @@
     if (!items.length) return;
     var paths = { a: $('.plate__a'), b: $('.plate__b'), c: $('.plate__c') };
     var food = $('.plate__food');
+    var bloom = $('.plate__bloom');
     var cap = {
       box: $('.course__caption'),
       ord: $('.course__cap-ord'), name: $('.course__cap-name'),
@@ -209,7 +218,10 @@
         G.to(paths[k], { morphSVG: { shape: form[k][0], type: 'rotational' }, fill: form[k][1], duration: 0.95, delay: n * 0.05, ease: 'power3.inOut', overwrite: 'auto' });
       });
       G.to(food, { rotation: form.rot, svgOrigin: '200 200', duration: 1.1, ease: 'power3.inOut', overwrite: 'auto' });
-      G.fromTo(cap.box.children, { autoAlpha: 0.15, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.04, ease: 'power2.out', overwrite: 'auto' });
+      G.fromTo(cap.box.children, { autoAlpha: 0.5, y: 4 }, { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.03, ease: 'power2.out', overwrite: 'auto' });
+      if (bloom) {
+        G.fromTo(bloom, { scale: 0.9, opacity: 0.35, svgOrigin: '200 200' }, { scale: 1.12, opacity: 0, duration: 0.9, ease: 'power2.out', overwrite: 'auto' });
+      }
     }
     course = { items: items, setActive: setActive, onPick: null, get active() { return active; } };
   }
@@ -219,7 +231,7 @@
     var ST = window.ScrollTrigger;
     var items = course.items;
     mm.add({
-      pinDesk: '(min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)',
+      pinDesk: '(min-width: 1024px) and (min-height: 600px) and (prefers-reduced-motion: no-preference)',
       flat: '(max-width: 1023px) and (prefers-reduced-motion: no-preference)'
     }, function (ctx) {
       var c = ctx.conditions;
@@ -346,7 +358,7 @@
 
   /* ---------------- 달의 위상 달력 ---------------- */
   function initCalendar() {
-    var cal = $('#cal'), wrap = $('.cal__grid-wrap', cal), monthEl = $('#cal-month');
+    var cal = $('#cal'), wrap = $('.cal__grid-wrap', cal), monthEl = $('#cal-month'), note = $('#cal-note');
     var navs = $$('.cal__nav', cal);
     var form = $('#book');
     if (!cal || !form) return;
@@ -488,10 +500,29 @@
       if (!b) return;
       var d = new Date(view.getFullYear(), view.getMonth(), +b.dataset.d);
       focusDate = d;
-      if (b.getAttribute('aria-disabled') === 'true') { render(true); return; }
+      if (b.getAttribute('aria-disabled') === 'true') {
+        refuse(d);
+        render(true);
+        var moon = $('.cal__day[tabindex="0"] .cal__moon', wrap);
+        if (G && moon && !reduceMQ.matches) G.to(moon, { keyframes: { x: [-3, 3, -2, 0] }, duration: 0.16, ease: 'none' });
+        return;
+      }
+      note.textContent = '';
       choose(d);
       render(true);
+      // 15. 휴대폰에서는 날짜를 고르면 다음 단계가 보이게 내려 준다
+      if (e.detail !== 0 && window.innerWidth < 1024) {
+        var y = form.getBoundingClientRect().top + window.scrollY - 72;
+        window.scrollTo({ top: y, behavior: reduceMQ.matches ? 'auto' : 'smooth' });
+      }
     });
+    function refuse(d) {
+      var inf = info(d), t = (d.getMonth() + 1) + '월 ' + d.getDate() + '일';
+      if (+d === +today) note.textContent = '오늘 자리는 전화로 여쭤 주세요. 02-000-0000';
+      else if (d < today) note.textContent = t + '은 지난 날입니다. 테두리가 밝은 날을 골라 주세요.';
+      else if (inf.full) note.textContent = t + '은 마감되었습니다. 테두리가 밝은 날을 골라 주세요.';
+      else note.textContent = t + '은 쉬는 날입니다. 테두리가 밝은 날을 골라 주세요.';
+    }
     wrap.addEventListener('keydown', function (e) {
       var b = e.target.closest('.cal__day');
       if (!b) return;
@@ -527,6 +558,17 @@
       time: $('[data-step="time"]', form), party: $('[data-step="party"]', form), confirm: $('[data-step="confirm"]', form)
     };
     var msg = $('#book-msg');
+    var submitBtn = $('.book__submit', form), submitLabel = $('.book__submit-label', form);
+    var bm = $('.book__moon'), bmLit = bm && $('.bm-lit', bm), bmHalo = bm && $('.bm-halo', bm);
+    function bookMoon(a) {
+      if (!bm) return;
+      bmLit.setAttribute('d', moonPath(a, 30));
+      bm.classList.add('is-set');
+      if (G && !reduceMQ.matches) {
+        G.fromTo(bmHalo, { scale: 0.7, opacity: 0, svgOrigin: '0 0' }, { scale: 1, opacity: 0.85, duration: 0.6, ease: 'power3.out', overwrite: 'auto' });
+        G.fromTo(bmLit, { opacity: 0.2 }, { opacity: 1, duration: 0.45, ease: 'power2.out', overwrite: 'auto' });
+      }
+    }
     function radios(name) { return $$('input[name="' + name + '"]', form); }
     function checked(name) { var r = $('input[name="' + name + '"]:checked', form); return r ? r.value : ''; }
 
@@ -538,8 +580,10 @@
       dateOut.innerHTML = '';
       dateOut.appendChild(document.createTextNode(label(d)));
       var small = document.createElement('small');
-      small.textContent = ph ? ph + '이 뜨는 밤' : '달이 숨는 밤';
+      var winter = d.getMonth() === 0 || d.getMonth() === 1 || (d.getMonth() === 11 && d.getDate() > 20);
+      small.textContent = (ph ? ph + '이 뜨는 밤' : '달이 숨는 밤') + (winter ? '. 겨울 차림을 냅니다.' : '. 가을 차림을 냅니다.');
       dateOut.appendChild(small);
+      bookMoon(inf.age);
       steps.time.disabled = false;
       radios('time').forEach(function (r) {
         var n = inf.seats[r.value];
@@ -561,9 +605,11 @@
         if (r.disabled && r.checked) r.checked = false;
       });
       steps.confirm.disabled = !(time && checked('party'));
+      submitBtn.classList.toggle('btn--solid', !!(time && checked('party')));
     }
     form.addEventListener('change', function (e) {
       if (e.target.name === 'time' || e.target.name === 'party') syncParty();
+      if (form.hasAttribute('data-done')) editMode();
     });
 
     var nameIn = $('#b-name'), telIn = $('#b-tel');
@@ -574,8 +620,19 @@
     }
     [nameIn, telIn].forEach(function (i) { i.addEventListener('input', function () { setErr(i, ''); }); });
 
+    function editMode() {
+      form.removeAttribute('data-done');
+      submitLabel.textContent = '자리 예약하기';
+      msg.textContent = ''; msg.className = 'book__msg';
+    }
+    form.addEventListener('input', function () { if (form.hasAttribute('data-done')) editMode(); });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (form.hasAttribute('data-done')) {
+        editMode();
+        nameIn.focus();
+        return;
+      }
       msg.className = 'book__msg';
       var time = checked('time'), party = checked('party');
       if (!selected) return fail('먼저 달력에서 날짜를 골라 주세요.', $('.cal__day[tabindex="0"]', wrap));
@@ -592,6 +649,11 @@
       strong.textContent = label(selected) + ' ' + time + ', ' + PARTY[+party];
       msg.appendChild(strong);
       msg.appendChild(document.createTextNode(' 자리를 맡아 두었습니다. 컨셉 시안이라 실제로 접수되지는 않습니다.'));
+      form.setAttribute('data-done', '');
+      submitLabel.textContent = '예약 내용 고치기';
+      msg.focus({ preventScroll: true });
+      var r = msg.getBoundingClientRect();
+      if (r.bottom > window.innerHeight || r.top < 80) msg.scrollIntoView({ block: 'center', behavior: reduceMQ.matches ? 'auto' : 'smooth' });
     });
     function fail(text, focusEl) {
       msg.classList.add('is-error');
@@ -601,7 +663,18 @@
 
     render(false);
   }
+  // 히어로를 조금이라도 벗어나면 헤더 띠를 불투명하게 (맨 아래에서도 유지, GSAP 없이도)
+  function initBar() {
+    var bar = document.getElementById('bar');
+    if (!bar) return;
+    var tick = false;
+    function solid() { tick = false; bar.classList.toggle('is-solid', (window.scrollY || 0) > 40); }
+    window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(solid); } }, { passive: true });
+    solid();
+  }
+
   /* ---------------- 시작 ---------------- */
+  safe(initBar);
   safe(initToc);
   safe(initCourse);
   safe(initCalendar);

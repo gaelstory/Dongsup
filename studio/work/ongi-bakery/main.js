@@ -82,7 +82,7 @@
       symXML[t] = s;
     });
 
-    var W = 0, H = 0, dpr = 1, tier = '';
+    var W = 0, H = 0, dpr = 1, tier = '', plan = null;
     var bodies = [];
     var simTime = 0;
     var running = false, rafId = 0, lastT = 0, acc = 0;
@@ -139,23 +139,116 @@
       dpr = Math.min(window.devicePixelRatio || 1, W < 600 ? 1.5 : 2);
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
-      return W < 600 ? 's' : W < 1000 ? 'm' : 'l';
+      if (W < 600) {
+        // Phones: the copy spans the width, so the pile is sized to the free band beneath it.
+        var hr = hero.getBoundingClientRect(), last = null;
+        [hint, hero.querySelector('.hero__actions'), hero.querySelector('.hero__sub')].some(function (el) {
+          if (el && !el.hidden && el.getBoundingClientRect().height) { last = el; return true; }
+          return false;
+        });
+        var band = Math.max(60, H - (last ? last.getBoundingClientRect().bottom - hr.top : H * 0.55) - 8);
+        var rM = Math.max(18, Math.min(40, band * 0.32)), rm = Math.max(14, rM * 0.55), avg = (rM + rm) / 2;
+        plan = { n: Math.max(4, Math.min(14, Math.round((W * band * 0.42) / (Math.PI * avg * avg)))), rMin: rm, rMax: rM };
+        return 's' + plan.n + ':' + Math.round(rM);
+      }
+      // Count and size follow the hero's area, so short laptop screens get a lower pile.
+      var area = W * H;
+      var rMax = Math.max(40, Math.min(64, H * 0.071));
+      plan = {
+        n: Math.max(12, Math.min(area > 1.8e6 ? 32 : 26, Math.round(area / 50000))),
+        rMin: rMax * 0.53, rMax: rMax
+      };
+      return (W < 1000 ? 'm' : 'l') + plan.n + ':' + Math.round(rMax);
+    }
+
+    // The words are solid: each headline line, the sticker and the copy block are static boxes.
+    var boxes = [];
+    var copy = {
+      lines: Array.prototype.slice.call(hero.querySelectorAll('.hero__title .t1, .hero__title .t2, .hero__title .t3')),
+      sticker: hero.querySelector('.first-batch'),
+      block: [hero.querySelector('.hero__sub'), hero.querySelector('.hero__actions'), hint]
+    };
+    function measureBoxes() {
+      boxes = [];
+      if (tier.charAt(0) === 's') return; // phones: the pile stays below the copy on its own
+      var cr = canvas.getBoundingClientRect(), pad = 10, range = document.createRange();
+      function add(r) {
+        if (!r || !r.width || !r.height) return;
+        boxes.push({ l: r.left - cr.left - pad, t: r.top - cr.top - pad, r: r.right - cr.left + pad, b: r.bottom - cr.top + pad });
+      }
+      var rows = [];
+      copy.lines.forEach(function (el) {
+        range.selectNodeContents(el);
+        Array.prototype.forEach.call(range.getClientRects(), function (r) {
+          var row = rows.filter(function (q) { return Math.abs(q.top - r.top) < r.height * 0.5; })[0];
+          if (row) { row.left = Math.min(row.left, r.left); row.right = Math.max(row.right, r.right); row.bottom = Math.max(row.bottom, r.bottom); }
+          else rows.push({ left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: 1, height: r.height });
+        });
+      });
+      rows.forEach(add);
+      add(copy.sticker.getBoundingClientRect());
+      var u = null;
+      copy.block.forEach(function (el) {
+        if (!el || el.hidden) return;
+        var r;
+        if (el.tagName === 'P') { range.selectNodeContents(el); r = range.getBoundingClientRect(); }
+        else {
+          // a flex row is as wide as the hero; only its buttons are solid
+          r = null;
+          Array.prototype.forEach.call(el.children, function (c) {
+            if (c.hidden) return;
+            var q = c.getBoundingClientRect();
+            if (!q.width) return;
+            r = r ? { left: Math.min(r.left, q.left), top: Math.min(r.top, q.top), right: Math.max(r.right, q.right), bottom: Math.max(r.bottom, q.bottom), width: 1 } : { left: q.left, top: q.top, right: q.right, bottom: q.bottom, width: 1 };
+          });
+        }
+        if (!r || !r.width) return;
+        u = u ? { left: Math.min(u.left, r.left), top: Math.min(u.top, r.top), right: Math.max(u.right, r.right), bottom: Math.max(u.bottom, r.bottom) } : { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+      });
+      if (u) { u.width = u.right - u.left; u.height = u.bottom - u.top; add(u); }
+      // Bread that lands on top of a box slides toward the side with more room.
+      boxes.forEach(function (bx) { bx.dir = bx.l > W - bx.r ? -1 : 1; });
+    }
+    function hitBox(b, bx, first, dt) {
+      var cx = Math.max(bx.l, Math.min(b.x, bx.r)), cy = Math.max(bx.t, Math.min(b.y, bx.b));
+      var dx = b.x - cx, dy = b.y - cy, d2 = dx * dx + dy * dy;
+      if (d2 >= b.r * b.r) return;
+      var nx, ny, pen;
+      if (d2 > 1e-6) {
+        var d = Math.sqrt(d2); nx = dx / d; ny = dy / d; pen = b.r - d;
+      } else {
+        var m = Math.min(b.y - bx.t, bx.b - b.y, b.x - bx.l, bx.r - b.x);
+        if (m === b.y - bx.t) { nx = 0; ny = -1; pen = m + b.r; }
+        else if (m === bx.b - b.y) { nx = 0; ny = 1; pen = m + b.r; }
+        else if (m === b.x - bx.l) { nx = -1; ny = 0; pen = m + b.r; }
+        else { nx = 1; ny = 0; pen = m + b.r; }
+      }
+      b.x += nx * pen; b.y += ny * pen;
+      b.touch = true;
+      var vn = b.vx * nx + b.vy * ny;
+      if (first && vn < 0) {
+        var e = vn < -90 ? REST : 0;
+        b.vx -= (1 + e) * vn * nx; b.vy -= (1 + e) * vn * ny;
+      }
+      if (ny < -0.5 && first) {
+        b.onCopy = true;
+        b.vx += bx.dir * 2600 * dt;
+        b.w += bx.dir * 2600 * dt / b.r;
+      }
     }
 
     function spawnX(r) {
       var x;
-      if (tier === 's') x = r + rand() * (W - 2 * r);
+      if (tier.charAt(0) === 's') x = r + rand() * (W - 2 * r);
       else {
-        var heavy = tier === 'l' ? 0.72 : 0.6;
+        var heavy = tier.charAt(0) === 'l' ? 0.72 : 0.6;
         x = rand() < heavy ? W * (0.44 + rand() * 0.52) : W * (0.04 + rand() * 0.4);
       }
       return Math.min(W - r, Math.max(r, x));
     }
 
     function build() {
-      var n = tier === 's' ? 14 : tier === 'm' ? 20 : 26;
-      var rMin = tier === 's' ? 22 : tier === 'm' ? 28 : 34;
-      var rMax = tier === 's' ? 40 : tier === 'm' ? 52 : 64;
+      var n = plan.n, rMin = plan.rMin, rMax = plan.rMax;
       var order = [];
       bodies = [];
       for (var i = 0; i < n; i++) {
@@ -240,6 +333,7 @@
       }
       if (b.x - r < 0) { b.x = r; if (b.vx < 0) b.vx = -b.vx * REST; }
       else if (b.x + r > W) { b.x = W - r; if (b.vx > 0) b.vx = -b.vx * REST; }
+      for (var k = 0; k < boxes.length; k++) hitBox(b, boxes[k], first, DT);
     }
 
     function step(dt) {
@@ -264,6 +358,7 @@
         if (sp > 3400 * 3400) { var s = 3400 / Math.sqrt(sp); b.vx *= s; b.vy *= s; }
         b.x += b.vx * dt; b.y += b.vy * dt; b.a += b.w * dt;
         b.touch = false;
+        b.onCopy = false;
       }
       for (var it = 0; it < ITER; it++) {
         var first = it === 0;
@@ -282,7 +377,7 @@
         b = bodies[i];
         if (!b.active || b.sleep) continue;
         if (b.touch) { b.w *= 0.965; b.vx *= 0.994; }
-        if (b !== grab && b.touch && b.vx * b.vx + b.vy * b.vy < 196 && Math.abs(b.w) < 0.3) {
+        if (b !== grab && !b.onCopy && b.touch && b.vx * b.vx + b.vy * b.vy < 196 && Math.abs(b.w) < 0.3) {
           b.still += dt;
           if (b.still > 0.45) putToSleep(b);
         } else b.still = 0;
@@ -365,14 +460,20 @@
 
     // Settle the pile synchronously (reduced motion and ?shot=1): 600 fixed steps, then draw once.
     function settle(steps) {
+      measureBoxes();
       var n = bodies.length;
       for (var i = 0; i < n; i++) {
         var b = bodies[i];
         // Keep the still pile clear of the headline column: most bread settles on the right.
-        if (tier !== 's') b.x = rand() < 0.82 ? W * (0.5 + rand() * 0.47) : W * (0.03 + rand() * 0.4);
+        if (tier.charAt(0) !== 's') b.x = rand() < 0.82 ? W * (0.5 + rand() * 0.47) : W * (0.03 + rand() * 0.4);
         b.x = Math.min(W - b.r, Math.max(b.r, b.x));
         b.active = true; b.sleep = false; b.spawnAt = 0;
-        b.y = H * 0.5 - i * (tier === 's' ? 46 : 64) - b.r;
+        b.y = H * 0.5 - i * (tier.charAt(0) === 's' ? 46 : 64) - b.r;
+        // start clear of the words so nothing is born inside a box
+        for (var q = 0; q < boxes.length; q++) {
+          var bx = boxes[q];
+          if (b.x + b.r > bx.l && b.x - b.r < bx.r && b.y + b.r > bx.t && b.y - b.r < bx.b) b.y = bx.t - b.r - 2;
+        }
         b.vx = (rand() - 0.5) * 60; b.vy = 200; b.w = (rand() - 0.5) * 4;
       }
       simTime = 10;
@@ -399,6 +500,19 @@
     function pop(x, y, strength, radius) {
       wakeAll();
       var R = radius || 190;
+      var near = bodies.filter(function (b) { return b.active && Math.max(0, Math.hypot(b.x - x, b.y - y) - b.r) <= R; });
+      if (!near.length) {
+        // Tapped far from the pile: still bounce the five nearest pieces, a little softer.
+        bodies.filter(function (b) { return b.active; })
+          .sort(function (a, c) { return Math.hypot(a.x - x, a.y - y) - Math.hypot(c.x - x, c.y - y); })
+          .slice(0, 5).forEach(function (b) {
+            b.vy -= (650 + 700 * 0.6) * strength * (0.8 + rand() * 0.4);
+            b.vx += (rand() - 0.5) * 260;
+            b.w += (rand() - 0.5) * 10;
+          });
+        kick();
+        return;
+      }
       for (var i = 0; i < bodies.length; i++) {
         var b = bodies[i];
         if (!b.active) continue;
@@ -494,11 +608,13 @@
         if (newTier !== tier || oldDpr !== dpr) {
           tier = newTier;
           halt();
+          measureBoxes();
           build().then(function () {
             if (staticMode || isShot) settle(600); else { draw(); kick(); }
           });
           return;
         }
+        measureBoxes();
         for (var i = 0; i < bodies.length; i++) {
           var b = bodies[i];
           b.x = Math.min(W - b.r, Math.max(b.r, b.x));
@@ -517,17 +633,29 @@
     if (reduceMQ.addEventListener) reduceMQ.addEventListener('change', onReduce); else reduceMQ.addListener(onReduce);
 
     tier = measure();
+    measureBoxes();
+    // The copy settles after fonts load and the short entrance, so measure the boxes again then.
+    var remeasure = function () {
+      var before = JSON.stringify(boxes);
+      measureBoxes();
+      if (JSON.stringify(boxes) !== before) { wakeAll(); kick(); }
+    };
+    var fontsReady = new Promise(function (res) {
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(res);
+      setTimeout(res, 800);
+    });
+    fontsReady.then(function () { setTimeout(remeasure, 30); });
+    setTimeout(remeasure, 750);
     if (isShot) rand = mulberry(36);
     build().then(function () {
       root.classList.add('pile-ready');
       if (shakeBtn) shakeBtn.hidden = false;
       if (hint) hint.hidden = staticMode;
       if (staticMode || isShot) {
-        settle(600);
-        rand = Math.random;
-      } else {
-        kick();
+        // the still pile is computed once, against the final text boxes
+        return fontsReady.then(function () { settle(600); rand = Math.random; });
       }
+      kick();
     }).catch(function () {
       root.classList.add('pile-failed');
     });
@@ -574,7 +702,7 @@
         var isNext = !t.monday && next === b && t.min < 1200;
         b.el.classList.toggle('is-past', past);
         b.el.classList.toggle('is-next', isNext);
-        b.state.textContent = past ? '나왔어요' : isNext ? span(b.min - t.min) + ' 뒤' : '';
+        b.state.textContent = past ? (t.min - b.min < 30 ? '갓 나왔어요' : '나왔어요') : isNext ? span(b.min - t.min) + ' 뒤' : '';
       });
       var msg;
       if (t.monday) msg = '오늘은 월요일, 쉬는 날이에요. 화요일 아침 7시 반에 첫 판이 나와요.';
@@ -584,13 +712,15 @@
       else msg = '지금은 ' + t.text + '. 오늘 굽기는 끝났어요. 남은 빵은 매장에서 확인해 주세요.';
       status.textContent = msg;
 
-      if (t.monday) { marker.hidden = true; return; }
+      // The rack only covers 07:00 to 17:00; outside that the sentence above says it all.
+      if (t.monday || t.min < START || t.min > END) { marker.hidden = true; return; }
       marker.hidden = false;
       label.textContent = '지금 ' + t.text;
       if (wide.matches) {
         var p = Math.min(1, Math.max(0, (t.min - START) / (END - START)));
         marker.style.left = (p * 100).toFixed(2) + '%';
         marker.style.top = '';
+        marker.classList.toggle('is-flip', p > 0.8);
       } else {
         var k = 0;
         for (i = 0; i < batches.length; i++) if (t.min >= batches[i].min) k = i + 1;
@@ -614,6 +744,7 @@
   /* ---------------- stamp card ---------------- */
   function initStamps() {
     var slots = Array.prototype.slice.call(document.querySelectorAll('.slot'));
+    var coupon = document.querySelector('.coupon');
     var nEl = document.querySelector('.coupon__n');
     var status = document.querySelector('.stamp__status');
     var reset = document.querySelector('.stamp__reset');
@@ -621,38 +752,49 @@
     var confetti = document.querySelector('.confetti');
     var count = 0;
     var COLORS = ['#FFD84D', '#E3002B', '#BDE8D3', '#FFF9EA', '#D98A3A'];
+    var BREADS = ['cro', 'salt', 'loaf', 'donut', 'tart', 'bagel', 'anpan'];
+    var ns = 'http://www.w3.org/2000/svg';
 
     function say() {
       nEl.textContent = count;
-      reset.disabled = count === 0;
+      reset.hidden = count === 0;
       if (count === 0) status.textContent = '아직 도장이 없어요. 칸을 눌러 찍어 보세요.';
-      else if (count < 10) status.textContent = '도장 ' + count + '개. 한 잔까지 ' + (10 - count) + '개 남았어요.';
+      else if (count < 10) status.textContent = '도장 ' + count + '개. 한 잔까지 ' + (10 - count) + '개 남았어요. 잘못 찍었으면 한 번 더 누르세요.';
       else status.textContent = '열 칸을 다 채웠어요. 아메리카노 한 잔은 저희가 살게요.';
     }
 
+    // The tenth stamp pays out in bread: little loaves and sprinkles burst from the cup slot.
     function burst() {
       if (!motionOK() || !hasGsap) return;
       confetti.textContent = '';
-      for (var i = 0; i < 56; i++) {
-        var piece = document.createElement('i');
-        piece.style.background = COLORS[i % COLORS.length];
-        if (i % 3 === 0) { piece.style.width = '11px'; piece.style.height = '11px'; piece.style.borderRadius = '50%'; }
+      var cup = slots[9];
+      // the slot's offsetParent is the coupon itself
+      confetti.style.left = (cup.offsetLeft + cup.offsetWidth / 2) + 'px';
+      confetti.style.top = (cup.offsetTop + cup.offsetHeight / 2) + 'px';
+      for (var i = 0; i < 46; i++) {
+        var piece;
+        if (i < 14) {
+          piece = document.createElement('span');
+          piece.className = 'crumb';
+          piece.innerHTML = '<svg viewBox="0 0 200 200" aria-hidden="true"><use href="#b-' + BREADS[i % BREADS.length] + '"/></svg>';
+        } else {
+          piece = document.createElement('i');
+          piece.style.background = COLORS[i % COLORS.length];
+          if (i % 3 === 0) { piece.style.width = '11px'; piece.style.height = '11px'; piece.style.borderRadius = '50%'; }
+        }
         confetti.appendChild(piece);
-        var ang = Math.random() * Math.PI * 2, dist = 120 + Math.random() * 220;
+        var ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.5, dist = 120 + Math.random() * 240;
         var tl = gsap.timeline({ onComplete: (function (p) { return function () { p.remove(); }; })(piece) });
         tl.fromTo(piece, { x: 0, y: 0, rotation: 0, opacity: 1, scale: 0.9 }, {
-          x: Math.cos(ang) * dist, y: Math.sin(ang) * dist * 0.7 - 120 - Math.random() * 80,
-          rotation: (Math.random() - 0.5) * 720, scale: 1, duration: 0.55, ease: 'power3.out'
-        }).to(piece, { y: '+=' + (220 + Math.random() * 160), rotation: '+=' + (Math.random() * 360), duration: 0.9, ease: 'power1.in' })
+          x: Math.cos(ang) * dist, y: Math.sin(ang) * dist * 0.8 - 60 - Math.random() * 60,
+          rotation: (Math.random() - 0.5) * 540, scale: 1, duration: 0.55, ease: 'power3.out'
+        }).to(piece, { y: '+=' + (260 + Math.random() * 180), rotation: '+=' + (Math.random() * 300), duration: 0.95, ease: 'power1.in' })
           .to(piece, { opacity: 0, duration: 0.3 }, '-=0.3');
       }
     }
 
-    function stamp(slot, i) {
-      if (slot.getAttribute('aria-pressed') === 'true') return;
+    function stamp(slot) {
       slot.setAttribute('aria-pressed', 'true');
-      slot.setAttribute('aria-label', (i + 1) + '번째 칸, 도장 찍힘');
-      var ns = 'http://www.w3.org/2000/svg';
       var svg = document.createElementNS(ns, 'svg');
       svg.setAttribute('class', 'slot__ink');
       svg.setAttribute('viewBox', '0 0 100 100');
@@ -675,13 +817,26 @@
         burst();
       }
     }
-    slots.forEach(function (slot, i) {
-      slot.addEventListener('click', function () { stamp(slot, i); });
+    // A second press lifts a mis-placed stamp.
+    function lift(slot) {
+      slot.setAttribute('aria-pressed', 'false');
+      var ink = slot.querySelector('.slot__ink');
+      if (ink) {
+        if (motionOK() && hasGsap) gsap.to(ink, { opacity: 0, scale: 0.92, duration: 0.12, ease: 'power1.in', onComplete: function () { ink.remove(); } });
+        else ink.remove();
+      }
+      count--;
+      if (count < 10) reward.hidden = true;
+      say();
+    }
+    slots.forEach(function (slot) {
+      slot.addEventListener('click', function () {
+        if (slot.getAttribute('aria-pressed') === 'true') lift(slot); else stamp(slot);
+      });
     });
     reset.addEventListener('click', function () {
-      slots.forEach(function (slot, i) {
+      slots.forEach(function (slot) {
         slot.setAttribute('aria-pressed', 'false');
-        slot.setAttribute('aria-label', (i + 1) + '번째 칸에 도장 찍기' + (i === 9 ? ', 마지막 칸' : ''));
         var ink = slot.querySelector('.slot__ink');
         if (ink) ink.remove();
       });
@@ -691,18 +846,20 @@
       say();
       slots[0].focus();
     });
+    say();
   }
 
   /* ---------------- quiet scroll moments + menu wobble ---------------- */
   function initMotion() {
     var items = Array.prototype.slice.call(document.querySelectorAll('.item'));
+    function wobble(art) {
+      if (!art || !motionOK() || !art.animate) return;
+      art.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(-8deg)' }, { transform: 'rotate(0deg)' }],
+        { duration: 300, easing: 'cubic-bezier(0.37, 0, 0.63, 1)' });
+    }
     items.forEach(function (item) {
       var art = item.querySelector('.item__art');
-      item.addEventListener('mouseenter', function () {
-        if (!fineMQ.matches || !motionOK() || !art.animate) return;
-        art.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(-8deg)' }, { transform: 'rotate(0deg)' }],
-          { duration: 300, easing: 'cubic-bezier(0.37, 0, 0.63, 1)' });
-      });
+      item.addEventListener('mouseenter', function () { if (fineMQ.matches) wobble(art); });
     });
 
     if (!hasGsap || typeof window.ScrollTrigger === 'undefined') return;
@@ -725,7 +882,11 @@
       gsap.set('.item', { y: 22, opacity: 0 });
       ScrollTrigger.batch('.item', {
         start: 'top 90%', once: true,
-        onEnter: function (els) { gsap.to(els, { y: 0, opacity: 1, duration: 0.5, stagger: 0.07, ease: 'power3.out' }); }
+        onEnter: function (els) {
+          gsap.to(els, { y: 0, opacity: 1, duration: 0.5, stagger: 0.07, ease: 'power3.out' });
+          // No hover on touch screens, so each loaf tilts once as its row arrives.
+          if (!fineMQ.matches) els.forEach(function (el, k) { setTimeout(function () { wobble(el.querySelector('.item__art')); }, 380 + k * 70); });
+        }
       });
       gsap.from('.recipe', {
         y: 56, rotation: -11, opacity: 0, duration: 0.7, ease: 'back.out(1.5)',

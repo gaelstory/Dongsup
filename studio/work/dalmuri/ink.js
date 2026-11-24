@@ -30,8 +30,10 @@
       cx = W / 3;
       var reach = R_OPEN * 1.22 * m;
       if (cx + reach > avail) {
-        cx = Math.max(avail / 2, 1);
-        m = Math.min(m, cx / (R_OPEN * 1.22));
+        // 바깥 번짐까지 화면 안에 두려면 먼저 크기를 줄이고 가운데를 맞춘다
+        m = Math.min(m, (avail - 48) / (2 * R_OPEN * 1.22));
+        reach = R_OPEN * 1.22 * m;
+        cx = Math.max(reach + 24, avail / 2);
       }
       cy = (barH + H) / 2;
     } else {
@@ -81,8 +83,8 @@
       'void main(){',
       ' vec2 p=(gl_FragCoord.xy-uC)/uM;',
       // 포인터 근처의 좌표를 끌어 먹이 따라오게 한다
-      ' vec2 dp=p-uP;float fall=exp(-dot(dp,dp)*8.);',
-      ' p-=(uDrag+normalize(dp+1e-4)*.25)*.08*fall*uAmt;',
+      ' vec2 dp=p-uP;float fall=exp(-dot(dp,dp)*4.5);',
+      ' p-=(uDrag+normalize(dp+1e-4)*.4)*.11*fall*uAmt;',
       ' float t=uT;',
       ' vec2 q=p*(1.75-.55*uS);',
       ' vec2 w=vec2(fbm(q+t*.03),fbm(q+vec2(5.2,1.3)-t*.03));',
@@ -91,9 +93,9 @@
       ' float bleed=ink-.5;',
       ' float d=length(p);',
       ' vec2 dir=p/max(d,1e-4);',
-      ' float rr=d-uR+bleed*(.07+.45*uS);',
+      ' float rr=d-uR+bleed*(.07+.75*uS);',
       // 붓 압력: 굵기가 먹을 따라 변한다
-      ' float th=.014+.032*inkN+.12*uS;',
+      ' float th=.014+.032*inkN+.2*uS;',
       ' float band=smoothstep(th,th*.3,abs(rr));',
       // 결을 따라 흐르는 마른 붓 자국 (각도 방향은 느리게, 반지름 방향은 빠르게)
       ' float br=noise(dir*2.6+vec2(rr*48.)+w*1.5)*.62+noise(dir*7.+vec2(rr*130.))*.38;',
@@ -109,6 +111,9 @@
       ' col+=BRASS*exp(-outside*3.6)*(1.-inside)*(.25+.75*inkN)*.2*uOpen*(1.-.5*uS);',
       ' float ra=ringA*(.55+.45*inkN)*uOpen*pow(1.-uS,1.6);',
       ' col=mix(col,MOON,clamp(ra,0.,1.));',
+      // 풀린 고리가 먹구름으로 퍼지는 잔광
+      ' col=mix(col,MOON,.14*uS*(1.-uS)*smoothstep(.5,.95,inkN)*exp(-abs(rr)*2.2)*uOpen);',
+      ' col+=MOON*.07*fall*uAmt*inkN;',
       ' vec2 uv=gl_FragCoord.xy/uRes;',
       ' col*=1.-.38*pow(length(uv-.5)*1.2,2.);',
       ' col+=(hash(gl_FragCoord.xy)-.5)/255.;',
@@ -199,10 +204,11 @@
       R = R_OPEN * easeOutCubic(k);
       open = easeOutCubic(Math.min(1, el / 0.9));
       t = 8 + el;
-      var target = Math.min(1, Math.max(0, (window.scrollY || 0) / Math.max(1, heroH * 0.85)));
+      var target = Math.min(1, Math.max(0, (window.scrollY || 0) / Math.max(1, heroH * 0.55)));
       sSmooth += (target - sSmooth) * (1 - Math.exp(-dt * 7));
       s = sSmooth;
       R += s * 0.45;
+      if (el > 2 && el < 4.4) R += 0.015 * Math.sin(Math.PI * (el - 2) / 2.4);
     }
 
     var ux, uy;
@@ -226,7 +232,7 @@
     var lerp = 1 - Math.exp(-dt * 6);
     P.x += (ux - P.x) * lerp; P.y += (uy - P.y) * lerp;
     if (dt > 0) {
-      var vx = (P.x - Pprev.x) / dt * 0.35, vy = (P.y - Pprev.y) / dt * 0.35;
+      var vx = (P.x - Pprev.x) / dt * 0.5, vy = (P.y - Pprev.y) / dt * 0.5;
       var len = Math.hypot(vx, vy);
       if (len > 1) { vx /= len; vy /= len; }
       var dl = 1 - Math.exp(-dt * 4);
