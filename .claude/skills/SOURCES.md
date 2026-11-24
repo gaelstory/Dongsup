@@ -22,6 +22,17 @@ AI로 만든 화면이 서로 비슷해 보이지 않게, 홈페이지를 만들
 
 | `gsap-core` · `gsap-timeline` · `gsap-scrolltrigger` · `gsap-plugins` · `gsap-performance` · `gsap-utils` | GSAP 애니메이션 공식 가이드 (기본 API, 타임라인, 스크롤 연동, 플러그인, 성능, 유틸) | [greensock/gsap-skills](https://github.com/greensock/gsap-skills/tree/main/skills) | `aed9cfd` | MIT © GreenSock |
 
+| `impeccable` | 디자인 마감 종합 스킬: 비평(critique)·점검(audit)·다듬기(polish)·타이포·레이아웃·모션·반응형 등 명령 모음 | [Sunwoo-choi-1/selling-product-page-skill](https://github.com/Sunwoo-choi-1/selling-product-page-skill/tree/main/impeccable) (원작: [pbakaus/impeccable](https://github.com/pbakaus/impeccable)) | `fe950ff` | Apache-2.0 (`LICENSE`, `NOTICE.md`) |
+
+`impeccable`은 원작자 저장소(`pbakaus/impeccable`, 엔진 0.1.27)의 스킬과 내용이 같습니다(Windows용 `impeccable.cmd`의
+줄바꿈만 다름). `NOTICE.md`는 원작 저장소에서 가져왔습니다. `scripts/impeccable`을 실행하면 GitHub 릴리스에서
+운영체제별 엔진 파일을 내려받아(체크섬 검증) 돌립니다. 디자인 감지 훅은 `/impeccable hooks on`을 직접 실행해야만
+켜집니다. 앞서 만든 `adapt` 스킬은 이 스킬의 `reference/adapt.md`를 꺼낸 것이라, 이제 같은 내용을 `/impeccable adapt`로도
+쓸 수 있습니다.
+
+같은 저장소의 `selling-product-page`(상세페이지 제작 스킬)는 라이선스 표기가 없어서 이 공개 저장소에는 넣지 않았습니다.
+쓰려면 작성자 안내대로 각자의 개인 스킬 폴더(`~/.claude/skills/`)에 설치하세요.
+
 `gemini-frontend-design`은 Gemini 모델에 맞춰 다듬은 실험 버전이고, 저장소에 "구글이 공식 지원하는 제품이
 아님"이라고 적혀 있습니다. `frontend-design`과 하는 일이 겹치므로 둘 다 불러와질 수 있습니다.
 
