@@ -87,7 +87,7 @@ async function checkPage(browser, base, rel) {
     page.on('pageerror', (e) => report.pageErrors.push(`[${view.name}] ${e.message}`));
     page.on('requestfailed', (r) => report.failedRequests.push(`[${view.name}] ${r.url()} ${r.failure()?.errorText}`));
     page.on('response', (r) => { if (r.status() >= 400) report.failedRequests.push(`[${view.name}] ${r.status()} ${r.url()}`); });
-    await page.goto(base + rel, { waitUntil: 'load', timeout: 45000 });
+    await page.goto(base + rel, { waitUntil: 'load', timeout: 120000 });
     await sleep(500);
     await page.screenshot({ path: path.join(dir, `${view.name}-load-0.5s.jpg`), type: 'jpeg', quality: 72 });
     await sleep(2000);
@@ -108,7 +108,7 @@ async function checkPage(browser, base, rel) {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce', locale: 'ko-KR' });
   const page = await ctx.newPage();
   page.on('pageerror', (e) => report.pageErrors.push(`[reduced-motion] ${e.message}`));
-  await page.goto(base + rel, { waitUntil: 'load', timeout: 45000 });
+  await page.goto(base + rel, { waitUntil: 'load', timeout: 120000 });
   await sleep(800);
   await page.screenshot({ path: path.join(dir, 'reduced-motion.jpg'), type: 'jpeg', quality: 72 });
   report.views.reducedMotion = { shots: [`${slug}/reduced-motion.jpg`] };
@@ -120,9 +120,9 @@ async function thumb(browser, base, rel) {
   const slug = rel.split('/')[1];
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, locale: 'ko-KR' });
   const page = await ctx.newPage();
-  await page.goto(base + rel, { waitUntil: 'load', timeout: 45000 });
+  // ?shot=1 makes each mockup skip its intro and show its designed still frame (PLAN.md 4.3)
+  await page.goto(base + rel + '?shot=1', { waitUntil: 'load', timeout: 120000 });
   await sleep(3500);
-  // hide the shared concept badge in thumbnails
   await page.addStyleTag({ content: '.concept-badge{display:none!important}' });
   const dir = path.join(ROOT, 'assets', 'thumbs');
   fs.mkdirSync(dir, { recursive: true });
@@ -130,6 +130,32 @@ async function thumb(browser, base, rel) {
   await ctx.close();
   return slug;
 }
+
+// Several builders share a 4-core machine and software-rendered WebGL is heavy, so at most
+// SLOTS runs take screenshots at once; the rest wait their turn (stale locks expire after 10 min).
+const SLOTS = Number(process.env.SHOOT_SLOTS || 2);
+const LOCK_DIR = '/tmp/studio-shoot-locks';
+fs.mkdirSync(LOCK_DIR, { recursive: true });
+async function acquireSlot() {
+  for (let waited = 0; ; waited += 2000) {
+    for (let i = 0; i < SLOTS; i++) {
+      const lock = path.join(LOCK_DIR, `slot-${i}`);
+      try {
+        fs.mkdirSync(lock);
+        return lock;
+      } catch {
+        try { if (Date.now() - fs.statSync(lock).mtimeMs > 600000) fs.rmSync(lock, { recursive: true, force: true }); } catch {}
+      }
+    }
+    if (waited % 30000 === 0) console.log(`waiting for a screenshot slot (${waited / 1000}s)...`);
+    await sleep(2000);
+  }
+}
+const slot = await acquireSlot();
+const releaseSlot = () => { try { fs.rmSync(slot, { recursive: true, force: true }); } catch {} };
+process.on('exit', releaseSlot);
+process.on('SIGINT', () => process.exit(130));
+process.on('SIGTERM', () => process.exit(143));
 
 const server = await serve();
 const base = `http://127.0.0.1:${server.address().port}/`;

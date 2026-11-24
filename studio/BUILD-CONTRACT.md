@@ -42,9 +42,15 @@ into `studio/assets/vendor/three/addons/` and map the bare `three` import with a
 
 ## Shared concept badge (mockups only)
 
-Put `<script src="../../assets/shared/concept-badge.js" defer></script>` before `</body>`. It draws a small fixed pill
-at the bottom-left linking back to the studio portfolio. Do not build your own; keep the bottom-left ~56px corner
-free of your own fixed UI.
+Put `<script src="../../assets/shared/concept-badge.js" defer></script>` before `</body>`. It draws the PLAN.md 4.2
+badge (studio ink pill, yellow corner mark) at the bottom-left, linking back to the studio portfolio, and hides it
+under `?shot=1`. **This replaces PLAN.md 4.2's inline markup and its `config.js` include**: do not paste the badge
+markup/CSS and do not load `../../assets/js/config.js` from a mockup. Keep the bottom-left ~60px corner free of your
+own fixed UI (or lift your fixed bottom bar's content clear of it). Detect `?shot=1` in your own script for the
+still frame PLAN.md describes.
+
+PLAN.md's mockup `<title>` pattern (`{브랜드명} | 컨셉 시안 · 첫화면 스튜디오`) and `noindex` apply to mockups;
+the 2-4 word title rule above is for the studio homepage.
 
 ## Layout and theme
 
