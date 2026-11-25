@@ -757,7 +757,7 @@ html:not(.js) .concern + .concern { padding-top: var(--sp-7); border-top: 1px so
 @media (max-width: 389.98px) {
   .hours-card { padding: var(--sp-5) var(--sp-4); }
   .hours th, .hours td { padding: var(--sp-3) var(--sp-1); }
-  .hours th { width: auto; white-space: nowrap; }
+  .hours th { width: 6.5em; white-space: nowrap; }
   .hours tr:last-child th { white-space: normal; }
   .today-mark { margin-left: var(--sp-1); }
   .hours__note { display: block; margin-left: 0; }
