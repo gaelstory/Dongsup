@@ -570,13 +570,17 @@
       }
       var opening = null;
       var hero = $('#top');
-      if (has('ScrollTrigger') && hero) {
+      // The scroll-opened blinds (tilted, shaded slats at the top of the page) made the first screen's
+      // preview read as broken stripes with a doubled headline, so the stage now starts open.
+      // Set OPEN_ON_SCROLL to true to bring the effect back.
+      var OPEN_ON_SCROLL = false;
+      if (OPEN_ON_SCROLL && has('ScrollTrigger') && hero) {
         // a staggered fromTo inside a scrubbed timeline does not paint its start until the first scroll
-        G.set(built.slats, { rotationX: -22 });
+        G.set(built.slats, { rotationX: -9 });
         opening = G.timeline({
           scrollTrigger: { trigger: hero, start: 0, end: function () { return hero.offsetHeight * 0.35; }, scrub: 0.4, invalidateOnRefresh: true }
         })
-          .fromTo(built.slats, { rotationX: -22 }, { rotationX: 0, duration: 1, ease: 'none', stagger: 0.02 }, 0)
+          .fromTo(built.slats, { rotationX: -9 }, { rotationX: 0, duration: 1, ease: 'none', stagger: 0.02 }, 0)
           .fromTo(stage, { '--open': 0 }, { '--open': 1, duration: 1, ease: 'none' }, 0);
       }
       startTimer();
