@@ -216,12 +216,11 @@ const PHOTOS = {
   var countEl = $('[data-strip-count]'), countNum = $('.num', countEl), lineB = $('.ctl__line b'), playBtn = $('[data-strip="play"]');
   var sceneCanvases = {};
   function drawPanel(p, half) {
-    var id = p.dataset.scene, list = sceneCanvases[id], c = $('canvas', p);
+    var id = p.dataset.scene, list = sceneCanvases[id];
     if (!list) return;
     if (half) { scene(list[0], id, .5); return; }
     scene(list[0], id);
     list.slice(1).forEach(function (cc) { if (!fit(cc)) return; cc.getContext('2d').drawImage(list[0], 0, 0, cc.width, cc.height); cc.parentNode.classList.add('is-drawn'); });
-    void c;
   }
   function heroPhoto(p, i) {
     var o = photo(PHOTOS.heroModels[i]); if (!o) return false;
@@ -374,29 +373,30 @@ const PHOTOS = {
   /* 로고타입 2행: 1행의 너비에 양끝이 맞게 자간 조정 */
   function fitLogotypes() {
     $$('.logotype').forEach(function (lt) {
-      var a = $('.logotype__1', lt), b = $('.logotype__2', lt);
-      b.style.setProperty('--ls2', '0em');
-      var fs = parseFloat(getComputedStyle(b).fontSize), n = b.textContent.length;
-      var wa = a.getBoundingClientRect().width, wb = b.getBoundingClientRect().width;
-      var ls = Math.max(0, (wa - wb) / (n - 1) / fs);
-      b.style.setProperty('--ls2', ls.toFixed(3) + 'em');
+      // 자간은 0.34em으로 두고 글자 크기를 풀어 1행 너비에 양끝을 맞춘다(인트로 중이어도 wdth 125 기준으로 잰다)
+      var a = $('.logotype__1', lt), b = $('.logotype__2', lt), keep = a.style.cssText;
+      a.style.fontVariationSettings = '"wdth" 125'; a.style.fontStretch = '125%';
+      b.style.fontSize = ''; b.style.setProperty('--ls2', '.34em');
+      var fs = parseFloat(getComputedStyle(b).fontSize);
+      var wa = a.getBoundingClientRect().width - parseFloat(getComputedStyle(a).paddingRight), wb = b.getBoundingClientRect().width - .34 * fs;
+      a.style.cssText = keep;
+      if (wb > 0) b.style.fontSize = (fs * wa / wb).toFixed(2) + 'px';
     });
   }
 
   /* =====================================================================
      5.2 기능 도해
      ===================================================================== */
-  var tech = $('#tech'), jk = $('#jk');
+  var tech = $('#tech'), jk = $('#jkStage');
   function drawTech() {
     if (!canDraw) return;
-    $$('.part', jk).forEach(function (pt) {
-      jacketTo($('canvas', pt), { model: 'hoody', color: 'ember', view: 'front', pose: 'flat', parts: [pt.dataset.part], bg: 'none' });
+    $$('.part', jk).forEach(function (pt, i) {
+      enqueue(function () { jacketTo($('canvas', pt), { model: 'hoody', color: 'ember', view: 'front', pose: 'flat', parts: [pt.dataset.part], bg: 'none' }); if (i === 3) jk.classList.add('is-drawn'); }, i === 1);
     });
     var cuts = [$('.cut__s', jk), $('.cut__d', jk), $('.cut__l', jk)];
     cuts.forEach(function (c) { fit(c); });
     SR.jacket.renderWindow(cuts, 'ember');
     var pk = $('.co__pack'); if (fit(pk)) SR.jacket.renderPack(pk, 'ember');
-    jk.classList.add('is-drawn');
   }
   near(tech, drawTech, '150% 0px');
   var coItems = $$('.co__i'), marks = $$('.mk', jk);
@@ -465,7 +465,7 @@ const PHOTOS = {
   var lookApi = (function () {
     var has3d = MOTION && W.CSS && CSS.supports('transform-style', 'preserve-3d');
     if (SHOT && W.CSS && CSS.supports('transform-style', 'preserve-3d') && ok) has3d = true;
-    var rot = 0, cur = 0, idleTw = null, idleOn = !SHOT && MOTION, idleStopped = SHOT || !MOTION, proxy, drag, R = 0, shades = lcards.map(function (c) { return $('.lcard__shade', c); });
+    var drawn = {}, rot = 0, cur = 0, idleTw = null, idleOn = !SHOT && MOTION, idleStopped = SHOT || !MOTION, proxy, drag, R = 0, shades = lcards.map(function (c) { return $('.lcard__shade', c); });
     var lookPlay = $('[data-look="play"]');
     function front() { return ((Math.round(-rot / 36) % NL) + NL) % NL; }
     function caption(i) {
@@ -523,7 +523,7 @@ const PHOTOS = {
         onDrag: function () { rot = this.x * .28; paint(); },
         onThrowUpdate: function () { rot = this.x * .28; paint(); },
         onClick: function (e) {
-          var el = D.elementFromPoint(e.clientX, e.clientY), c = el && el.closest && el.closest('.lcard');
+          var t = e.changedTouches ? e.changedTouches[0] : e, el = D.elementFromPoint(t.clientX, t.clientY), c = el && el.closest && el.closest('.lcard');
           if (c && +c.dataset.i === front()) openQV(c.dataset.p, c.dataset.color, null);
         },
         snap: { x: function (v) { return Math.round(v * .28 / 36) * 36 / .28; } }
@@ -566,7 +566,6 @@ const PHOTOS = {
     });
     $('[data-look-qv]').addEventListener('click', function () { var c = lcards[cur]; openQV(c.dataset.p, c.dataset.color, null); });
     // 카드 그림: 화면 근처에서 그린다. 휴대폰은 1/2 해상도로 먼저, 앞에 오면 원해상도로.
-    var drawn = {};
     function drawCard(i, full) {
       var c = lcards[i], cv = $('canvas', c), k = full || !PHONE() ? 1 : .5;
       if (drawn[i] >= k) return;
@@ -583,13 +582,16 @@ const PHOTOS = {
   // 아코디언: grid-template-rows 280ms. 퀵뷰 안에서는 한 번에 하나만.
   function accordion(root, single) {
     var btns = $$('.acc__btn', root);
+    function set(b, open) { b.setAttribute('aria-expanded', String(open)); var pn = D.getElementById(b.getAttribute('aria-controls')); pn.classList.toggle('is-open', open); pn.inert = !open; }
     btns.forEach(function (b) {
+      set(b, b.getAttribute('aria-expanded') === 'true');
       b.addEventListener('click', function () {
         var open = b.getAttribute('aria-expanded') !== 'true';
-        if (single && open) btns.forEach(function (o) { if (o !== b) o.setAttribute('aria-expanded', 'false'); });
-        b.setAttribute('aria-expanded', String(open));
+        if (single && open) btns.forEach(function (o) { if (o !== b) set(o, false); });
+        set(b, open);
       });
     });
+    return set;
   }
   accordion($('.look .acc'), false);
 
@@ -736,7 +738,7 @@ const PHOTOS = {
   var qC = $('.qv__c', qv), qC2 = $('.qv__c--b', qv), Qs = { id: null, color: null, size: null, qty: 1, view: 'front', from: null, rec: null };
   var qf = function (k) { return $('[data-q="' + k + '"]', qv); };
   var lastOpener = null;
-  accordion($('.qv__acc', qv), true);
+  var qAccSet = accordion($('.qv__acc', qv), true);
   function qOpts(lx) { var p = PI[Qs.id]; return { model: p.model, color: Qs.color, view: Qs.view, bg: 'studio', light: { x: lx == null ? .25 : lx } }; }
   function qDraw(fade) {
     var p = PI[Qs.id], ph2 = cardPhoto(Qs.id, Qs.color)[Qs.view === 'front' ? 0 : 1];
@@ -803,7 +805,7 @@ const PHOTOS = {
     qf('err').hidden = true; qf('sizes').removeAttribute('aria-describedby');
     $('[data-find-out]', qv).textContent = ''; $('[data-find]', qv).reset();
     $('[data-sg]', qv).setAttribute('aria-expanded', 'false'); $('#sg').hidden = true;
-    $$('.qv__acc .acc__btn', qv).forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+    $$('.qv__acc .acc__btn', qv).forEach(function (b) { qAccSet(b, false); });
     $$('.qv__view button', qv).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === 'front')); });
     qSwatches(); qSizes(); qTable(); qStock(); qQty(); syncWish();
     $('[data-add]', qv).textContent = '장바구니 담기';
@@ -1009,7 +1011,7 @@ const PHOTOS = {
       $('.line__img', li).appendChild(thumb(l.id, l.color));
       ul.appendChild(li);
     });
-    if (focusSel) { var f = $(focusSel, ul); if (f && !f.disabled) f.focus(); else { var any = $('[data-i="' + D.activeElement + '"]', ul); void any; } }
+    if (focusSel) { var f = $(focusSel, ul); if (f && f.disabled) f = f.parentNode.querySelector('button:not([disabled])'); if (f) f.focus(); }
     var empty = !lines.length;
     $('[data-empty]', dr).hidden = !empty; $('[data-ship]', dr).hidden = empty; $('[data-tot]', dr).hidden = empty;
     if (empty) { var ep = $('.empty__pack', dr); if (canDraw && !ep.dataset.d) { ep.width = 304; ep.height = 176; SR.jacket.renderPack(ep, 'dawn'); ep.dataset.d = 1; } }

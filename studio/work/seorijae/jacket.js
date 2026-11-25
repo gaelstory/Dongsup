@@ -356,10 +356,13 @@
   function rr(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
 
   // 광택 층: 칸마다 가장 밝은 띠 위에 1~3조각. 가로 위치는 light.x를 따라간다. 화면에서는 이 층만 다시 합성한다.
-  function gloss(L, lx, col) {
+  function gloss(L, lx, col, temp) {
     var k = lx.toFixed(2) + col;
-    if (L.gl[k]) return L.gl[k];
-    var g = L.g, c = L.gl[k] = cv(L.W, L.H), x = c.getContext('2d'), SM = [L.S, 0, 0, L.S, 0, 0], C = COLORS[col];
+    if (!temp && L.gl[k]) return L.gl[k];
+    var g = L.g, c, C = COLORS[col];
+    if (temp) { c = L.tmp || (L.tmp = cv(L.W, L.H)); c.getContext('2d').clearRect(0, 0, L.W, L.H); }
+    else c = L.gl[k] = cv(L.W, L.H);
+    var x = c.getContext('2d'), SM = [L.S, 0, 0, L.S, 0, 0];
     var long = col === 'basalt' ? 1.5 : col === 'frost' ? .8 : 1;
     L.order.forEach(function (key, idx) {
       var p = g.parts[key], M = mul(SM, p.M), r = rng(90 + idx * 13), bb = p.bbox, mid = (bb[0] + bb[2]) / 2, half = (bb[2] - bb[0]) / 2;
@@ -406,11 +409,11 @@
   }
 
   // 색 합성(8ms 이내): 무광 바탕 → 광택 screen → 가장자리 안쪽 선 → 부속
-  function compose(L, col, lx, out, gk) {
+  function compose(L, col, lx, out, gk, temp) {
     var C = COLORS[col], x = out.getContext('2d'), S = L.S, g = L.g;
     x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, out.width, out.height);
     x.drawImage(matte(L, col), 0, 0);
-    x.globalCompositeOperation = 'screen'; x.globalAlpha = C.gloss * (gk || 1); x.drawImage(gloss(L, lx, col), 0, 0); x.globalAlpha = 1;
+    x.globalCompositeOperation = 'screen'; x.globalAlpha = C.gloss * (gk || 1); x.drawImage(gloss(L, lx, col, temp), 0, 0); x.globalAlpha = 1;
     x.globalCompositeOperation = 'source-over';
     L.order.forEach(function (k) {
       var p = g.parts[k]; x.save(); setT(x, mul([S, 0, 0, S, 0, 0], p.M)); x.clip(p.path);
@@ -506,7 +509,7 @@
     S = Math.round(S * 400) / 400;
     var L = getLayers(o, S), tmp = relight.t || (relight.t = {});
     var key = L.W + 'x' + L.H, c = tmp[key] || (tmp[key] = cv(L.W, L.H));
-    compose(L, o.color, lx, c);
+    compose(L, o.color, lx, c, o.glossK, true);
     var ox = o.bg === 'studio' ? (w - 1000 * S) / 2 : (w - 1000 * S) / 2, oy = o.bg === 'studio' ? (h - vh * S) / 2 - top * S - h * .025 : (h - 1200 * S) / 2;
     var x = canvas.getContext('2d');
     if (o.bg === 'studio') { studio(x, w, h, ox + 120 * S, oy, 760 * S, oy + (visualBot(o) - 8) * S); soft(x, c, ox, oy); } else x.clearRect(0, 0, w, h);

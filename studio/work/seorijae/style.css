@@ -769,3 +769,8 @@ html.shot .acc__panel, html.shot .promo { transition: none; }
 /* 컨셉 배지 자리(왼쪽 아래 60px)를 비운다 */
 .ft { padding-bottom: 72px; }
 @media print { .tabs, .promo, .strip__ctl, .search, .toast { display: none; } }
+
+/* 모바일 시트 손잡이(아래로 80px 끌면 닫힘) */
+.qv__grip { position: absolute; z-index: 4; left: 50%; top: 0; width: 120px; height: 44px; margin-left: -60px; touch-action: none; cursor: grab; }
+.qv__grip::before { content: ""; position: absolute; left: 50%; top: 10px; width: 36px; height: 4px; margin-left: -18px; border-radius: 2px; background: rgba(17, 19, 21, .32); }
+@media (min-width: 768px) { .qv__grip { display: none; } }

@@ -150,7 +150,8 @@
     for (var pi = 0; pi < panelTexts.length; pi++) {
       var op = 1;
       if (mqWide.matches && !reduce && !isShot) {
-        var dd = smSp - pi;
+        // keyed to the real scroll position so the copy is never left hidden while a slow device catches up
+        var dd = clamp(rawSp, -1, 3) - pi;
         // the bottle moves during f 0.3..0.7 of each segment, so the copy clears just before and returns just after
         op = dd >= 0 ? 1 - smooth(0.2, 0.3, dd) : smooth(-0.3, -0.2, dd);
       }
