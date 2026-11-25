@@ -745,6 +745,7 @@ html:not(.js) .mobile-menu a { min-height: 44px; font-family: var(--f-body); fon
 [data-poster="film36"] { --c: #070707; --fg: #FFFFFF; }
 [data-poster="heavy-club"] { --c: #E4E3DE; --fg: #0F1A3A; }
 [data-poster="mitjul-academy"] { --c: #FAFAF4; --fg: #0F1A3A; }
+[data-poster="seorijae"] { --c: #0B0C0E; --fg: #FFFFFF; }
 
 .thumb__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; color: transparent; }
 
@@ -867,24 +868,18 @@ html:not(.js) .mobile-menu a { min-height: 44px; font-family: var(--f-body); fon
   .work-grid.is-stagger { padding-bottom: var(--stagger); }
   .work__end-frame { padding: var(--sp-8); }
   .work-grid.is-stagger > .card:nth-child(3n + 2) { position: relative; top: var(--stagger); }
-  /* sixteen cards leave two empty cells in the last row: the closing invitation fills them */
-  .work-grid.is-stagger > .work__end { grid-column: 2 / span 2; margin-top: 0; position: relative; top: var(--stagger); }
-  .work-grid.is-stagger > .work__end .work__end-frame {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) var(--sp-7) minmax(0, 1fr);   /* same as the grid's column gap */
-    padding: 0;
-    text-align: left;
-  }
-  /* a sizer one column wide and 16:10 tall, so the frame is exactly as tall as a thumbnail */
+  /* seventeen cards leave one cell (the right column of the last row): the closing invitation takes it.
+     The right column is not lowered, so the frame starts on the row line. */
+  .work-grid.is-stagger > .work__end { grid-column: 3; margin-top: 0; }
+  .work-grid.is-stagger > .work__end .work__end-frame { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0; text-align: left; }
+  /* a 16:10 sizer, so the frame is at least as tall as a thumbnail */
   .work-grid.is-stagger > .work__end .work__end-frame::before { content: ""; grid-area: 1 / 1; aspect-ratio: 16 / 10; }
-  .work-grid.is-stagger > .work__end .work__end-frame .btn { white-space: nowrap; flex: none; }
   .work-grid.is-stagger > .work__end .work__end-inner {
-    grid-area: 1 / 1 / 2 / 4;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--sp-7);
-    padding: 0 clamp(var(--sp-6), 3vw, var(--sp-8));
+    grid-area: 1 / 1;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--sp-5);
+    padding: var(--sp-6);
   }
 }
 .work-grid.is-collapsed > .card:nth-child(n + 7) { display: none; }
