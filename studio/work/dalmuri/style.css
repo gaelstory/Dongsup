@@ -793,3 +793,20 @@ div.book__step { gap: var(--sp-3); }
   .course__won { font-size: var(--t-figure); }
   .course__fine { margin-top: var(--sp-3); font-size: var(--t-cap); }
 }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* 보조 글자를 한 단계 밝게: 칠흑 위 9.3:1, 비활성 7.2:1, 숯 위 자리표시 6.5:1 */
+  :root { --dim: #B8B2A5; --faint: #A39D90; --placeholder: #A8A295; }
+  /* 고운바탕 본문, 보조, 캡션, 입력 글자에 얇은 획 보강 (어두운 바탕 위 밝은 글자라 .25px) */
+  body { -webkit-text-stroke: .25px currentColor; }
+  /* 송명 제목체, 굵은 버튼, SVG 글자, 공용 배지는 그대로 */
+  h1, h2, h3, .logo__word, .toc__list a, .philo__lead, .philo__seal, .philo__rules dt,
+  .course__cap-name, .course__name, .course__won, .space__notes strong, .cal__month,
+  .book__date:not(.is-empty), .foot__word, .btn, svg, svg *, .concept-badge { -webkit-text-stroke: 0; }
+  .toc__ord, .book__date small { -webkit-text-stroke: .25px currentColor; }
+}
+@media (max-resolution: 1.49dppx) and (min-width: 900px), (-webkit-max-device-pixel-ratio: 1.49) and (min-width: 900px) {
+  /* 14px 캡션을 본문과 같은 17px로: 크기 대신 색(--dim)으로 위계를 둔다 */
+  :root { --t-cap: var(--t-body); }
+}
