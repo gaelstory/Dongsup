@@ -69,6 +69,12 @@
       if (t) s.textContent = t;
     });
     if (PRICE.first) $$('[data-price-line]').forEach(function (e) { e.hidden = false; });
+    $$('[data-price-times]').forEach(function (s) {
+      var m = /^(\w+)\*(\d+)$/.exec(s.getAttribute('data-price-times') || '');
+      var d = m && document.querySelector('[data-price="' + m[1] + '"]');
+      var n = d ? Number(d.getAttribute('value')) : NaN;
+      if (n > 0) s.textContent = (n * Number(m[2])).toLocaleString('ko-KR') + '원';
+    });
   }
 
   function isPlaceholder(v) {
@@ -1360,7 +1366,7 @@
         return [
           '[' + (C.name || '첫화면 스튜디오') + ' 제작 의뢰서]',
           line('성함/상호', d.name), line('연락처', d.phone), line('이메일', d.email), line('답변 방법', d.replyBy),
-          line('업종', d.industry), line('필요한 구성', d.package), line('예산', d.budget), line('희망 오픈 시기', d.timeline),
+          line('업종', d.industry), line('필요한 구성', d.package), line('월 예산', d.budget), line('희망 오픈 시기', d.timeline),
           line('마음에 든 시안', d.likedWorks), line('참고 사이트', d.reference), line('필요한 기능', d.features),
           line('준비된 자료', d.materials), d.message ? '하고 싶은 이야기:\n' + d.message : null,
           '개인정보 수집·이용 동의: 동의함 (' + stamp(d.consentAt) + ')'
@@ -1374,7 +1380,7 @@
         '답변 방법: ' + or(d.replyBy),
         '업종: ' + or(d.industry),
         '필요한 구성: ' + or(d.package),
-        '예산: ' + or(d.budget),
+        '월 예산: ' + or(d.budget),
         '희망 오픈 시기: ' + or(d.timeline),
         '마음에 든 시안: ' + or(d.likedWorks),
         '참고 사이트: ' + or(d.reference),

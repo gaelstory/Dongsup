@@ -1124,6 +1124,7 @@ html:not(.js) .cursor-label { display: none; }
   color: var(--on-ink);
 }
 .price__won { margin-left: .08em; font-size: var(--fs-body); font-weight: 700; letter-spacing: 0; }
+.price__per { margin-right: .12em; font-size: var(--fs-body); font-weight: 700; letter-spacing: 0; }
 .price--quote { white-space: normal; }
 .row-samples a { padding-block: var(--sp-3); color: var(--on-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .24em; }
 .sample-thumbs { display: none; }
