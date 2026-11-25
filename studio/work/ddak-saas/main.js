@@ -62,6 +62,15 @@
     panel.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen()) { set(false); btn.focus(); } });
     document.addEventListener('click', function (e) { if (isOpen() && !e.target.closest('.nav')) set(false); });
+    // one filled primary action per view: the header CTA turns to an outline while a section's own CTA is visible
+    var cta = panel.querySelector('.nav__cta'), seen = new Set();
+    if (cta && 'IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) {
+        en.forEach(function (e) { if (e.isIntersecting) seen.add(e.target); else seen.delete(e.target); });
+        cta.classList.toggle('is-quiet', seen.size > 0);
+      });
+      document.querySelectorAll('.hero__actions .btn--primary, .price-table .btn--primary, #signup .btn').forEach(function (b) { io.observe(b); });
+    }
     var tick = false;
     window.addEventListener('scroll', function () {
       if (tick) return;

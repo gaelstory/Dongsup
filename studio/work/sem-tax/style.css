@@ -340,7 +340,7 @@ svg { display: block; }
   .amt--total { font-size: var(--fs-2xl); }
   .lrow--total .lc--label { font-size: var(--fs-lg) !important; }
   .hero__ledger .lrow--total .lc--memo { position: relative; inset: auto; display: block; grid-area: memo; }
-  .seal--ok { width: 112px; height: 112px; right: -28px; top: -30px; margin: 0; }
+  .seal--ok { width: 104px; height: 104px; right: 0; top: -18px; margin: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero__ledger .lc--memo .memo { transform: none !important; }
