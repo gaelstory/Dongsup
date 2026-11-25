@@ -1874,3 +1874,11 @@ html:not(.js) .cursor-label { display: none; }
   .band { background: var(--surface); color: var(--ink); }
   .band * { color: var(--ink) !important; }
 }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md)
+   On low-density monitors the 14px grey captions and the small light-on-ink lines render with 1px hairlines and look faint.
+   Phones and retina screens are unaffected. */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  :root { --mist: #4A5266; }  /* 7.1:1 on paper, 7.8:1 on white (5.4:1 elsewhere) */
+  .footer__biz, .footer__contact dt, .pricing__fine { -webkit-text-stroke: .25px currentColor; }
+}

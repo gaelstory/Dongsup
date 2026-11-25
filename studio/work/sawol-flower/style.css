@@ -524,3 +524,23 @@ html:not(.js) .hero__hint { display: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
 @media print { .hero__garden, .petals, .hero__wind { display: none; } }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* darker secondary so small thin serif text reaches about 7:1 */
+  :root { --soil-soft: #54463D; --on-stem-2: #E6F0EA; }
+  /* Nanum Myeongjo at 400: a hairline stroke keeps its thin strokes whole at 1x; lighter on dark surfaces */
+  body { -webkit-text-stroke: 0.3px currentColor; }
+  .bench, .site-footer { -webkit-text-stroke: 0.25px currentColor; }
+  /* never on the Yeon Sung display face, bold text or the studio badge */
+  h1, h2, h3, .field__legend, .brand__name, .price, .roll, .chip--size b, .month__num, .month-detail__when, .plan__name, .day__time, .site-footer__name,
+  b, strong, .btn, .skip-link, .nav__toggle, .nav__list a, .hero__hint, .tag__mean, .tag__meta, .chip > span, .pick > span, .cycle__opt span,
+  .month-detail__names, .month-detail__now, .sub__dates-label, .contact dt, .contact dd a, .site-footer__nav a, .concept-badge { -webkit-text-stroke: 0; }
+  /* 400-weight text that sits inside a display or bold parent gets it back */
+  .tag__mean span, .tag__meta span + span, .chip--size small { -webkit-text-stroke: 0.3px currentColor; }
+  .field__count, .field__optional, .bench .chip--size small { -webkit-text-stroke: 0.25px currentColor; }
+}
+@media (min-width: 900px) and (max-resolution: 1.49dppx), (min-width: 900px) and (-webkit-max-device-pixel-ratio: 1.49) {
+  /* thin serif body text never below 17px on a desktop monitor */
+  :root { --fs-1: 15px; --fs-2: 17px; }
+}

@@ -586,3 +586,22 @@ h2 { font-size: clamp(38px, 9.4vw, 72px); }
   .item__name { font-size: var(--fs-3); }
   .item__price { font-size: var(--fs-2); }
 }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  :root { --cocoa-soft: #5C3A22; } /* secondary text reaches 7.3:1 on butter, 7.5:1 on mint */
+  /* Gowun Dodum body and secondary text gets a hairline of its own colour */
+  body { -webkit-text-stroke: .3px currentColor; }
+  .story, .site-foot, .batch.is-next .batch__state { -webkit-text-stroke-width: .25px; }
+  /* never on the display face, the stickers or anything drawn in SVG */
+  h1, h2, h3, .btn, .logo__word, .menu-btn, .shake, .first-batch, .rack__now-label, .bake__now strong,
+  .batch__time, .batch__name, .item__name, .item__price, .story__sign, .recipe__title, .recipe__list dt,
+  .stamp__status, .coupon__title, .coupon__count, .slot__num, .coupon__prize, .info dt, .foot__logo,
+  svg, svg * { -webkit-text-stroke-width: 0; }
+}
+@media (max-resolution: 1.49dppx) and (max-width: 959px), (-webkit-max-device-pixel-ratio: 1.49) and (max-width: 959px) {
+  .site-nav a { -webkit-text-stroke-width: 0; } /* the open phone menu uses the display face */
+}
+@media (max-resolution: 1.49dppx) and (min-width: 900px), (-webkit-max-device-pixel-ratio: 1.49) and (min-width: 900px) {
+  .rack__hours i, .batch__state { font-size: var(--fs-2); }
+}

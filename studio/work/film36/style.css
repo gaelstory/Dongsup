@@ -539,3 +539,28 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(.9); opac
   *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; }
 }
 @media print { body::after, .tray, .loupe { display: none !important; } }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* secondary steps reach about 7:1 or more at 1x: silver 8.0:1 on chemical, ink-2 8.0:1 on paper */
+  :root { --silver: #A8A8A4; --ink-2: #4A4742; }
+  /* Gowun Batang is mostly light on dark here, so the hairline starts at .25px */
+  body { -webkit-text-stroke: .25px currentColor; }
+  input, select, textarea { -webkit-text-stroke: .25px currentColor; }
+  .print, .sheet { -webkit-text-stroke-width: .3px; }
+  /* never on Bodoni, bold Korean, or anything drawn in SVG */
+  h1, h2, h3, .mark, .btn, .num, .reel__count, .step__n, .frame__edge, .frame__no, .foot__mark, .plan__name,
+  .select__count, .field label, .viewer__title, .print__no, .next-photo__n, .cut__no,
+  svg, svg * { -webkit-text-stroke-width: 0; }
+  .field__opt { -webkit-text-stroke-width: .25px; }
+}
+@media (max-resolution: 1.49dppx) and (max-width: 1023px), (-webkit-max-device-pixel-ratio: 1.49) and (max-width: 1023px) {
+  .site-nav a { -webkit-text-stroke-width: 0; } /* the open menu is set in bold */
+}
+@media (max-resolution: 1.49dppx) and (min-width: 900px), (-webkit-max-device-pixel-ratio: 1.49) and (min-width: 900px) {
+  .btn-text, .reel__lead, .frame__tag, .info dt, .sheet__label, .field__err, .form__cuts,
+  .foot__copy, .foot__disclaimer { font-size: var(--fs-17); }
+}
+@media (max-resolution: 1.49dppx) and (min-width: 1024px), (-webkit-max-device-pixel-ratio: 1.49) and (min-width: 1024px) {
+  .site-nav a { font-size: var(--fs-17); }
+}

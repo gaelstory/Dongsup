@@ -926,3 +926,17 @@ html:not(.js) .concern + .concern { padding-top: var(--sp-7); border-top: 1px so
   .hero__hint { display: none; }
 }
 @media print { .site-header, .skin { display: none; } .hero { min-height: 0; background: none; } }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* Noto Sans KR 400 in the secondary grey thins out at 1x; a hairline stroke restores the stems */
+  .principle__text, .concerns__intro, .compare__note, .doctors__intro, .doctor__bio, .fees__intro, .fees__notice,
+  .price tbody td:not(.price__cost), .status__text, .hours-card__foot, .hours__note, .map__caption,
+  .field__help, .field__optional {
+    -webkit-text-stroke: 0.3px currentColor;
+  }
+  /* light text at 400 on the deep band and the ink footer */
+  .booking__intro, .booking__points, .site-footer p:not(.footer__brand) {
+    -webkit-text-stroke: 0.25px currentColor;
+  }
+}

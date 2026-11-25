@@ -463,3 +463,47 @@ a[href^="tel"] { display: inline-block; padding: var(--s-3) 0; margin: calc(var(
   *, *::before, *::after { animation-duration: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0s !important; transition-delay: 0s !important; }
 }
 @media print { .site-header, .playground .ball, .ball-hint { display: none; } }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* Gowun Dodum body and secondary text gets a hairline stroke so it does not break up at 1x */
+  body { -webkit-text-stroke: 0.3px currentColor; }
+  /* the Jua display face, svg text and the drawings stay exactly as drawn */
+  h1, h2, h3,
+  .skip-link,
+  .btn,
+  .brand-ko,
+  .brand-sub,
+  .nav-list a,
+  .mobile-menu a:not(.btn),
+  .mat-label,
+  .ball-hint,
+  .fetch-count,
+  .stop-time,
+  .diary-list strong,
+  .phone-sticker,
+  .phone-app,
+  .page-text,
+  .page-stats dd,
+  .pager-label,
+  .seg-opt span,
+  .weight-label,
+  .quote-class,
+  .quote-price,
+  .scale-read,
+  .step-num,
+  .field label, .field legend,
+  .field-error,
+  .size-chip span,
+  .done-title,
+  .visit-list dt,
+  .map-text,
+  .map-label,
+  .footer-mark,
+  .footer-nav a,
+  svg text { -webkit-text-stroke: 0; }
+}
+@media (min-width: 900px) and (max-resolution: 1.49dppx), (min-width: 900px) and (-webkit-max-device-pixel-ratio: 1.49) {
+  /* small Gowun Dodum captions move up one step on desktop monitors */
+  .page-date, .page-stats dt, .weight-scale, .optional, .footer-legal { font-size: var(--fs-sm); }
+}

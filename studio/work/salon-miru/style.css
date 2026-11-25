@@ -577,3 +577,15 @@ html:not(.tabs-js) .tabs, html:not(.tabs-js) .dur-toggle, html:not(.reel-js) .re
 .hero:has(input[value="choco"]:checked) { --hair-root: #2E1B14; --hair-tip: #6A4632; }
 .hero:has(input[value="rose"]:checked) { --hair-root: #7A3B46; --hair-tip: #E3A9A0; }
 .hero:has(input[value="black"]:checked) { --hair-root: #0F0D0E; --hair-tip: #3A3436; }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* secondary text darkens to about 7.7:1 on champagne and 9.6:1 on pearl */
+  :root { --ink-soft: #4A3D41; }
+  /* small Sunflower secondary text gets a hairline stroke; Grandiflora display and the hair canvas are untouched */
+  .section-note, .brand-en, .swatches-legend, .promises p, .dial-figure figcaption, .designer-role, .designer-quote,
+  .tab, .menu-desc, .menu-dur, .book-step-item, .book-hint, .pick-text span, .when-label span, .summary dt, .optional,
+  .done-text, .visit-list dt, .map-figure figcaption, .tab-note, .reel-keys { -webkit-text-stroke: 0.25px currentColor; }
+  /* light text on the wine footer: a lighter hairline */
+  .footer-line, .footer-info, .footer-legal { -webkit-text-stroke: 0.25px currentColor; }
+}

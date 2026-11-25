@@ -703,3 +703,11 @@ html:not(.js) .twin-toggle { display: none; }
   .site-header, .hero-visual, .hero-scrim, .twin-toggle { display: none; }
   .hero { min-height: 0; }
 }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md)
+   Gothic A1 400 light-on-navy loses stem weight at 1x; a .25px stroke fills it in.
+   Display text, bold headings, dark-on-white pills and SVG text stay unstroked. Phones/retina are unchanged. */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  body { -webkit-text-stroke: 0.25px currentColor; }
+  h1, h2, h3, .brand-word, .case-stat .num, .sol-metric .num, .pill-white, .skip-link, svg, svg * { -webkit-text-stroke: 0; }
+}

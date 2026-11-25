@@ -701,3 +701,11 @@ html:not(.js) .qa__a { grid-template-rows: 1fr; }
   .c-chip .chip { height: 19px; }
   .inbox__pile { min-height: 230px; }
 }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* small grey captions (12-13px at 400) read faint on a monitor: a slightly darker grey, still lighter than --sub */
+  :root { --fog: #5E5B73; }
+  /* small light text on the ink footer gets the 500 weight the page already loads */
+  .site-footer__line, .site-footer__info, .site-footer__note { font-weight: 500; }
+}
