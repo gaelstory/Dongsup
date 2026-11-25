@@ -977,7 +977,7 @@
 
   /* ---------- request form ---------- */
 
-  var PKG_NAMES = { basic: '기본형', plus: '기능형' };
+  var PKG_NAMES = { basic: '기본형', plus: '기능형', corp: '기업형' };
 
   // Korean numbers as people actually write them: mobile 010, Seoul 02, area codes, 070, 050x safe numbers,
   // 15xx/16xx/18xx business numbers, and +82 / 82 prefixes (turned into the domestic 0 form).

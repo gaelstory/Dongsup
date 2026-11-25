@@ -142,7 +142,7 @@
         </div>
 
         <div class="work-grid is-stagger" id="work-grid" data-grid>
-          <article class="card" data-slug="haeon-systems" data-category="pro" data-color="#0A1430" data-fg="#FFFFFF" data-package="기본형" data-name="해온 시스템즈" data-kind="AI 스마트 항만·공간">
+          <article class="card" data-slug="haeon-systems" data-category="pro" data-color="#0A1430" data-fg="#FFFFFF" data-package="기업형" data-name="해온 시스템즈" data-kind="AI 스마트 항만·공간">
             <a class="card__thumb" href="work/haeon-systems/index.html">
               <span class="thumb">
                 <span class="poster" data-poster="haeon-systems" aria-hidden="true">
@@ -157,7 +157,7 @@
               <div class="card__text">
                 <h3 class="card__name">해온 시스템즈</h3>
                 <p class="card__kind">AI 스마트 항만·공간</p>
-                <p class="card__pkg">기본형 견본</p>
+                <p class="card__pkg">기업형 견본</p>
               </div>
               <a class="card__ask textbtn" href="#request" data-ask="haeon-systems">이 느낌으로 문의</a>
             </div>
@@ -668,7 +668,7 @@
               </li>
             </ol>
             <div class="process__end">
-              <p class="process__summary">자료를 받은 날부터 오픈까지 기본형은 영업일 7~15일(약 1~3주), 기능형은 15~25일(약 3~5주)이 기준입니다.</p>
+              <p class="process__summary">자료를 받은 날부터 오픈까지 기본형은 영업일 7~15일(약 1~3주), 기능형은 15~25일(약 3~5주)이 기준입니다. 기업형은 상담 후 정합니다.</p>
               <a class="btn btn--primary" href="#request">첫 걸음, 무료 상담 신청하기</a>
             </div>
           </div>
@@ -681,7 +681,7 @@
       <div class="wrap">
         <div class="pricing__head">
           <h2 class="h2 has-mark" id="pricing-title">도메인, 호스팅, 관리까지<br>단돈 월 5만 원</h2>
-          <p class="pricing__intro">제작비는 0원. 도메인 등록부터 호스팅, 관리, 오류 수정까지 월 요금 하나로 끝납니다. 예약, 회원, 결제처럼 서버나 별도 기능이 필요할 때만 월 10만 원입니다.</p>
+          <p class="pricing__intro">제작비는 0원. 도메인 등록부터 호스팅, 관리, 오류 수정까지 월 요금 하나로 끝납니다. 예약, 회원, 결제처럼 서버나 별도 기능이 필요할 때만 월 10만 원입니다. 큰 기업 홈페이지는 따로 견적을 드립니다.</p>
         </div>
 
         <div class="seg seg--ink pkg-tabs" role="radiogroup" aria-label="요금제 선택" data-seg data-pkg-tabs hidden>
@@ -689,6 +689,7 @@
             <div class="seg__track">
               <label class="seg__item"><input type="radio" name="pkgTab" value="basic" checked><span class="seg__label">기본형</span></label>
               <label class="seg__item"><input type="radio" name="pkgTab" value="plus"><span class="seg__label">기능형</span></label>
+              <label class="seg__item"><input type="radio" name="pkgTab" value="corp"><span class="seg__label">기업형</span></label>
             </div>
           </div>
         </div>
@@ -701,53 +702,69 @@
                 <td class="pkg-corner" role="cell"></td>
                 <th scope="col" role="columnheader" data-col="basic" class="is-pick"><span class="pkg-name">기본형</span><span class="pkg-pick">대부분의 가게는 이걸로 충분합니다</span></th>
                 <th scope="col" role="columnheader" data-col="plus"><span class="pkg-name">기능형</span></th>
+                <th scope="col" role="columnheader" data-col="corp"><span class="pkg-name">기업형</span></th>
               </tr>
             </thead>
             <tbody role="rowgroup">
               <tr role="row" class="row-lede">
                 <th scope="row" role="rowheader">한 줄 설명</th>
-                <td role="cell" data-col="basic" data-label="한 줄 설명" class="is-pick">가게, 병원, 학원, 회사를 알리는 홈페이지</td>
+                <td role="cell" data-col="basic" data-label="한 줄 설명" class="is-pick">가게, 병원, 학원, 사무소를 알리는 홈페이지</td>
                 <td role="cell" data-col="plus" data-label="한 줄 설명">예약, 회원, 게시판, 결제처럼 서버나 별도 기능이 필요한 홈페이지</td>
+                <td role="cell" data-col="corp" data-label="한 줄 설명">회사 소개, 홍보, 투자 정보까지 담는 큰 기업 홈페이지</td>
               </tr>
               <tr role="row" class="row-price">
                 <th scope="row" role="rowheader">월 요금</th>
                 <td role="cell" data-col="basic" data-label="월 요금" class="is-pick"><data class="price" value="50000" data-price="basic"><span class="price__per">월 </span>50,000<span class="price__won">원</span></data></td>
                 <td role="cell" data-col="plus" data-label="월 요금"><data class="price" value="100000" data-price="plus"><span class="price__per">월 </span>100,000<span class="price__won">원</span></data></td>
+                <td role="cell" data-col="corp" data-label="월 요금"><data class="price price--quote" value="quote" data-price="corp">별도 견적</data></td>
               </tr>
               <tr role="row">
                 <th scope="row" role="rowheader">제작비</th>
                 <td role="cell" data-col="basic" data-label="제작비" class="is-pick">0원</td>
                 <td role="cell" data-col="plus" data-label="제작비">0원</td>
+                <td role="cell" data-col="corp" data-label="제작비">견적에 따라</td>
+              </tr>
+              <tr role="row">
+                <th scope="row" role="rowheader">페이지 수</th>
+                <td role="cell" data-col="basic" data-label="페이지 수" class="is-pick">10페이지까지</td>
+                <td role="cell" data-col="plus" data-label="페이지 수">20페이지까지</td>
+                <td role="cell" data-col="corp" data-label="페이지 수">20페이지 이상</td>
               </tr>
               <tr role="row">
                 <th scope="row" role="rowheader">월 요금에 포함</th>
                 <td role="cell" data-col="basic" data-label="월 요금에 포함" class="is-pick">도메인, 호스팅, 보안 접속, 관리, 오류 수정</td>
                 <td role="cell" data-col="plus" data-label="월 요금에 포함">기본형 전부, 서버와 기능 운영</td>
+                <td role="cell" data-col="corp" data-label="월 요금에 포함">기능형 전부, 운영 범위는 협의</td>
               </tr>
               <tr role="row">
                 <th scope="row" role="rowheader">디자인</th>
                 <td role="cell" data-col="basic" data-label="디자인" class="is-pick">맞춤 디자인, 첫 화면 전용 연출</td>
                 <td role="cell" data-col="plus" data-label="디자인">맞춤 디자인, 첫 화면 전용 연출</td>
+                <td role="cell" data-col="corp" data-label="디자인">기획부터 함께 설계, 3D 연출, 다국어</td>
               </tr>
               <tr role="row">
                 <th scope="row" role="rowheader">제작 기간</th>
                 <td role="cell" data-col="basic" data-label="제작 기간" class="is-pick">영업일 7~15일</td>
                 <td role="cell" data-col="plus" data-label="제작 기간">영업일 15~25일</td>
+                <td role="cell" data-col="corp" data-label="제작 기간">협의</td>
               </tr>
               <tr role="row">
                 <th scope="row" role="rowheader">이런 분께</th>
                 <td role="cell" data-col="basic" data-label="이런 분께" class="is-pick">매장, 병원, 학원, 사무소, 1인 사업</td>
                 <td role="cell" data-col="plus" data-label="이런 분께">숙소·클래스 예약, 회원제, 쇼핑몰</td>
+                <td role="cell" data-col="corp" data-label="이런 분께">법인, 상장사, 공공기관</td>
               </tr>
               <tr role="row" class="row-samples">
                 <th scope="row" role="rowheader">견본 시안</th>
                 <td role="cell" data-col="basic" data-label="견본 시안" class="is-pick"><a href="work/gyeol-clinic/index.html">결 피부과의원</a>, <a href="work/sawol-flower/index.html">꽃집 사월</a> 외</td>
                 <td role="cell" data-col="plus" data-label="견본 시안"><a href="work/seorijae/index.html">서리재 SEORIJAE</a>, <a href="work/supmeong-stay/index.html">숲멍 스테이</a></td>
+                <td role="cell" data-col="corp" data-label="견본 시안"><a href="work/haeon-systems/index.html">해온 시스템즈</a></td>
               </tr>
               <tr role="row" class="row-cta">
                 <th scope="row" role="rowheader"><span class="visually-hidden">문의하기</span></th>
                 <td role="cell" data-col="basic" data-label="" class="is-pick"><a class="btn btn--light" href="#request" data-pick-package="basic">기본형으로 문의</a></td>
                 <td role="cell" data-col="plus" data-label=""><a class="textbtn textbtn--ink" href="#request" data-pick-package="plus">기능형으로 문의</a></td>
+                <td role="cell" data-col="corp" data-label=""><a class="textbtn textbtn--ink" href="#request" data-pick-package="corp">기업형 견적 문의</a></td>
               </tr>
             </tbody>
           </table>
@@ -815,7 +832,7 @@
         <div class="faq__list layout-12__main" data-faq>
           <details class="qa">
             <summary class="qa__q"><span class="qa__text">제작 기간은 얼마나 걸리나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
-            <div class="qa__a"><p>기본형은 영업일 7~15일, 기능형은 15~25일이 기준입니다. 자료를 받은 날부터 세며, 시안 확인이 늦어지면 그만큼 뒤로 밀립니다. 급하시면 급행 제작 옵션으로 기간을 30% 정도 줄일 수 있습니다.</p></div>
+            <div class="qa__a"><p>기본형은 영업일 7~15일, 기능형은 15~25일이 기준이고, 기업형은 상담 후 정합니다. 자료를 받은 날부터 세며, 시안 확인이 늦어지면 그만큼 뒤로 밀립니다. 급하시면 급행 제작 옵션으로 기간을 30% 정도 줄일 수 있습니다.</p></div>
           </details>
           <details class="qa">
             <summary class="qa__q"><span class="qa__text">정말 제작비가 없나요?</span><span class="qa__icon" aria-hidden="true"></span></summary>
@@ -951,6 +968,7 @@
                   <div class="opts-list" role="radiogroup" aria-labelledby="l-package">
                     <label class="opt"><input type="radio" name="package" value="기본형" data-key="basic"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">기본형</span><span class="opt__hint" data-price-ref="basic"></span></span></label>
                     <label class="opt"><input type="radio" name="package" value="기능형 (예약, 회원, 결제 등)" data-key="plus"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">기능형 (예약, 회원, 결제 등)</span><span class="opt__hint" data-price-ref="plus"></span></span></label>
+                    <label class="opt"><input type="radio" name="package" value="기업형 (별도 견적)" data-key="corp"><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">기업형 (20페이지 이상)</span><span class="opt__hint" data-price-ref="corp"></span></span></label>
                     <label class="opt"><input type="radio" name="package" value="아직 모르겠어요, 상담하고 정할게요" data-key="unsure" checked><span class="opt__box"><i class="opt__dot" aria-hidden="true"></i><span class="opt__text">아직 모르겠어요, 상담하고 정할게요</span></span></label>
                   </div>
                 </div>
@@ -962,7 +980,7 @@
                       <option selected>정하지 않았어요</option>
                       <option>월 5만 원</option>
                       <option>월 10만 원</option>
-                      <option>그 이상도 괜찮아요</option>
+                      <option>그 이상도 괜찮아요 (기업형)</option>
                     </select></span>
                   </div>
                   <div class="field" data-field="timeline">
