@@ -152,8 +152,9 @@
       if (mqWide.matches && !reduce && !isShot) {
         // keyed to the real scroll position so the copy is never left hidden while a slow device catches up
         var dd = clamp(rawSp, -1, 3) - pi;
-        // the bottle moves during f 0.3..0.7 of each segment, so the copy clears just before and returns just after
-        op = dd >= 0 ? 1 - smooth(0.2, 0.3, dd) : smooth(-0.3, -0.2, dd);
+        // the bottle travels toward the outgoing copy and away from the incoming copy: the outgoing copy clears
+        // before the bottle reaches the centre, the incoming copy returns once the bottle has left its side
+        op = dd >= 0 ? 1 - smooth(0.36, 0.46, dd) : smooth(-0.5, -0.4, dd);
       }
       if (panelTexts[pi]._op !== op) { panelTexts[pi]._op = op; panelTexts[pi].style.opacity = op >= 1 ? '' : op.toFixed(3); }
     }

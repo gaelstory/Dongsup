@@ -95,10 +95,13 @@ const PHOTOS = {
     if (f) { try { f(); } catch (e) { /* 한 장 실패해도 나머지는 그린다 */ } }
     if (Q.length) W.requestAnimationFrame(function () { idle(pump); }); else pumping = false;
   }
+  // 배치 크기(변형 전)로 잰다: 연출 중 scale이 걸려 있어도 흐리게 그리지 않게
   function fit(c, k) {
-    var r = c.getBoundingClientRect(), w = Math.max(2, Math.round(r.width * DPR * (k || 1))), h = Math.max(2, Math.round(r.height * DPR * (k || 1)));
+    var cw = c.offsetWidth, ch = c.offsetHeight;
+    if (!cw) { var r = c.getBoundingClientRect(); cw = r.width; ch = r.height; }
+    var w = Math.max(2, Math.round(cw * DPR * (k || 1))), h = Math.max(2, Math.round(ch * DPR * (k || 1)));
     if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
-    return r.width > 0;
+    return cw > 0;
   }
   function near(el, fn, margin) {
     if (!('IntersectionObserver' in W)) { enqueue(fn); return; }
@@ -373,14 +376,14 @@ const PHOTOS = {
   /* 로고타입 2행: 1행의 너비에 양끝이 맞게 자간 조정 */
   function fitLogotypes() {
     $$('.logotype').forEach(function (lt) {
-      // 자간은 0.34em으로 두고 글자 크기를 풀어 1행 너비에 양끝을 맞춘다(인트로 중이어도 wdth 125 기준으로 잰다)
-      var a = $('.logotype__1', lt), b = $('.logotype__2', lt), keep = a.style.cssText;
+      // 1행 너비에 2행의 양끝이 맞게 자간으로 조정한다(인트로 중이어도 wdth 125 기준으로 잰다)
+      var a = $('.logotype__1', lt), b = $('.logotype__2', lt), keep = a.style.cssText, n = b.textContent.trim().length;
       a.style.fontVariationSettings = '"wdth" 125'; a.style.fontStretch = '125%';
-      b.style.fontSize = ''; b.style.setProperty('--ls2', '.34em');
+      b.style.setProperty('--ls2', '0em');
       var fs = parseFloat(getComputedStyle(b).fontSize);
-      var wa = a.getBoundingClientRect().width - parseFloat(getComputedStyle(a).paddingRight), wb = b.getBoundingClientRect().width - .34 * fs;
+      var wa = a.getBoundingClientRect().width - parseFloat(getComputedStyle(a).paddingRight), wb = b.getBoundingClientRect().width;
       a.style.cssText = keep;
-      if (wb > 0) b.style.fontSize = (fs * wa / wb).toFixed(2) + 'px';
+      b.style.setProperty('--ls2', Math.max(.1, (wa - wb) / (n - 1) / fs).toFixed(3) + 'em');
     });
   }
 
@@ -475,8 +478,10 @@ const PHOTOS = {
       $$('.look__side').forEach(function (b) { b.classList.toggle('is-on', (b.dataset.fitGo === '0') === (i < 5)); });
       $$('.seg2').forEach(function (b) { b.setAttribute('aria-pressed', String((b.dataset.fitGo === '0') === (i < 5))); });
     }
+    var ringScale = 1;
+    function ringT() { ring.style.transform = 'translateZ(' + (-R).toFixed(1) + 'px) rotateX(-4deg) rotateY(' + rot.toFixed(2) + 'deg) scale(' + ringScale + ')'; }
     function paint() {
-      G.set(ring, { rotationY: rot });
+      ringT();
       var f = front();
       for (var i = 0; i < NL; i++) {
         var d = ((i * 36 + rot) % 360 + 540) % 360 - 180;
@@ -511,8 +516,8 @@ const PHOTOS = {
       var layout = function () {
         var cw = lcards[0].getBoundingClientRect().width || 300;
         R = cw / 2 / Math.tan(Math.PI / 10) + 34;
-        lcards.forEach(function (c, i) { G.set(c, { rotationY: i * 36, z: R, transformOrigin: '50% 50%' }); });
-        G.set(ring, { rotationX: -4, transformPerspective: 0 });
+        lcards.forEach(function (c, i) { c.style.transform = 'rotateY(' + i * 36 + 'deg) translateZ(' + R.toFixed(1) + 'px)'; });
+        ringT();
       };
       layout();
       proxy = D.createElement('div');
@@ -537,7 +542,8 @@ const PHOTOS = {
         D.addEventListener('visibilitychange', function () { if (D.hidden) stopIdle(); else startIdle(); });
         // 입장(한 번): 링이 -50°에서 제자리로
         W.ScrollTrigger.create({ trigger: lookStage, start: 'top 80%', once: true, onEnter: function () {
-          G.fromTo(ring, { rotationY: rot - 50, scale: .92 }, { rotationY: rot, scale: 1, duration: .9, ease: 'power3.out', onComplete: startIdle });
+          var e = { k: 0 }, r0 = rot;
+          G.to(e, { k: 1, duration: .9, ease: 'power3.out', onUpdate: function () { ringScale = (.92 + .08 * e.k).toFixed(4); rot = r0 - 50 * (1 - e.k); paint(); }, onComplete: function () { ringScale = 1; startIdle(); } });
         } });
       }
     } else {

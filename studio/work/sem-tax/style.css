@@ -465,7 +465,7 @@ select.field__control {
 .crow--diff .crow__amt { position: relative; }
 .crow--diff .amt { font-size: var(--fs-xl); }
 .calc__note { grid-column: 1 / -1; padding: 0 var(--cell); font-size: var(--fs-sm); color: var(--ink-2); }
-@media (min-width: 900px) { .calc__note p, .calc__note { max-width: none; } .calc__note { padding-right: calc(var(--cell) + 25%); } .cal__foot, .month__note { grid-column: 1; } }
+@media (min-width: 900px) { .calc__note p, .calc__note { max-width: none; } .calc__note { padding-right: calc(var(--cell) + 33%); } .cal__foot, .month__note { grid-column: 1; } }
 .crow__ex { font-weight: 400; color: var(--ink-2); font-size: var(--fs-sm); }
 .calc__note { margin-inline: 1px; background: var(--paper) var(--hrules); background-size: 100% var(--row); position: relative; z-index: 1; }
 .bar--gap { opacity: 0.85; }
