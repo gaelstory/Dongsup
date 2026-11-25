@@ -362,7 +362,7 @@ svg { display: block; }
 /* ---------- services ---------- */
 .ledger--full { grid-column: 1 / -1; margin-top: var(--row); }
 .ledger--full .lrow--head { display: none; }
-.lrow--svc { grid-template-areas: "name fee" "io1 ." "io2 ."; padding-bottom: var(--half); }
+.lrow--svc { grid-template-areas: "name fee" "io1 ." "io2 ."; padding-bottom: var(--half); align-content: start; }
 .lrow--svc > :nth-child(1) { grid-area: name; }
 .lrow--svc > :nth-child(2) { grid-area: io1; }
 .lrow--svc > :nth-child(3) { grid-area: io2; }

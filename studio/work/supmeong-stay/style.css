@@ -545,8 +545,9 @@ html.bar-off body .concept-badge { bottom: calc(var(--sp-16) + env(safe-area-ins
   .dir { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--sp-64); align-items: center; }
   .site-footer { padding: var(--vh-24) 0 var(--vh-24); }
   .footer__line { max-width: min(700px, 50vw); }
-  .footer__grid, .footer__note { max-width: min(620px, 46vw); }
-  .footer__grid { grid-template-columns: 1fr 1fr; }
+  .footer__grid, .footer__note { max-width: min(640px, 52vw); }
+  /* the contact column carries the e-mail address, so it gets the wider share */
+  .footer__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
   .footer__nav { display: block; grid-column: 1 / -1; }
 }
 @media (min-width: 1000px) and (max-width: 1199px) {

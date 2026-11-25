@@ -686,3 +686,11 @@ html.is-shot .reps, html:not(.js) .reps, html.is-shot .reps__done { display: non
 
 /* §2.8 한 화면 한 주 버튼: 히어로 띠와 신청 칸이 안 보일 때만 헤더 버튼을 빨간 면으로 */
 .bar.is-past-hero .nav__cta { background: var(--red); }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* 검은 바탕 위 밝은 400 글자만 획을 살짝 보강. 밝은 바탕의 IBM Plex Sans KR은 그대로 */
+  .foot__cols p, .foot__notice, .form__msg:not(.is-error),
+  .prog__row:is(:hover, :active) .prog__desc { -webkit-text-stroke: .25px currentColor; }
+  .foot__cols strong, .form__msg strong { -webkit-text-stroke: 0; }
+}

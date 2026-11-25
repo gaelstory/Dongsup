@@ -20,7 +20,7 @@
   function announce(t) { announcer.textContent = ''; setTimeout(function () { announcer.textContent = t; }, 40); }
 
   /* ---------- keep every block on the 56px rows ---------- */
-  var SNAP = '.grid > .sec__head, .grid > .hero__copy, .grid > .people__text, .grid > .people__seal, .svc__desc, .lrow--svc > .lc, .lrow--svc, .calc__inputs .field, .calc__inputs, .crow, .calc__note, .calc__out, .consult .field, .consult__done, .consult, .contact, .faq__btn, .faq__in > p, .month__body, .ledger__note, .cal__foot, .foot__main';
+  var SNAP = '.grid > .sec__head, .grid > .hero__copy, .grid > .people__text, .grid > .people__seal, .svc__desc, .lrow--svc, .calc__inputs .field, .calc__inputs, .crow, .calc__note, .calc__out, .consult .field, .consult__done, .consult, .contact, .faq__btn, .faq__in > p, .month__body, .ledger__note, .cal__foot, .foot__main';
   function snap() {
     $$(SNAP).forEach(function (el) { el.style.minHeight = ''; });
     // innermost first, so a container is measured after its children have been rounded up
