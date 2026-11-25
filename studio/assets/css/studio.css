@@ -1088,7 +1088,7 @@ html:not(.js) .cursor-label { display: none; }
 
 .pkg-tabs { margin-top: var(--sp-8); }
 .pkg-tabs .seg__scroller { margin: 0; padding: 0; overflow: visible; }
-.pkg-tabs .seg__track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; }
+.pkg-tabs .seg__track { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
 .pkg-tabs .seg__track.seg__glider { display: grid; }
 .pkg-tabs .seg__item { padding: 0 var(--sp-1); font-size: var(--fs-small); }
 @media (min-width: 1024px) { .pkg-tabs { display: none !important; } }
@@ -1166,10 +1166,8 @@ html:not(.js) .cursor-label { display: none; }
 .pkg-table .row-cta .is-pick::after { bottom: 8px; right: 0; border-bottom-width: 2px; border-right-width: 2px; }
 
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
-  .pkg-table:has(:is(th, td)[data-col="first"]:hover) [data-col="first"],
-  .pkg-table:has(:is(th, td)[data-col="five"]:hover) [data-col="five"],
-  .pkg-table:has(:is(th, td)[data-col="ten"]:hover) [data-col="ten"],
-  .pkg-table:has(:is(th, td)[data-col="custom"]:hover) [data-col="custom"] { background: rgba(255, 255, 255, .05); }
+  .pkg-table:has(:is(th, td)[data-col="basic"]:hover) [data-col="basic"],
+  .pkg-table:has(:is(th, td)[data-col="plus"]:hover) [data-col="plus"] { background: rgba(255, 255, 255, .05); }
 }
 
 /* phones and tablets: the table becomes one package at a time (with JS) or every package stacked (without JS) */
@@ -1178,12 +1176,10 @@ html:not(.js) .cursor-label { display: none; }
   .pkg-table { display: flex; flex-direction: column; }
   .pkg-table thead, .pkg-table tbody, .pkg-table tr { display: contents; }
   .pkg-table tbody th, .pkg-table .pkg-corner { display: none; }
-  .pkg-table [data-col="first"] { order: 1; }
-  .pkg-table [data-col="five"] { order: 2; }
-  .pkg-table [data-col="ten"] { order: 3; }
-  .pkg-table [data-col="custom"] { order: 4; }
+  .pkg-table [data-col="basic"] { order: 1; }
+  .pkg-table [data-col="plus"] { order: 2; }
   .pkg-table thead th { display: block; padding: var(--sp-9) 0 var(--sp-3); border: 0; }
-  .pkg-table thead th[data-col="first"] { padding-top: 0; }
+  .pkg-table thead th[data-col="basic"] { padding-top: 0; }
   .pkg-table td {
     display: block;
     position: relative;

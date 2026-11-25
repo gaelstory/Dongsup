@@ -68,13 +68,7 @@
       var t = PRICE[s.getAttribute('data-price-ref')];
       if (t) s.textContent = t;
     });
-    if (PRICE.first) $$('[data-price-line]').forEach(function (e) { e.hidden = false; });
-    $$('[data-price-times]').forEach(function (s) {
-      var m = /^(\w+)\*(\d+)$/.exec(s.getAttribute('data-price-times') || '');
-      var d = m && document.querySelector('[data-price="' + m[1] + '"]');
-      var n = d ? Number(d.getAttribute('value')) : NaN;
-      if (n > 0) s.textContent = (n * Number(m[2])).toLocaleString('ko-KR') + '원';
-    });
+    if (PRICE.basic) $$('[data-price-line]').forEach(function (e) { e.hidden = false; });
   }
 
   function isPlaceholder(v) {
@@ -844,7 +838,7 @@
     var tabs = $('[data-pkg-tabs]');
     if (!wrap || !table || !tabs) return;
     var cells = $$('[data-col]', table);
-    var active = 'five';
+    var active = 'basic';
     var apply = function () { cells.forEach(function (c) { c.classList.toggle('is-off', c.getAttribute('data-col') !== active); }); };
     function setMode() {
       var mobile = !mqWide.matches;
@@ -983,7 +977,7 @@
 
   /* ---------- request form ---------- */
 
-  var PKG_NAMES = { first: '첫 화면', five: '다섯 화면', ten: '열 화면', custom: '맞춤 화면' };
+  var PKG_NAMES = { basic: '기본형', plus: '기능형' };
 
   // Korean numbers as people actually write them: mobile 010, Seoul 02, area codes, 070, 050x safe numbers,
   // 15xx/16xx/18xx business numbers, and +82 / 82 prefixes (turned into the domestic 0 form).
