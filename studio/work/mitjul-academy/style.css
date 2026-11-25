@@ -552,3 +552,19 @@ select.q__input { appearance: none; -webkit-appearance: none; padding-right: 32p
 /* six grade tabs stay on one line on phones */
 @media (max-width: 420px) { .tabs__list [role="tab"] { min-width: 44px; padding: 0 var(--sp-8); } }
 @media (max-width: 399px) { .tabs__list { gap: var(--sp-2) var(--sp-4); } }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md)
+   Gothic A1 holds up at 1x, so the body text is left alone. What breaks up is Gaegu at its small 22px size and the
+   small grey labels: the handwriting gets a hairline of its own colour, the secondary grey steps darker, and the
+   13px labels come up a step on wide screens. Gaegu at 26px and up, and anything drawn in SVG, stay untouched,
+   and phones and retina screens never see any of this. */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  :root { --muted: #43474C; }   /* 8.9:1 on paper, 8.0:1 on the desk (was 7.4 / 6.7) */
+  .note, .proof__comment, .seat, .total__note, .prop--note, .praise__more {
+    -webkit-text-stroke: .3px currentColor;
+  }
+  .proof__grade { -webkit-text-stroke-width: 0; }
+  @media (min-width: 900px) {
+    .tt thead th, .fee thead th, .footer__note { font-size: var(--fs-15); }
+  }
+}
