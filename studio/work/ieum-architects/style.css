@@ -752,3 +752,11 @@ html.js .pdetail:not(.is-open) .pdetail__in {
   .site-header, .stage, .plan-float { display: none; }
   body { background: #fff; color: #000; }
 }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md)
+   Light-on-dark Plex and the small Orbit labels lose stroke weight at 1x; a quarter-pixel stroke restores it.
+   Display headings, bold text, the light estimate section and SVG drawings are left as they are. */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  body { -webkit-text-stroke: 0.25px currentColor; }
+  h1, h2, h3, .logo__name, .btn, b, strong, .estimate, .estimate *, svg, svg * { -webkit-text-stroke: 0; }
+}
