@@ -180,7 +180,7 @@
               <path vector-effect="non-scaling-stroke" data-co="0" d="M 696.4 563 H 660 L 397 300 H 380"/>
               <path vector-effect="non-scaling-stroke" data-co="1" d="M 870 373.8 H 1046 L 1159.8 260 H 1220"/>
               <path vector-effect="non-scaling-stroke" data-co="2" d="M 641.1 640 H 520 L 440 560 H 380"/>
-              <path vector-effect="non-scaling-stroke" data-co="3" d="M 1030.2 580.7 H 1099 L 1159.7 520 H 1220"/>
+              <path vector-effect="non-scaling-stroke" data-co="3" d="M 1030.2 580.7 H 1131 L 1191.7 520 H 1220"/>
               <path vector-effect="non-scaling-stroke" data-co="4" d="M 724.4 703.7 H 560 L 443.7 820 H 380"/>
             </g>
             <g class="lines__end" fill="#EEF1F2">
@@ -514,8 +514,9 @@
 
 <dialog class="qv" id="qv" aria-labelledby="qv-name">
   <div class="qv__panel">
-    <div class="qv__media">
-      <div class="qv__img" data-flip-id="qv">
+    <span class="qv__grip" aria-hidden="true"></span>
+    <div class="qv__media" data-flip-id="qv">
+      <div class="qv__img">
         <canvas class="qv__c" role="img" aria-label=""></canvas>
         <canvas class="qv__c qv__c--b" aria-hidden="true"></canvas>
       </div>
@@ -525,8 +526,7 @@
       <button class="heart heart--qv" type="button" aria-pressed="false" aria-label="찜하기" data-wish=""><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg></button>
     </div>
     <div class="qv__info">
-      <span class="qv__grip" aria-hidden="true"></span>
-      <p class="qv__tag" data-q="tag">신상품</p>
+            <p class="qv__tag" data-q="tag">신상품</p>
       <h2 class="qv__name" id="qv-name" data-q="name">한줌 후디 다운</h2>
       <p class="qv__desc" data-q="desc"></p>
       <p class="qv__price"><span data-q="price"></span><span class="qv__rev" data-q="rev"></span></p>

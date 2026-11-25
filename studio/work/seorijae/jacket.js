@@ -214,7 +214,7 @@
     var SM = [S, 0, 0, S, 0, 0], lw = 1 / S, step = Math.max(5, 7 / S * 0.5);
     var want = parts && parts !== 'all' ? parts : null;
     var order = g.order.filter(function (k) { return !want || want.indexOf(k) >= 0 || (k === 'collar' && want.indexOf('body') >= 0); });
-    var drawInner = !want || want.indexOf('body') >= 0 || want.indexOf('hood') >= 0;
+    var drawInner = !want || want.indexOf(g.m.hood ? 'hood' : 'body') >= 0;
     // 뒷목 안감: 기본색보다 35% 어둡게. 후드면 후드 겉감 위(얼굴 자리), 칼라면 몸판 앞에 먼저.
     function inner() {
       if (!g.inner || !drawInner) return;
@@ -233,7 +233,7 @@
     }
     if (!g.m.hood) inner();
     order.forEach(function (k, idx) {
-      if (k === 'body' && g.m.hood) inner();
+      if (idx && order[idx - 1] === 'hood' && g.m.hood && !g.back) inner();
       var p = g.parts[k], M = mul(SM, p.M), bb = p.bbox;
       // 명암 지도
       sx.save(); setT(sx, M); sx.clip(p.path);
@@ -310,6 +310,7 @@
       // 실루엣 마스크
       setT(kx, M); kx.fillStyle = '#fff'; kx.fill(p.path);
     });
+    if (order[order.length - 1] === 'hood' && g.m.hood && !g.back) inner();
     // 원단 결: 6px 립스톱 격자 + 노이즈 타일. 실루엣으로 자른다.
     sx.setTransform(1, 0, 0, 1, 0, 0);
     var gp = cv(6, 6), gx = gp.getContext('2d'); gx.fillStyle = 'rgba(0,0,0,' + Math.min(.06, .03 / S) + ')'; gx.fillRect(0, 0, 6, .5); gx.fillRect(0, 0, .5, 6);

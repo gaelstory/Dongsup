@@ -16,15 +16,15 @@
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
   function smooth(a, b, x) { var t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
 
-  var PEARL = hex('#E8E6E2'), GRAPHITE = hex('#171717');
+  var PEARL = hex('#E8E6E2'), GRAPHITE = hex('#171717'), INK2 = hex('#4A4744');
   var SCENTS = [
-    { no: 'No.1', name: '무화과', line: '한낮, 반으로 가른 무화과', hex: '#7A4868', tint: 0.3,
+    { no: 'No.1', name: '무화과', line: '한낮, 반으로 가른 무화과', hex: '#7A4868', tint: 0.3, ink2: '#3A2833',
       notes: ['무화과 잎, 베르가못', '무화과 과육, 코코넛 밀크', '시더우드, 머스크'] },
-    { no: 'No.2', name: '유자', line: '겨울 부엌, 유자를 써는 손', hex: '#E8C23A', tint: 0.36,
+    { no: 'No.2', name: '유자', line: '겨울 부엌, 유자를 써는 손', hex: '#E8C23A', tint: 0.36, ink2: '#605323',
       notes: ['유자 껍질, 생강', '유자 꽃, 덖은 녹차', '편백, 화이트 앰버'] },
-    { no: 'No.3', name: '이끼', line: '비 갠 숲의 돌담', hex: '#5C7A4A', tint: 0.3,
+    { no: 'No.3', name: '이끼', line: '비 갠 숲의 돌담', hex: '#5C7A4A', tint: 0.3, ink2: '#2F3A29',
       notes: ['젖은 흙, 갈바넘', '이끼, 제비꽃 잎', '베티버, 참나무 이끼'] },
-    { no: 'No.4', name: '비', line: '창을 열어 둔 장마 첫날', hex: '#6C8EB4', tint: 0.32,
+    { no: 'No.4', name: '비', line: '창을 열어 둔 장마 첫날', hex: '#6C8EB4', tint: 0.32, ink2: '#35414E',
       notes: ['빗방울, 배 껍질', '젖은 면, 은방울꽃', '화이트 머스크, 마른 나무'] }
   ];
   SCENTS.forEach(function (s) {
@@ -56,6 +56,7 @@
 
   var stage = $('#stage'), header = $('#top'), hero = $('.hero'), stickyEl = $('.stage__sticky');
   var panels = $$('.scent');
+  var panelTexts = panels.map(function (p) { return $('.scent__text', p); });
   var horizon = $('#poster-line');
   var announcer = $('#announcer');
   function announce(t) { announcer.textContent = ''; setTimeout(function () { announcer.textContent = t; }, 30); }
@@ -97,8 +98,8 @@
   }
 
   function stateOf(k) {
-    if (k < 0) return { bg: PEARL, ink: GRAPHITE, liquid: heroLiquidShown, x: 0, glyph: 1, label: heroLabel };
-    return { bg: SCENTS[k].bg, ink: SCENTS[k].ink, liquid: SCENTS[k].rgb, x: k % 2 === 0 ? 1 : -1, glyph: 0, label: k };
+    if (k < 0) return { bg: PEARL, ink: GRAPHITE, ink2: INK2, liquid: heroLiquidShown, x: 0, glyph: 1, label: heroLabel };
+    return { bg: SCENTS[k].bg, ink: SCENTS[k].ink, ink2: hex(SCENTS[k].ink2), liquid: SCENTS[k].rgb, x: k % 2 === 0 ? 1 : -1, glyph: 0, label: k };
   }
 
   var last = 0, running = false, settleFrames = 0;
@@ -144,6 +145,17 @@
     if (!header._past) header.style.setProperty('--stage-bg', bgc);
     if (horizon) horizon.style.opacity = String(clamp(1 - st.pass * 1.8, 0, 1));
     stage.style.setProperty('--poster-ink', css(st.ink));
+    stage.style.setProperty('--stage-ink-2', css(mixc(A.ink2, B.ink2, e)));
+    // §7.2 §6.5: on wide screens the copy clears before the bottle crosses it and returns once it has settled
+    for (var pi = 0; pi < panelTexts.length; pi++) {
+      var op = 1;
+      if (mqWide.matches && !reduce && !isShot) {
+        var dd = smSp - pi;
+        // the bottle moves during f 0.3..0.7 of each segment, so the copy clears just before and returns just after
+        op = dd >= 0 ? 1 - smooth(0.2, 0.3, dd) : smooth(-0.3, -0.2, dd);
+      }
+      if (panelTexts[pi]._op !== op) { panelTexts[pi]._op = op; panelTexts[pi].style.opacity = op >= 1 ? '' : op.toFixed(3); }
+    }
     if (mqWide.matches) {
       var vh = innerHeight, leftOver = stageBottom - scrollY - vh;
       // leftOver hits 0 when the last scent rests; below that the next section is sliding over the stage
@@ -182,8 +194,18 @@
     if (window.TEUM_SCENE && TEUM_SCENE.kick) TEUM_SCENE.kick();
   }
   TEUM.select = select;
+  function showNow(idx) {
+    heroNow.innerHTML = '<span class="num">' + SCENTS[idx].no + '</span> ' + SCENTS[idx].name + ' <span class="num">50 ml</span>';
+  }
   swatches.forEach(function (b) {
-    b.addEventListener('click', function () { select(+b.dataset.scent); });
+    b.addEventListener('click', function () {
+      select(+b.dataset.scent);
+      announce(SCENTS[+b.dataset.scent].no + ' ' + SCENTS[+b.dataset.scent].name + ' 병으로 바꿨습니다.');
+    });
+    b.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') showNow(+b.dataset.scent); });
+    b.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') showNow(TEUM.selected); });
+    b.addEventListener('focus', function () { showNow(+b.dataset.scent); });
+    b.addEventListener('blur', function () { showNow(TEUM.selected); });
   });
 
   var spinBtn = $('#spin-toggle');

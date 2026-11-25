@@ -1626,12 +1626,34 @@
     if (!bar || !heroCta || !('IntersectionObserver' in window)) return;
     var past = false, inReq = false, inFoot = false, typing = false;
     var fields = 'input, select, textarea';
+    // One filled action on screen (Refactoring UI §2.8): while a section's own filled button is visible,
+    // the bottom bar stays down and the header pill steps back to an outline.
+    var ctaSeen = new Set();
     function update() {
       var desk = mqTablet.matches;
-      var show = past && !inReq && !(desk && inFoot) && !(!desk && typing);
+      var ctaInView = ctaSeen.size > 0;
+      var show = past && !inReq && !ctaInView && !(desk && inFoot) && !(!desk && typing);
       bar.classList.toggle('is-shown', show);
       root.classList.toggle('float-on', show && !desk);
+      root.classList.toggle('cta-in-view', ctaInView);
+      root.classList.toggle('in-request', inReq);
     }
+    var ctaObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var visible = en.isIntersecting && en.target.getClientRects().length > 0;
+        if (visible) ctaSeen.add(en.target); else ctaSeen.delete(en.target);
+      });
+      update();
+    }, { threshold: 0.6 });
+    var watchCtas = function () {
+      $$('main .btn--primary, main .btn--light, footer .btn--light').forEach(function (b) {
+        if (!b._ctaWatched) { b._ctaWatched = true; ctaObserver.observe(b); }
+      });
+    };
+    watchCtas();
+    // buttons on the result screen are created later
+    var resultBox = $('[data-result]');
+    if (resultBox && 'MutationObserver' in window) new MutationObserver(watchCtas).observe(resultBox, { childList: true });
     new IntersectionObserver(function (en) {
       past = !en[0].isIntersecting && en[0].boundingClientRect.top < 0;
       update();

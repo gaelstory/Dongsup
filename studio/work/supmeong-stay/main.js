@@ -347,8 +347,8 @@
   var bookingInView = false, footerInView = false, heroEl = $('.hero');
   function updateBar() {
     if (!bar) return;
-    var desktop = innerWidth >= 1200;
-    var inHero = desktop && (window.scrollY || 0) < (heroEl ? heroEl.offsetHeight * 0.55 : 400);
+    // one filled action per view: the hero already has 머물 날짜 고르기, so the bar waits until the hero is mostly gone
+    var inHero = (window.scrollY || 0) < (heroEl ? heroEl.offsetHeight * 0.55 : 400);
     var off = inHero || bookingInView || footerInView;
     if (off !== bar.classList.contains('is-hidden')) bar.classList.toggle('is-hidden', off);
     if (off !== root.classList.contains('bar-off')) root.classList.toggle('bar-off', off);
@@ -537,7 +537,8 @@
         var s = +b.getAttribute('data-step');
         b.setAttribute('aria-disabled', String((s < 0 && st.guests <= 1) || (s > 0 && st.guests >= 4)));
       });
-      var bd = $('#bar-dates'), bp = $('#bar-price'), narrow = innerWidth < 600;
+      var bd = $('#bar-dates'), bp = $('#bar-price'), narrow = innerWidth < 600, barEl = $('#book-bar');
+      if (barEl) barEl.classList.toggle('has-dates', !!st.inD);
       var tiny = function (d) { return (d.getMonth() + 1) + '.' + d.getDate() + '(' + DOW[d.getDay()] + ')'; };
       if (bd && bp) {
         if (n) { bd.textContent = narrow ? tiny(st.inD) + '~' + tiny(st.outD) + ', ' + st.guests + '명' : short(st.inD) + '부터 ' + short(st.outD) + '까지, ' + st.guests + '명'; bp.textContent = n + '박 ' + won(price()); }
