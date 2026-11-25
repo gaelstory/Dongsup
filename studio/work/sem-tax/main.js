@@ -485,13 +485,15 @@
   snap();
   var rT;
   addEventListener('resize', function () { clearTimeout(rT); rT = setTimeout(function () { snap(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 150); });
-  var fontsDone = false;
+  // rows are measured again whenever webfonts finish loading: a late font changes line wraps and so row heights
   function afterFonts() {
-    if (fontsDone) return; fontsDone = true;
     snap();
     if (window.ScrollTrigger) ScrollTrigger.refresh();
   }
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(afterFonts);
+  if (document.fonts) {
+    if (document.fonts.ready) document.fonts.ready.then(afterFonts);
+    if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', afterFonts);
+  }
   setTimeout(afterFonts, 800);
   addEventListener('load', function () { snap(); if (window.ScrollTrigger) ScrollTrigger.refresh(); });
 
