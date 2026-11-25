@@ -21,7 +21,7 @@ const files = [];
 (function copy(rel) {
   for (const name of fs.readdirSync(path.join(ROOT, rel))) {
     const r = rel ? `${rel}/${name}` : name;
-    if (!rel && SKIP.has(name)) continue;
+    if (!rel && (SKIP.has(name) || /^PLAN.*\.md$/.test(name))) continue;
     if (name.startsWith('.') || name.endsWith('.map')) continue;
     // a mockup's readable sources (work/<slug>/src/) are for editing, not for the published page
     if (name === 'src' && /^work\/[^/]+$/.test(rel)) continue;
