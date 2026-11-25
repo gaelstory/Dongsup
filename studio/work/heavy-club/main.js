@@ -367,7 +367,7 @@
     });
     t += '</tr></thead><tbody>' + rowsHTML(WEEKDAY) + '</tbody>';
     t += '<tbody class="tt__weekend"><tr><th scope="colgroup" colspan="8">주말 수업</th></tr>' + rowsHTML(WEEKEND) + '</tbody></table>';
-    t += '<p class="tt-legend"><span><i style="background:#000"></i>크로스핏</span><span><i style="background:#FF3B0F"></i>웨이트 입문</span><span><i style="background:#2B2B2B"></i>바디 서킷</span><span class="tt-legend__free"><i></i>수업 없는 시간은 자유 이용</span></p></div>';
+    t += '<p class="tt-legend"><span><i class="is-cf"></i>크로스핏</span><span><i class="is-wt"></i>웨이트 입문</span><span><i class="is-bc"></i>바디 서킷</span><span class="tt-legend__free"><i></i>수업 없는 시간은 자유 이용</span></p></div>';
     var n = '<div class="sched__narrow"><div class="days" role="tablist" aria-label="요일">';
     DAYS.forEach(function (d, i) {
       n += '<button type="button" role="tab" id="day-tab-' + i + '" aria-controls="day-panel" aria-selected="' + (i === today) + '" tabindex="' + (i === today ? 0 : -1) + '"' + (i === today ? ' class="is-today"' : '') + ' aria-label="' + DAYL[i] + (i === today ? ', 오늘' : '') + '">' + d + '</button>';
@@ -674,7 +674,18 @@
     w.style.fontSize = Math.min(fs * (avail / w.offsetWidth) * 0.995, 400).toFixed(2) + 'px';
   }
 
+  // §2.8 한 화면 한 주 버튼: 히어로 띠의 버튼이나 신청 칸이 보이는 동안 헤더 버튼은 채우지 않는다
+  function initBarCta() {
+    var bar = $('#bar'), strip = $('.strip'), apply = $('#apply');
+    if (!bar || !strip || !('IntersectionObserver' in window)) { if (bar) bar.classList.add('is-past-hero'); return; }
+    var stripOn = true, applyOn = false;
+    function sync() { bar.classList.toggle('is-past-hero', !stripOn && !applyOn); }
+    new IntersectionObserver(function (en) { stripOn = en[0].isIntersecting; sync(); }).observe(strip);
+    if (apply) new IntersectionObserver(function (en) { applyOn = en[0].isIntersecting; sync(); }).observe(apply);
+  }
+
   /* ---------------- 시작 ---------------- */
+  safe(initBarCta);
   safe(initSheet);
   safe(initSchedule);
   safe(initForm);
