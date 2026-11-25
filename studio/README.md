@@ -1,7 +1,7 @@
-# 첫화면 스튜디오 홈페이지와 포트폴리오 16종
+# 첫화면 스튜디오 홈페이지와 포트폴리오 17종
 
 홈페이지 제작 스튜디오 **첫화면 스튜디오**의 홈페이지(`index.html`)와, 그 홈페이지의 포트폴리오에 들어가는
-가상 고객사 목업 16개(`work/<이름>/`)입니다. 빌드 과정 없이 그대로 올리면 되는 정적 사이트입니다.
+가상 고객사 목업 17개(`work/<이름>/`)입니다. 빌드 과정 없이 그대로 올리면 되는 정적 사이트입니다.
 
 ## 들어 있는 것
 
@@ -9,20 +9,21 @@
 |---|---|
 | `index.html`, `assets/css/studio.css`, `assets/js/studio.js` | 스튜디오 홈페이지 (포트폴리오, 진행 절차, 가격, FAQ, 제작 의뢰 폼) |
 | `assets/js/config.js` | **사장님이 채울 값** (연락처, 사업자 정보, 폼 접수 주소) |
-| `work/<이름>/index.html` | 포트폴리오 목업 16개 (아래 표) |
+| `work/<이름>/index.html` | 포트폴리오 목업 17개 (아래 표) |
 | `assets/thumbs/` | 목업 첫 화면 썸네일 (1440×900, 720px 버전) |
 | `assets/vendor/` | GSAP 3.15, Lenis 1.3.27, Three.js r186 (외부 CDN 없이 동작하도록 사이트 안에 둠) |
 | `assets/shared/concept-badge.js` | 목업마다 붙는 "컨셉 시안 · 첫화면 스튜디오" 배지 |
-| `PLAN.md` | 기획서 (브랜드, 문구, 가격, 목업별 브리프) |
+| `PLAN.md`, `PLAN-M16-shop.md` | 기획서 (브랜드, 문구, 가격, 목업별 브리프; 쇼핑몰은 별도 파일) |
 | `BUILD-CONTRACT.md` | 제작 기술 규칙 |
-| `reviews/` | 페이지별 검수 기록 |
+| `reviews/` | 페이지별 검수 기록 (`<이름>.md` 일반 검수, `rui-<이름>.md` Refactoring UI 검토, `RUI-FIX-POLICY.md` 수정 기준) |
 | `tools/shoot.mjs` | 스크린샷·오류 점검과 썸네일 생성 도구 |
 
-### 포트폴리오 16종
+### 포트폴리오 17종
 
 | 주소 | 가상 고객사 | 업종 | 대표 효과 |
 |---|---|---|---|
 | `work/haeon-systems/` | 해온 시스템즈 | AI 스마트 항만 (대표작) | Three.js 야간 항만, 빛 궤도와 비콘 |
+| `work/seorijae/` | 서리재 SEORIJAE | 아웃도어 쇼핑몰 기획전 | 모델 사진 스트립, 펼쳐지는 기능 도해, 3D 룩북 링, 퀵뷰·장바구니 |
 | `work/ieum-architects/` | 이음 건축사사무소 | 건축 | 스크롤하면 설계도 위에 집이 지어짐 |
 | `work/ongi-bakery/` | 온기 베이커리 | 베이커리 | 잡아서 던지는 빵 더미 |
 | `work/teum-perfume/` | 틈 TEUM | 향수 브랜드 | 빛을 굴절시키는 유리병 |
@@ -51,6 +52,17 @@ cd studio
 python3 -m http.server 8000
 # 브라우저에서 http://localhost:8000
 ```
+
+### 쇼핑몰 목업(서리재)의 사진 바꾸기
+`work/seorijae/`의 재킷과 모델 장면은 코드로 그린 그림입니다. 실제로 쓸 수 있는 사진(직접 찍었거나 라이선스가 있는
+사진)이 생기면 `work/seorijae/photos/`에 넣고 `main.js` 맨 위의 `PHOTOS` 설정에 경로를 적으면 그 자리만 사진으로
+바뀝니다. 방법은 `work/seorijae/photos/README.txt`에 있습니다. 다른 브랜드의 사진은 쓰지 마세요.
+읽기 쉬운 원본 코드는 `work/seorijae/src/`에 있고, `node work/seorijae/src/build.mjs`(terser 5 필요)로 다시 묶습니다.
+
+### 디자인 규칙(Refactoring UI)
+모든 페이지를 `refactoring-ui` 스킬로 점검해, 글자 크기·간격·둥근 모서리·그림자·글자색을 페이지마다 정해진 값(토큰)
+에서만 쓰도록 정리했습니다. 각 페이지 `style.css` 맨 위 `:root`에 그 값들이 있으니, 고칠 때는 새 값을 만들지 말고
+그 토큰을 쓰세요.
 
 ## 공개하기 전에 꼭 할 일
 
@@ -107,5 +119,6 @@ cd studio/assets/thumbs && for f in *.jpg; do case $f in *-720.jpg) continue;; e
 ## 알아 두실 점
 - 모든 점검은 헤드리스 크롬(소프트웨어 WebGL)에서 했습니다. 실제 아이폰 사파리와 실제 기기의 프레임 속도는 확인하지
   못했습니다. 공개 전에 휴대폰으로 한 번씩 열어 보세요.
+- `서리재`, `한줌`이 실제 의류 상표로 등록돼 있는지는 확인하지 않았습니다. 목업을 공개하기 전에 한 번 검색해 보세요.
 - `결 피부과의원` 목업의 제목 "피부는 결대로 좋아집니다"는 실제 의료광고 심의에서는 통과하지 못할 수 있습니다(목업이라 유지).
 - 라이브러리 라이선스: GSAP(무료 표준 라이선스), Lenis(MIT), Three.js(MIT). 글꼴은 모두 Google Fonts.
