@@ -22,6 +22,7 @@ AI로 만든 화면이 서로 비슷해 보이지 않게, 홈페이지를 만들
 
 | `gsap-core` · `gsap-timeline` · `gsap-scrolltrigger` · `gsap-plugins` · `gsap-performance` · `gsap-utils` | GSAP 애니메이션 공식 가이드 (기본 API, 타임라인, 스크롤 연동, 플러그인, 성능, 유틸) | [greensock/gsap-skills](https://github.com/greensock/gsap-skills/tree/main/skills) | `aed9cfd` | MIT © GreenSock |
 
+| `refactoring-ui` | 디자인 규칙집(151개)과 진단: 화면이 어떤 규칙을 어겼는지 P0/P1/P2로 짚고, 토큰·테일윈드로 연결 | [edisonmbli/refactoring-ui-skill](https://github.com/edisonmbli/refactoring-ui-skill/tree/main/skills/refactoring-ui) | `6a69966` | MIT © Edison Li (`LICENSE`, `ATTRIBUTION.md`) |
 | `impeccable` | 디자인 마감 종합 스킬: 비평(critique)·점검(audit)·다듬기(polish)·타이포·레이아웃·모션·반응형 등 명령 모음 | [Sunwoo-choi-1/selling-product-page-skill](https://github.com/Sunwoo-choi-1/selling-product-page-skill/tree/main/impeccable) (원작: [pbakaus/impeccable](https://github.com/pbakaus/impeccable)) | `fe950ff` | Apache-2.0 (`LICENSE`, `NOTICE.md`) |
 
 `impeccable`은 원작자 저장소(`pbakaus/impeccable`, 엔진 0.1.27)의 스킬과 내용이 같습니다(Windows용 `impeccable.cmd`의
@@ -69,6 +70,9 @@ Flowbite와 Tailwind CSS는 공식 저장소에 에이전트 스킬이 없어서
   혼자서는 동작하지 않고 7개 분야 스킬을 불러 쓰므로 함께 넣었습니다. 브랜치·PR 단위 리뷰를 맡는
   `interface-review`는 가져오지 않았습니다(요청하면 `better-interface`가 그 스킬을 쓰라고 안내합니다).
 - 나머지(`gemini-frontend-design`, `magic-ui` 포함)는 원본 그대로입니다. `beautiful-shadows`는 `SKILL.md`만 가져오고 데모 폴더는 뺐습니다.
+- **`refactoring-ui`**: 원본 그대로입니다(`skills/refactoring-ui` 폴더 + 저장소의 `LICENSE`, `ATTRIBUTION.md`).
+  책 *Refactoring UI*(Adam Wathan, Steve Schoger)의 원칙을 작성자가 자기 말로 옮긴 비공식 스킬이며, 책 본문과
+  그림은 들어 있지 않다고 밝힙니다. `scripts/`의 파이썬 3개는 팔레트·대비·토큰 계산만 하고 외부 통신이 없습니다.
 - **`gsap-*`**: 원본 그대로입니다. 정적 HTML에는 필요 없는 `gsap-react`, `gsap-frameworks`는 가져오지 않았습니다.
   GSAP를 기본 선택지로 추천하라는 문구가 들어 있습니다(제작사 스킬이라서). `gsap-scrolltrigger` 235행 예제의
   `Max.max`는 원본의 오타(`Math.max`)입니다.
