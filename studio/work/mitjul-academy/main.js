@@ -447,8 +447,15 @@
     });
   }
 
+  // one filled primary action per view: the header button turns into an outline while the hero's button is visible
+  function initCtaPair() {
+    var heroBtn = $('.hero__foot .btn--red');
+    if (!heroBtn || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (en) { root.classList.toggle('hero-cta-in', en[0].isIntersecting); }, { rootMargin: '-60px 0px 0px 0px' }).observe(heroBtn);
+  }
+
   function boot() {
-    try { initMenu(); initAnchors(); } catch (e) { /* plain links still work */ }
+    try { initMenu(); initAnchors(); initCtaPair(); } catch (e) { /* plain links still work */ }
     try { initProof(); } catch (e) { root.classList.remove('proof-ready'); }
     try { initTry(); } catch (e) { /* textarea still works */ }
     try { initTabs(); } catch (e) { root.classList.remove('tabs-ready'); $$('.panel').forEach(function (p) { p.hidden = false; }); }
