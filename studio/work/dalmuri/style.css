@@ -328,7 +328,7 @@ button, input, textarea { font: inherit; color: inherit; }
   }
   .hero__copy { align-items: flex-end; gap: clamp(var(--sp-6), 3.6vw, var(--sp-8)); }
   .hero__title { font-size: clamp(3rem, min(7.2svh, 5vw), 6rem); }
-  .hero__aside { max-width: 16em; padding: 0 0 .5em; }
+  .hero__aside { max-width: 18em; padding: 0 0 .5em; }
   .hero__lead { font-size: var(--t-lead); }
   .hero__cue { display: flex; }
 }
