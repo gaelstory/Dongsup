@@ -654,3 +654,22 @@ html:not(.js) .quiz__nav { display: none; }
   .stage__sticky, .top, .sheet { display: none; }
 }
 #main:focus { outline: none; }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* Noto Serif KR 400 loses its hairlines at 1x: a hairline stroke keeps body and secondary text solid */
+  body { -webkit-text-stroke: 0.3px currentColor; }
+  /* display type, logos, drawings and the studio badge keep their drawn weight */
+  h1, h2, h3, .h2, .h3, .hero__title, .scent__name, .result__name, .tnote__text, .q__title, .sheet__title,
+  .wordmark, .foot__mark, svg, svg *, .concept-badge, .concept-badge * { -webkit-text-stroke: 0; }
+  /* light text on dark surfaces needs less */
+  .foot, .btn:not(.btn--ghost), .cta-orb, .chip[aria-pressed="true"], .add.is-added, .cart-btn__count, .skip { -webkit-text-stroke: 0.25px currentColor; }
+  /* secondary text reaches about 7:1 on every tinted scent screen */
+  .scent__no, .scent__body, .notes dt, .scent__price .num:first-child {
+    color: color-mix(in srgb, var(--stage-ink-2, var(--ink-2)) 72%, #171717);
+  }
+}
+@media (min-width: 900px) and (max-resolution: 1.49dppx), (min-width: 900px) and (-webkit-max-device-pixel-ratio: 1.49) {
+  /* small serif body copy steps up to the body size on wide 1x screens */
+  .notes dd, .scent__price, .steps__d, .shop__note, .sheet__msg, .foot__grid, .foot__legal { font-size: var(--fs-md); }
+}

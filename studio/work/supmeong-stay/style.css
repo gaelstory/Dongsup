@@ -605,3 +605,45 @@ html.bar-off body .concept-badge { bottom: calc(var(--sp-16) + env(safe-area-ins
   .scene, .book-bar, .clock, .site-header, .menu-sheet { display: none !important; }
   .site-footer { color: var(--fir); background: none; min-height: 0; padding: var(--sp-24) 0; }
 }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md)
+   Nanum Myeongjo 400 loses its hairlines at 1x. Every regular-weight line of it gets a stroke of its own colour,
+   light text on dark grounds a lighter one, secondary colours step darker (or lighter on dark) to about 7:1, and
+   small text comes up to 17px on wide screens. Display faces, bold weights and drawn (SVG) text stay untouched,
+   and phones and retina screens never see any of this. */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  :root {
+    --moss: #334E45;      /* 8.5:1 on snow, 7.0:1 on mist (was 5.8 / 4.8) */
+    --fog-ink: #C2D2CC;   /* 7.9:1 on fir (was 7.3) */
+    --fir-dim: #9AAFA8;   /* unavailable dates, 5.3:1 on fir: still clearly dimmer than open dates */
+    --coral: #F6B5A4;     /* 7.1:1 on fir (was 6.1) */
+    --stroke-1x: .3px;
+    --stroke-1x-dark: .25px;
+  }
+  /* the stroke colour stays at its initial currentColor, so it follows every time-of-day colour change */
+  body { -webkit-text-stroke-width: var(--stroke-1x); }
+  /* light text on dark grounds: the dusk/night scene, the fir and night surfaces, the bar and tooltips */
+  html.is-dusk .hero, html.is-dusk .day, .surface--fir, .site-footer, .menu-sheet, .book-bar, .tip,
+  html.menu-open .site-header, .site-header[data-mode="dark"], html.is-dusk .site-header[data-mode="scene"] {
+    -webkit-text-stroke-width: var(--stroke-1x-dark);
+  }
+  /* never on display faces, bold weights, drawn text or the shared badge */
+  h1, h2, h3, strong, b, svg, .footer__line, .btn, .skip-link, .brand, .menu-btn, .nav__list a, .menu-sheet__list a,
+  .clock, .moment__time, .house__en, .specs dd, .notes__list dt, .cal__title, .cal th, .cal__key, .day-btn,
+  .guests__label, .guests__value, .sum dd, .sum__price, .contact dd, .footer__name, .footer__nav a, .book-bar__price,
+  .concept-badge {
+    -webkit-text-stroke-width: 0;
+  }
+  .route li::before { -webkit-text-stroke-width: 0; }
+  /* unavailable dates are the one regular-weight thing in the date grid */
+  .day-btn[aria-disabled="true"] { -webkit-text-stroke-width: var(--stroke-1x-dark); }
+
+  /* small thin text comes up to 17px where there is room */
+  @media (min-width: 900px) {
+    .hero__cue, .specs dt, .specs dd, .contact dt, .tip, .tip strong, .cal__hint, .cal__legend, .guests__note,
+    .sum dt, .sum__nights, .book__status, .footer__grid, .footer__note, .menu-sheet__contact {
+      font-size: var(--fs-17);
+    }
+    .book-bar__summary { font-size: var(--fs-16); }
+  }
+}

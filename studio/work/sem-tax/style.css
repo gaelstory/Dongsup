@@ -689,3 +689,9 @@ html:not(.js) .faq__a { grid-template-rows: 1fr; }
 @media (max-width: 899px) {
   .foot .foot__main { grid-column: 1 / -1; }
 }
+
+/* 1x screens: thin text legibility (studio/reviews/DESKTOP-LEGIBILITY.md) */
+@media (max-resolution: 1.49dppx), (-webkit-max-device-pixel-ratio: 1.49) {
+  /* Gothic A1 400 holds up at 1x; only the small grey text is darkened (about 9:1 on the paper) */
+  :root { --ink-2: #3A443F; }
+}
