@@ -228,7 +228,7 @@
   }
 
   function figure(f, k, sc) {
-    var S = Math.max(.05, Math.round(k * 400) / 400), J = SRJ.jacket;
+    var S = Math.max(.05, Math.min(.8, Math.round(k * 400) / 400)), J = SRJ.jacket;
     var c = cv(1100 * S, 1960 * S), x = c.getContext('2d'), r = rng(sc.seed + 5);
     var arm = f.walk ? 10 : 7, g = J.build(f.model, 'back', 'worn', arm);
     x.setTransform(S, 0, 0, S, 50 * S, 60 * S);
@@ -246,7 +246,7 @@
     if (f.pack) backpack(x);
     if (!J.MODELS[f.model].hood) head(x, f);
     x.setTransform(1, 0, 0, 1, 0, 0);
-    return { c: c, ax: 550 * S, ay: 1910 * S, S: S };
+    return { c: c, ax: 550 * S, ay: 1910 * S, S: S, q: k / S };
   }
 
   // 주변광: 장면의 빛 색을 인물에 곱해 배경과 같은 공기 안에 놓는다
@@ -272,15 +272,16 @@
   /* ---------- 장면 유형별 특수 구도 ---------- */
   function chest(x, w, h, f, sc, r) {
     // 목 아래 크롭: 칼라 앞면에서 자르고, 어깨는 화면 밖으로 살짝 나가게(마네킹이 아니라 사람)
-    var J = SRJ.jacket, k = h / 560, S = Math.round(k * 400) / 400, d = sc.rimDir || 1;
+    // 재킷 층은 S 1까지만 만들고 확대한다(첫 화면 차단 시간을 줄이려고)
+    var J = SRJ.jacket, k = h / 560, S = Math.min(.8, Math.round(k * 400) / 400), q = k / S, d = sc.rimDir || 1;
     var jl = J.layer({ model: f.model, color: f.color, view: 'front', pose: 'worn', armAngle: -3, sleeveLen: .84, light: { x: d * .35 }, glossK: .7 }, S);
-    var F = cv(jl.width, jl.height), fx = F.getContext('2d'); fx.drawImage(jl, 0, 0); cast(F, sc);
+    var F = cv(jl.width * q, jl.height * q), fx = F.getContext('2d'); fx.imageSmoothingQuality = 'high'; fx.drawImage(jl, 0, 0, F.width, F.height); cast(F, sc);
     fx.globalCompositeOperation = 'source-atop';
     var vg = fx.createLinearGradient(0, 0, F.width, 0); vg.addColorStop(d > 0 ? 0 : 1, 'rgba(6,10,24,.38)'); vg.addColorStop(.6, 'rgba(6,10,24,0)');
     fx.fillStyle = vg; fx.fillRect(0, 0, F.width, F.height);
     var halo = rim(F, sc.rim, d, Math.max(2, w / 220));
     x.save(); x.translate(w / 2, h / 2); x.rotate(-.025 * d); x.translate(-w / 2, -h / 2);
-    var ox = (w - jl.width) / 2, oy = -205 * S;
+    var ox = (w - F.width) / 2, oy = -205 * k;
     x.globalAlpha = .6; x.globalCompositeOperation = 'screen'; x.drawImage(halo, ox + d * 2, oy);
     x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.drawImage(F, ox, oy); x.restore();
   }
@@ -423,7 +424,7 @@
         cast(F.c, sc);
         var halo = rim(F.c, sc.rim, sc.rimDir || 1, Math.max(1.5, px * 4));
         if (f.haze) { var hx = F.c.getContext('2d'); hx.globalCompositeOperation = 'source-atop'; hx.fillStyle = rgba(horizon, f.haze); hx.fillRect(0, 0, sx, sy); }
-        var dx = feetX - F.ax * turn, dy = feetY - F.ay;
+        var dx = feetX - F.ax * F.q * turn, dy = feetY - F.ay * F.q;
         // 발밑 그림자: 해 반대쪽으로 길게 눕는 청보라
         if (!sc.city && !f.lift) {
           var sd = -(sc.rimDir || 1), len = h * f.h * .9;
@@ -438,7 +439,7 @@
             x.fillStyle = 'rgba(255,255,255,.18)'; x.beginPath(); x.ellipse(fxp - sd * fs * .3, fy + fs * .2, fs, fs * .2, 0, 0, 7); x.fill();
           }
         }
-        x.save(); x.translate(dx, dy); x.scale(turn, 1);
+        x.save(); x.translate(dx, dy); x.scale(turn * F.q, F.q);
         x.globalAlpha = .55; x.globalCompositeOperation = 'screen'; x.drawImage(halo, (sc.rimDir || 1) * 1.5, 0);
         x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.drawImage(F.c, 0, 0); x.restore();
       });

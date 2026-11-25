@@ -68,11 +68,11 @@ const PHOTOS = {
   function save() { if (SHOT) return; try { W.sessionStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 무시 */ } }
 
   /* ---------- 사진 슬롯: ./photos/ 상대 경로만 허용. 비어 있으면 요청 0건. ---------- */
-  var PHOTO_RE = /^\.\/photos\/[A-Za-z0-9_\-][A-Za-z0-9_\-./]*\.(jpe?g|png|webp|avif)$/i;
+  var PHOTO_RE = /^\.\/photos\/[A-Za-z0-9_\-][A-Za-z0-9_\-./]*\.(jpe?g|png|webp|avif)$/i, BAD = {};
   function photo(v) {
     if (!v) return null;
     var o = typeof v === 'string' ? { src: v } : v;
-    if (!o || typeof o.src !== 'string' || !PHOTO_RE.test(o.src) || o.src.indexOf('..') >= 0 || o.src.indexOf('//') >= 0) return null;
+    if (!o || typeof o.src !== 'string' || !PHOTO_RE.test(o.src) || o.src.indexOf('..') >= 0 || o.src.indexOf('//') >= 0 || BAD[o.src]) return null;
     return o;
   }
   function putPhoto(ph, o, alt, fallback) {
@@ -80,16 +80,18 @@ const PHOTOS = {
     img.loading = 'lazy'; img.decoding = 'async'; img.alt = o.alt || alt;
     if (o.focal) img.style.objectPosition = o.focal;
     if (cvs) cvs.setAttribute('aria-hidden', 'true');
-    img.addEventListener('error', function () { img.remove(); ph.classList.remove('has-photo'); if (cvs) cvs.removeAttribute('aria-hidden'); fallback(); }, { once: true });
+    img.addEventListener('error', function () { BAD[o.src] = 1; img.remove(); ph.classList.remove('has-photo'); if (cvs) cvs.removeAttribute('aria-hidden'); fallback(); }, { once: true });
     img.addEventListener('load', function () { ph.classList.add('is-drawn'); }, { once: true });
     img.src = o.src; ph.appendChild(img); ph.classList.add('has-photo');
     return true;
   }
 
   /* ---------- 그리기 일정: 한 번 그리면 끝. 화면 1개 높이 전에 프레임당 1장. ---------- */
-  var Q = [], pumping = false;
+  // 인트로(0.9초)가 끝난 뒤부터 그린다: 연출 중에 무거운 그리기가 끼어들지 않게
+  var Q = [], pumping = false, gate = SHOT || !MOTION;
+  setTimeout(function () { gate = true; if (Q.length && !pumping) { pumping = true; idle(pump); } }, 1100);
   var idle = W.requestIdleCallback ? function (f) { W.requestIdleCallback(f, { timeout: 200 }); } : function (f) { setTimeout(f, 16); };
-  function enqueue(f, front) { if (front) Q.unshift(f); else Q.push(f); if (!pumping) { pumping = true; idle(pump); } }
+  function enqueue(f, front) { if (front) Q.unshift(f); else Q.push(f); if (!pumping && gate) { pumping = true; idle(pump); } }
   function pump() {
     var f = Q.shift();
     if (f) { try { f(); } catch (e) { /* 한 장 실패해도 나머지는 그린다 */ } }
@@ -108,8 +110,9 @@ const PHOTOS = {
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); enqueue(fn); } }); }, { rootMargin: margin || '100% 0px' });
     io.observe(el);
   }
+  // 장면은 그레인과 심도가 있는 사진이라 1.5배 밀도로 충분하다
   function scene(c, id, k) {
-    if (!canDraw || !fit(c, k)) return;
+    if (!canDraw || !fit(c, (k || 1) * Math.min(1, 1.5 / DPR))) return;
     SR.scenes.render(c, id);
     c.parentNode.classList.add('is-drawn');
   }
@@ -237,7 +240,7 @@ const PHOTOS = {
 
   var stripApi = (function () {
     var cur = 0, auto = !RM && !SHOT, hover = false, focusIn = false, onScreen = true, step = 0, pw = 0, base = 0, Wt = 0, panels = origPanels, offset = 0;
-    var proxy, drag, prog, sets = [], inner = [], skewTo;
+    var proxy, drag, prog, sets = [], inner = [], skewTo, intro = null;
     var carousel = MOTION && !SHOT;
     origPanels.forEach(function (p) { sceneCanvases[p.dataset.scene] = [$('canvas', p)]; });
     function label() { countNum.textContent = (cur + 1) + ' / ' + NP; }
@@ -261,7 +264,7 @@ const PHOTOS = {
         inner[i](G.utils.clamp(-1, 1, -c / (vw / 2 + pw / 2)) * par * pw / 2);
       }
     }
-    function curFromOffset() { cur = ((Math.round(-offset / step) % NP) + NP) % NP; label(); }
+    function curFromOffset() { var c = ((Math.round(-offset / step) % NP) + NP) % NP; if (c !== cur || !countNum.textContent) { cur = c; label(); } }
     function goTo(i, dur, ease) {
       if (!carousel) {
         var t = origPanels[(i + NP) % NP];
@@ -297,12 +300,12 @@ const PHOTOS = {
       skewTo = G.quickTo(track, 'skewX', { duration: .4, ease: 'power3.out' });
       var last = 0;
       drag = W.Draggable.create(proxy, {
-        type: 'x', trigger: strip, inertia: true, minimumMovement: 10, dragClickables: false, allowContextMenu: true,
+        type: 'x', trigger: strip, inertia: true, minDuration: .3, maxDuration: 1.2, minimumMovement: 10, dragClickables: false, allowContextMenu: true,
         onPress: function () { G.killTweensOf(proxy); strip.classList.add('is-grab'); last = this.x; },
         onRelease: function () { strip.classList.remove('is-grab'); },
         onDragStart: function () { auto = false; syncPlayBtn(); updateAuto(); },
-        onDrag: function () { offset = this.x; skewTo(G.utils.clamp(-2, 2, (this.x - last) * .12)); last = this.x; layout(); },
-        onThrowUpdate: function () { offset = this.x; skewTo(G.utils.clamp(-2, 2, (this.x - last) * .12)); last = this.x; layout(); },
+        onDrag: function () { offset = this.x; skewTo(G.utils.clamp(-2, 2, (this.x - last) * .12)); last = this.x; layout(); curFromOffset(); },
+        onThrowUpdate: function () { offset = this.x; skewTo(G.utils.clamp(-2, 2, (this.x - last) * .12)); last = this.x; layout(); curFromOffset(); },
         onThrowComplete: function () { skewTo(0); curFromOffset(); },
         onDragEnd: function () { skewTo(0); },
         snap: { x: function (v) { return Math.round(v / step) * step; } }
@@ -315,7 +318,8 @@ const PHOTOS = {
       if (PHONE()) vis = vis.slice(0, 3);
       var slice = pw * .18 + 2;
       panels.forEach(function (p) { if (!vis.some(function (o) { return o.p === p; })) G.set(p, { autoAlpha: 0 }); });
-      var tl = G.timeline({ onComplete: function () { G.set(panels, { clearProps: 'clipPath,opacity,visibility' }); layout(); updateAuto(); } });
+      // 멈춘 채 만들고, 첫 그리기가 끝난 다음 프레임에 재생한다(동기 렌더로 첫 프레임을 건너뛰지 않게)
+      var tl = intro = G.timeline({ paused: true, onComplete: function () { G.set(panels, { clearProps: 'clipPath,opacity,visibility' }); layout(); updateAuto(); } });
       vis.forEach(function (o, k) {
         var gx = vw / 2 + (k - (vis.length - 1) / 2) * slice - pw / 2;
         tl.fromTo(o.p, { x: gx, clipPath: 'inset(0% 41% 0% 41%)' }, { x: o.x, clipPath: 'inset(0% 0% 0% 0%)', duration: .9, ease: 'power3.out' }, k * .04);
@@ -332,9 +336,8 @@ const PHOTOS = {
       if (SHOT) {
         // 썸네일: h1이 왼쪽에서 두 번째, 왼쪽 끝에 h5가 반쯤. 복제 없이 순서만 바꿔 같은 정지 화면을 만든다.
         track.insertBefore(origPanels[NP - 1], origPanels[0]);
-        track.style.paddingLeft = '0px';
-        track.style.transform = 'translateX(' + (-origPanels[0].getBoundingClientRect().width / 2) + 'px)';
-        track.style.overflow = 'hidden';
+        track.style.paddingLeft = '0px'; track.style.scrollSnapType = 'none';
+        track.scrollLeft = origPanels[0].getBoundingClientRect().width / 2;
       }
       label();
       var timer;
@@ -355,7 +358,7 @@ const PHOTOS = {
     strip.addEventListener('focusout', function (e) { if (!strip.contains(e.relatedTarget)) { focusIn = false; updateAuto(); } });
     D.addEventListener('visibilitychange', updateAuto);
     if ('IntersectionObserver' in W) new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; updateAuto(); }).observe(strip);
-    return { start: updateAuto };
+    return { start: function () { if (intro) { W.requestAnimationFrame(function () { intro.play(); if (logoIntro) logoIntro.play(); }); } else updateAuto(); } };
   })();
 
   // 패널 그리기: 처음 보이는 패널은 동기(1/2 해상도 → 다음 프레임에 원해상도), 나머지는 차례로
@@ -376,14 +379,14 @@ const PHOTOS = {
   /* 로고타입 2행: 1행의 너비에 양끝이 맞게 자간 조정 */
   function fitLogotypes() {
     $$('.logotype').forEach(function (lt) {
-      // 1행 너비에 2행의 양끝이 맞게 자간으로 조정한다(인트로 중이어도 wdth 125 기준으로 잰다)
-      var a = $('.logotype__1', lt), b = $('.logotype__2', lt), keep = a.style.cssText, n = b.textContent.trim().length;
+      // 자간 0.34em을 지키면서 2행의 양끝이 1행 너비에 맞도록 글자 크기를 푼다(인트로 중이어도 wdth 125 기준으로 잰다)
+      var a = $('.logotype__1', lt), b = $('.logotype__2', lt), keep = a.style.cssText;
       a.style.fontVariationSettings = '"wdth" 125'; a.style.fontStretch = '125%';
-      b.style.setProperty('--ls2', '0em');
+      b.style.fontSize = ''; b.style.setProperty('--ls2', '.34em');
       var fs = parseFloat(getComputedStyle(b).fontSize);
-      var wa = a.getBoundingClientRect().width - parseFloat(getComputedStyle(a).paddingRight), wb = b.getBoundingClientRect().width;
+      var wa = a.getBoundingClientRect().width - parseFloat(getComputedStyle(a).paddingRight), wb = b.getBoundingClientRect().width - .34 * fs;
       a.style.cssText = keep;
-      b.style.setProperty('--ls2', Math.max(.1, (wa - wb) / (n - 1) / fs).toFixed(3) + 'em');
+      if (wb > 0) b.style.fontSize = (fs * wa / wb).toFixed(2) + 'px';
     });
   }
 
@@ -399,14 +402,14 @@ const PHOTOS = {
     var cuts = [$('.cut__s', jk), $('.cut__d', jk), $('.cut__l', jk)];
     cuts.forEach(function (c) { fit(c); });
     SR.jacket.renderWindow(cuts, 'ember');
-    var pk = $('.co__pack'); if (fit(pk)) SR.jacket.renderPack(pk, 'ember');
+    var pk = $('.co__pack'); if (fit(pk, 2)) SR.jacket.renderPack(pk, 'ember');
   }
   near(tech, drawTech, '150% 0px');
   var coItems = $$('.co__i'), marks = $$('.mk', jk);
   marks.forEach(function (m) {
     m.addEventListener('click', function () {
       var li = coItems[+m.dataset.mk];
-      li.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
+      li.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' });
       li.classList.add('is-hi'); setTimeout(function () { li.classList.remove('is-hi'); }, 1200);
     });
   });
@@ -536,7 +539,8 @@ const PHOTOS = {
       setRot(SHOT ? -8 : 0); caption(0);
       W.addEventListener('resize', debounce(function () { layout(); paint(); }, 150));
       if (!SHOT) {
-        lookStage.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') interact(); });
+        // 스크롤로 커서 밑에 들어온 경우가 아니라 실제로 포인터를 움직였을 때만 멈춘다
+        lookStage.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse' && (e.movementX || e.movementY)) interact(); });
         var io = new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) startIdle(); else stopIdle(); }, { threshold: .25 });
         io.observe(lookStage);
         D.addEventListener('visibilitychange', function () { if (D.hidden) stopIdle(); else startIdle(); });
@@ -576,8 +580,7 @@ const PHOTOS = {
       var c = lcards[i], cv = $('canvas', c), k = full || !PHONE() ? 1 : .5;
       if (drawn[i] >= k) return;
       var o = photo(PHOTOS.lookbook[i]);
-      if (o && drawn[i] == null) { drawn[i] = 1; putPhoto($('.ph', c), o, '룩 ' + (i + 1) + ', ' + (i < 5 ? '공용 핏' : '여성 핏') + ' ' + COL[c.dataset.color].ko, function () { drawn[i] = 0; drawCard(i, true); }); return; }
-      if (o) return;
+      if (o) { drawn[i] = 1; putPhoto($('.ph', c), o, '룩 ' + (i + 1) + ', ' + (i < 5 ? '공용 핏' : '여성 핏') + ' ' + COL[c.dataset.color].ko, function () { drawn[i] = 0; drawCard(i, true); }); return; }
       drawn[i] = k; scene(cv, c.dataset.scene, k);
     }
     function upgrade(i) { if (!PHONE()) return; for (var d = -2; d <= 2; d++) { (function (j) { if ((drawn[j] || 0) < 1) enqueue(function () { drawCard(j, true); }); })(((i + d) % NL + NL) % NL); } }
@@ -612,8 +615,8 @@ const PHOTOS = {
   }
   function drawFullCode() {
     if (!canDraw) return;
-    var r = sceneC.getBoundingClientRect(), h = Math.round(r.height * DPR), w = Math.round(h * 16 / 9);
-    if (w < r.width * DPR) { w = Math.round(r.width * DPR); h = Math.round(w * 9 / 16); }
+    var sd = Math.min(DPR, 1.5), r = sceneC.getBoundingClientRect(), h = Math.round(r.height * sd), w = Math.round(h * 16 / 9);
+    if (w < r.width * sd) { w = Math.round(r.width * sd); h = Math.round(w * 9 / 16); }
     if (w > 2400) { h = Math.round(h * 2400 / w); w = 2400; }
     sceneC.width = w; sceneC.height = h;
     SR.scenes.render(sceneC, 'full'); sceneC.parentNode.classList.add('is-drawn');
@@ -683,7 +686,6 @@ const PHOTOS = {
       var st = MOTION ? W.Flip.getState(cards) : null;
       cards.forEach(function (c) { c.classList.toggle('is-out', show.indexOf(c) < 0); });
       if (st) W.Flip.from(st, { duration: .45, ease: 'power3.out', targets: cards, onEnter: function (els) { return G.fromTo(els, { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .3, ease: 'power2.out' }); } });
-      if (W.ScrollTrigger) W.ScrollTrigger.refresh();
     }
     if (MOTION && leaving.length) G.to(leaving, { opacity: 0, duration: .18, ease: 'power1.out', onComplete: function () { G.set(leaving, { clearProps: 'opacity' }); relayout(); } });
     else relayout();
@@ -868,7 +870,10 @@ const PHOTOS = {
   });
   function qSetColor(c) {
     if (c === Qs.color) return;
-    Qs.color = c; qSwatches();
+    // 스와치는 다시 만들지 않고 상태만 바꾼다(포커스와 화살표 키 이동이 끊기지 않게)
+    Qs.color = c;
+    $$('[data-c]', qv).forEach(function (b) { var on = b.dataset.c === c; b.setAttribute('aria-checked', String(on)); b.tabIndex = on ? 0 : -1; });
+    qf('colorName').textContent = COL[c].ko + ' ' + COL[c].en;
     if (Qs.size && stockOf(Qs.id, c, Qs.size) === 0) Qs.size = null;
     qSizes(); qStock(); qQty(); qDraw(true);
   }
@@ -896,7 +901,7 @@ const PHOTOS = {
     e.preventDefault();
     var h = parseFloat(this.h.value), w = parseFloat(this.w.value), out = $('[data-find-out]', qv), list = FIT[PI[Qs.id].fit].sizes;
     if (!(h >= 145 && h <= 200 && w >= 38 && w <= 120)) { out.textContent = '입력한 값으로는 추천이 어렵습니다. 치수표의 가슴 단면을 가진 옷과 비교해 보세요.'; Qs.rec = null; qSizes(); return; }
-    var hi = h < 160 ? 0 : h < 167 ? 1 : h < 174 ? 2 : h < 181 ? 3 : h < 188 ? 4 : 5, wi = w < 52 ? 0 : w < 60 ? 1 : w < 69 ? 2 : w < 78 ? 3 : w < 88 ? 4 : 5;
+    var hi = h < 163 ? 0 : h < 170 ? 1 : h < 180 ? 2 : h < 186 ? 3 : h < 192 ? 4 : 5, wi = w < 54 ? 0 : w < 62 ? 1 : w < 73 ? 2 : w < 83 ? 3 : w < 93 ? 4 : 5;
     var i = Math.min(list.length - 1, Math.max(hi, wi)), s = list[i], s2 = list[i + 1];
     Qs.rec = s; qSizes();
     out.textContent = s + josa(s, '을', '를') + ' 추천합니다. ' + (s2 ? '안에 두껍게 겹쳐 입으면 ' + s2 + josa(s2, '이', '가') + ' 편합니다.' : '가장 큰 사이즈라, 두껍게 겹쳐 입을 때는 치수표의 가슴 단면을 확인해 주세요.');
@@ -1117,10 +1122,11 @@ const PHOTOS = {
   /* =====================================================================
      모션(matchMedia 분기). 숨김 시작 상태는 여기서만 만든다.
      ===================================================================== */
+  var logoIntro = null;
   var fontsReady = new Promise(function (res) { if (D.fonts && D.fonts.ready) D.fonts.ready.then(res); setTimeout(res, 800); });
   if (MOTION && !SHOT) {
     // 로고타입 1행: wdth 62 → 125 (0.9초)
-    G.fromTo('.hero .logotype__1', { fontVariationSettings: '"wdth" 62', fontStretch: '62%' }, { fontVariationSettings: '"wdth" 125', fontStretch: '125%', duration: .9, ease: 'power3.out', clearProps: 'fontVariationSettings,fontStretch' });
+    logoIntro = G.fromTo('.hero .logotype__1', { fontVariationSettings: '"wdth" 62', fontStretch: '62%' }, { fontVariationSettings: '"wdth" 125', fontStretch: '125%', duration: .9, ease: 'power3.out', paused: true, onComplete: function () { H.classList.add('intro-done'); } });
   }
   fontsReady.then(function () {
     fitLogotypes(); fitBig(); segPaint(); setTab(curTab);
@@ -1199,7 +1205,7 @@ const PHOTOS = {
     W.ScrollTrigger.create({ trigger: jk, start: 'top 70%', once: true, onEnter: function () { G.to($$('.mk__tail path', jk), { drawSVG: '0% 100%', duration: .5, stagger: .06, ease: 'power2.out' }); } });
     var did = {};
     coItems.forEach(function (li, i) {
-      W.ScrollTrigger.create({ trigger: li, start: 'top 55%', end: 'bottom 45%',
+      W.ScrollTrigger.create({ trigger: li, start: 'top 70%', end: 'bottom 70%',
         onToggle: function (s) {
           marks.forEach(function (m) { if (+m.dataset.mk === i) m.classList.toggle('is-on', s.isActive); });
           if (!s.isActive || did[i]) return;

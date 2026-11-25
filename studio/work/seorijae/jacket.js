@@ -32,7 +32,6 @@
       A[0] * B[4] + A[2] * B[5] + A[4], A[1] * B[4] + A[3] * B[5] + A[5]];
   }
   function setT(x, M) { x.setTransform(M[0], M[1], M[2], M[3], M[4], M[5]); }
-  function app(M, p) { return [M[0] * p[0] + M[2] * p[1] + M[4], M[1] * p[0] + M[3] * p[1] + M[5]]; }
   function rot(deg, px, py) { var r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r); return [c, s, -s, c, px, py]; }
   var MIRROR = [-1, 0, 0, 1, 1000, 0];
   SRJ.util = { rng: rng, cv: cv, noise: noise, hex: hex, rgba: rgba, mix: mix, gray: gray };
@@ -171,8 +170,6 @@
   }
 
   /* ---------- 층 만들기 ---------- */
-  function partPath(p) { return p.path; }
-
   function drawRows(x, base, rows, step) {
     var S = strip();
     for (var i = 0; i < rows.length; i++) {
@@ -571,21 +568,6 @@
     return img;
   }
 
-  /* 도해용 좌표: 설계 좌표의 호출 시작점과 박음선 SVG 경로 */
-  function points(key) {
-    var g = build(key, 'front', 'flat', 18), body = g.parts.body;
-    var chest = body.seams.filter(function (s) { return s.chest && s.x0 > 500; }).slice(0, 3).map(function (s) {
-      var d = ''; for (var a = s.x0; a <= s.x1; a += 12) d += (d ? ' L ' : 'M ') + a.toFixed(1) + ' ' + s.f(a).toFixed(1); return d;
-    });
-    var sr = g.parts.sleeveR.M;
-    return {
-      pocket: [352, 690], chest: [600, body.seams.filter(function (s) { return s.chest && s.x0 > 500; })[0].f(600)], yoke: [356, 300],
-      shell: app(sr, [34, 470]), window: [392, g.B - 75], chestPaths: chest,
-      yokePath: 'M 330 284 Q 420 300 487 292 M 513 292 Q 580 300 670 284', sidePath: 'M 300 478 L 300 ' + g.B + ' M 700 478 L 700 ' + g.B,
-      pivotL: [300, 262], pivotR: [700, 262]
-    };
-  }
-
   /* 절개 창: 겉감(확대된 립스톱) / 솜털 클러스터 60~80개와 물방울 / 안감 */
   function renderWindow(canvases, col) {
     var C = COLORS[col || 'ember'], base = hex(C.hex);
@@ -626,6 +608,6 @@
     });
   }
 
-  SRJ.jacket = { render: render, relight: relight, layer: layer, renderPack: renderPack, packLayer: packLayer, points: points, renderWindow: renderWindow,
+  SRJ.jacket = { render: render, relight: relight, layer: layer, renderPack: renderPack, packLayer: packLayer, renderWindow: renderWindow,
     COLORS: COLORS, MODELS: MODELS, build: build };
 })();
