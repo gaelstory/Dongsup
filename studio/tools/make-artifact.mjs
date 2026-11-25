@@ -23,6 +23,8 @@ const files = [];
     const r = rel ? `${rel}/${name}` : name;
     if (!rel && SKIP.has(name)) continue;
     if (name.startsWith('.') || name.endsWith('.map')) continue;
+    // a mockup's readable sources (work/<slug>/src/) are for editing, not for the published page
+    if (name === 'src' && /^work\/[^/]+$/.test(rel)) continue;
     const src = path.join(ROOT, r);
     if (fs.statSync(src).isDirectory()) { copy(r); continue; }
     fs.mkdirSync(path.dirname(path.join(OUT, r)), { recursive: true });
